@@ -28,7 +28,7 @@ import ReadonlyBindableMap from './ReadonlyBindableMap';
 /**
  * Extension of ReadonlyBindableMap abstraction with destroy method.
  */
-interface DestroyableReadonlyBindableMap<T> extends Destroyable, ReadonlyBindableMap<T> {
+interface DestroyableReadonlyBindableMap<K, V> extends Destroyable, ReadonlyBindableMap<K, V> {
 }
 
 export default DestroyableReadonlyBindableMap;

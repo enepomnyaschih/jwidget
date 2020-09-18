@@ -23,13 +23,12 @@ SOFTWARE.
 */
 
 import * as ArrayUtils from '../ArrayUtils';
+import BindableArray from '../BindableArray';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
-import Dictionary from '../Dictionary';
 import IBindableArray from '../IBindableArray';
-import {def} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
-import BindableArray from '../BindableArray';
+import {filter} from "../IterableUtils";
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractFilterer from './AbstractFilterer';
 
@@ -37,6 +36,7 @@ import AbstractFilterer from './AbstractFilterer';
  * AbstractFilterer implementation for arrays.
  */
 class ArrayFilterer<T> extends AbstractFilterer<T> {
+
 	private _filtered: number[] = [];
 
 	/**
@@ -45,7 +45,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	readonly source: ReadonlyBindableArray<T>;
 
 	/**
-	 * @inheritDoc
+	 * Target array.
 	 */
 	readonly target: IBindableArray<T>;
 
@@ -54,10 +54,10 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, test: (item: T) => any, config: ArrayFilterer.FullConfig<T> = {}) {
-		super(test, config);
-		this.target = config.target ?? this.own(new BindableArray<T>(this.source.getKey, this.source.silent));
-		this._splice([], [new IndexItems(0, this.source.items)]);
+	constructor(source: ReadonlyBindableArray<T>, test: (item: T) => boolean, config: ArrayFilterer.Config<T> = {}) {
+		super(test);
+		this.target = config.target ?? this.own(new BindableArray<T>(this.source.silent));
+		this._splice([], [new IndexItems(0, this.source.native)]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onMove.listen(this._onMove, this));
@@ -70,8 +70,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 * @param config Options to modify.
 	 */
 	reconfigure(config: ArrayFilterer.Reconfig<T>) {
-		this._test = def(config.test, this._test);
-		this._scope = def(config.scope, this._scope);
+		this.test = config.test ?? this.test;
 		this.refilter();
 	}
 
@@ -80,9 +79,9 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 * Call this method when collection item properties change the way that it must be refiltered.
 	 */
 	refilterAt(sourceIndex: number) {
-		var item = this.source.get(sourceIndex);
-		var good = this._test.call(this._scope, item);
-		var targetIndex = this._countFiltered(0, sourceIndex);
+		const item = this.source.get(sourceIndex);
+		const good = this.test(item);
+		const targetIndex = this._countFiltered(0, sourceIndex);
 		if (this._filtered[sourceIndex] === 0) {
 			if (good) {
 				this._filtered[sourceIndex] = 1;
@@ -102,7 +101,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 * @param item Item to refilter.
 	 */
 	refilterItem(item: T) {
-		var index = this.source.indexOf(item);
+		const index = this.source.indexOf(item);
 		if (index !== -1) {
 			this.refilterAt(index);
 		}
@@ -113,12 +112,10 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 * they must be refiltered.
 	 */
 	refilter() {
-		var newFiltered = this.source.items.map((item) => {
-			return this._test.call(this._scope, item) ? 1 : 0;
-		});
+		const newFiltered = this.source.native.map(item => this.test(item) ? 1 : 0);
 
-		var removeParams: IndexCount = null;
-		var segmentsToRemove: IBindableArray.IndexCount[] = [];
+		const segmentsToRemove: IBindableArray.IndexCount[] = [];
+		let removeParams: IndexCount = null;
 
 		function flushRemove() {
 			if (removeParams !== null) {
@@ -127,9 +124,8 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 			}
 		}
 
-		var targetIndex = 0;
-		this.source.every((item, index) => {
-			item = item;
+		let targetIndex = 0;
+		this.source.every((_, index) => {
 			if (this._filtered[index] === 0) {
 				return true;
 			}
@@ -148,8 +144,8 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 
 		flushRemove();
 
-		var addParams: IBindableArray.IndexItems<T> = null;
-		var segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
+		const segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
+		let addParams: IBindableArray.IndexItems<T> = null;
 
 		function flushAdd() {
 			if (addParams !== null) {
@@ -158,7 +154,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 			}
 		}
 
-		var targetIndex = 0;
+		targetIndex = 0;
 		this.source.every((item, index) => {
 			if (this._filtered[index] === 1) {
 				flushAdd();
@@ -169,7 +165,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 				if (addParams === null) {
 					addParams = new IndexItems<T>(targetIndex, []);
 				}
-				addParams.items.push(item);
+				(<T[]>addParams.items).push(item);
 				this._filtered[index] = 1;
 				++targetIndex;
 			} else {
@@ -184,49 +180,47 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 		this.target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		this.target.clear();
 		super.destroyObject();
 	}
 
 	private _countFiltered(index: number, count: number): number {
-		var result = 0;
-		for (var i = 0; i < count; ++i) {
+		let result = 0;
+		for (let i = 0; i < count; ++i) {
 			result += this._filtered[index + i];
 		}
 		return result;
 	}
 
-	private _splice(removedSegments: IBindableArray.IndexItems<T>[], addedSegments: IBindableArray.IndexItems<T>[]) {
-		var sourceIndex = 0;
-		var targetIndex = 0;
-		var segmentsToRemove = removedSegments.map(indexItems => {
+	private _splice(removedSegments: readonly IBindableArray.IndexItems<T>[],
+					addedSegments: readonly IBindableArray.IndexItems<T>[]) {
+		let sourceIndex = 0;
+		let targetIndex = 0;
+		const segmentsToRemove = removedSegments.map(indexItems => {
 			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
-			var count = this._countFiltered(indexItems.index, indexItems.items.length);
-			var params = new IndexCount(targetIndex, count);
+			const count = this._countFiltered(indexItems.index, indexItems.items.length);
+			const params = new IndexCount(targetIndex, count);
 			sourceIndex = indexItems.index + indexItems.items.length;
 			targetIndex += count;
 			return params;
 		});
 		ArrayUtils.trySplice(this._filtered, removedSegments.map(x => x.toIndexCount()), []);
 
-		var sourceIndex = 0;
-		var targetIndex = 0;
-		var segmentsToAdd = addedSegments.map(indexItems => {
+		sourceIndex = 0;
+		targetIndex = 0;
+		const segmentsToAdd = addedSegments.map(indexItems => {
 			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
-			var items: T[] = [];
-			var filtered = indexItems.items.map((item) => {
-				if (!this._test.call(this._scope, item)) {
+			const items: T[] = [];
+			const filtered = indexItems.items.map(item => {
+				if (!this.test(item)) {
 					return 0;
 				}
 				items.push(item);
 				return 1;
 			});
-			var params = new IndexItems(targetIndex, items);
-			ArrayUtils.tryAddAll(this._filtered, filtered, indexItems.index);
+			const params = new IndexItems(targetIndex, items);
+			ArrayUtils.addAll(this._filtered, filtered, indexItems.index);
 			sourceIndex = indexItems.index + filtered.length;
 			targetIndex += items.length;
 			return params;
@@ -235,31 +229,30 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 		this.target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
 
-	private _onSplice(message: IBindableArray.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
+	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
 		this._splice(spliceResult.removedSegments, spliceResult.addedSegments);
 	}
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
-		var oldFiltered = this._filtered[message.index] !== 0;
-		var newFiltered = this._test.call(this._scope, message.newItem);
+		const oldFiltered = this._filtered[message.index] !== 0;
+		const newFiltered = this.test(message.newValue);
 		if (!oldFiltered && !newFiltered) {
 			return;
 		}
-		var index = this._countFiltered(0, message.index);
+		const index = this._countFiltered(0, message.index);
 		this._filtered[message.index] = newFiltered ? 1 : 0;
 		if (!newFiltered) {
 			this.target.remove(index);
 		} else if (!oldFiltered) {
-			this.target.add(message.newItem, index);
+			this.target.add(message.newValue, index);
 		} else {
-			this.target.trySet(index, message.newItem);
+			this.target.trySet(index, message.newValue);
 		}
 	}
 
 	private _onMove(message: IBindableArray.MoveMessage<T>) {
 		if (this._filtered[message.fromIndex] !== 0) {
-			var fromIndex: number, toIndex: number;
+			let fromIndex: number, toIndex: number;
 			if (message.fromIndex < message.toIndex) {
 				fromIndex = this._countFiltered(0, message.fromIndex);
 				toIndex = fromIndex + this._countFiltered(message.fromIndex + 1, message.toIndex - message.fromIndex);
@@ -269,7 +262,7 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 			}
 			this.target.tryMove(fromIndex, toIndex);
 		}
-		ArrayUtils.tryMove(this._filtered, message.fromIndex, message.toIndex);
+		ArrayUtils.move(this._filtered, message.fromIndex, message.toIndex);
 	}
 
 	private _onClear() {
@@ -277,20 +270,20 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	}
 
 	private _onReorder(message: IBindableArray.ReorderMessage<T>) {
-		var targetIndex = 0;
-		var targetIndexWhichMovesToI: Dictionary<number> = {};
-		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
+		let targetIndex = 0;
+		const targetIndexWhichMovesToI = new Map<number, number>();
+		for (let sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
 			if (this._filtered[sourceIndex] !== 0) {
-				targetIndexWhichMovesToI[message.indexArray[sourceIndex]] = targetIndex++;
+				targetIndexWhichMovesToI.set(message.indexMapping[sourceIndex], targetIndex++);
 			}
 		}
-		ArrayUtils.tryReorder(this._filtered, message.indexArray);
+		ArrayUtils.tryReorder(this._filtered, message.indexMapping);
 
-		var targetIndex = 0;
-		var indexes = new Array<number>(this.target.length.get());
-		for (var sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
+		targetIndex = 0;
+		const indexes = new Array<number>(this.target.length.get());
+		for (let sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
 			if (this._filtered[sourceIndex] !== 0) {
-				indexes[targetIndexWhichMovesToI[sourceIndex]] = targetIndex++;
+				indexes[targetIndexWhichMovesToI.get(sourceIndex)] = targetIndex++;
 			}
 		}
 
@@ -304,7 +297,7 @@ namespace ArrayFilterer {
 	/**
 	 * ArrayFilterer configuration.
 	 */
-	export interface FullConfig<T> extends AbstractFilterer.Config {
+	export interface Config<T> {
 		/**
 		 * Target array.
 		 */
@@ -319,12 +312,7 @@ namespace ArrayFilterer {
 		/**
 		 * New filtering criteria.
 		 */
-		readonly test?: (item: T) => any;
-
-		/**
-		 * New `test` call scope.
-		 */
-		readonly scope?: any;
+		readonly test?: (item: T) => boolean;
 	}
 }
 
@@ -332,14 +320,13 @@ namespace ArrayFilterer {
  * Filters an array and starts synchronization.
  * @param source Source array.
  * @param test Filtering criteria.
- * @param scope Call scope of `test` function.
  * @returns Target array.
  */
-export function filterArray<T>(source: ReadonlyBindableArray<T>, test: (item: T) => any,
-							   scope?: any): DestroyableReadonlyBindableArray<T> {
+export function filterArray<T>(source: ReadonlyBindableArray<T>,
+							   test: (item: T) => boolean): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
-		return source.filter(test, scope);
+		return new BindableArray(filter(source, test), true);
 	}
-	const target = new BindableArray<T>(source.getKey);
-	return target.owning(new ArrayFilterer<T>(source, test, {target, scope}));
+	const target = new BindableArray<T>();
+	return target.owning(new ArrayFilterer<T>(source, test, {target}));
 }

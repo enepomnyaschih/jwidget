@@ -36,29 +36,25 @@ export default class ArrayObserver<T> extends AbstractObserver<T> {
 	 */
 	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractObserver.Config<T>) {
 		super(config);
-		this._addItems(source.items);
+		this._addItems(source.native);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.items);
+		if (this.source.native.length !== 0) {
+			this._doClearItems(this.source.native);
+		}
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableArray.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
-		var oldItems = spliceResult.oldItems;
-		var removedItems = spliceResult.removedItems;
-
-		if (this._clear && (3 * removedItems.length > 2 * oldItems.length)) {
+	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
+		const {oldContents, removedItems} = spliceResult;
+		if (this._clear && (3 * removedItems.length > 2 * oldContents.length)) {
 			// if there is an effective clearing function, just reset the controller
-			this._clear.call(this._scope, oldItems);
-			this._addItems(this.source.items);
+			this._clear(oldContents);
+			this._addItems(this.source.native);
 		} else {
 			// else, splice the elements
 			this._removeItems(removedItems);
@@ -68,14 +64,14 @@ export default class ArrayObserver<T> extends AbstractObserver<T> {
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
 		if (this._remove) {
-			this._remove.call(this._scope, message.oldItem);
+			this._remove(message.oldValue);
 		}
 		if (this._add) {
-			this._add.call(this._scope, message.newItem);
+			this._add(message.newValue);
 		}
 	}
 
-	private _onClear(message: IBindableArray.MessageWithItems<T>) {
-		this._doClearItems(message.items);
+	private _onClear(oldContents: readonly T[]) {
+		this._doClearItems(oldContents);
 	}
 }

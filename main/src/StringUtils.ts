@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import {addAll} from "./ArrayUtils";
+
 /**
  * Escapes special HTML symbols.
  * Converts symbols &amp;, &gt;, &lt;, &quot; to `&amp;` `&gt;` `&lt;` `&quot;` correspondingly.
@@ -124,12 +126,12 @@ export function hyphen(str: string): string {
  *     JW.strings.parseClass(["  a    b ", "c", [], [["d", "e"]]]); // ["a", "b", "c", "d", "e"]
  */
 export function parseClass(str: string): string[];
-export function parseClass(str: any[]): string[];
+export function parseClass(str: readonly any[]): string[];
 export function parseClass(str: any): string[] {
 	if (Array.isArray(str)) {
-		var result: string[] = [];
-		for (var i = 0; i < str.length; ++i) {
-			result.push.apply(result, parseClass(str[i]));
+		const result: string[] = [];
+		for (let i = 0; i < str.length; ++i) {
+			addAll(result, parseClass(str[i]));
 		}
 		return result;
 	}
@@ -143,12 +145,10 @@ export function parseClass(str: any): string[] {
 	return [];
 }
 
-function _fcamel(a: string, b: string): string {
-	a = a;
+function _fcamel(_a: string, b: string): string {
 	return b.toUpperCase();
 }
 
-function _fhyphen(a: string, b: string): string {
-	a = a;
+function _fhyphen(_a: string, b: string): string {
 	return "-" + b.toLowerCase();
 }

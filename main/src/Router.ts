@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
 import CancelToken from "./CancelToken";
 import Class from './Class';
@@ -30,11 +29,10 @@ import Component from './Component';
 import Copier from './Copier';
 import defer from "./defer";
 import Destroyable from './Destroyable';
-import Dictionary from './Dictionary';
-import * as DictionaryUtils from './DictionaryUtils';
 import hash from './hash';
-import {identity, isNotNil} from './index';
+import {isNotNil} from './index';
 import IProperty from './IProperty';
+import {map} from "./IterableUtils";
 import Property from './Property';
 
 /**
@@ -104,7 +102,7 @@ class Router<T extends Destroyable> extends Class {
 		this.handler = Router.makeHandler(config.handler);
 		this.scope = config.scope || this;
 		this._target = config.target || this.own(new Property<T>());
-		this.own(this.path.onChange.listen(() => this.update(), this));
+		this.own(this.path.onChange.listen(() => this.update()));
 	}
 
 	/**
@@ -131,9 +129,6 @@ class Router<T extends Destroyable> extends Class {
 		return this._arg;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	destroyObject() {
 		if (this._updating) {
 			throw new Error("Router can not be destroyed during its update cycle.");
@@ -274,7 +269,9 @@ namespace Router {
 		 * corresponding handler and passes argument to it. Route and argument themselves are computed with `separator`
 		 * callback.
 		 */
-		readonly routes?: Dictionary<Route<T>>;
+		readonly routes?: {
+			readonly [key: string]: Route<T>;
+		};
 
 		/**
 		 * If none of the `routes` matches current route, the router calls this handler callback and passes both
@@ -350,7 +347,7 @@ namespace Router {
 		}
 		return function (path: string) {
 			const result = separator.exec(path || "");
-			return result ? [result[1], ArrayUtils.find(result.slice(2), isNotNil) ?? null] : null;
+			return result ? [result[1], result.slice(2).find(isNotNil) ?? null] : null;
 		};
 	}
 
@@ -446,10 +443,19 @@ namespace Router {
 	 * This allows you to render your content as a fixed array of panels representing the concurrent routes.
 	 */
 	export class Node extends Class {
-		private _paths: Dictionary<IProperty<string>>;
-		private _expanded: Dictionary<IProperty<boolean>>;
 		private _initialized = false; // used to auto-activate the first route on initialization
 		private _updating = false; // used to prevent redirection error
+
+		/**
+		 * Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
+		 * always exist regardless of their activity.
+		 */
+		readonly paths: ReadonlyMap<string, IProperty<string>>;
+
+		/**
+		 * Provides "expanded" flags to bind child panels to, by name. Support two-way binding.
+		 */
+		readonly expanded: ReadonlyMap<string, IProperty<boolean>>;
 
 		/**
 		 * Default route this node was initialized with.
@@ -470,57 +476,41 @@ namespace Router {
 			super();
 			this.defaultRoute = config.defaultRoute;
 
-			const routeMap = ArrayUtils.index(config.routes, identity);
-			this._paths = DictionaryUtils.map(routeMap, () => new Property<string>());
-			this._expanded = DictionaryUtils.map(routeMap, () => new Property(config.expanded === true));
+			this.paths = new Map(map(config.routes, route => [route, new Property<string>()]));
+			this.expanded = new Map(map(config.routes, route => [route, new Property(config.expanded === true)]));
 
 			if (config.expanded && (typeof config.expanded !== "boolean")) {
-				config.expanded.forEach((route) => {
-					this._expanded[route].set(true);
-				});
+				for (const route of config.expanded) {
+					this.expanded.get(route).set(true);
+				}
 			}
 
-			DictionaryUtils.forEach(this._expanded, (expanded, route) => {
+			for (const [route, expanded] of this.expanded) {
 				this.own(expanded.onChange.listen(message => {
 					if (message.value && !this._updating) {
 						this.router.redirect(route);
 					}
 				}));
-			});
+			}
 
 			this.router = this.own(new Router<Destroyable>({
 				name: config.name,
 				parent: config.parent,
 				path: config.path,
 				handler: (route, arg) => {
-					const path = this._paths[route];
+					const path = this.paths.get(route);
 					if (!path) {
 						return (!this._initialized && this.defaultRoute) ?
 							new Redirector(this.defaultRoute, this.router) : null;
 					}
 					this._updating = true;
-					const expander = new NodeExpander(this.router, arg, path, this._expanded[route]);
+					const expander = new NodeExpander(this.router, arg, path, this.expanded.get(route));
 					this._updating = false;
 					return expander;
 				}
 			}));
 			this.router.update();
 			this._initialized = true;
-		}
-
-		/**
-		 * Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
-		 * always exist regardless of their activity.
-		 */
-		get paths(): Dictionary<Bindable<string>> {
-			return this._paths;
-		}
-
-		/**
-		 * Provides "expanded" flags to bind child panels to, by name. Support two-way binding.
-		 */
-		get expanded(): Dictionary<IProperty<boolean>> {
-			return this._expanded;
 		}
 	}
 
@@ -548,13 +538,13 @@ namespace Router {
 			 * Fixed array of routes to manage by this node. For every name in this list, corresponding properties will be
 			 * created in `paths` and `expanded` dictionaries of the node.
 			 */
-			readonly routes: string[];
+			readonly routes: Iterable<string>;
 
 			/**
 			 * Initial "expanded" status of routes or initial routes to expand. Defaults to false (all routes are
 			 * collapsed).
 			 */
-			readonly expanded?: boolean | string[];
+			readonly expanded?: boolean | Iterable<string>;
 
 			/**
 			 * Default route. If the initial path is blank (""), the router performs a redirection to this route, i.e.

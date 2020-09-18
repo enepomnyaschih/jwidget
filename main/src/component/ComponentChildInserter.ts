@@ -22,37 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Dictionary from '../Dictionary';
-import * as DictionaryUtils from '../DictionaryUtils';
-import IBindableMap from '../IBindableMap';
-import {iidStr} from '../index';
 import BindableMap from '../BindableMap';
+import IBindableMap from '../IBindableMap';
 import Some from '../Some';
 import ComponentChild from './ComponentChild';
 
-/**
- * @hidden
- */
-export default class ComponentChildInserter extends BindableMap<ComponentChild> {
+export default class ComponentChildInserter extends BindableMap<string, ComponentChild> {
+
 	constructor() {
-		super(iidStr, true);
+		super(true);
 	}
 
-	tryPut(key: string, item: ComponentChild): Some<ComponentChild> {
-		var result = super.tryPut(key, item);
+	trySet(key: string, value: ComponentChild): Some<ComponentChild> {
+		const result = super.trySet(key, value);
 		if (result === undefined) {
 			return undefined;
 		}
-		var removedItem = result.value;
-		if (removedItem) {
-			removedItem.detach();
+		const removedValue = result.value;
+		if (removedValue) {
+			removedValue.detach();
 		}
-		item.attach(key);
+		value.attach(key);
 		return result;
 	}
 
 	trySetKey(oldKey: string, newKey: string): ComponentChild {
-		var item = super.trySetKey(oldKey, newKey);
+		const item = super.trySetKey(oldKey, newKey);
 		if (item === undefined) {
 			return undefined;
 		}
@@ -61,8 +56,8 @@ export default class ComponentChildInserter extends BindableMap<ComponentChild> 
 		return item;
 	}
 
-	tryRemove(key: string): ComponentChild {
-		var item = super.tryRemove(key);
+	remove(key: string): ComponentChild {
+		const item = super.remove(key);
 		if (item === undefined) {
 			return undefined;
 		}
@@ -70,35 +65,35 @@ export default class ComponentChildInserter extends BindableMap<ComponentChild> 
 		return item;
 	}
 
-	trySplice(removedKeys: string[], updatedItems: Dictionary<ComponentChild>): IBindableMap.SpliceResult<ComponentChild> {
-		var spliceResult = super.trySplice(removedKeys, updatedItems);
+	trySplice(keysToRemove: Iterable<string>,
+			  entriesToUpdate: ReadonlyMap<string, ComponentChild>): IBindableMap.SpliceResult<string, ComponentChild> {
+		const spliceResult = super.trySplice(keysToRemove, entriesToUpdate);
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		DictionaryUtils.forEach(spliceResult.removedItems, this._detach, this);
-		DictionaryUtils.forEach(spliceResult.addedItems, this._attach, this);
+		spliceResult.removedEntries.forEach(this._detach, this);
+		spliceResult.addedEntries.forEach(this._attach, this);
 		return spliceResult;
 	}
 
-	clear(): Dictionary<ComponentChild> {
-		var items = super.clear();
-		if (items === undefined) {
+	clear(): Map<string, ComponentChild> {
+		const oldContents = super.clear();
+		if (oldContents === undefined) {
 			return undefined;
 		}
-		DictionaryUtils.forEach(items, this._detach, this);
-		return items;
+		oldContents.forEach(this._detach, this);
+		return oldContents;
 	}
 
-	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		var result = super.tryReindex(keyMap);
+	tryReindex(keyMapping: ReadonlyMap<string, string>): Map<string, string> {
+		const result = super.tryReindex(keyMapping);
 		if (result === undefined) {
 			return undefined;
 		}
-		for (var oldKey in keyMap) {
-			var newKey = keyMap[oldKey];
-			var item = this.get(newKey);
-			item.detach();
-			item.attach(newKey);
+		for (let newKey of keyMapping.values()) {
+			const value = this.get(newKey);
+			value.detach();
+			value.attach(newKey);
 		}
 		return result;
 	}

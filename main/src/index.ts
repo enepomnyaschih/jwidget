@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Dictionary from './Dictionary';
-import Identifiable from './Identifiable';
 import {cmpPrimitives} from './internal';
 
 export {identity} from './internal';
@@ -141,28 +139,6 @@ export function def<T>(value: T, defaultValue: T): T {
 }
 
 /**
- * Iterates through objects passed after first argument and copies all their fields into
- * `target` object. Returns `target`. Undefined source object fields are ignored.
- * Null and undefined source objects are be ignored.
- *
- * Function modifies `target` object!
- */
-export function apply<T>(target: Dictionary<T>, ...sources: Dictionary<T>[]): Dictionary<T> {
-	for (var i = 0; i < sources.length; ++i) {
-		var source = sources[i];
-		if (!source) {
-			continue;
-		}
-		for (var key in source) {
-			if (source[key] !== undefined) {
-				target[key] = source[key];
-			}
-		}
-	}
-	return target;
-}
-
-/**
  * Universal and sophisticated comparer for array sorting. Broadly speaking, it:
  *
  * - Returns 1, if x > y
@@ -195,8 +171,6 @@ export function smartCmp(x: any, y: any, config?: CmpConfig): number {
 			return cmpArrays(x, y, config);
 		case "boolean":
 			return cmpBooleans(x, y);
-		case "identifiable":
-			return cmpIdentifiables(x, y);
 		case "string":
 			return cmpStrings(x, y, config);
 		default:
@@ -220,8 +194,7 @@ export interface CmpConfig {
 }
 
 function getTypeRank(x: any): string {
-	return (x === undefined) ? "0" : (x === null) ? "1" : Array.isArray(x) ? "array" :
-		(typeof x.iid === "number") ? "identifiable" : typeof x;
+	return (x === undefined) ? "0" : (x === null) ? "1" : Array.isArray(x) ? "array" : typeof x;
 }
 
 function cmpArrays(x: any[], y: any[], config?: CmpConfig): number {
@@ -237,10 +210,6 @@ function cmpArrays(x: any[], y: any[], config?: CmpConfig): number {
 
 function cmpBooleans(x: boolean, y: boolean): number {
 	return x ? (y ? 0 : 1) : (y ? -1 : 0);
-}
-
-function cmpIdentifiables(x: Identifiable, y: Identifiable): number {
-	return cmpPrimitives(x.iid, y.iid);
 }
 
 function cmpStrings(x: string, y: string, config?: CmpConfig): number {
@@ -303,23 +272,6 @@ export function get<T>(obj: any, path?: any): T {
 		obj = get(obj, path[i]);
 	}
 	return obj;
-}
-
-let _lastIid = 0;
-
-/**
- * Returns a new auto-incrementing instance identifier for `Identifiable` interface.
- */
-export function newIid() {
-	return ++_lastIid;
-}
-
-/**
- * Returns object `iid` converted to a string. Can be used as efficient `getKey` implementation
- * for collections consisting of `Identifiable` objects only.
- */
-export function iidStr(obj: Identifiable) {
-	return (obj === undefined) ? "u" : (obj === null) ? "n" : String(obj.iid);
 }
 
 /**

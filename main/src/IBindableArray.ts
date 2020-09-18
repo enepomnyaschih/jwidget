@@ -23,11 +23,7 @@ SOFTWARE.
 */
 
 import DestroyableReadonlyBindableArray from './DestroyableReadonlyBindableArray';
-import IBindableMap from './IBindableMap';
 import IClass from "./IClass";
-import Listenable from './Listenable';
-import Reducer from './Reducer';
-import Some from './Some';
 
 /**
  * Extension of DestroyableReadonlyBindableArray with modification methods.
@@ -35,194 +31,63 @@ import Some from './Some';
 interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> {
 
 	/**
-	 * The array is cleared.
+	 * Makes this array an owner of its values, which means that its items are alive as long as they are present in
+	 * this array. The item is destroyed when it leaves the array, and all items are destroyed on the array destruction.
+	 * All item values in such array must be unique.
 	 */
-	readonly onClear: Listenable<IBindableArray.MessageWithItems<T>>;
+	ownValues(): this;
 
 	/**
-	 * The array is changed. Dispatched right after any another message.
-	 */
-	readonly onChange: Listenable<IBindableArray.Message<T>>;
-
-	/**
-	 * Returns a full copy of this array.
-	 */
-	clone(): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	every(callback: (item: T, index: number) => any, scope?: any): boolean;
-
-	/**
-	 * @inheritDoc
-	 */
-	some(callback: (item: T, index: number) => any, scope?: any): boolean;
-
-	/**
-	 * @inheritDoc
-	 */
-	forEach(callback: (item: T, index: number) => any, scope?: any): void;
-
-	/**
-	 * @inheritDoc
-	 */
-	findIndex(callback: (item: T, index: number) => any, scope?: any): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	find(callback: (item: T, index: number) => any, scope?: any): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IBindableArray<number>;
-
-	/**
-	 * @inheritDoc
-	 */
-	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IBindableArray<number>;
-
-	/**
-	 * @inheritDoc
-	 */
-	index(callback: (item: T, index: number) => any, scope?: any): IBindableMap<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	filter(callback: (item: T, index: number) => any, scope?: any): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	count(callback: (item: T, index: number) => any, scope?: any): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => any): IBindableArray<U>;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(reducer: Reducer<T, U>): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
-
-	/**
-	 * Makes this array an owner of its items, which means that its items are alive as long as they are present in
-	 * this array. The item is destroyed when it leaves the
-	 * array, and all items are destroyed on the array destruction.
-	 */
-	ownItems(): this;
-
-	/**
-	 * Inserts an item to the array.
-	 * @param item Item to insert.
+	 * Inserts an item to the array and dispatches a splice message.
+	 * @param value Value to insert.
 	 * @param index Index of an item to insert new one before. By default, appends the item to the end of the array.
 	 */
-	add(item: T, index?: number): void;
+	add(value: T, index?: number): void;
 
 	/**
-	 * Inserts an item range to the array.
-	 * @param items Items to insert.
+	 * Inserts an item range to the array and dispatches a splice message.
+	 * @param values Values to insert.
 	 * @param index Index of an item to insert new ones before. By default, appends the items to the end of the array.
 	 */
-	addAll(items: T[], index?: number): void;
+	addAll(values: readonly T[], index?: number): void;
 
 	/**
-	 * Replaces item at specified position.
+	 * Replaces item at specified position and dispatches an item replacement message.
 	 * @param index Index of an item to replace. If the array doesn't contain such index, it may lead to unknown consequences.
-	 * @param item Item to put into the array.
-	 * @returns The replaced item.
+	 * @param newValue New item value.
+	 * @returns Old item value.
 	 */
-	set(index: number, item: T): T;
+	set(index: number, newValue: T): T;
 
 	/**
-	 * Removes item at specified index.
+	 * Removes item at specified index and dispatches a splice message.
 	 * @param index Index of an item to remove. If the array doesn't contain such index, it may lead to unknown consequences.
 	 * @returns The removed item.
 	 */
 	remove(index: number): T;
 
 	/**
-	 * Removes item range from the array.
+	 * Removes item range from the array and dispatches a splice message.
 	 * @param index Index of the first item to remove.
 	 * @param count Count of items to remove.
 	 * @returns The removed items.
 	 */
-	removeAll(index: number, count: number): T[];
+	removeAll(index: number, count: number): readonly T[];
 
 	/**
-	 * Removes the first occurrence of the item in the array.
-	 * @param item Item to remove.
+	 * Removes the first occurrence of the value in the array and dispatches a splice message.
+	 * @param value Value to remove.
 	 */
-	removeItem(item: T): void;
+	removeValue(value: T): void;
 
 	/**
-	 * Removes all occurrences of the items in the array.
-	 * For efficient performance, you should define an optimal getKey callback for this array.
-	 * @param items Items to remove.
+	 * Removes all occurrences of the values in the array and dispatches a splice message.
+	 * @param values Values to remove.
 	 */
-	removeItems(items: T[]): void;
+	removeValues(values: Iterable<T>): void;
 
 	/**
-	 * Moves an item inside the array.
+	 * Moves an item inside the array and dispatches an item movement message.
 	 * @param fromIndex Item index to move.
 	 * @param toIndex Index to move to.
 	 * @returns The moved item.
@@ -230,43 +95,44 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	move(fromIndex: number, toIndex: number): T;
 
 	/**
-	 * @inheritDoc
+	 * Removes all array items and dispatches a cleanup message.
 	 */
-	clear(): T[];
+	clear(): readonly T[];
 
 	/**
-	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * Removes and inserts item ranges granularly and dispatches a splice message.
 	 * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
 	 * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(segmentsToRemove: IBindableArray.IndexCount[], segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T>;
+	splice(segmentsToRemove: Iterable<IBindableArray.IndexCount>,
+		   segmentsToAdd: Iterable<IBindableArray.IndexItems<T>>): IBindableArray.SpliceResult<T>;
 
 	/**
-	 * Reorders array items.
-	 * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * Reorders array items and dispatches a reordering message.
+	 * @param indexMapping Index array. Item with index `i` will be moved to index `indexArray[i]`.
 	 * Must contain all indexes from 0 to (length - 1).
 	 */
-	reorder(indexArray: number[]): void;
+	reorder(indexMapping: readonly number[]): void;
 
 	/**
-	 * Replaces an item at specified index.
-	 * @param index Index of an item to replace. If the array doesn't contain such index, it may lead to unknown consequences.
-	 * @param item Item to put into the array.
-	 * @returns Wrapper over the replaced item. If the array is not modified, returns undefined.
+	 * Replaces an item at the specified index and dispatches a splice message.
+	 * @param index Index of an item to replace.
+	 * @param newValue New item value.
+	 * @returns Old item value. If the array is not modified, returns undefined.
 	 */
-	trySet(index: number, item: T): Some<T>;
+	trySet(index: number, newValue: T): T;
 
 	/**
-	 * Removes an item range from the array.
+	 * Removes an item range from the array and dispatches a splice message.
 	 * @param index Index of the first item to remove.
 	 * @param count Count of items to remove.
 	 * @returns The removed items. If the array is not modified, returns undefined.
 	 */
-	tryRemoveAll(index: number, count: number): T[];
+	tryRemoveAll(index: number, count: number): readonly T[];
 
 	/**
-	 * Moves an item inside the array.
+	 * Moves an item inside the array and dispatches an item replacement message.
 	 * @param fromIndex Item index to move.
 	 * @param toIndex Index to move to.
 	 * @returns The moved item. If the array is not modified, returns undefined.
@@ -274,218 +140,174 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	tryMove(fromIndex: number, toIndex: number): T;
 
 	/**
-	 * Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.
+	 * Removes and inserts item ranges granularly and dispatches a splice message.
 	 * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
 	 * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
 	 * @returns Splice result. If the array is not modified, returns undefined.
 	 */
-	trySplice(segmentsToRemove: IBindableArray.IndexCount[], segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T>;
+	trySplice(segmentsToRemove: Iterable<IBindableArray.IndexCount>,
+			  segmentsToAdd: Iterable<IBindableArray.IndexItems<T>>): IBindableArray.SpliceResult<T>;
 
 	/**
-	 * Reorders array items.
+	 * Reorders array items and dispatches a reordering message.
 	 * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
 	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns Old array contents. If the array is not modified, returns undefined.
 	 */
-	tryReorder(indexArray: number[]): T[];
+	tryReorder(indexArray: readonly number[]): readonly T[];
 
 	/**
-	 * Adjusts array contents to `newItems` using `detectSplice` and `splice` methods.
-	 * All items must have unique `getKey` function result.
-	 * If items don't have unique key, probably `performFilter` method may help,
-	 * because it doesn't require item uniquiness.
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this array.
-	 * Defaults to `getKey` property of the array.
-	 * @param scope `getKey` call scope. Defaults to the array itself.
+	 * Adjusts array contents to `newContents` using `detectSplice` and `splice` methods.
+	 * All current values in the array must be unique.
+	 * Otherwise, consider using `performFilter` method, because it doesn't require value uniqueness.
+	 * @param newContents New array contents.
 	 */
-	performSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): void;
+	performSplice(newContents: readonly T[]): void;
 
 	/**
-	 * Adjusts array contents to `newItems` using `detectFilter` and `splice` methods. Only removes items.
-	 * Doesn't assume items insertion - try `detectSplice` if that's the case.
-	 * In advantage to `detectSplice`, doesn't require item uniquiness.
-	 * @param newItems New array contents.
+	 * Adjusts array contents to `newContents` using `detectFilter` and `splice` methods.
+	 * Doesn't consider item insertion - try `performSplice` if that's necessary.
+	 * In advantage to `performSplice`, doesn't require item uniqueness.
+	 * @param newContents New array contents.
 	 */
-	performFilter(newItems: T[]): void;
+	performFilter(newContents: readonly T[]): void;
 
 	/**
-	 * Adjusts array contents to `newItems` using `detectReorder` and `reorder` methods.
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this array.
-	 * Defaults to `getKey` property of the array.
-	 * @param scope `getKey` call scope. Defaults to the array itself.
+	 * Adjusts array contents to `newContents` using `detectReorder` and `reorder` methods.
+	 * Values of `newContents` must match current values of the array.
+	 * All values in the array must be unique.
+	 * @param newContents New array contents.
 	 */
-	performReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): void;
+	performReorder(newContents: T[]): void;
 
 	/**
-	 * Sorts the array by result of `callback` function call for each item.
+	 * Sorts the array by result of `callback` function call for each item. Modifies the array itself.
 	 * @param callback Indexer function. Must return a comparable value, compatible with
 	 * `cmp`. Returns item itself by default.
-	 * @param scope `callback` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 */
-	sort(callback?: (item: T, index: number) => any, scope?: any, order?: number): void;
+	sort(callback?: (item: T, index: number) => any, order?: number): void;
 
 	/**
-	 * Sorts the array by comparer.
+	 * Sorts the array by comparer. Modifies the array itself.
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
-	 * @param scope `comparer` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 */
-	sortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): void;
+	sortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, order?: number): void;
 
 	/**
 	 * Reverses item order in the array. Modifies the array itself.
 	 */
 	reverse(): void;
-
-	/**
-	 * Removes last item from the array. Does nothing if the array is empty.
-	 * @returns The removed item or undefined.
-	 */
-	pop(): T;
 }
 
 export default IBindableArray;
 
 namespace IBindableArray {
 	/**
-	 * Message of IBindableArray.
-	 * @param T Item type.
-	 */
-	export interface Message<T> {
-		/**
-		 * Message sender.
-		 */
-		readonly sender: IBindableArray<T>;
-	}
-
-	/**
-	 * Array splice message.
-	 * @param T Item type.
-	 */
-	export interface SpliceMessage<T> extends Message<T> {
-		/**
-		 * Result of `splice` method.
-		 */
-		readonly spliceResult: SpliceResult<T>;
-	}
-
-	/**
 	 * Array item movement message.
-	 * @param T Item type.
 	 */
-	export interface MoveMessage<T> extends Message<T> {
+	export interface MoveMessage<T> {
 		/**
-		 * Where item is moved from.
+		 * Where the item is moved from.
 		 */
 		readonly fromIndex: number;
 
 		/**
-		 * Where item is moved to.
+		 * Where the item is moved to.
 		 */
 		readonly toIndex: number;
 
 		/**
-		 * The moved item.
+		 * The moved item value.
 		 */
-		readonly item: T;
+		readonly value: T;
 	}
 
 	/**
 	 * Array item replacement message.
-	 * @param T Item type.
 	 */
-	export interface ReplaceMessage<T> extends Message<T> {
+	export interface ReplaceMessage<T> {
 		/**
 		 * Index of the replaced item.
 		 */
 		readonly index: number;
 
 		/**
-		 * Old item.
+		 * Old item value.
 		 */
-		readonly oldItem: T;
+		readonly oldValue: T;
 
 		/**
-		 * New item.
+		 * New item value.
 		 */
-		readonly newItem: T;
-	}
-
-	/**
-	 * Array message with items.
-	 * @param T Item type.
-	 */
-	export interface MessageWithItems<T> extends Message<T> {
-		/**
-		 * Old array contents.
-		 */
-		readonly items: T[];
+		readonly newValue: T;
 	}
 
 	/**
 	 * Array item reordering message.
-	 * @param T Item type.
 	 */
-	export interface ReorderMessage<T> extends MessageWithItems<T> {
+	export interface ReorderMessage<T> {
+		/**
+		 * Old array contents.
+		 */
+		readonly oldContents: readonly T[];
+
 		/**
 		 * Indexes of items in the reordered array.
 		 */
-		readonly indexArray: number[];
+		readonly indexMapping: readonly number[];
 	}
 
 	/**
-	 * IBindableArray.splice method arguments. Result of `detectSplice` method.
-	 * @param T Item type.
+	 * Array splice method arguments. Result of `detectSplice` method.
 	 */
 	export interface SpliceParams<T> {
 		/**
 		 * Segments to remove.
 		 */
-		readonly segmentsToRemove: IndexCount[];
+		readonly segmentsToRemove: readonly IndexCount[];
 
 		/**
 		 * Segments to add.
 		 */
-		readonly segmentsToAdd: IndexItems<T>[];
+		readonly segmentsToAdd: readonly IndexItems<T>[];
 	}
 
 	/**
-	 * IBindableArray.splice method result.
+	 * Array splice method result.
 	 */
 	export interface SpliceResult<T> {
 		/**
 		 * Old array contents.
 		 */
-		readonly oldItems: T[];
+		readonly oldContents: readonly T[];
 
 		/**
 		 * Removed item segments.
 		 */
-		readonly removedSegments: IndexItems<T>[];
+		readonly removedSegments: readonly IndexItems<T>[];
 
 		/**
 		 * Added item segments.
 		 */
-		readonly addedSegments: IndexItems<T>[];
+		readonly addedSegments: readonly IndexItems<T>[];
 
 		/**
 		 * Plain array of all removed items.
 		 */
-		readonly removedItems: T[];
+		readonly removedItems: readonly T[];
 
 		/**
 		 * Plain array of all added items.
 		 */
-		readonly addedItems: T[];
+		readonly addedItems: readonly T[];
 
 		/**
 		 * Removed item segments converted to index and count pairs.
 		 */
-		readonly removeParams: IndexCount[];
+		readonly removeParams: readonly IndexCount[];
 
 		/**
 		 * The splice call didn't change the array.
@@ -494,7 +316,7 @@ namespace IBindableArray {
 	}
 
 	/**
-	 * Index and count pair. Used in IBindableArray.splice method arguments to specify item segments to remove.
+	 * Index and count pair. Used in array splice method arguments to specify item segments to remove.
 	 */
 	export interface IndexCount {
 		/**
@@ -514,7 +336,7 @@ namespace IBindableArray {
 	}
 
 	/**
-	 * Index and items pair. Used in IBindableArray.splice method arguments to specify item segments to add, and in
+	 * Index and items pair. Used in array splice method arguments to specify item segments to add, and in
 	 * ArraySpliceResult class to specify removed and added item segments.
 	 */
 	export interface IndexItems<T> {
@@ -526,7 +348,7 @@ namespace IBindableArray {
 		/**
 		 * Items.
 		 */
-		readonly items: T[];
+		readonly items: readonly T[];
 
 		/**
 		 * Converts to index and count pair.

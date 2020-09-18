@@ -29,29 +29,25 @@ import SetMapper from "../mapper/set";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import ComponentObserver from './ComponentObserver';
 
-/**
- * @hidden
- */
 export default class ComponentSet extends Class {
 	constructor(private parent: Component, private source: ReadonlyBindableSet<Component>, el: JQuery) {
 		super();
-		parent._sets[this.iid] = this;
+		parent._sets.add(this);
 
-		const mapper = this.own(new SetMapper<Component, Component>(source, (child) => {
+		const mapper = this.own(new SetMapper<Component, Component>(source, child => {
 			this.parent._initChild(child);
 			return child;
 		}, {
-			destroy: (child) => {
+			destroy: child => {
 				this.parent._doneChild(child);
-			},
-			getKey: source.getKey
+			}
 		}));
 
 		this.own(new ComponentObserver(mapper.target, el[0]));
 	}
 
 	destroy() {
-		delete this.parent._sets[this.iid];
+		this.parent._sets.delete(this);
 		super.destroy();
 	}
 

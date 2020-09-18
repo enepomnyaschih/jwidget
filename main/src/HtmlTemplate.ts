@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import AbstractTemplate from './AbstractTemplate';
-import Dictionary from './Dictionary';
 import * as DomUtils from './DomUtils';
 import TemplateOutput from './TemplateOutput';
 
@@ -32,8 +31,9 @@ import TemplateOutput from './TemplateOutput';
  * optimize rendering performance.
  */
 export default class HtmlTemplate extends AbstractTemplate {
+
 	private mirror: HTMLElement = null;
-	private groups: Dictionary<number[][]>;
+	private groups: Map<string, number[][]>;
 
 	/**
 	 * @param html Input HTML.
@@ -42,35 +42,20 @@ export default class HtmlTemplate extends AbstractTemplate {
 		super();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	createElement(): TemplateOutput {
 		this._compile();
-		var root = <HTMLElement>(this.mirror.cloneNode(true));
-		var groups: Dictionary<HTMLElement[]> = {};
-		for (var index = 0, count = this.ids.length; index < count; ++index) {
-			var id = this.ids[index];
-			var paths = this.groups[id];
-			var groupSize = paths.length;
-			var group = new Array(groupSize);
-			for (var i = 0; i < groupSize; ++i) {
-				var path = paths[i];
-				var el = root;
-				for (var j = 0, n = path.length; j < n; ++j) {
-					el = <HTMLElement>(el.childNodes[path[j]]);
-				}
-				group[i] = el;
-			}
-			groups[id] = group;
+		const root = <HTMLElement>(this.mirror.cloneNode(true));
+		const groups = new Map<string, HTMLElement[]>();
+		for (const id of this.ids) {
+			groups.set(id, this.groups.get(id).map(
+				path => path.reduce((el, index) => <HTMLElement>el.childNodes[index], root)));
 		}
-		return { root: root, groups: groups };
+		return {root, groups};
 	}
 
-	protected _addElement(id: string, el: HTMLElement, path: number[]) {
-		el = el;
-		this.groups[id] = this.groups[id] || [];
-		this.groups[id].push(path.concat());
+	protected _addElement(id: string, _el: HTMLElement, path: readonly number[]) {
+		this.groups.set(id, this.groups.get(id) ?? []);
+		this.groups.get(id).push(path.concat());
 	}
 
 	private _compile() {
@@ -78,7 +63,7 @@ export default class HtmlTemplate extends AbstractTemplate {
 			return;
 		}
 		this.mirror = DomUtils.parseHtml(this.html);
-		this.groups = {};
+		this.groups = new Map<string, number[][]>();
 		this._compileAttributes(this.mirror);
 	}
 }

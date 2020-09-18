@@ -23,386 +23,173 @@ SOFTWARE.
 */
 
 import DestroyableReadonlyBindableMap from './DestroyableReadonlyBindableMap';
-import Dictionary from './Dictionary';
-import IBindableArray from './IBindableArray';
 import IClass from "./IClass";
-import Listenable from './Listenable';
-import Reducer from './Reducer';
 import Some from './Some';
 
 /**
  * Extension of DestroyableReadonlyMap with modification methods.
  */
-interface IBindableMap<T> extends IClass, DestroyableReadonlyBindableMap<T> {
+interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V> {
 
 	/**
-	 * The map is cleared.
+	 * Makes this map an owner of its keys, which means that the keys are alive as long as they are present in
+	 * this map. A key is destroyed when it leaves the map, and all keys are destroyed on the map destruction.
 	 */
-	readonly onClear: Listenable<IBindableMap.MessageWithItems<T>>;
+	ownKeys(): this;
 
 	/**
-	 * The map is changed. Dispatched right after any another message.
+	 * Makes this map an owner of its values, which means that the values are alive as long as they are present in
+	 * this map. A value is destroyed when it leaves the map, and all values are destroyed on the map destruction.
 	 */
-	readonly onChange: Listenable<IBindableMap.Message<T>>;
+	ownValues(): this;
 
 	/**
-	 * Returns a full copy of this map.
+	 * Puts or replaces a value with the specified key and dispatches a splice message.
+	 * @param key Entry key.
+	 * @param value Entry value.
+	 * @returns The replaced value.
 	 */
-	clone(): IBindableMap<T>;
+	set(key: K, value: V): V;
 
 	/**
-	 * @inheritDoc
+	 * Puts or replaces multiple entries and dispatches a splice message.
+	 * @param entries Entries to put.
 	 */
-	every(callback: (item: T, key: string) => any, scope?: any): boolean;
+	setAll(entries: ReadonlyMap<K, V>): void;
 
 	/**
-	 * @inheritDoc
+	 * Changes entry key in the map and dispatches a reindexing message.
+	 * If the map doesn't contain oldKey or contains newKey, and they are not equal, throws an error.
+	 * @param oldKey Old entry key.
+	 * @param newKey New entry key.
+	 * @returns The entry value.
 	 */
-	some(callback: (item: T, key: string) => any, scope?: any): boolean;
+	setKey(oldKey: K, newKey: K): V;
 
 	/**
-	 * @inheritDoc
+	 * Removes an entry with the specified key and dispatches a splice message.
+	 * @param key Entry key.
+	 * @returns The removed value.
 	 */
-	forEach(callback: (item: T, key: string) => any, scope?: any): void;
+	remove(key: K): V;
 
 	/**
-	 * @inheritDoc
+	 * Removes multiple entries from the map and dispatches a splice message.
+	 * @param keys Entry keys.
 	 */
-	findKey(callback: (item: T, key: string) => any, scope?: any): string;
+	removeAll(keys: readonly K[]): void;
 
 	/**
-	 * @inheritDoc
+	 * Removes all map entries and dispatches a cleanup message.
 	 */
-	find(callback: (item: T, key: string) => any, scope?: any): T;
+	clear(): Map<K, V>;
 
 	/**
-	 * @inheritDoc
-	 */
-	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IBindableArray<string>;
-
-	/**
-	 * @inheritDoc
-	 */
-	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IBindableArray<string>;
-
-	/**
-	 * @inheritDoc
-	 */
-	index(callback: (item: T, key: string) => any, scope?: any): IBindableMap<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	filter(callback: (item: T, key: string) => any, scope?: any): IBindableMap<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	count(callback: (item: T, key: string) => any, scope?: any): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => any): IBindableMap<U>;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(reducer: Reducer<T, U>): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
-
-	/**
-	 * @inheritDoc
-	 */
-	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
-
-	/**
-	 * @inheritDoc
-	 */
-	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
-
-	/**
-	 * @inheritDoc
-	 */
-	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
-
-	/**
-	 * @inheritDoc
-	 */
-	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
-
-	/**
-	 * Makes this map an owner of its items, which means that its items are alive as long as they are present in
-	 * this map. The item is destroyed when it leaves the
-	 * map, and all items are destroyed on the map destruction.
-	 */
-	ownItems(): this;
-
-	/**
-	 * Puts or replaces an item with the specified key.
-	 * @param key Item key.
-	 * @param item Item to put.
-	 * @returns The replaced item.
-	 */
-	put(key: string, item: T): T;
-
-	/**
-	 * Puts or replaces a bunch of items.
-	 * @param items Items to put.
-	 */
-	putAll(items: Dictionary<T>): void;
-
-	/**
-	 * Low-performance alternative to putAll with verbose result set.
-	 * @param items Items to put.
-	 * @returns Result of internal splice method call.
-	 */
-	putAllVerbose(items: Dictionary<T>): IBindableMap.SpliceResult<T>;
-
-	/**
-	 * Changes item key in the map. If the map doesn't contain oldKey or contains newKey, it may lead to unexpected
-	 * consequences.
-	 * @param oldKey Old key of the item.
-	 * @param newKey New key of the item.
-	 * @returns The moved item.
-	 */
-	setKey(oldKey: string, newKey: string): T;
-
-	/**
-	 * Removes item with specified key.
-	 * @param key Item key.
-	 * @returns The removed item.
-	 */
-	remove(key: string): T;
-
-	/**
-	 * Removes a bunch of items from the map.
-	 * @param keys Item keys.
-	 */
-	removeAll(keys: string[]): void;
-
-	/**
-	 * Low-performance alternative to removeAll with verbose result set.
-	 * @param keys Item keys.
-	 * @returns The removed items.
-	 */
-	removeAllVerbose(keys: string[]): Dictionary<T>;
-
-	/**
-	 * Removes the first occurrence of the item in the map.
-	 * @param item Item to remove.
-	 */
-	removeItem(item: T): void;
-
-	/**
-	 * Removes all occurrences of the items in the map.
-	 * For efficient performance, you should define an optimal getKey callback for this map.
-	 * @param items Items to remove.
-	 */
-	removeItems(items: T[]): void;
-
-	/**
-	 * @inheritDoc
-	 */
-	clear(): Dictionary<T>;
-
-	/**
-	 * Removes and adds bunches of items in the map. Universal optimized granular operation of removal/insertion.
-	 * @param removedKeys Keys of items to remove.
-	 * @param updatedItems Items to put/replace.
+	 * Removes and/or adds multiple entries in the map granularly and dispatches a splice message.
+	 * @param keysToRemove Keys of entries to remove.
+	 * @param entriesToUpdate Entries to put/replace.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedKeys: string[], updatedItems: Dictionary<T>): IBindableMap.SpliceResult<T>;
+	splice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
 
 	/**
-	 * Changes item keys in the map.
-	 * @param keyMap Key dictionary. Item with key x will gain key keyMap[x].
+	 * Changes entry keys in the map and dispatches a reindexing message.
+	 * @param keyMapping Key mapping. Entry with key x will gain key keyMapping[x].
 	 * It is necessary to pass only changed keys, but unchanged keys or nonexistent keys are acceptable as well.
-	 * @returns Dictionary of changed keys. Never returns null or undefined.
+	 * @returns Mapping of truly changed keys. Never returns null or undefined.
 	 */
-	reindex(keyMap: Dictionary<string>): Dictionary<string>;
+	reindex(keyMapping: ReadonlyMap<K, K>): Map<K, K>;
 
 	/**
-	 * Puts or replaces an item with the specified key.
-	 * @param key Item key.
-	 * @param item Item to put.
-	 * @returns The replaced item. If the map is not modified, returns undefined.
+	 * Puts or replaces an entry with the specified key and dispatches a splice message.
+	 * @param key Entry key.
+	 * @param value Entry value.
+	 * @returns The replaced value. If the map is not modified, returns undefined.
 	 */
-	tryPut(key: string, item: T): Some<T>;
+	trySet(key: K, value: V): Some<V>;
 
 	/**
-	 * Puts or replaces a bunch of items.
-	 * @param items Items to put.
-	 * @returns Result of internal splice method call. If the map is not modified, returns undefined.
+	 * Puts or replaces multiple entries and dispatches a splice message.
+	 * @param entries Entries to put.
+	 * @returns Result of an internal splice method call. If the map is not modified, returns undefined.
 	 */
-	tryPutAll(items: Dictionary<T>): IBindableMap.SpliceResult<T>;
+	trySetAll(entries: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
 
 	/**
-	 * Changes item key in map. If the map doesn't contain oldKey or contains newKey, it may lead to unexpected
-	 * consequences.
-	 * @param oldKey Old key of the item.
-	 * @param newKey New key of the item.
-	 * @returns The moved item. If the map is not modified, returns undefined.
+	 * Changes entry key in map and dispatches a reindexing message.
+	 * If the map doesn't contain oldKey or contains newKey, and they are not equal, throws an error.
+	 * @param oldKey Old entry key.
+	 * @param newKey New entry key.
+	 * @returns The entry value. If the map is not modified, returns undefined.
 	 */
-	trySetKey(oldKey: string, newKey: string): T;
+	trySetKey(oldKey: K, newKey: K): V;
 
 	/**
-	 * Removes item with specified key.
-	 * @param key Item key.
-	 * @returns The removed item. If the map is not modified, returns undefined.
+	 * Removes multiple entries from the map and dispatches a splice message.
+	 * @param keys Entry keys.
+	 * @returns The removed entries. If the map is not modified, returns undefined.
 	 */
-	tryRemove(key: string): T;
+	tryRemoveAll(keys: Iterable<K>): Map<K, V>;
 
 	/**
-	 * Removes a bunch of items from the map.
-	 * @param keys Item keys.
-	 * @returns The removed items. If the map is not modified, returns undefined.
-	 */
-	tryRemoveAll(keys: string[]): Dictionary<T>;
-
-	/**
-	 * Removes and adds bunches of items in the map. Universal optimized granular operation of removal/insertion.
-	 * @param removedKeys Keys of items to remove.
-	 * @param updatedItems Items to put/replace.
+	 * Removes and adds multiple entries in the map granularly and dispatches a splice message.
+	 * @param keysToRemove Keys of entries to remove.
+	 * @param entriesToUpdate Entries to put/replace.
 	 * @returns Splice result. If the map is not modified, returns undefined.
 	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IBindableMap.SpliceResult<T>;
+	trySplice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
 
 	/**
-	 * Changes item keys in the map.
-	 * @param keyMap Key dictionary. Item with key x will gain key keyMap[x].
+	 * Changes entry keys in the map and dispatches a reindexing message.
+	 * @param keyMapping Key mapping. Entry with key x will gain key keyMap[x].
 	 * It is necessary to pass only changed keys, but unchanged keys or nonexistent keys are acceptable as well.
-	 * @returns Dictionary of changed keys. If the map is not modified, returns undefined.
+	 * @returns Mapping of truly changed keys. If the map is not modified, returns undefined.
 	 */
-	tryReindex(keyMap: Dictionary<string>): Dictionary<string>;
+	tryReindex(keyMapping: ReadonlyMap<K, K>): Map<K, K>;
 
 	/**
-	 * Adjusts map contents to `newItems` using `detectSplice` and `splice` methods.
-	 * @param newItems New map contents.
+	 * Adjusts map contents to `newContents` using `detectSplice` and `splice` methods.
+	 * @param newContents New map contents.
 	 */
-	performSplice(newItems: Dictionary<T>): void;
+	performSplice(newContents: ReadonlyMap<K, V>): void;
 
 	/**
-	 * Adjusts map contents to `newItems` using `detectReindex` and `reindex` methods.
-	 * All items must have unique `getKey` function result.
-	 * @param newItems New map contents.
-	 * @param getKey Function which returns unique key of an item in this map.
-	 * Defaults to `getKey` property of the map.
-	 * @param scope `getKey` call scope. Defaults to the map itself.
+	 * Adjusts map contents to `newContents` using `detectReindex` and `reindex` methods. All values must be unique.
+	 * @param newContents New map contents.
 	 */
-	performReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): void;
+	performReindex(newContents: ReadonlyMap<K, V>): void;
 }
 
 export default IBindableMap;
 
 namespace IBindableMap {
 	/**
-	 * Message of IMap.
-	 * @param T Item type.
+	 * Map splice method arguments. Result of `detectSplice` method.
 	 */
-	export interface Message<T> {
+	export interface SpliceParams<K, V> {
 		/**
-		 * Message sender.
+		 * Keys to remove.
 		 */
-		readonly sender: IBindableMap<T>;
+		readonly keysToRemove: Iterable<K>;
+
+		/**
+		 * Entries to put/replace.
+		 */
+		readonly entriesToUpdate: ReadonlyMap<K, V>;
 	}
 
 	/**
-	 * Map splice message.
-	 * @param T Item type.
+	 * IBindableMap.splice method result.
 	 */
-	export interface SpliceMessage<T> extends Message<T> {
+	export interface SpliceResult<K, V> {
 		/**
-		 * Result of `splice` method.
+		 * Removed entries.
 		 */
-		readonly spliceResult: SpliceResult<T>;
-	}
-
-	/**
-	 * Map item reindexing message.
-	 * @param T Item type.
-	 */
-	export interface ReindexMessage<T> extends Message<T> {
-		/**
-		 * Map of changed keys.
-		 */
-		readonly keyMap: Dictionary<string>;
-	}
-
-	/**
-	 * Map message with items.
-	 * @param T Item type.
-	 */
-	export interface MessageWithItems<T> extends Message<T> {
-		/**
-		 * Old map contents.
-		 */
-		readonly items: Dictionary<T>;
-	}
-
-	/**
-	 * IMap.splice method arguments. Result of `detectSplice` method.
-	 * @param T Item type.
-	 */
-	export interface SpliceParams<T> {
-		/**
-		 * Keys of items to remove.
-		 */
-		readonly removedKeys: string[];
+		readonly removedEntries: ReadonlyMap<K, V>;
 
 		/**
-		 * Items to put/replace.
+		 * Added entries.
 		 */
-		readonly updatedItems: Dictionary<T>;
-	}
-
-	/**
-	 * IMap.splice method result.
-	 * @param T Item type.
-	 */
-	export interface SpliceResult<T> {
-		/**
-		 * Removed items.
-		 */
-		readonly removedItems: Dictionary<T>;
-
-		/**
-		 * Added items.
-		 */
-		readonly addedItems: Dictionary<T>;
+		readonly addedEntries: ReadonlyMap<K, V>;
 	}
 }

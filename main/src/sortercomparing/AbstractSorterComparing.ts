@@ -23,65 +23,42 @@ SOFTWARE.
 */
 
 import * as ArrayUtils from '../ArrayUtils';
+import BindableArray from '../BindableArray';
 import Class from '../Class';
 import IBindableArray from '../IBindableArray';
 import {cmp} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
-import BindableArray from '../BindableArray';
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
 
 /**
  * Sorter (comparing). Builds a new array containing the items of source collection sorter by comparer.
  */
 abstract class AbstractSorterComparing<T> extends Class {
+
 	private _targetCreated: boolean;
 
-	/**
-	 * @hidden
-	 */
 	protected _compare: (x: T, y: T) => number;
-
-	/**
-	 * @hidden
-	 */
-	protected _scope: any;
-
-	/**
-	 * @hidden
-	 */
 	protected _order: number;
-
-	/**
-	 * @hidden
-	 */
 	protected _target: IBindableArray<T>;
 
-	/**
-	 * @hidden
-	 */
-	protected constructor(config: AbstractSorterComparing.FullConfig<T>, getKey: (item: T) => any, silent: boolean) {
+	protected constructor(config: AbstractSorterComparing.FullConfig<T>, silent: boolean) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
-		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableArray<T>(getKey, silent) : config.target;
+		this._target = this._targetCreated ? new BindableArray<T>(silent) : config.target;
 	}
 
 	get target(): ReadonlyBindableArray<T> {
 		return this._target;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
 		this._compare = null;
-		this._scope = null;
 		super.destroyObject();
 	}
 
@@ -89,49 +66,47 @@ abstract class AbstractSorterComparing<T> extends Class {
 	 * Resorts target array forcibly. Call this method on modification of sorting factors.
 	 */
 	resort() {
-		this._target.sortComparing(this._compare, this._scope, this._order);
+		this._target.sortComparing(this._compare, this._order);
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _splice(removedItems: T[], addedItems: T[]) {
-		var removedItemsSorted = ArrayUtils.toSortedComparing(removedItems, this._compare, this._scope, this._order);
-		var addedItemsSorted = ArrayUtils.toSortedComparing(addedItems, this._compare, this._scope, this._order);
-		removedItems = new Array<T>(removedItems.length);
-		addedItems = new Array<T>(addedItems.length);
-		var iRemoved = 0;
-		var iAdded = 0;
-		var jRemoved = 0;
-		var jAdded = 0;
-		// ignore out the items which are removed and added at the same time
-		while ((iRemoved < removedItemsSorted.length) || (iAdded < addedItemsSorted.length)) {
-			var removedItem = removedItemsSorted[iRemoved];
-			var addedItem = addedItemsSorted[iAdded];
-			var c = cmp(removedItem === undefined, addedItem === undefined) ||
-				(this._order * this._compare.call(this._scope, removedItem, addedItem));
+	protected _splice(removedValues: Iterable<T>, addedValues: Iterable<T>) {
+		const removedValuesSorted = [...removedValues].sort((x, y) => this._order * this._compare(x, y));
+		const addedValuesSorted = [...addedValues].sort((x, y) => this._order * this._compare(x, y));
+		const valuesToRemove = new Array<T>(removedValuesSorted.length);
+		const valuesToAdd = new Array<T>(addedValuesSorted.length);
+		let iRemoved = 0;
+		let iAdded = 0;
+		let jRemoved = 0;
+		let jAdded = 0;
+		// ignore the items which are removed and added at the same time
+		while ((iRemoved < removedValuesSorted.length) || (iAdded < addedValuesSorted.length)) {
+			const removedValue = removedValuesSorted[iRemoved];
+			const addedValue = addedValuesSorted[iAdded];
+			const c = cmp(removedValue === undefined, addedValue === undefined) ||
+				(this._order * this._compare(removedValue, addedValue));
 			if (c < 0) {
-				removedItems[jRemoved++] = removedItem;
+				valuesToRemove[jRemoved++] = removedValue;
 				++iRemoved;
 			} else if (c > 0) {
-				addedItems[jAdded++] = addedItem;
+				valuesToAdd[jAdded++] = addedValue;
 				++iAdded;
 			} else {
 				++iRemoved;
 				++iAdded;
 			}
 		}
-		removedItems.splice(jRemoved, removedItems.length - jRemoved);
-		addedItems.splice(jAdded, addedItems.length - jAdded);
+		valuesToRemove.splice(jRemoved, valuesToRemove.length - jRemoved);
+		valuesToAdd.splice(jAdded, valuesToAdd.length - jAdded);
 
-		var iAdds = 0;
-		var addShift = 0;
-		var segmentsToRemove: IBindableArray.IndexCount[] = [];
-		var segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
-		var removeParams: IndexCount = null;
-		for (var iTarget = 0, lTarget = this.target.length.get(); iTarget < lTarget; ++iTarget) {
-			var value = this.target.get(iTarget);
-			if (removedItems[ArrayUtils.binarySearch(removedItems, value, this._compare, this._scope, this._order) - 1] === value) {
+		let iAdds = 0;
+		let addShift = 0;
+		const segmentsToRemove: IBindableArray.IndexCount[] = [];
+		const segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
+		let removeParams: IndexCount = null;
+		const lTarget = this.target.length.get();
+		for (let iTarget = 0; iTarget < lTarget; ++iTarget) {
+			const value = this.target.get(iTarget);
+			if (valuesToRemove[ArrayUtils.binarySearch(valuesToRemove, value, this._compare, this._order) - 1] === value) {
 				if (!removeParams) {
 					removeParams = new IndexCount(iTarget, 0);
 					segmentsToRemove.push(removeParams);
@@ -141,8 +116,8 @@ abstract class AbstractSorterComparing<T> extends Class {
 			} else {
 				removeParams = null;
 				var addParams = new IndexItems<T>(iTarget + addShift, []);
-				while ((iAdds < addedItems.length) && (this._order * this._compare.call(this._scope, addedItems[iAdds], value) < 0)) {
-					addParams.items.push(addedItems[iAdds++]);
+				while ((iAdds < valuesToAdd.length) && (this._order * this._compare(valuesToAdd[iAdds], value) < 0)) {
+					(<any>addParams.items).push(valuesToAdd[iAdds++]);
 					++addShift;
 				}
 				if (addParams.items.length !== 0) {
@@ -150,8 +125,8 @@ abstract class AbstractSorterComparing<T> extends Class {
 				}
 			}
 		}
-		if (iAdds < addedItems.length) {
-			segmentsToAdd.push(new IndexItems<T>(iTarget + addShift, addedItems.slice(iAdds)));
+		if (iAdds < valuesToAdd.length) {
+			segmentsToAdd.push(new IndexItems<T>(lTarget + addShift, valuesToAdd.slice(iAdds)));
 		}
 		this._target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
@@ -168,11 +143,6 @@ namespace AbstractSorterComparing {
 		 * Item comparing callback.
 		 */
 		readonly compare?: (x: T, y: T) => number;
-
-		/**
-		 * Call scope of `compare` callback. Defaults to synchronizer itself.
-		 */
-		readonly scope?: any;
 
 		/**
 		 * Sorting order. Positive number for ascending sorting, negative for descending sorting. Defaults to 1.

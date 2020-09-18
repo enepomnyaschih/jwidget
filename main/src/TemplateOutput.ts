@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Dictionary from './Dictionary';
-
 /**
  * Result of AbstractTemplate.createElement method call. HTML template rendering output.
  */
@@ -36,7 +34,7 @@ interface TemplateOutput {
 	/**
 	 * Map from jwid to the elements with this jwid.
 	 */
-	readonly groups: Dictionary<HTMLElement[]>;
+	readonly groups: ReadonlyMap<string, HTMLElement[]>;
 }
 
 export default TemplateOutput;

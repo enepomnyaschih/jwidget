@@ -22,11 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
-import * as DictionaryUtils from '../DictionaryUtils';
-import IBindableMap from '../IBindableMap';
-import {VidSet} from '../internal';
 import BindableArray from '../BindableArray';
+import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
+import IBindableMap from '../IBindableMap';
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractConverterToArray from './AbstractConverterToArray';
 
@@ -34,35 +32,31 @@ import AbstractConverterToArray from './AbstractConverterToArray';
  * AbstractConverterToArray implementation for maps.
  */
 export default class MapConverterToArray<T> extends AbstractConverterToArray<T> {
+
 	/**
 	 * @param source Source map.
 	 * @param config Converter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<T>, config: AbstractConverterToArray.Config<T>) {
-		super(config, source.getKey, source.silent);
-		this._target.addAll(source.toArray());
+	constructor(readonly source: ReadonlyBindableMap<unknown, T>, config: AbstractConverterToArray.Config<T>) {
+		super(config, source.silent);
+		this._target.addAll([...source.values()]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._target.removeItems(this.source.toArray());
+		this._target.removeValues(this.source.values());
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
+	private _onSplice(spliceResult: IBindableMap.SpliceResult<unknown, T>) {
 		this._splice(
-			VidSet.fromDictionary<T>(spliceResult.removedItems, this.source.getKey),
-			VidSet.fromDictionary<T>(spliceResult.addedItems, this.source.getKey));
+			new Set(spliceResult.removedEntries.values()),
+			new Set(spliceResult.addedEntries.values()));
 	}
 
-	private _onClear(message: IBindableMap.MessageWithItems<T>) {
-		this._target.removeItems(
-			DictionaryUtils.toArray(message.items));
+	private _onClear(oldContents: ReadonlyMap<unknown, T>) {
+		this._target.removeValues(new Set(oldContents.values()));
 	}
 }
 
@@ -71,10 +65,10 @@ export default class MapConverterToArray<T> extends AbstractConverterToArray<T> 
  * @param source Source map.
  * @returns Target array.
  */
-export function mapToArray<T>(source: ReadonlyBindableMap<T>): DestroyableReadonlyBindableArray<T> {
+export function mapToArray<T>(source: ReadonlyBindableMap<unknown, T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
-		return source.toBindableArray();
+		return new BindableArray(source.values(), true);
 	}
-	const target = new BindableArray<T>(source.getKey);
+	const target = new BindableArray<T>();
 	return target.owning(new MapConverterToArray<T>(source, {target}));
 }

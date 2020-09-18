@@ -24,7 +24,6 @@ SOFTWARE.
 
 import Destroyable from './Destroyable';
 import IClass from './IClass';
-import {newIid} from './index';
 
 /**
  * Introduces object aggregation support.
@@ -34,15 +33,8 @@ import {newIid} from './index';
  * See online documentation for details.
  */
 class Class implements IClass {
-	private _ownagePool: Destroyable[] = null;
 
-	/**
-	 * Instance ID.
-	 *
-	 * Auto-incrementing object unique ID. Each `IClass` instance has such an identifier.
-	 * Used, say, in Set as map key for quick item access.
-	 */
-	readonly iid = newIid();
+	private _ownagePool: Destroyable[] = null;
 
 	/**
 	 * Aggregates the object. It means that the specified object is automatically destroyed

@@ -24,24 +24,22 @@ SOFTWARE.
 
 import Bindable from "./Bindable";
 import IBindableArray from './IBindableArray';
-import IBindableMap from './IBindableMap';
-import IBindableSet from "./IBindableSet";
 import Listenable from './Listenable';
-import Reducer from './Reducer';
+import Reducer from "./Reducer";
 
 /**
  * Bindable readonly wrapper over a native array.
  */
 interface ReadonlyBindableArray<T> {
 	/**
-	 * Checks if this array never dispatches any message. This knowledge may help you do certain code optimizations.
+	 * Iterates over items in the array.
 	 */
-	readonly silent: boolean;
+	[Symbol.iterator](): IterableIterator<T>;
 
 	/**
-	 * Identifies an item in this array for optimization of some algorithms.
+	 * The array never dispatches any messages. This knowledge may help you do certain code optimizations.
 	 */
-	readonly getKey: (item: T) => any;
+	readonly silent: boolean;
 
 	/**
 	 * Property containing number of items in the array.
@@ -49,34 +47,14 @@ interface ReadonlyBindableArray<T> {
 	readonly length: Bindable<number>;
 
 	/**
-	 * Checks is the array is empty.
-	 */
-	readonly empty: boolean;
-
-	/**
-	 * Returns the first item in the array. If collection is empty, returns undefined.
-	 */
-	readonly first: T;
-
-	/**
-	 * The last item of the array.
-	 */
-	readonly last: T;
-
-	/**
-	 * The index of the last item of the array. If the array is empty, returns undefined.
-	 */
-	readonly lastIndex: number;
-
-	/**
 	 * Internal representation of the array.
 	 */
-	readonly items: T[];
+	readonly native: readonly T[];
 
 	/**
-	 * Items are removed from the array and items are added to the array.
+	 * Items are removed from the array and/or items are added to the array.
 	 */
-	readonly onSplice: Listenable<IBindableArray.SpliceMessage<T>>;
+	readonly onSplice: Listenable<IBindableArray.SpliceResult<T>>;
 
 	/**
 	 * An item is replaced in the array.
@@ -89,285 +67,166 @@ interface ReadonlyBindableArray<T> {
 	readonly onMove: Listenable<IBindableArray.MoveMessage<T>>;
 
 	/**
-	 * The array is cleared.
-	 */
-	readonly onClear: Listenable<IBindableArray.MessageWithItems<T>>;
-
-	/**
-	 * Items are reordered in the array.
+	 * Items are reordered in the array. Passes mapping of indices (old to new) as a message.
 	 */
 	readonly onReorder: Listenable<IBindableArray.ReorderMessage<T>>;
 
 	/**
+	 * The array is cleared. Passes old contents as a message.
+	 */
+	readonly onClear: Listenable<readonly T[]>;
+
+	/**
 	 * The array is changed. Dispatched right after any another message.
 	 */
-	readonly onChange: Listenable<IBindableArray.Message<T>>;
-
-	/**
-	 * Returns a shallow copy of this array.
-	 */
-	clone(): IBindableArray<T>;
-
-	/**
-	 * Checks if an item exists in the array.
-	 */
-	contains(item: T): boolean;
+	readonly onChange: Listenable<void>;
 
 	/**
 	 * Returns an item by index. If an item with such index doesn't exist, returns undefined.
 	 * @param index Item index.
+	 * @returns Array item.
 	 */
 	get(index: number): T;
 
 	/**
-	 * @inheritDoc
+	 * Checks if a value exists in the array.
 	 */
-	every(callback: (item: T, index: number) => any, scope?: any): boolean;
+	includes(value: T): boolean;
 
 	/**
-	 * Checks all items against the criteria in backward order.
-	 * Returns true if the callback returns !== false for all array items.
-	 * Algorithm iterates items consequently, and stops it after the first item not matching the criteria.
+	 * Returns index of the first item with the specified value in this array.
+	 * @param value Value.
+	 * @returns Item index. If an item doesn't exist, returns -1.
+	 */
+	indexOf(value: T): number;
+
+	/**
+	 * Returns index of the last item with the specified value in this array.
+	 * @param value Value.
+	 * @returns Item index. If an item doesn't exist, returns -1.
+	 */
+	lastIndexOf(value: T): number;
+
+	/**
+	 * Matches all array items against a criteria. Returns true if the callback returns true for every
+	 * array item. The algorithm iterates through the items sequentially, and stops the process after the first item
+	 * violating the criteria.
 	 * @param callback Criteria callback.
-	 * @param scope Callback call scope. Defaults to the array itself.
-	 * @returns Every item matches the criteria.
+	 * @returns All items match the criteria.
 	 */
-	backEvery(callback: (item: T, index: number) => any, scope?: any): boolean;
+	every(callback: (value: T, index: number) => boolean): boolean;
 
 	/**
-	 * @inheritDoc
-	 */
-	some(callback: (item: T, index: number) => any, scope?: any): boolean;
-
-	/**
-	 * @inheritDoc
-	 */
-	forEach(callback: (item: T, index: number) => any, scope?: any): void;
-
-	/**
-	 * Returns item index in this array.
-	 * @param item Item.
-	 * @returns Item index. If item doesn't exist, returns -1.
-	 */
-	indexOf(item: T): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	find(callback: (item: T, index: number) => any, scope?: any): T;
-
-	/**
-	 * Finds item matching criteria.
-	 * Returns index of the first item the callback returns %truthy value for.
-	 * Algorithm iterates items sequentially, and stops it after the first item matching the criteria.
+	 * Matches each array item against a criteria. Returns true if the callback returns true for at least one
+	 * item in the array. The algorithm iterates through the items sequentially, and stops the process after the first
+	 * item matching the criteria.
 	 * @param callback Criteria callback.
-	 * @param scope `callback` call scope. Defaults to the array itself.
-	 * @returns Found item index or undefined.
+	 * @returns Some item matches the criteria.
 	 */
-	findIndex(callback: (item: T, index: number) => any, scope?: any): number;
+	some(callback: (value: T, index: number) => boolean): boolean;
 
 	/**
-	 * Determines index of the first item which is more (or less if order < 0) than the specified value by compare function,
-	 * using binary search. Array must be sorted by compare function. Can be used for item insertion easily.
-	 * If you want to use this method for item removal, you must look at the previous item and compare it to the value first.
-	 * @param value Value to insert/remove.
-	 * @param compare Comparer function. Should return positive value if t1 > t2;
-	 * negative value if t1 < t2; 0 if t1 == t2.
-	 * Defaults to [[cmp]].
-	 * @param scope Comparer call scope. Defaults to the array itself.
-	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns Item index.
+	 * Iterates through the array items. Calls the specified function for all items.
+	 * @param callback Callback function.
 	 */
-	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number;
+	forEach(callback: (value: T, index: number) => void): void;
 
 	/**
-	 * Converts the array to a set. Builds a new set consisting of the array items.
+	 * Finds an item matching the criteria. Returns the first item the callback returns true for. The
+	 * algorithm iterates through the items sequentially, and stops the process after the first item matching the
+	 * criteria.
+	 * @param callback Criteria callback.
+	 * @returns First item matching the criteria.
 	 */
-	toSet(): IBindableSet<T>;
+	find(callback: (value: T, index: number) => boolean): T;
 
 	/**
-	 * @inheritDoc
+	 * Finds an item matching the criteria. Returns index of the first item the callback returns true for.
+	 * The algorithm iterates through the items sequentially, and stops the process after the first item matching the
+	 * criteria.
+	 * @param callback Criteria callback.
+	 * @returns Index of the first item matching the criteria.
 	 */
-	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IBindableArray<T>;
+	findIndex(callback: (value: T, index: number) => boolean): number;
 
 	/**
-	 * @inheritDoc
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IBindableArray<T>;
-
-	/**
-	 * Builds an array of item indices sorted by the result of %callback call for each item.
-	 * @param callback Indexer function. Must return a comparable value, compatible with %cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the array.
-	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
-	 * @returns Indices of items to build a sorted array.
-	 */
-	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IBindableArray<number>;
-
-	/**
-	 * Builds an array of item indices sorted by comparer.
-	 * @param compare Comparer function. Should return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Compare call scope. Defaults to the array.
-	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
-	 * @returns Indices of items to build a sorted array.
-	 */
-	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IBindableArray<number>;
-
-	/**
-	 * Builds a new array containing items of this array in reversed order. Does not modify this array.
-	 * @returns Reversed array.
-	 */
-	toReversed(): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	index(callback: (item: T, index: number) => any, scope?: any): IBindableMap<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	filter(callback: (item: T, index: number) => any, scope?: any): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	count(callback: (item: T, index: number) => any, scope?: any): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => any): IBindableArray<U>;
-
-	/**
-	 * @inheritDoc
+	 * Applies a function against an accumulator and each item in the collection (left to right) to reduce it to a
+	 * single value.
+	 * @param reducer Standard reducer.
+	 * @returns Final accumulator value.
 	 */
 	reduce<U>(reducer: Reducer<T, U>): U;
 
 	/**
-	 * @inheritDoc
+	 * Applies a function against an accumulator and each item in the collection (left to right) to reduce it to a
+	 * single value.
+	 * @param callback Function to execute on each item in the collection.
+	 * @param initial Value to use as the first argument to the first call of the callback.
+	 * @returns Final accumulator value.
 	 */
-	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
+	reduce<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U;
 
 	/**
-	 * @inheritDoc
+	 * Applies a function against an accumulator and each item in the collection (right to left) to reduce it to a
+	 * single value.
+	 * @param reducer Standard reducer.
+	 * @returns Final accumulator value.
 	 */
-	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
+	reduceRight<U>(reducer: Reducer<T, U>): U;
 
 	/**
-	 * Returns index of the array item the callback returns the highest (or lowest if order < 0) value for.
-	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the array.
-	 * @param order Pass negative order to find the lowest value.
-	 * @returns Index of item with the highest (or lowest) value in the array.
+	 * Applies a function against an accumulator and each item in the collection (right to left) to reduce it to a
+	 * single value.
+	 * @param callback Function to execute on each item in the collection.
+	 * @param initial Value to use as the first argument to the first call of the callback.
+	 * @returns Final accumulator value.
 	 */
-	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
+	reduceRight<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U;
 
 	/**
-	 * @inheritDoc
-	 */
-	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
-
-	/**
-	 * Returns index of the highest (or lowest if order < 0) array item in terms of the specified comparer function.
-	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the array.
-	 * @param order Pass negative order to find the lowest value.
-	 * @returns Index of the highest (or lowest) array item.
-	 */
-	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T;
-
-	/**
-	 * Returns index of the array item the callback returns the lowest (or highest if order < 0) value for.
-	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the array.
-	 * @param order Pass negative order to find the highest value.
-	 * @returns Index of item with the lowest (or highest) value in the array.
-	 */
-	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T;
-
-	/**
-	 * Returns index of the lowest (or highest if order < 0) array item in terms of the specified comparer function.
-	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the array.
-	 * @param order Pass negative order to find the highest value.
-	 * @returns Index of the lowest (or highest) array item.
-	 */
-	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number;
-
-	/**
-	 * Checks this array for equality (===) to a native array, item by item.
-	 * @param arr Array.
-	 * @returns This array is equal to the specified native array.
-	 */
-	equal(arr: T[]): boolean;
-
-	/**
-	 * Detects `splice` method arguments to adjust array contents to `newItems`.
-	 * Determines item ranges to be removed and inserted.
-	 * All items must have unique `getKey` function result.
-	 * If items don't have unique key, probably `detectFilter` method may help,
-	 * because it doesn't require item uniquiness.
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this array.
-	 * Defaults to `getKey` property of the array.
-	 * @param scope `getKey` call scope. Defaults to the array itself.
+	 * Detects `splice` method arguments to adjust the array contents to `newContents`.
+	 * Determines item ranges to be removed and inserted. All current values in the array must be unique.
+	 * Otherwise, consider using `detectFilter` method, because it doesn't require value uniqueness.
+	 * @param newContents New array contents.
 	 * @returns `splice` method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: T[], getKey?: (item: T) => any, scope?: any): IBindableArray.SpliceParams<T>;
+	detectSplice(newContents: readonly T[]): IBindableArray.SpliceParams<T>;
 
 	/**
-	 * Detects segments to remove to adjust list contents to `newItems` with a `splice` method call.
-	 * Doesn't assume item insertion - try `detectSplice` if that's the case.
-	 * In advantage to `detectSplice`, doesn't require item uniquiness.
-	 * @param newItems New array contents.
-	 * @returns Segments to remove.
-	 * If no method call required, returns undefined.
+	 * Detects segments to remove to adjust the array contents to `newContents` with a `splice` method call.
+	 * Doesn't consider item insertion - try `detectSplice` if that's necessary.
+	 * In advantage to `detectSplice`, doesn't require item uniqueness.
+	 * @param newContents New array contents.
+	 * @returns Segments to remove. If no method call required, returns undefined.
 	 */
-	detectFilter(newItems: T[]): IBindableArray.IndexCount[];
+	detectFilter(newContents: readonly T[]): readonly IBindableArray.IndexCount[];
 
 	/**
-	 * Detects `reorder` method arguments to adjust array contents to `newItems`.
-	 * Determines where to move all items.
-	 * If `newItems` contents differ from the array contents, it may have unexpected consequences.
-	 * @param newItems New array contents.
-	 * @param getKey Function which returns unique key of an item in this array.
-	 * Defaults to `getKey` property of the array.
-	 * @param scope `getKey` call scope. Defaults to the array itself.
-	 * @returns `indexArray` argument of `reorder` method. If no method call required, returns undefined.
+	 * Detects `reorder` method arguments to adjust the array contents to `newContents`.
+	 * Determines where all items must be moved to. Values of `newContents` must match current values of the array.
+	 * All values in the array must be unique.
+	 * @param newContents New array contents.
+	 * @returns `indexMapping` argument of `reorder` method. If no method call required, returns undefined.
 	 */
-	detectReorder(newItems: T[], getKey?: (item: T) => any, scope?: any): number[];
+	detectReorder(newContents: readonly T[]): readonly number[];
 
 	/**
-	 * Detects `reorder` method arguments to sort array contents by result of
-	 * `callback` call for each item.
+	 * Detects `reorder` method arguments to sort array contents by result of `callback` call for each item.
 	 * @param callback Indexer function. Must return a comparable value, compatible with
 	 * `cmp`. Returns item itself by default.
-	 * @param scope `callback` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns `indexArray` argument of `reorder` method. If no method call required, returns undefined.
+	 * @returns `indexMapping` argument of `reorder` method. If no method call required, returns undefined.
 	 */
-	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[];
+	detectSort(callback?: (item: T, index: number) => any, order?: number): readonly number[];
 
 	/**
 	 * Detects `reorder` method arguments to sort array contents by comparer.
 	 * @param compare Comparer function. Should return positive value if t1 > t2;
 	 * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
-	 * @param scope `comparer` call scope. Defaults to the array itself.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
-	 * @returns `indexArray` argument of `reorder` method. If no method call required, returns undefined.
+	 * @returns `indexMapping` argument of `reorder` method. If no method call required, returns undefined.
 	 */
-	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[];
+	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, order?: number): readonly number[];
 }
 
 export default ReadonlyBindableArray;

@@ -22,80 +22,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Class from '../Class';
-import Dictionary from '../Dictionary';
-import IBindableMap from '../IBindableMap';
 import BindableMap from '../BindableMap';
+import Class from '../Class';
+import IBindableMap from '../IBindableMap';
 import ReadonlyBindableMap from "../ReadonlyBindableMap";
 
 /**
  * Abstract collection indexer. Builds a new map by rule: key is the result of the function call, value is the
  * corresponding item. Can be used for item search optimization.
  */
-abstract class AbstractIndexer<T> extends Class {
+abstract class AbstractIndexer<V, K> extends Class {
+
 	private _targetCreated: boolean;
 
-	/**
-	 * @hidden
-	 */
-	protected _scope: any;
+	protected _target: IBindableMap<K, V>;
 
-	/**
-	 * @hidden
-	 */
-	protected _target: IBindableMap<T>;
-
-	/**
-	 * @hidden
-	 */
-	constructor(protected _getKey: (item: T) => any, config: AbstractIndexer.Config<T> = {},
-				getKey: (item: T) => any, silent: boolean) {
+	constructor(protected getKey: (value: V) => K, config: AbstractIndexer.Config<V, K> = {}, silent: boolean) {
 		super();
-		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableMap<T>(getKey, silent) : config.target;
+		this._target = this._targetCreated ? new BindableMap<K, V>(silent) : config.target;
 	}
 
 	/**
 	 * Target map.
 	 */
-	get target(): ReadonlyBindableMap<T> {
+	get target(): ReadonlyBindableMap<K, V> {
 		return this._target;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this._getKey = null;
-		this._scope = null;
+		this.getKey = null;
 		super.destroyObject();
-	}
-
-	/**
-	 * @hidden
-	 */
-	protected _index(items: T[]): Dictionary<T> {
-		var index: Dictionary<T> = {};
-		for (var i = 0, l = items.length; i < l; ++i) {
-			var item = items[i];
-			index[this._getKey.call(this._scope, item)] = item;
-		}
-		return index;
-	}
-
-	/**
-	 * @hidden
-	 */
-	protected _keys(items: T[]): string[] {
-		var keys: string[] = [];
-		for (var i = 0, l = items.length; i < l; ++i) {
-			keys.push(this._getKey.call(this._scope, items[i]));
-		}
-		return keys;
 	}
 }
 
@@ -105,15 +65,10 @@ namespace AbstractIndexer {
 	/**
 	 * AbstractIndexer configuration.
 	 */
-	export interface Config<T> {
-		/**
-		 * Call scope of indexer's `getKey` callback. Defaults to the synchronizer itself.
-		 */
-		readonly scope?: any;
-
+	export interface Config<V, K> {
 		/**
 		 * Target map. By default, created automatically.
 		 */
-		readonly target?: IBindableMap<T>;
+		readonly target?: IBindableMap<K, V>;
 	}
 }

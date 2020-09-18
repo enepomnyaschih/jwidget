@@ -23,115 +23,89 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import Dictionary from '../Dictionary';
-import {isEmpty} from '../DictionaryUtils';
 import IBindableMap from '../IBindableMap';
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 
 /**
  * Inserter implementation for maps.
- * @param T Map item type.
  */
-class MapInserter<T> extends Class {
-	/**
-	 * @hidden
-	 */
-	protected _add: (item: T, key: string) => void;
+class MapInserter<K, V> extends Class {
 
-	/**
-	 * @hidden
-	 */
-	protected _remove: (item: T, key: string) => void;
-
-	/**
-	 * @hidden
-	 */
-	protected _clear: (items: Dictionary<T>) => void;
-
-	/**
-	 * @hidden
-	 */
-	protected _scope: any;
+	protected _add: (value: V, key: K) => void;
+	protected _remove: (value: V, key: K) => void;
+	protected _clear: (entries: ReadonlyMap<K, V>) => void;
 
 	/**
 	 * @param source Source map.
 	 * @param config Inserter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<T>, config: MapInserter.Config<T> = {}) {
+	constructor(readonly source: ReadonlyBindableMap<K, V>, config: MapInserter.Config<K, V> = {}) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
-		this._scope = config.scope || this;
 		this._clear = config.clear;
-		this._addItems(this.source.items);
+		this._addEntries(this.source.native);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.items);
+		this._doClearItems(this.source.native);
 		this._add = null;
 		this._remove = null;
 		this._clear = null;
-		this._scope = null;
 		super.destroyObject();
 	}
 
-	private _addItems(items: Dictionary<T>) {
+	private _addEntries(entries: ReadonlyMap<K, V>) {
 		if (!this._add) {
 			return;
 		}
-		for (var key in items) {
-			this._add.call(this._scope, items[key], key);
+		for (let [key, value] of entries) {
+			this._add(value, key);
 		}
 	}
 
-	private _removeItems(items: Dictionary<T>) {
+	private _removeEntries(entries: ReadonlyMap<K, V>) {
 		if (!this._remove) {
 			return;
 		}
-		for (var key in items) {
-			this._remove.call(this._scope, key, items[key]);
+		for (let [key, value] of entries) {
+			this._remove(value, key);
 		}
 	}
 
-	private _doClearItems(items: Dictionary<T>) {
-		if (isEmpty(items)) {
+	private _doClearItems(entries: ReadonlyMap<K, V>) {
+		if (entries.size === 0) {
 			return;
 		}
 		if (this._clear) {
-			this._clear.call(this._scope || this, items);
+			this._clear(entries);
 		} else {
-			this._removeItems(items);
+			this._removeEntries(entries);
 		}
 	}
 
-	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
-		this._removeItems(spliceResult.removedItems);
-		this._addItems(spliceResult.addedItems);
+	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, V>) {
+		this._removeEntries(spliceResult.removedEntries);
+		this._addEntries(spliceResult.addedEntries);
 	}
 
-	private _onReindex(message: IBindableMap.ReindexMessage<T>) {
-		var keyMap = message.keyMap;
-		for (var oldKey in keyMap) {
-			var newKey = keyMap[oldKey];
-			var item = this.source.get(newKey);
+	private _onReindex(keyMapping: ReadonlyMap<K, K>) {
+		for (let [oldKey, newKey] of keyMapping) {
+			const value = this.source.get(newKey);
 			if (this._remove) {
-				this._remove.call(this._scope, oldKey, item);
+				this._remove(value, oldKey);
 			}
 			if (this._add) {
-				this._add.call(this._scope, item, newKey);
+				this._add(value, newKey);
 			}
 		}
 	}
 
-	private _onClear(message: IBindableMap.MessageWithItems<T>) {
-		this._doClearItems(message.items);
+	private _onClear(oldContents: ReadonlyMap<K, V>) {
+		this._doClearItems(oldContents);
 	}
 }
 
@@ -140,27 +114,21 @@ export default MapInserter;
 namespace MapInserter {
 	/**
 	 * MapInserter configuration.
-	 * @param T Map item type.
 	 */
-	export interface Config<T> {
+	export interface Config<K, V> {
 		/**
 		 * Callback to call when an item is added to the map or moved within the map.
 		 */
-		readonly add?: (item: T, key: string) => void;
+		readonly add?: (value: V, key: K) => void;
 
 		/**
 		 * Callback to call when an item is removed from the map or moved within the map.
 		 */
-		readonly remove?: (item: T, key: string) => void;
+		readonly remove?: (value: V, key: K) => void;
 
 		/**
 		 * Callback to call when the map is cleared. By default, calls `remove` for all map items.
 		 */
-		readonly clear?: (items: Dictionary<T>) => void;
-
-		/**
-		 * Call scope of `add`, `remove` and `clear` callbacks. Defaults to the synchronizer itself.
-		 */
-		readonly scope?: any;
+		readonly clear?: (entries: ReadonlyMap<K, V>) => void;
 	}
 }

@@ -28,36 +28,32 @@ import * as DomUtils from '../DomUtils';
 import SetObserver from "../observer/set";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
-/**
- * @hidden
- */
 export default class ComponentObserver extends Class {
 	private len: number = 0;
 
 	constructor(source: ReadonlyBindableSet<Component>, private el: HTMLElement) {
 		super();
 		this.own(new SetObserver(source, {
-			add: this._addItem,
-			remove: this._removeItem,
-			scope: this
+			add: value => this._addValue(value),
+			remove: value => this._removeValue(value)
 		}));
 	}
 
-	_addItem(item: Component) {
-		var parent = this.el;
-		var anchor = parent.childNodes[this.len];
-		var child = item.el[0];
+	private _addValue(value: Component) {
+		const parent = this.el;
+		const anchor = parent.childNodes[this.len];
+		const child = value.el[0];
 		if (anchor != null) {
 			parent.insertBefore(child, anchor);
 		} else {
 			parent.appendChild(child);
 		}
 		++this.len;
-		item._afterAppend();
+		value._afterAppend();
 	}
 
-	_removeItem(item: Component) {
-		DomUtils.remove(item.el[0]);
+	private _removeValue(value: Component) {
+		DomUtils.remove(value.el[0]);
 		--this.len;
 	}
 }

@@ -22,46 +22,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableSet from '../BindableSet';
 import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
-import * as DictionaryUtils from '../DictionaryUtils';
 import IBindableMap from '../IBindableMap';
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
-import BindableSet from '../BindableSet';
 import AbstractConverterToSet from './AbstractConverterToSet';
 
 /**
  * AbstractConverterToSet implementation for maps.
  */
-export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
+export default class MapConverterToSet<V> extends AbstractConverterToSet<V> {
+
 	/**
 	 * @param source Source map.
 	 * @param config Converter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<T>, config: AbstractConverterToSet.Config<T>) {
-		super(config, source.getKey, source.silent);
-		this._target.tryAddAll(source.toArray());
+	constructor(readonly source: ReadonlyBindableMap<unknown, V>, config: AbstractConverterToSet.Config<V>) {
+		super(config, source.silent);
+		this._target.tryAddAll(source.values());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._target.removeItems(this.source.toArray());
+		this._target.tryDeleteAll(this.source.values());
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
+	private _onSplice(spliceResult: IBindableMap.SpliceResult<unknown, V>) {
 		this._target.trySplice(
-			DictionaryUtils.toArray(spliceResult.removedItems),
-			DictionaryUtils.toArray(spliceResult.addedItems));
+			spliceResult.removedEntries.values(),
+			spliceResult.addedEntries.values());
 	}
 
-	private _onClear(message: IBindableMap.MessageWithItems<T>) {
-		this._target.tryRemoveAll(
-			DictionaryUtils.toArray(message.items));
+	private _onClear(oldContents: ReadonlyMap<unknown, V>) {
+		this._target.tryDeleteAll(oldContents.values());
 	}
 }
 
@@ -70,10 +65,10 @@ export default class MapConverterToSet<T> extends AbstractConverterToSet<T> {
  * @param source Source map.
  * @returns Target set.
  */
-export function mapToSet<T>(source: ReadonlyBindableMap<T>): DestroyableReadonlyBindableSet<T> {
+export function mapToSet<T>(source: ReadonlyBindableMap<unknown, T>): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
-		return source.toSet();
+		return new BindableSet(source.values(), true);
 	}
-	const target = new BindableSet<T>(source.getKey);
+	const target = new BindableSet<T>();
 	return target.owning(new MapConverterToSet<T>(source, {target}));
 }

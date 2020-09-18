@@ -22,90 +22,77 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableMap from '../BindableMap';
 import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import Destructor from '../Destructor';
-import Dictionary from '../Dictionary';
-import * as DictionaryUtils from '../DictionaryUtils';
 import IBindableMap from '../IBindableMap';
 import {destroy} from '../index';
-import BindableMap from '../BindableMap';
+import {map} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
+import {getDifference} from "../SetUtils";
 import AbstractMapper from './AbstractMapper';
 
 /**
  * AbstractMapper implementation for maps.
  */
-class MapMapper<T, U> extends AbstractMapper<T, U> {
+class MapMapper<K, T, U> extends AbstractMapper<T, U> {
+
 	private _targetCreated: boolean;
 
 	/**
 	 * Target map.
 	 */
-	readonly target: IBindableMap<U>;
+	readonly target: IBindableMap<K, U>;
 
 	/**
 	 * @param source Source map.
 	 * @param create Mapping callback.
 	 * @param config Mapper configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<T>, create: (data: T) => U,
-				config: MapMapper.FullConfig<T, U> = {}) {
+	constructor(readonly source: ReadonlyBindableMap<K, T>, create: (data: T) => U,
+				config: MapMapper.FullConfig<K, T, U> = {}) {
 		super(create, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableMap<U>(config.getKey, this.source.silent) : config.target;
-		this.target.tryPutAll(this._createItems(source.items));
+		this.target = this._targetCreated ? new BindableMap<K, U>(this.source.silent) : config.target;
+		this.target.trySetAll(map(source.native, this._create));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._destroyItems(this.target.removeAllVerbose(this.source.getKeys().items), this.source.items);
+		this._destroyItems(this.target.tryRemoveAll(this.source.keys()) ?? new Map(), this.source.native);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		super.destroyObject();
 	}
 
-	private _createItems(datas: Dictionary<T>): Dictionary<U> {
-		var items: Dictionary<U> = {};
-		for (var key in datas) {
-			items[key] = this._create.call(this._scope, datas[key]);
-		}
-		return items;
-	}
-
-	private _destroyItems(items: Dictionary<U>, datas: Dictionary<T>) {
+	private _destroyItems(items: ReadonlyMap<K, U>, datas: ReadonlyMap<K, T>) {
 		if (this._destroy === undefined) {
 			return;
 		}
-		for (var key in items) {
-			this._destroy.call(this._scope, items[key], datas[key]);
+		for (let [key, item] of items) {
+			this._destroy(item, datas.get(key));
 		}
 	}
 
-	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
-		var sourceResult = message.spliceResult;
-		var removedDatas = sourceResult.removedItems;
-		var addedDatas = sourceResult.addedItems;
-		var targetResult = this.target.trySplice(
-			DictionaryUtils.getRemovedKeys(removedDatas, addedDatas),
-			this._createItems(addedDatas));
+	private _onSplice(sourceResult: IBindableMap.SpliceResult<K, T>) {
+		const {removedEntries, addedEntries} = sourceResult;
+		const targetResult = this.target.trySplice(
+			getDifference(removedEntries.keys(), addedEntries),
+			map(addedEntries, this._create));
 		if (targetResult !== undefined) {
-			this._destroyItems(targetResult.removedItems, removedDatas);
+			this._destroyItems(targetResult.removedEntries, removedEntries);
 		}
 	}
 
-	private _onReindex(message: IBindableMap.ReindexMessage<T>) {
-		this.target.tryReindex(message.keyMap);
+	private _onReindex(keyMapping: ReadonlyMap<K, K>) {
+		this.target.tryReindex(keyMapping);
 	}
 
-	private _onClear(message: IBindableMap.MessageWithItems<T>) {
-		var datas = message.items;
-		this._destroyItems(this.target.tryRemoveAll(Object.keys(datas)), datas);
+	private _onClear(oldContents: ReadonlyMap<K, T>) {
+		this._destroyItems(this.target.tryRemoveAll(oldContents.keys()), oldContents);
 	}
 }
 
@@ -115,11 +102,11 @@ namespace MapMapper {
 	/**
 	 * MapMapper configuration.
 	 */
-	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
+	export interface FullConfig<K, T, U> extends AbstractMapper.Config<T, U> {
 		/**
 		 * Target map.
 		 */
-		readonly target?: IBindableMap<U>;
+		readonly target?: IBindableMap<K, U>;
 	}
 }
 
@@ -130,24 +117,22 @@ namespace MapMapper {
  * @param config Mapper configuration.
  * @returns Target map.
  */
-export function mapMap<T, U>(source: ReadonlyBindableMap<T>, create: (sourceValue: T) => U,
-							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableMap<U> {
+export function mapMap<K, T, U>(source: ReadonlyBindableMap<K, T>, create: (sourceValue: T) => U,
+								config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableMap<K, U> {
 	if (!source.silent) {
-		const target = new BindableMap<U>(config.getKey);
-		return target.owning(new MapMapper<T, U>(source, create, {
+		const target = new BindableMap<K, U>();
+		return target.owning(new MapMapper<K, T, U>(source, create, {
 			target,
-			destroy: config.destroy,
-			scope: config.scope
+			destroy: config.destroy
 		}));
 	}
-	const target = source.map(create, config.scope, config.getKey);
+	const target = new BindableMap(map(source.native, create), true);
 	if (config.destroy === destroy) {
-		target.ownItems();
+		target.ownValues();
 	} else if (config.destroy) {
-		const sourceValues = DictionaryUtils.clone(source.items);
-		target.own(new Destructor(() => target.every((item, key) => {
-			config.destroy.call(config.scope, item, sourceValues[key]);
-			return true;
+		const sourceValues = new Map(source.native);
+		target.own(new Destructor(() => target.forEach((value, key) => {
+			config.destroy(value, sourceValues.get(key));
 		})));
 	}
 	return target;

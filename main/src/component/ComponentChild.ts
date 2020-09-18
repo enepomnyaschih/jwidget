@@ -24,34 +24,28 @@ SOFTWARE.
 
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
-import Identifiable from '../Identifiable';
-import {newIid} from '../index';
 
-/**
- * @hidden
- */
-export default class ComponentChild implements Identifiable {
+export default class ComponentChild {
+
 	private _name: string;
 	private _el: JQuery;
-
-	readonly iid = newIid();
 
 	constructor(private parent: Component, private child: Component) {}
 
 	attach(name: string) {
 		// JW.assertNull(this.name);
 		this._name = name;
-		this._el = this.parent._elements[name];
+		this._el = this.parent._elements.get(name);
 		this.parent._initChild(this.child);
-		this.parent._elements[name] = this.child.el;
+		this.parent._elements.set(name, this.child.el);
 		DomUtils.replace(this._el[0], this.child.el[0], true);
 		this.child._afterAppend();
 	}
 
 	detach() {
 		// JW.assertString(this.name, JW.isNotBlank);
-		if (this.parent._elements[this._name] === this.child.el) {
-			this.parent._elements[this._name] = this._el;
+		if (this.parent._elements.get(this._name) === this.child.el) {
+			this.parent._elements.set(this._name, this._el);
 		}
 		DomUtils.replace(this.child.el[0], this._el[0]);
 		this.parent._doneChild(this.child);

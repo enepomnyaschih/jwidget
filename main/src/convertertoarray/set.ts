@@ -22,10 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
-import {VidSet} from '../internal';
-import IBindableSet from '../IBindableSet';
 import BindableArray from '../BindableArray';
+import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
+import IBindableSet from '../IBindableSet';
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractConverterToArray from './AbstractConverterToArray';
 
@@ -33,34 +32,29 @@ import AbstractConverterToArray from './AbstractConverterToArray';
  * AbstractConverterToArray implementation for sets.
  */
 export default class SetConverterToArray<T> extends AbstractConverterToArray<T> {
+
 	/**
 	 * @param source Source set.
 	 * @param config Converter configuration.
 	 */
 	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractConverterToArray.Config<T>) {
-		super(config, source.getKey, source.silent);
-		this._target.addAll(source.toArray());
+		super(config, source.silent);
+		this._target.addAll([...source]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._target.removeItems(this.source.toArray());
+		this._target.removeValues(this.source);
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
-		this._splice(
-			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
-			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
+	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
+		this._splice(spliceResult.removedValues, spliceResult.addedValues);
 	}
 
-	private _onClear(message: IBindableSet.MessageWithItems<T>) {
-		this._target.removeItems(message.items);
+	private _onClear(oldContents: ReadonlySet<T>) {
+		this._target.removeValues(oldContents);
 	}
 }
 
@@ -71,8 +65,8 @@ export default class SetConverterToArray<T> extends AbstractConverterToArray<T> 
  */
 export function setToArray<T>(source: ReadonlyBindableSet<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
-		return source.toBindableArray();
+		return new BindableArray(source, true);
 	}
-	const target = new BindableArray<T>(source.getKey);
+	const target = new BindableArray<T>();
 	return target.owning(new SetConverterToArray<T>(source, {target}));
 }

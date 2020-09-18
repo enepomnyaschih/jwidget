@@ -24,16 +24,10 @@ SOFTWARE.
 
 import Destroyable from './Destroyable';
 import Dispatcher from './Dispatcher';
-import Identifiable from './Identifiable';
-import {newIid} from './index';
 
-/**
- * @hidden
- */
-export default class Listener<P> implements Destroyable, Identifiable {
-	readonly iid = newIid();
+export default class Listener<P> implements Destroyable {
 
-	constructor(private _dispatcher: Dispatcher<P>, readonly handler: (message: P) => any, readonly scope: any) {
+	constructor(private _dispatcher: Dispatcher<P>, readonly handler: (message: P) => void, readonly scope: any) {
 	}
 
 	destroy() {

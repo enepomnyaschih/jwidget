@@ -29,32 +29,17 @@ import Class from '../Class';
  * call for each collection item, and starts continuous synchronization.
  */
 abstract class AbstractMapper<T, U> extends Class {
-	/**
-	 * @hidden
-	 */
+
 	protected _destroy: (item: U, data: T) => void;
 
-	/**
-	 * @hidden
-	 */
-	protected _scope: any;
-
-	/**
-	 * @hidden
-	 */
 	protected constructor(protected _create: (data: T) => U, config: AbstractMapper.Config<T, U> = {}) {
 		super();
 		this._destroy = config.destroy;
-		this._scope = config.scope || this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		this._create = null;
 		this._destroy = null;
-		this._scope = null;
 		super.destroyObject();
 	}
 }
@@ -63,7 +48,7 @@ export default AbstractMapper;
 
 namespace AbstractMapper {
 	export interface DestroyCallback<T, U> {
-		(targetValue: U, sourceValue: T): any;
+		(targetValue: U, sourceValue: T): void;
 	}
 
 	/**
@@ -74,15 +59,5 @@ namespace AbstractMapper {
 		 * Item destructor. Destroys an item of the target collection.
 		 */
 		readonly destroy?: DestroyCallback<T, U>;
-
-		/**
-		 * Call scope of mapper's `create` and `destroy` callbacks. Defaults to the synchronizer itself.
-		 */
-		readonly scope?: any;
-
-		/**
-		 * Identifies an item in the auto-created target collection for optimization of some algorithms.
-		 */
-		readonly getKey?: (item: U) => any;
 	}
 }

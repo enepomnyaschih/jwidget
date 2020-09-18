@@ -23,8 +23,8 @@ SOFTWARE.
 */
 
 import DestroyableBindable from '../DestroyableBindable';
-import * as DictionaryUtils from '../DictionaryUtils';
 import IBindableMap from '../IBindableMap';
+import {count} from "../IterableUtils";
 import Property from '../Property';
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractCounter from './AbstractCounter';
@@ -33,26 +33,26 @@ import AbstractCounter from './AbstractCounter';
  * AbstractCounter implementation for maps.
  */
 export default class MapCounter<T> extends AbstractCounter<T> {
+
 	/**
 	 * @param source Source map.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<T>, test: (item: T) => any, config?: AbstractCounter.Config) {
+	constructor(readonly source: ReadonlyBindableMap<unknown, T>, test: (item: T) => boolean, config?: AbstractCounter.Config) {
 		super(test, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	recount() {
-		this._target.set(this.source.count(this._test, this._scope));
+		this._target.set(count(this.source.values(), this.test));
 	}
 
-	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
+	private _onSplice(spliceResult: IBindableMap.SpliceResult<unknown, T>) {
 		this._target.set(this._target.get() -
-			DictionaryUtils.count(spliceResult.removedItems, this._test, this._scope) +
-			DictionaryUtils.count(spliceResult.addedItems, this._test, this._scope));
+			count(spliceResult.removedEntries.values(), this.test) +
+			count(spliceResult.addedEntries.values(), this.test));
 	}
 
 	private _onClear() {
@@ -64,14 +64,13 @@ export default class MapCounter<T> extends AbstractCounter<T> {
  * Counts matching items in a map and starts synchronization.
  * @param source Source map.
  * @param test Filtering criteria.
- * @param scope Call scope of `test` function.
  * @returns Target property.
  */
-export function countMap<T>(source: ReadonlyBindableMap<T>, test: (item: T) => any,
-							scope?: any): DestroyableBindable<number> {
+export function countMap<T>(source: ReadonlyBindableMap<unknown, T>,
+							test: (item: T) => boolean): DestroyableBindable<number> {
 	if (source.silent) {
-		return new Property(source.count(test, scope), true);
+		return new Property(count(source.values(), test), true);
 	}
 	const target = new Property(0);
-	return target.owning(new MapCounter<T>(source, test, {target, scope}));
+	return target.owning(new MapCounter<T>(source, test, {target}));
 }

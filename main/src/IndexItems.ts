@@ -34,7 +34,7 @@ export default class IndexItems<T> implements IBindableArray.IndexItems<T> {
 	 * @param index Index.
 	 * @param items Items.
 	 */
-	constructor(readonly index: number, readonly items: T[]) {
+	constructor(readonly index: number, readonly items: readonly T[]) {
 	}
 
 	/**
@@ -48,6 +48,6 @@ export default class IndexItems<T> implements IBindableArray.IndexItems<T> {
 	 * Clones pair.
 	 */
 	clone(): IBindableArray.IndexItems<T> {
-		return new IndexItems<T>(this.index, this.items.concat());
+		return new IndexItems<T>(this.index, [...this.items]);
 	}
 }

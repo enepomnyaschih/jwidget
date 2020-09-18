@@ -3,10 +3,13 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/doc/samples-dist" />
       <excludeFolder url="file://$MODULE_DIR$/docgen/dist" />
       <excludeFolder url="file://$MODULE_DIR$/examples/.cache" />
       <excludeFolder url="file://$MODULE_DIR$/examples/dist" />
       <excludeFolder url="file://$MODULE_DIR$/main/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/main/dist-tsc" />
+      <excludeFolder url="file://$MODULE_DIR$/old" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/test/.cache" />
       <excludeFolder url="file://$MODULE_DIR$/test/dist" />

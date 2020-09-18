@@ -27,17 +27,14 @@ import Class from '../Class';
 import Component from '../Component';
 import Switcher from '../Switcher';
 
-/**
- * @hidden
- */
 export default class ComponentBindable extends Class {
 	constructor(private parent: Component, component: Bindable<Component>, private id: string) {
 		super();
-		parent._bindables[this.iid] = this;
+		parent._bindables.set(this.id, this);
 
 		this.own(new Switcher<Component>(component, {
 			init: child => {
-				this.parent.children.put(this.id, child);
+				this.parent.children.set(this.id, child);
 			},
 			done: () => {
 				this.parent.children.remove(this.id);
@@ -46,7 +43,7 @@ export default class ComponentBindable extends Class {
 	}
 
 	destroy() {
-		delete this.parent._bindables[this.iid];
+		this.parent._bindables.delete(this.id);
 		super.destroy();
 	}
 }

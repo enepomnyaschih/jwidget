@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as DictionaryUtils from '../DictionaryUtils';
 import IBindableMap from '../IBindableMap';
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractObserver from './AbstractObserver';
@@ -35,28 +34,26 @@ export default class MapObserver<T> extends AbstractObserver<T> {
 	 * @param source Source map.
 	 * @param config Observer configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<T>, config: AbstractObserver.Config<T>) {
+	constructor(readonly source: ReadonlyBindableMap<unknown, T>, config: AbstractObserver.Config<T>) {
 		super(config);
-		this._addItems(source.toArray());
+		this._addItems(source.values());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.toArray());
+		if (this.source.native.size !== 0) {
+			this._doClearItems(this.source.values());
+		}
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableMap.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
-		this._removeItems(DictionaryUtils.toArray(spliceResult.removedItems));
-		this._addItems(DictionaryUtils.toArray(spliceResult.addedItems));
+	private _onSplice(spliceResult: IBindableMap.SpliceResult<unknown, T>) {
+		this._removeItems(spliceResult.removedEntries.values());
+		this._addItems(spliceResult.addedEntries.values());
 	}
 
-	private _onClear(message: IBindableMap.MessageWithItems<T>) {
-		this._doClearItems(DictionaryUtils.toArray(message.items));
+	private _onClear(oldContents: ReadonlyMap<unknown, T>) {
+		this._doClearItems(oldContents.values());
 	}
 }

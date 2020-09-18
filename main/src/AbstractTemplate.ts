@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Dictionary from './Dictionary';
+import {addAll} from "./ArrayUtils";
 import * as DomUtils from './DomUtils';
 import * as StringUtils from './StringUtils';
 import TemplateOutput from './TemplateOutput';
@@ -33,8 +33,8 @@ import TemplateOutput from './TemplateOutput';
 abstract class AbstractTemplate {
 	private prefixes: string[] = null;
 
-	private parentIdMap: Dictionary<Dictionary<boolean>> = null; // The parent IDs of [key] item.
-	private childIdMap : Dictionary<Dictionary<boolean>> = null; // The child IDs of [key] item.
+	private parentIds: Map<string, Set<string>> = null; // The parent IDs of [key] item.
+	private childIds: Map<string, Set<string>> = null; // The child IDs of [key] item.
 
 	protected ids: string[] = null; // IDs in dependency order.
 
@@ -43,21 +43,21 @@ abstract class AbstractTemplate {
 	}
 
 	/**
-	 * Renders the template. See [[TemplateOutput]] for details.
+	 * Renders the template. See TemplateOutput for details.
 	 */
 	abstract createElement(): TemplateOutput;
 
-	protected abstract _addElement(id: string, el: HTMLElement, path: number[]): void;
+	protected abstract _addElement(id: string, el: HTMLElement, path: readonly number[]): void;
 
 	protected _compileAttributes(root: HTMLElement) {
 		this.prefixes = StringUtils.parseClass(root.getAttribute("jwclass"));
 		root.removeAttribute("jwclass");
-		for (let i = 0, l = this.prefixes.length; i < l; ++i) {
-			DomUtils.addClass(root, this.prefixes[i]);
+		for (let prefix of this.prefixes) {
+			DomUtils.addClass(root, prefix);
 		}
 
-		this.parentIdMap = {};
-		this.childIdMap = {};
+		this.parentIds = new Map<string, Set<string>>();
+		this.childIds = new Map<string, Set<string>>();
 
 		// add elements to groups and fill in dependencies
 		this._walkAll(root);
@@ -67,27 +67,27 @@ abstract class AbstractTemplate {
 		this._backtrace("root");
 
 		// check for trash
-		let remainingIds = Object.keys(this.parentIdMap);
-		if (remainingIds.length !== 0) {
-			// some ID's may not have been backtraced if they are assigned to the root element,
-			// so we must backtrace them to make sure that everything is processed
-			remainingIds.forEach(this._backtrace, this);
-			remainingIds = Object.keys(this.parentIdMap);
-			if (remainingIds.length !== 0) {
-				console.warn("jWidget template '" + this.prefixes.join(" ") +
-					"' has cyclic dependencies among the next jwid's: " + remainingIds.join(", ") +
-					". Can't detect the desired rendering order. Rendering elements in arbitrary order...");
-				this.ids.push.apply(this.ids, remainingIds);
-			}
+		const parentIds = this.parentIds.keys();
+		// some ID's may not have been backtraced if they are assigned to the root element,
+		// so we must backtrace them to make sure that everything is processed
+		for (let id of parentIds) {
+			this._backtrace(id);
+		}
+		const remainingIds = this.parentIds.keys();
+		if (this.parentIds.size !== 0) {
+			console.warn("jWidget template '" + this.prefixes.join(" ") +
+				"' has cyclic dependencies between the next jwid's: " + [...remainingIds].join(", ") +
+				". Can't detect the desired rendering order. Rendering elements in arbitrary order...");
+			addAll(this.ids, remainingIds);
 		}
 
 		this.prefixes = null;
-		this.parentIdMap = null;
-		this.childIdMap = null;
+		this.parentIds = null;
+		this.childIds = null;
 	}
 
 	private _walkAll(root: HTMLElement) {
-		this._walk(root, [], [], (el: HTMLElement, path: number[]): string[] => {
+		this._walk(root, [], [], (el: HTMLElement, path: readonly number[]): string[] => {
 			const attr = el.getAttribute("jwid");
 			if (!attr) {
 				return null;
@@ -98,36 +98,34 @@ abstract class AbstractTemplate {
 			if (l === 0) {
 				return null;
 			}
-			for (let i = 0; i < l; ++i) {
-				const id = ids[i];
-				for (let j = 0, n = this.prefixes.length; j < n; ++j) {
-					DomUtils.addClass(el, this.prefixes[j] + "-" + id);
+			for (let id of ids) {
+				for (let prefix of this.prefixes) {
+					DomUtils.addClass(el, prefix + "-" + id);
 				}
 				this._addElement(id, el, path);
 			}
 			return ids;
-		}, this);
+		});
 		this._addElement("root", root, []);
 	}
 
-	private _walk(el: Node, path: number[], parentIds: string[], callback: (el: HTMLElement, path: number[]) => void, scope?: any) {
+	private _walk(el: HTMLElement, path: number[], parentIds: readonly string[],
+				  callback: (el: HTMLElement, path: readonly number[]) => string[]) {
 		if (el.nodeType !== 1) { // ELEMENT
 			return;
 		}
-		let childIds: string[] = callback.call(scope, el, path);
+		let childIds: string[] = callback(el, path);
 		if (path.length === 0) {
 			childIds = childIds || [];
 			childIds.push("root");
 		}
 		if (childIds !== null) {
-			for (let i = 0, l = childIds.length; i < l; ++i) {
-				const childId = childIds[i];
-				this.parentIdMap[childId] = this.parentIdMap[childId] || {};
-				for (let j = 0, m = parentIds.length; j < m; ++j) {
-					const parentId = parentIds[j]
-					this.childIdMap[parentId] = this.childIdMap[parentId] || {};
-					this.parentIdMap[childId][parentId] = true;
-					this.childIdMap[parentId][childId] = true;
+			for (let childId of childIds) {
+				this.parentIds.set(childId, this.parentIds.get(childId) || new Set<string>());
+				for (let parentId of parentIds) {
+					this.childIds.set(parentId, this.childIds.get(parentId) || new Set<string>());
+					this.parentIds.get(childId).add(parentId);
+					this.childIds.get(parentId).add(childId);
 				}
 			}
 			parentIds = childIds;
@@ -135,33 +133,33 @@ abstract class AbstractTemplate {
 		const index = path.length;
 		path.push(0);
 		const childNodes = el.childNodes;
-		for (var i = 0, l = childNodes.length; i < l; ++i) {
+		for (let i = 0, l = childNodes.length; i < l; ++i) {
 			path[index] = i;
-			this._walk(childNodes[i], path, parentIds, callback, scope);
+			this._walk(<HTMLElement>childNodes[i], path, parentIds, callback);
 		}
 		path.pop();
 	}
 
 	private _backtrace(id: string) {
 		// if this element has already been processed, skip it
-		const parentIds = this.parentIdMap[id];
+		const parentIds = this.parentIds.get(id);
 		if (parentIds === undefined) {
 			return;
 		}
 
 		// if this element still has parents, skip it
-		for (let parentId in parentIds) {
-			if (this.parentIdMap.hasOwnProperty(parentId)) {
+		for (let parentId of parentIds) {
+			if (this.parentIds.has(parentId)) {
 				return;
 			}
 		}
 		// remove the element from graph
-		delete this.parentIdMap[id];
+		this.parentIds.delete(id);
 		this.ids.push(id);
 
 		// traverse into children
-		const childIds = this.childIdMap[id];
-		for (let childId in childIds) {
+		const childIds = this.childIds.get(id);
+		for (let childId of childIds) {
 			this._backtrace(childId);
 		}
 	}

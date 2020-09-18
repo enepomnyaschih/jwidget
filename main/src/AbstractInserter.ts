@@ -35,9 +35,8 @@ export default abstract class AbstractInserter<T> extends Class {
 	constructor(source: ReadonlyBindableArray<T>, readonly el: HTMLElement) {
 		super();
 		this.own(new ArrayInserter(source, {
-			add: this._addItem,
-			remove: this._removeItem,
-			scope: this
+			add: (item, index) => this._addItem(item, index),
+			remove: (item, index) => this._removeItem(item, index)
 		}));
 	}
 

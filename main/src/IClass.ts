@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import Destroyable from './Destroyable';
-import Identifiable from './Identifiable';
 
 /**
  * Introduces object aggregation support.
@@ -32,7 +31,7 @@ import Identifiable from './Identifiable';
  *
  * See online documentation for details.
  */
-interface IClass extends Destroyable, Identifiable {
+interface IClass extends Destroyable {
 	/**
 	 * Aggregates the object. It means that the specified object is automatically destroyed
 	 * on this object destruction. The aggregated objects are destroyed in reverse order.

@@ -22,115 +22,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Dictionary from './Dictionary';
+import ArraySpliceResult from './ArraySpliceResult';
 import IBindableArray from './IBindableArray';
-import {cmp, def} from './index';
+import {cmp} from './index';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
-import {identity, initReduceState, VidMap, VidSet} from './internal';
-import ArraySpliceResult from './ArraySpliceResult';
+import {identity, initReduceState} from './internal';
 import Reducer from './Reducer';
-import Some from './Some';
-
-/**
- * Returns the last array item.
- *
- * @param arr Array.
- * @returns Last array item or undefined. If array is empty, returns undefined.
- */
-export function getLast<T>(arr: T[]): T {
-	return arr[arr.length - 1];
-}
-
-/**
- * Checks if array is empty.
- *
- * @param arr Array.
- * @returns Array has zero length.
- */
-export function isEmpty<T>(arr: T[]): boolean {
-	return arr.length === 0;
-}
-
-/**
- * Checks if the item exists in array, i.e. if `arr.indexOf(item)` doesn't return -1.
- *
- * @param arr Array.
- * @param item Item to find.
- * @returns Item exists in array.
- */
-export function contains<T>(arr: T[], item: T): boolean {
-	return arr.indexOf(item) !== -1;
-}
-
-/**
- * Finds an item matching criteria.
- *
- * Returns the first item for which callback returns truthy value.
- *
- * Algorithms iterates items consequently, and stops after the first item matching the criteria.
- *
- * @param arr Array.
- * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to array itself.
- * @returns The found item or undefined.
- */
-export function find<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): T {
-	return arr[findIndex(arr, callback, scope)];
-}
-
-/**
- * Finds an item matching criteria.
- *
- * Returns index of the first item for which callback returns truthy value.
- *
- * Algorithms iterates items consequently, and stops after the first item matching the criteria.
- *
- * @param arr Array.
- * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to array itself.
- * @returns Index of the found item or undefined.
- */
-export function findIndex<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number {
-	scope = scope || arr;
-	let result: number;
-	arr.every(function (item, index) {
-		if (callback.call(scope, item, index)) {
-			result = index;
-			return false;
-		}
-		return true;
-	});
-	return result;
-}
 
 /**
  * Determines index of the first item which is more (or less if `order` < 0) than the specified value by `compare` function,
  * using binary search. Array must be sorted by `compare` function.
  * Can be used for item insertion easily.
  * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
- *
  * @param arr Sorted array.
+ * @param value Searched value.
  * @param compare Comparer function. Should return positive value if t1 > t2;
  * negative value if t1 < t2; 0 if t1 == t2.
  * Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
  * @param order Sorting order. Positive number if array is sorted ascending, negative if descending.
  * @returns Item index.
  */
-export function binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
+export function binarySearch<T>(arr: readonly T[], value: T, compare?: (t1: T, t2: T) => number, order?: number): number {
 	compare = compare || cmp;
-	scope = scope || arr;
 	order = order || 1;
-	var length = arr.length;
-	var len2 = length >> 1;
-	var step = 1;
+	const length = arr.length;
+	const len2 = length >> 1;
+	let step = 1;
 	while (step <= len2) {
 		step <<= 1;
 	}
-	var index = 0;
+	let index = 0;
 	while (step) {
-		if ((index + step <= length) && (order * compare.call(scope, value, arr[index + step - 1]) >= 0)) {
+		if ((index + step <= length) && (order * compare(value, arr[index + step - 1]) >= 0)) {
 			index += step;
 		}
 		step >>= 1;
@@ -143,12 +67,11 @@ export function binarySearch<T>(arr: T[], value: T, compare?: (t1: T, t2: T) => 
  *
  * @param arr Array.
  * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Array item.
  */
-export function max<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
-	return arr[maxIndex(arr, callback, scope, order)];
+export function max<T>(arr: readonly T[], callback?: (item: T, index: number) => any, order: number = 1): T {
+	return arr[maxIndex(arr, callback, order)];
 }
 
 /**
@@ -156,20 +79,18 @@ export function max<T>(arr: T[], callback?: (item: T, index: number) => any, sco
  *
  * @param arr Array.
  * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Item index.
  */
-export function maxIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
+export function maxIndex<T>(arr: readonly T[], callback?: (item: T, index: number) => any, order: number = 1): number {
 	if (arr.length === 0) {
 		return -1;
 	}
 	callback = callback || identity;
-	scope = scope || arr;
 	let result = 0;
-	let max: any = callback.call(scope, arr[0]);
+	let max: any = callback(arr[0], 0);
 	for (let i = 1, l = arr.length; i < l; ++i) {
-		const item: any = callback.call(scope, arr[i], i);
+		const item: any = callback(arr[i], i);
 		const diff = cmp(item, max);
 		if ((order > 0 && diff > 0) || (order < 0 && diff < 0)) {
 			result = i;
@@ -185,12 +106,12 @@ export function maxIndex<T>(arr: T[], callback?: (item: T, index: number) => any
  * @param arr Array.
  * @param compare Comparer function. Should return positive value if t1 > t2;
  * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Array item.
  */
-export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): T {
-	return arr[maxIndexComparing(arr, compare, scope, order)];
+export function maxComparing<T>(arr: readonly T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number,
+								order: number = 1): T {
+	return arr[maxIndexComparing(arr, compare, order)];
 }
 
 /**
@@ -199,19 +120,18 @@ export function maxComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i
  * @param arr Array.
  * @param compare Comparer function. Should return positive value if t1 > t2;
  * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
  * @param order Pass positive order to find the highest value, and negative to find the lowest one.
  * @returns Item index.
  */
-export function maxIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): number {
+export function maxIndexComparing<T>(arr: readonly T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number,
+									 order: number = 1): number {
 	if (arr.length === 0) {
 		return -1;
 	}
 	compare = compare || cmp;
-	scope = scope || arr;
 	let result = 0;
 	for (let i = 1, l = arr.length; i < l; ++i) {
-		if (order * compare.call(scope, arr[result], arr[i], result, i) < 0) {
+		if (order * compare(arr[result], arr[i], result, i) < 0) {
 			result = i;
 		}
 	}
@@ -223,12 +143,11 @@ export function maxIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: numb
  *
  * @param arr Array.
  * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Array item.
  */
-export function min<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T {
-	return max(arr, callback, scope, -order);
+export function min<T>(arr: readonly T[], callback?: (item: T, index: number) => any, order: number = 1): T {
+	return max(arr, callback, -order);
 }
 
 /**
@@ -236,12 +155,11 @@ export function min<T>(arr: T[], callback?: (item: T, index: number) => any, sco
  *
  * @param arr Array.
  * @param callback Returns a comparable value, compatible with `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Item index.
  */
-export function minIndex<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number {
-	return maxIndex(arr, callback, scope, -order);
+export function minIndex<T>(arr: readonly T[], callback?: (item: T, index: number) => any, order: number = 1): number {
+	return maxIndex(arr, callback, -order);
 }
 
 /**
@@ -250,12 +168,12 @@ export function minIndex<T>(arr: T[], callback?: (item: T, index: number) => any
  * @param arr Array.
  * @param compare Comparer function. Should return positive value if t1 > t2;
  * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Array item.
  */
-export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): T {
-	return maxComparing(arr, compare, scope, -order);
+export function minComparing<T>(arr: readonly T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number,
+								order: number = 1): T {
+	return maxComparing(arr, compare, -order);
 }
 
 /**
@@ -264,12 +182,12 @@ export function minComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i
  * @param arr Array.
  * @param compare Comparer function. Should return positive value if t1 > t2;
  * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `compare` call scope. Defaults to array itself.
  * @param order Pass positive order to find the lowest value, and negative to find the highest one.
  * @returns Item index.
  */
-export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): number {
-	return maxIndexComparing(arr, compare, scope, -order);
+export function minIndexComparing<T>(arr: readonly T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number,
+									 order: number = 1): number {
+	return maxIndexComparing(arr, compare, -order);
 }
 
 /**
@@ -279,145 +197,29 @@ export function minIndexComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: numb
  *
  * @param arr Array.
  * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to array itself.
  * @returns Number of items.
  */
-export function count<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number {
-	scope = scope || arr;
+export function count<T>(arr: readonly T[], callback: (item: T, index: number) => any): number {
 	let result = 0;
-	arr.every(function (item, index) {
-		if (callback.call(scope, item, index)) {
+	arr.forEach((item, index) => {
+		if (callback(item, index)) {
 			++result;
 		}
-		return true;
 	});
 	return result;
 }
 
 /**
- * Returns indices of sorted items.
- *
- * Builds array of item indices, sorted by the result of callback call for each item.
- *
- * @param arr Array.
- * @param callback Indexer function. Must return a comparable value, compatible with
- * `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Array of indices.
- */
-export function getSortingIndices<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
-	callback = callback || identity;
-	scope = scope || arr;
-	order = order || 1;
-	const pairs: any[] = [];
-	arr.every(function (item, key) {
-		pairs.push([key, callback.call(scope, item, key)]);
-		return true;
-	});
-	pairs.sort(function (x, y) {
-		return order * cmp(x[1], y[1]);
-	});
-	return pairs.map(function (pair) {
-		return pair[0];
-	});
-}
-
-/**
- * Returns indices of sorted items.
- *
- * Builds array of item indices, sorted by comparer.
- *
- * @param arr Array.
- * @param compare Comparer function. Must return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Array of indices.
- */
-export function getSortingIndicesComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[] {
-	compare = compare || cmp;
-	scope = scope || arr;
-	order = order || 1;
-	const pairs: any[] = [];
-	arr.every(function (item, key) {
-		pairs.push([key, item]);
-		return true;
-	});
-	pairs.sort(function (x, y) {
-		return order * compare.call(scope, x[1], y[1], x[0], y[0]);
-	});
-	return pairs.map(function (pair) {
-		return pair[0];
-	});
-}
-
-/**
- * Builds and returns a new array consisting of original array items sorted by the result of
- * callback call for each item.
- *
- * @param arr Array.
- * @param callback Indexer function. Must return a comparable value, compatible with
- * `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Sorted array.
- */
-export function toSorted<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): T[]{
-	return getSortingIndices(arr, callback, scope, order).map(function (index): T {
-		return arr[index];
-	});
-}
-
-/**
- * Builds and returns a new array consisting of original array items sorted by comparer.
- *
- * @param arr Array.
- * @param compare Comparer function. Must return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns Sorted array.
- */
-export function toSortedComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T[] {
-	return getSortingIndicesComparing(arr, compare, scope, order).map(function (index): T {
-		return arr[index];
-	});
-}
-
-/**
- * Builds a new array containing items of this array in reversed order.
- * Current array is not modified.
- *
- * @param arrays Array.
- * @returns Reversed array.
- */
-export function toReversed<T>(arr: T[]): T[] {
-	var result = arr.concat();
-	result.reverse();
-	return result;
-}
-
-/**
- * Indexes an array.
- *
- * Builds and returns a new map by rule: key is the result of the indexer function call,
+ * Indexes an array. Builds and returns a new map by rule: key is the result of the indexer function call,
  * value is the corresponding item.
- *
  * @param arr Array.
  * @param callback Indexer function.
- * @param scope `callback` call scope. Defaults to array itself.
  * @returns Array index.
  */
-export function index<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): Dictionary<T> {
-	scope = scope || arr;
-	const result: Dictionary<T> = {};
-	arr.every(function (item, index) {
-		const key = callback.call(scope, item, index);
-		if (key != null) {
-			result[key] = item;
-		}
-		return true;
+export function index<T, K>(arr: readonly T[], callback: (item: T, index: number) => K): ReadonlyMap<K, T> {
+	const result = new Map<K, T>();
+	arr.forEach((item, index) => {
+		result.set(callback(item, index), item);
 	});
 	return result;
 }
@@ -430,7 +232,7 @@ export function index<T>(arr: T[], callback: (item: T, index: number) => any, sc
  * @param reducer Standard reducer. See `jwidget/Reducer` for examples.
  * @returns Final accumulator value.
  */
-export function reduce<T, U>(arr: T[], reducer: Reducer<T, U>): U;
+export function reduce<T, U>(arr: readonly T[], reducer: Reducer<T, U>): U;
 
 /**
  * Applies a function against an accumulator and each item in the array (from left to right)
@@ -441,9 +243,9 @@ export function reduce<T, U>(arr: T[], reducer: Reducer<T, U>): U;
  * @param initial Value to use as the first argument to the first call of the callback.
  * @returns Final accumulator value.
  */
-export function reduce<T, U>(arr: T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
-export function reduce<T, U>(arr: T[],
-		reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
+export function reduce<T, U>(arr: readonly T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
+export function reduce<T, U>(arr: readonly T[],
+							 reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
 	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
 		value: initial,
 		callback: reducer
@@ -452,225 +254,14 @@ export function reduce<T, U>(arr: T[],
 }
 
 /**
- * Inserts an item to array.
- *
+ * Iterates through array items in backward order.
  * @param arr Array.
- * @param item Item to insert.
- * @param index Index of an item to insert the new one before.
- * By default, appends the item to the end of array.
+ * @param callback Callback.
  */
-export function add<T>(arr: T[], item: T, index?: number) {
-	arr.splice(def(index, arr.length), 0, item);
-}
-
-/**
- * Inserts item range to array.
- *
- * @param arr Array.
- * @param items Items to insert.
- * @param index Index of an item to insert the new ones before.
- * By default, appends the items to the end of array.
- */
-export function addAll<T>(arr: T[], items: T[], index?: number) {
-	tryAddAll(arr, items, index);
-}
-
-/**
- * Replaces item at specified index.
- * If array doesn't contain such index, it will demolish the application.
- *
- * @param arr Array.
- * @param index Index of an item to replace.
- * @param item Item to replace with.
- * @returns The replaced item.
- */
-export function set<T>(arr: T[], index: number, item: T): T {
-	var result = trySet(arr, index, item);
-	return (result !== undefined) ? result.value : arr[index];
-}
-
-/**
- * Removes item at specified position.
- * If array doesn't contain such index, it will demolish the application.
- *
- * @param arr Array.
- * @param index Index of an item to remove.
- * @returns The removed item.
- */
-export function remove<T>(arr: T[], index: number): T {
-	return arr.splice(index, 1)[0];
-}
-
-/**
- * Removes item range from array.
- *
- * @param arr Array.
- * @param index Index of the first item to remove.
- * @param count Count of items to remove.
- * @returns The removed items.
- */
-export function removeAll<T>(arr: T[], index: number, count: number): T[]{
-	var result = tryRemoveAll(arr, index, count);
-	return result || [];
-}
-
-/**
- * Removes the first occurrence of an item in array.
- *
- * @param arr Array.
- * @param item Item to remove.
- * @returns Index of the removed item or -1.
- */
-export function removeItem<T>(arr: T[], item: T): number {
-	const index = arr.indexOf(item);
-	if (index !== -1) {
-		remove(arr, index);
+export function backForEach<T>(arr: readonly T[], callback: (item: T, index: number) => void): void {
+	for (let i = arr.length - 1; i >= 0; --i) {
+		callback(arr[i], i);
 	}
-	return index;
-}
-
-/**
- * Removes all occurrences of items in array.
- *
- * @param arr Array.
- * @param items Items to remove.
- * @param getKey Function which returns unique key of an item in this array.
- * By default, identifies primitive values and `Identifiable` objects.
- */
-export function removeItems<T>(arr: T[], items: T[], getKey?: (item: T) => any) {
-	const itemSet = VidSet.fromArray<T>(items, getKey);
-	const newItems = arr.filter(function (item: T): boolean {
-		return !itemSet.contains(item);
-	});
-	clear(arr);
-	addAll(arr, newItems);
-}
-
-/**
- * Moves an item inside array.
- *
- * @param arr Array.
- * @param fromIndex Item index to move.
- * @param toIndex Index to move to.
- * @returns The moved item.
- */
-export function move<T>(arr: T[], fromIndex: number, toIndex: number): T {
-	tryMove(arr, fromIndex, toIndex);
-	return arr[toIndex];
-}
-
-/**
- * Clears array.
- *
- * @param arr Array.
- * @returns Old array contents. Never returns null or undefined.
- */
-export function clear<T>(arr: T[]): T[]{
-	var result = tryClear(arr);
-	return (result !== undefined) ? result : [];
-}
-
-/**
- * Removes and inserts item ranges.
- *
- * @param arr Array.
- * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
- * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
- * @returns Splice result. Never returns null or undefined.
- */
-export function splice<T>(arr: T[],
-		segmentsToRemove: IBindableArray.IndexCount[],
-		segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T> {
-	var result = trySplice(arr, segmentsToRemove, segmentsToAdd);
-	return (result !== undefined) ? result :
-		new ArraySpliceResult<T>(arr.concat(), <IBindableArray.IndexItems<T>[]>[], <IBindableArray.IndexItems<T>[]>[]);
-}
-
-/**
- * Reorders array items.
- *
- * @param arr Array.
- * @param indexArray Index array. Item with index `i` is moved to index `indexArray[i]`.
- * Must contain all indexes from 0 to (length - 1).
- */
-export function reorder<T>(arr: T[], indexArray: number[]) {
-	tryReorder(arr, indexArray);
-}
-
-/**
- * Sorts array by the result of `callback` function call for each item.
- *
- * @param arr Array.
- * @param callback Indexer function. Must return a comparable value, compatible with
- * `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- */
-export function sort<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number) {
-	var indexArray = detectSort(arr, callback, scope, order);
-	if (indexArray !== undefined) {
-		tryReorder(arr, indexArray);
-	}
-}
-
-/**
- * Sorts array by comparer.
- *
- * @param arr Array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- */
-export function sortComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number) {
-	var indexArray = detectSortComparing(arr, compare, scope, order);
-	if (indexArray !== undefined) {
-		tryReorder(arr, indexArray);
-	}
-}
-
-/**
- * Checks two arrays for equality, item by item (===).
- *
- * @param x First array.
- * @param y Second array.
- * @returns Arrays are equal.
- */
-export function equal<T>(x: T[], y: T[]): boolean {
-	if (x === y) {
-		return true;
-	}
-	if (x.length !== y.length) {
-		return false;
-	}
-	for (var i = 0, l = x.length; i < l; ++i) {
-		if (x[i] !== y[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
-/**
- * Checks all items against criteria in backward order.
- *
- * Returns true if criteria returns truthy value for all array items.
- *
- * Algorithms iterates items consequently, and stops after the first item not matching the criteria.
- *
- * @param arr Array.
- * @param callback Criteria callback.
- * @param scope `callback` call scope. Defaults to array itself.
- * @returns True if every item matches the criteria.
- */
-export function backEvery<T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): boolean {
-	scope = scope || arr;
-	for (var i = arr.length - 1; i >= 0; --i) {
-		if (!callback.call(scope, arr[i], i)) {
-			return false;
-		}
-	}
-	return true;
 }
 
 /**
@@ -679,8 +270,8 @@ export function backEvery<T>(arr: T[], callback: (item: T, index: number) => any
  * @param arr Array.
  * @returns Every item is equal to its index.
  */
-export function isIdentity(arr: number[]): boolean {
-	for (var i = 0, l = arr.length; i < l; ++i) {
+export function isIdentity(arr: readonly number[]): boolean {
+	for (let i = 0, l = arr.length; i < l; ++i) {
 		if (arr[i] !== i) {
 			return false;
 		}
@@ -694,10 +285,10 @@ export function isIdentity(arr: number[]): boolean {
  * @param arr Array.
  * @returns The inverted array.
  */
-export function invert(arr: number[]): number[] {
-	var l = arr.length;
-	var result = new Array<number>(l);
-	for (var i = 0; i < l; ++i) {
+export function invert(arr: readonly number[]): number[] {
+	const l = arr.length;
+	const result = new Array<number>(l);
+	for (let i = 0; i < l; ++i) {
 		result[arr[i]] = i;
 	}
 	return result;
@@ -709,121 +300,62 @@ export function invert(arr: number[]): number[] {
  * @param arrays Array of subarrays.
  * @returns The merged array.
  */
-export function merge<T>(arrays: T[][]): T[] {
-	var result: T[] = [];
-	for (var i = 0, l = arrays.length; i < l; ++i) {
-		result.push.apply(result, arrays[i]);
+export function merge<T>(arrays: readonly (readonly T[])[]): T[] {
+	const result: T[] = [];
+	for (let array of arrays) {
+		addAll(result, array);
 	}
 	return result;
 }
 
 /**
- * The same as `addAll`, but returns undefined if the array stays unmodified. Else returns true.
- *
+ * Adds a range of items to an array.
  * @param arr Array.
- * @param items Items to insert.
- * @param index Index of an item to insert the new ones before.
- * By default, appends the items to the end of array.
- * @returns True if array was modified, else undefined.
+ * @param items Items to add.
+ * @param index Index of an item to add the new ones before. By default, appends the items to the end of the array.
  */
-export function tryAddAll<T>(arr: T[], items: T[], index?: number): boolean {
-	if (items.length === 0) {
-		return undefined;
-	}
+export function addAll<T>(arr: T[], items: Iterable<T>, index?: number): void {
 	if (index === undefined) {
-		var l = arr.length;
-		arr.length += items.length;
-		for (var i = 0; i < items.length; ++i) {
-			arr[i + l] = items[i];
+		for (let item of items) {
+			arr.push(item);
 		}
 	} else {
-		var tail = arr.splice(index, arr.length - index);
-		tryAddAll(arr, items);
-		tryAddAll(arr, tail);
+		const tail = arr.splice(index, arr.length - index);
+		addAll(arr, items);
+		addAll(arr, tail);
 	}
-	return true;
-}
-
-/**
- * Replaces item at specified index.
- * If array doesn't contain such index, it will demolish the application.
- *
- * @param arr Array.
- * @param index Index of an item to replace.
- * @param item Item to replace with.
- * @returns The replaced item. If array is not modified, returns undefined.
- */
-export function trySet<T>(arr: T[], index: number, item: T): Some<T> {
-	var oldItem = arr[index];
-	if (item !== oldItem) {
-		arr[index] = item;
-		return { value: oldItem };
-	}
-	return undefined;
-}
-
-/**
- * Removes item range from array.
- *
- * @param arr Array.
- * @param index Index of first item to remove.
- * @param count Count of items to remove.
- * @returns The removed items. If array is not modified, returns undefined.
- */
-export function tryRemoveAll<T>(arr: T[], index: number, count: number): T[]{
-	if (count !== 0) {
-		return arr.splice(index, count);
-	}
-	return undefined;
 }
 
 /**
  * Moves an item inside array.
- *
  * @param arr Array.
  * @param fromIndex Item index to move.
  * @param toIndex Index to move to.
- * @returns The moved item. If array is not modified, returns undefined.
+ * @returns The moved item.
  */
-export function tryMove<T>(arr: T[], fromIndex: number, toIndex: number): T {
+export function move<T>(arr: T[], fromIndex: number, toIndex: number): T {
+	const item = arr[fromIndex];
 	if (fromIndex === toIndex) {
-		return undefined;
+		return item;
 	}
-	var item = arr[fromIndex];
 	arr.splice(fromIndex, 1);
 	arr.splice(toIndex, 0, item);
 	return item;
 }
 
 /**
- * Clears array.
- *
- * @param arr Array.
- * @returns Old array contents. If not modified - undefined.
- */
-export function tryClear<T>(arr: T[]): T[]{
-	if (arr.length !== 0) {
-		return arr.splice(0, arr.length);
-	}
-	return undefined;
-}
-
-/**
  * Removes and inserts item ranges.
- *
  * @param arr Array.
  * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
  * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. If the array is not modified, returns undefined.
  */
 export function trySplice<T>(arr: T[],
-		segmentsToRemove: IBindableArray.IndexCount[],
-		segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T> {
-	var optimizedSegmentsToRemove: IBindableArray.IndexCount[] = [];
-	var rlast: IndexCount = null;
-	var rparams: IBindableArray.IndexCount;
-	for (var i = 0, l = segmentsToRemove.length; i < l; ++i) {
-		rparams = segmentsToRemove[i];
+							 segmentsToRemove: Iterable<IBindableArray.IndexCount>,
+							 segmentsToAdd: Iterable<IBindableArray.IndexItems<T>>): IBindableArray.SpliceResult<T> {
+	const optimizedSegmentsToRemove: IBindableArray.IndexCount[] = [];
+	let rlast: IndexCount = null;
+	for (let rparams of segmentsToRemove) {
 		if (rlast && (rparams.index === rlast.index + rlast.count)) {
 			rlast.count += rparams.count;
 		} else {
@@ -832,223 +364,58 @@ export function trySplice<T>(arr: T[],
 		}
 	}
 
-	var optimizedSegmentsToAdd = [];
-	var alast: IBindableArray.IndexItems<T> = null;
-	var aparams: IBindableArray.IndexItems<T>;
-	for (var i = 0, l = segmentsToAdd.length; i < l; ++i) {
-		aparams = segmentsToAdd[i];
+	const optimizedSegmentsToAdd: IBindableArray.IndexItems<T>[] = [];
+	let alast: IBindableArray.IndexItems<T> = null;
+	for (let aparams of segmentsToAdd) {
 		if (alast && (aparams.index === alast.index + alast.items.length)) {
-			tryAddAll(alast.items, aparams.items);
+			addAll(<T[]>alast.items, aparams.items);
 		} else {
 			alast = aparams.clone();
 			optimizedSegmentsToAdd.push(alast);
 		}
 	}
 
-	var oldItems = arr.concat();
-	var removedSegments = [];
-	for (var i = optimizedSegmentsToRemove.length - 1; i >= 0; --i) {
-		rparams = optimizedSegmentsToRemove[i];
-		var index = rparams.index;
-		var items = tryRemoveAll(arr, index, rparams.count);
-		if (items === undefined) {
+	const oldContents = arr.concat();
+	const removedSegments: IBindableArray.IndexItems<T>[] = [];
+	for (let i = optimizedSegmentsToRemove.length - 1; i >= 0; --i) {
+		const rparams = optimizedSegmentsToRemove[i];
+		if (rparams.count === 0) {
 			continue;
 		}
+		const index = rparams.index;
+		const items = arr.splice(index, rparams.count);
 		removedSegments.push(new IndexItems<T>(index, items));
 	}
-	var addedSegments = [];
-	for (var i = 0, l = optimizedSegmentsToAdd.length; i < l; ++i) {
-		aparams = optimizedSegmentsToAdd[i];
-		if (tryAddAll(arr, aparams.items, aparams.index) === undefined) {
+	const addedSegments: IBindableArray.IndexItems<T>[] = [];
+	for (let aparams of optimizedSegmentsToAdd) {
+		if (!aparams.items.length) {
 			continue;
 		}
+		addAll(arr, aparams.items, aparams.index);
 		addedSegments.push(aparams);
 	}
-	if ((removedSegments.length !== 0) || (addedSegments.length !== 0)) {
-		removedSegments.reverse();
-		return new ArraySpliceResult<T>(oldItems, removedSegments, addedSegments);
+	if ((removedSegments.length === 0) && (addedSegments.length === 0)) {
+		return undefined;
 	}
-	return undefined;
+	removedSegments.reverse();
+	return new ArraySpliceResult<T>(oldContents, removedSegments, addedSegments);
 }
 
 /**
  * Reorders array items.
- *
  * @param arr Array.
  * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
  * Must contain all indexes from 0 to (length - 1).
  * @returns Old array contents. If the array is not modified, returns undefined.
  */
-export function tryReorder<T>(arr: T[], indexArray: number[]): T[]{
-	var length = arr.length;
+export function tryReorder<T>(arr: T[], indexArray: readonly number[]): readonly T[] {
+	const length = arr.length;
 	if (isIdentity(indexArray)) {
 		return undefined;
 	}
-	var oldItems = arr.concat();
-	for (var i = 0; i < length; ++i) {
-		arr[indexArray[i]] = oldItems[i];
+	const oldContents = arr.concat();
+	for (let i = 0; i < length; ++i) {
+		arr[indexArray[i]] = oldContents[i];
 	}
-	return oldItems;
-}
-
-/**
- * Detects `splice` method arguments to adjust array contents to `newItems`.
- * Determines item ranges neccessary to be removed and inserted.
- * All items must have unique `getKey` function result.
- * If items don't have unique key, probably `detectFilter` method may help,
- * because it doesn't require item uniquiness.
- *
- * @param oldItems Old array contents.
- * @param newItems New array contents.
- * @param getKey Function which returns unique key of an item in this array.
- * By default, identifies primitive values and `Identifiable` objects.
- * @returns `splice` method arguments. If no method call required, returns undefined.
- */
-export function detectSplice<T>(oldItems: T[], newItems: T[],
-								getKey?: (item: T) => any): IBindableArray.SpliceParams<T> {
-	var segmentsToRemove: IBindableArray.IndexCount[] = [];
-	var segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
-	var oldIndexMap = new VidMap<T, number>(getKey);
-	for (var i = 0, l = oldItems.length; i < l; ++i) {
-		oldIndexMap.put(oldItems[i], i);
-	}
-	var nextOldIndex = 0;
-	var offset = 0;
-	var newItemBuffer: T[] = [];
-
-	function buffer(item: T) {
-		newItemBuffer.push(item);
-	}
-
-	function flush() {
-		if (newItemBuffer.length === 0) {
-			return;
-		}
-		segmentsToAdd.push(new IndexItems<T>(offset + nextOldIndex, newItemBuffer));
-		offset += newItemBuffer.length;
-		newItemBuffer = [];
-	}
-
-	function testRemove(oldIndex: number) {
-		if (oldIndex > nextOldIndex) {
-			const count = oldIndex - nextOldIndex;
-			segmentsToRemove.push(new IndexCount(nextOldIndex, count));
-			offset -= count;
-		}
-	}
-
-	for (let newIndex = 0, l = newItems.length; newIndex < l; ++newIndex) {
-		const item = newItems[newIndex];
-		const oldIndex = oldIndexMap.get(item);
-		if ((oldIndex === undefined) || (oldIndex < nextOldIndex)) {
-			buffer(item);
-		} else {
-			flush();
-			testRemove(oldIndex);
-			nextOldIndex = oldIndex + 1;
-		}
-	}
-	flush();
-	testRemove(oldItems.length);
-	if ((segmentsToRemove.length !== 0) || (segmentsToAdd.length !== 0)) {
-		return {segmentsToRemove, segmentsToAdd};
-	}
-	return undefined;
-}
-
-/**
- * Detects segments to remove adjust array contents to `newItems` with a `splice` method call.
- * Doesn't assume item insertion - try `detectSplice` if that's the case.
- * As opposed to `detectSplice`, doesn't require item uniqueness.
- *
- * @param oldItems Old array contents.
- * @param newItems New array contents.
- * @returns Segments to remove. If no change required, returns undefined.
- */
-export function detectFilter<T>(oldItems: T[], newItems: T[]): IBindableArray.IndexCount[] {
-	const segmentsToRemove: IBindableArray.IndexCount[] = [];
-	let oldIndex = 0;
-	const oldLength = oldItems.length;
-	const newLength = newItems.length;
-	for (let newIndex = 0; newIndex <= newLength; ++newIndex) {
-		const newItem = newItems[newIndex];
-		let count = 0;
-		while ((oldIndex + count < oldLength) && (oldItems[oldIndex + count] !== newItem)) {
-			++count;
-		}
-		if (count !== 0) {
-			segmentsToRemove.push(new IndexCount(oldIndex, count));
-		}
-		oldIndex += count + 1;
-	}
-	if (segmentsToRemove.length !== 0) {
-		return segmentsToRemove;
-	}
-	return undefined;
-}
-
-/**
- * Detects `reorder` method arguments to adjust array contents to `newItems`.
- * Determines indices to move the items to.
- * If `newItems` contents differ from `oldItems` contents,
- * you should pray Gods that application still works well.
- *
- * @param oldItems Old array contents.
- * @param newItems New array contents.
- * @param getKey Function which returns unique key of an item in this array.
- * By default, identifies primitive values and `Identifiable` objects.
- * @returns `indexArray` argument of `reorder` method.
- * If no method call required, returns undefined.
- */
-export function detectReorder<T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any): number[] {
-	var indexArray: number[] = [];
-	var newIndexMap = new VidMap<T, number>(getKey);
-	for (var i = 0, l = newItems.length; i < l; ++i) {
-		newIndexMap.put(newItems[i], i);
-	}
-	for (var i = 0, l = oldItems.length; i < l; ++i) {
-		indexArray.push(newIndexMap.get(oldItems[i]));
-	}
-	if (!isIdentity(indexArray)) {
-		return indexArray;
-	}
-	return undefined;
-}
-
-/**
- * Detects `reorder` method arguments to sort array contents by the result of `callback` call for each item.
- *
- * @param arr Array.
- * @param callback Indexer function. Must return a comparable value, compatible with
- * `cmp`. Returns item itself by default.
- * @param scope `callback` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns `indexArray` argument of `reorder` method.
- * If no method call required, returns undefined.
- */
-export function detectSort<T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order?: number): number[]{
-	var keys = getSortingIndices(arr, callback, scope, order);
-	if (!isIdentity(keys)) {
-		return invert(keys);
-	}
-	return undefined;
-}
-
-/**
- * Detects `reorder` method arguments to sort array contents by comparer.
- *
- * @param arr Array.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2. Defaults to `cmp`.
- * @param scope `comparer` call scope. Defaults to array itself.
- * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
- * @returns `indexArray` argument of `reorder` method.
- * If no method call required, returns undefined.
- */
-export function detectSortComparing<T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[] {
-	var keys = getSortingIndicesComparing(arr, compare, scope, order);
-	if (!isIdentity(keys)) {
-		return invert(keys);
-	}
-	return undefined;
+	return oldContents;
 }

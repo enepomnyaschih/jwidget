@@ -29,39 +29,15 @@ import Class from '../Class';
  * returns truthy value for, and starts continuous synchronization. Preserves item order in an array.
  */
 abstract class AbstractFilterer<T> extends Class {
-	/**
-	 * @hidden
-	 */
-	protected _scope: any;
 
-	/**
-	 * @hidden
-	 */
-	protected constructor(protected _test: (item: T) => any, config: AbstractFilterer.Config = {}) {
+	protected constructor(protected test: (item: T) => boolean) {
 		super();
-		this._scope = config.scope || this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._test = null;
-		this._scope = null;
+		this.test = null;
 		super.destroyObject();
 	}
 }
 
 export default AbstractFilterer;
-
-namespace AbstractFilterer {
-	/**
-	 * AbstractFilterer configuration.
-	 */
-	export interface Config {
-		/**
-		 * Call scope of filterer's `test` callback. Defaults to the synchronizer itself.
-		 */
-		readonly scope?: any;
-	}
-}

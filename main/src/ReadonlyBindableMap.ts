@@ -23,294 +23,102 @@ SOFTWARE.
 */
 
 import Bindable from "./Bindable";
-import Dictionary from './Dictionary';
-import IBindableArray from './IBindableArray';
 import IBindableMap from './IBindableMap';
-import IBindableSet from "./IBindableSet";
 import Listenable from './Listenable';
-import Reducer from './Reducer';
 
 /**
  * Bindable readonly wrapper over a native map.
  */
-interface ReadonlyBindableMap<T> {
+interface ReadonlyBindableMap<K, V> extends Iterable<readonly [K, V]> {
 	/**
-	 * Checks if this map never dispatches any message. This knowledge may help you do certain code optimizations.
+	 * Returns an iterable of entries in the map.
+	 */
+	[Symbol.iterator](): IterableIterator<[K, V]>;
+
+	/**
+	 * The map never dispatches any messages. This knowledge may help you do certain code optimizations.
 	 */
 	readonly silent: boolean;
 
 	/**
-	 * Identifies an item in this map for optimization of some algorithms.
+	 * Property containing number of entries in the map.
 	 */
-	readonly getKey: (item: T) => any;
-
-	/**
-	 * Property containing number of items in the map.
-	 */
-	readonly length: Bindable<number>;
-
-	/**
-	 * Checks if the map is empty.
-	 */
-	readonly empty: boolean;
-
-	/**
-	 * Returns the first (or some) item in the map. If the map is empty, returns undefined.
-	 */
-	readonly first: T;
-
-	/**
-	 * Returns key of first item. If the map is empty, returns undefined.
-	 */
-	readonly firstKey: string;
+	readonly size: Bindable<number>;
 
 	/**
 	 * Internal representation of the map.
 	 */
-	readonly items: Dictionary<T>;
+	readonly native: ReadonlyMap<K, V>;
 
 	/**
-	 * Items are removed from the map and items are updated in the map.
+	 * Entries are removed from the map and/or entries are updated in the map.
 	 */
-	readonly onSplice: Listenable<IBindableMap.SpliceMessage<T>>;
+	readonly onSplice: Listenable<IBindableMap.SpliceResult<K, V>>;
 
 	/**
-	 * Keys of items are changed in the map.
+	 * Keys are changed in the map. Passes mapping of changed keys (old to new) as a message.
 	 */
-	readonly onReindex: Listenable<IBindableMap.ReindexMessage<T>>;
+	readonly onReindex: Listenable<ReadonlyMap<K, K>>;
 
 	/**
-	 * The map is cleared.
+	 * The map is cleared. Passes old map contents as a message.
 	 */
-	readonly onClear: Listenable<IBindableMap.MessageWithItems<T>>;
+	readonly onClear: Listenable<ReadonlyMap<K, V>>;
 
 	/**
 	 * The map is changed. Dispatched right after any another message.
 	 */
-	readonly onChange: Listenable<IBindableMap.Message<T>>;
+	readonly onChange: Listenable<void>;
 
 	/**
-	 * Returns a shallow copy of this map.
-	 */
-	clone(): IBindableMap<T>;
-
-	/**
-	 * Checks if an item is present the map.
-	 */
-	contains(item: T): boolean;
-
-	/**
-	 * Returns an item by key. If item with such key doesn't exist, returns undefined.
+	 * Checks an entry presence by key.
 	 * @param key Item key.
 	 */
-	get(key: string): T;
+	has(key: K): boolean;
 
 	/**
-	 * Returns array of all map keys.
-	 */
-	getKeys(): IBindableArray<string>;
-
-	/**
-	 * Checks existence of an item with the specified key in the map.
+	 * Returns a value by key. If such key doesn't exist, returns undefined.
 	 * @param key Item key.
 	 */
-	containsKey(key: string): boolean;
+	get(key: K): V;
 
 	/**
-	 * @inheritDoc
+	 * Returns an iterable of keys in the map.
 	 */
-	every(callback: (item: T, key: string) => any, scope?: any): boolean;
+	keys(): IterableIterator<K>;
 
 	/**
-	 * @inheritDoc
+	 * Returns an iterable of values in the map.
 	 */
-	some(callback: (item: T, key: string) => any, scope?: any): boolean;
+	values(): IterableIterator<V>;
 
 	/**
-	 * @inheritDoc
+	 * Returns an iterable of entries in the map.
 	 */
-	forEach(callback: (item: T, key: string) => any, scope?: any): void;
+	entries(): IterableIterator<readonly [K, V]>;
 
 	/**
-	 * Returns key of the specified item in the map. If such item doesn't exist, returns undefined.
-	 * @param item Map item.
+	 * Iterates through the map entries. Calls the specified function for all entries.
+	 * @param callback Callback function.
 	 */
-	keyOf(item: T): string;
+	forEach(callback: (value: V, key: K) => void): void;
 
 	/**
-	 * @inheritDoc
-	 */
-	find(callback: (item: T, key: string) => any, scope?: any): T;
-
-	/**
-	 * Finds item matching criteria.
-	 * Returns the key of some item the callback returns %truthy value for.
-	 * Algorithm iterates items sequentially, and stops it after the first item matching the criteria.
-	 * @param callback Criteria callback.
-	 * @param scope `callback` call scope. Defaults to the map itself.
-	 * @returns Found item key or undefined.
-	 */
-	findKey(callback: (item: T, key: string) => any, scope?: any): string;
-
-	/**
-	 * Converts the map to a native array. Builds a new array consisting of the map items.
-	 */
-	toArray(): T[];
-
-	/**
-	 * Converts collection to a bindable array. Builds a new array consisting of collection items.
-	 */
-	toBindableArray(): IBindableArray<T>;
-
-	/**
-	 * Converts the map to a set. Builds a new set consisting of the map items.
-	 */
-	toSet(): IBindableSet<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IBindableArray<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IBindableArray<T>;
-
-	/**
-	 * Builds an array of item keys sorted by the result of %callback call for each item.
-	 * @param callback Indexer function. Must return a comparable value, compatible with %cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the map.
-	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
-	 * @returns Keys of items to build a sorted array.
-	 */
-	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IBindableArray<string>;
-
-	/**
-	 * Builds an array of item keys sorted by comparer.
-	 * @param compare Comparer function. Should return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Compare call scope. Defaults to the map.
-	 * @param order Sorting order. Positive number for ascending sorting (default), negative number for descending sorting.
-	 * @returns Keys of items to build a sorted array.
-	 */
-	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IBindableArray<string>;
-
-	/**
-	 * @inheritDoc
-	 */
-	index(callback: (item: T, key: string) => any, scope?: any): IBindableMap<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	filter(callback: (item: T, key: string) => any, scope?: any): IBindableMap<T>;
-
-	/**
-	 * @inheritDoc
-	 */
-	count(callback: (item: T, key: string) => any, scope?: any): number;
-
-	/**
-	 * @inheritDoc
-	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => any): IBindableMap<U>;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(reducer: Reducer<T, U>): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
-
-	/**
-	 * Returns key of the map item the callback returns the highest (or lowest if order < 0) value for.
-	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the map.
-	 * @param order Pass negative order to find the lowest value.
-	 * @returns Key of item with the highest (or lowest) value in the map.
-	 */
-	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
-
-	/**
-	 * @inheritDoc
-	 */
-	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
-
-	/**
-	 * Returns key of the highest (or lowest if order < 0) map item in terms of the specified comparer function.
-	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the map.
-	 * @param order Pass negative order to find the lowest value.
-	 * @returns Key of the highest (or lowest) map item.
-	 */
-	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
-
-	/**
-	 * @inheritDoc
-	 */
-	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T;
-
-	/**
-	 * Returns key of the map item the callback returns the lowest (or highest if order < 0) value for.
-	 * @param callback Returns a comparable value, compatible with cmp. Returns the item itself by default.
-	 * @param scope Callback call scope. Defaults to the map.
-	 * @param order Pass negative order to find the highest value.
-	 * @returns Key of item with the lowest (or highest) value in the map.
-	 */
-	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string;
-
-	/**
-	 * @inheritDoc
-	 */
-	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T;
-
-	/**
-	 * Returns key of the lowest (or highest if order < 0) map item in terms of the specified comparer function.
-	 * @param compare Returns a positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to cmp.
-	 * @param scope Callback call scope. Defaults to the map.
-	 * @param order Pass negative order to find the highest value.
-	 * @returns Key of the lowest (or highest) map item.
-	 */
-	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string;
-
-	/**
-	 * Checks this map for equality (===) to a dictionary, item by item.
-	 * @param dict Dictionary.
-	 * @returns This map is equal to the dictionary.
-	 */
-	equal(dict: Dictionary<T>): boolean;
-
-	/**
-	 * @returns Copy of map contents.
-	 */
-	toDictionary(): Dictionary<T>;
-
-	/**
-	 * Detects `splice` method arguments to adjust the map contents to `newItems`.
+	 * Detects `splice` method arguments to adjust the map contents to `newContents`.
 	 * Determines item bunches to be removed and inserted/replaced, along with their keys.
-	 * @param newItems New map contents.
+	 * @param newContents New map contents.
 	 * @returns `splice` method arguments. If no method call required, returns undefined.
 	 */
-	detectSplice(newItems: Dictionary<T>): IBindableMap.SpliceParams<T>;
+	detectSplice(newContents: ReadonlyMap<K, V>): IBindableMap.SpliceParams<K, V>;
 
 	/**
 	 * Detects `reindex` method arguments to adjust the map contents to `newItems`.
 	 * Determines new keys to be assigned to all items.
 	 * If `newItems` contents differ from the map contents, it may lead to unknown consequences.
-	 * @param newItems New map contents.
-	 * @param getKey Function which returns unique key of an item in this map. Defaults to `getKey`.
-	 * @param scope `getKey` call scope. Defaults to the map itself.
-	 * @returns `keyMap` argument of `reindex` method. If no method call required, returns undefined.
+	 * @param newContents New map contents.
+	 * @returns `keyMapping` argument of `reindex` method. If no method call required, returns undefined.
 	 */
-	detectReindex(newItems: Dictionary<T>, getKey?: (item: T) => any, scope?: any): Dictionary<string>;
+	detectReindex(newContents: ReadonlyMap<K, V>): ReadonlyMap<K, K>;
 }
 
 export default ReadonlyBindableMap;

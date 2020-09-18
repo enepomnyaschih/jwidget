@@ -25,9 +25,6 @@ SOFTWARE.
 import AbstractInserter from '../AbstractInserter';
 import Component from '../Component';
 
-/**
- * @hidden
- */
 export default class ComponentInserter extends AbstractInserter<Component> {
 	protected _getElement(item: Component): HTMLElement {
 		return item.el[0];

@@ -24,16 +24,13 @@ SOFTWARE.
 
 import jQuery from 'jquery';
 import AbstractTemplate from './AbstractTemplate';
-import Dictionary from './Dictionary';
 import TemplateOutput from './TemplateOutput';
 
-/**
- * @hidden
- */
 export default class DomTemplate extends AbstractTemplate {
+
 	private el: HTMLElement;
 	private output: TemplateOutput = null;
-	private groups: Dictionary<HTMLElement[]>;
+	private groups: Map<string, HTMLElement[]>;
 
 	/**
 	 * Creates a template instance.
@@ -52,20 +49,18 @@ export default class DomTemplate extends AbstractTemplate {
 		if (this.output !== null) {
 			return this.output;
 		}
-		this.groups = {};
+		this.groups = new Map<string, HTMLElement[]>();
 		this._compileAttributes(this.el);
-		var orderedGroups: Dictionary<HTMLElement[]> = {};
-		for (var i = 0, l = this.ids.length; i < l; ++i) {
-			var id = this.ids[i];
-			orderedGroups[id] = this.groups[id];
+		const orderedGroups = new Map<string, HTMLElement[]>();
+		for (const id of this.ids) {
+			orderedGroups.set(id, this.groups.get(id));
 		}
 		this.output = {root: this.el, groups: orderedGroups};
 		return this.output;
 	}
 
-	protected _addElement(id: string, el: HTMLElement, path: number[]) {
-		path = path;
-		this.groups[id] = this.groups[id] || [];
-		this.groups[id].push(el);
+	protected _addElement(id: string, el: HTMLElement, _path: readonly number[]) {
+		this.groups.set(id, this.groups.get(id) ?? []);
+		this.groups.get(id).push(el);
 	}
 }

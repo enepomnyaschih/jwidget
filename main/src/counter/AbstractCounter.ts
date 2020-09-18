@@ -32,25 +32,17 @@ import Property from '../Property';
  * returns truthy value for, and starts continuous synchronization.
  */
 abstract class AbstractCounter<T> extends Class {
+
 	private _targetCreated: boolean;
 
-	/**
-	 * @hidden
-	 */
-	protected _scope: any;
-
-	/**
-	 * @hidden
-	 */
 	protected _target: IProperty<number>;
 
 	/**
-	 * @param _test Filtering criteria.
+	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	protected constructor(protected _test: (item: T) => any, config: AbstractCounter.Config = {}) {
+	protected constructor(protected test: (item: T) => boolean, config: AbstractCounter.Config = {}) {
 		super();
-		this._scope = config.scope || this;
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new Property<number>(0) : config.target;
 		this.recount();
@@ -63,17 +55,13 @@ abstract class AbstractCounter<T> extends Class {
 		return this._target;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		this._target.set(0);
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
-		this._test = null;
+		this.test = null;
 		this._target = null;
-		this._scope = null;
 		super.destroyObject();
 	}
 
@@ -82,8 +70,7 @@ abstract class AbstractCounter<T> extends Class {
 	 * @param config Options to modify.
 	 */
 	reconfigure(config: AbstractCounter.Reconfig<T>) {
-		this._test = config.test || this._test;
-		this._scope = config.scope || this._scope;
+		this.test = config.test ?? this.test;
 		this.recount();
 	}
 
@@ -102,11 +89,6 @@ namespace AbstractCounter {
 	 */
 	export interface Config {
 		/**
-		 * Call scope of counter's `test` callback. Defaults to the synchronizer itself.
-		 */
-		readonly scope?: any;
-
-		/**
 		 * Target property. By default, created automatically.
 		 */
 		readonly target?: IProperty<number>;
@@ -119,11 +101,6 @@ namespace AbstractCounter {
 		/**
 		 * Filtering criteria.
 		 */
-		readonly test?: (item: T) => any;
-
-		/**
-		 * Call scope of counter's `test` callback.
-		 */
-		readonly scope?: any;
+		readonly test?: (item: T) => boolean;
 	}
 }

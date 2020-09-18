@@ -34,11 +34,11 @@ export default class ArraySpliceResult<T> implements IBindableArray.SpliceResult
 	private _removeParams: IBindableArray.IndexCount[];
 
 	/**
-	 * @param oldItems Old array contents.
+	 * @param oldContents Old array contents.
 	 * @param removedSegments Removed item segments.
 	 * @param addedSegments Added item segments.
 	 */
-	constructor(readonly oldItems: T[],
+	constructor(readonly oldContents: T[],
 		readonly removedSegments: IBindableArray.IndexItems<T>[],
 		readonly addedSegments: IBindableArray.IndexItems<T>[]) {
 	}

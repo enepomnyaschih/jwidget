@@ -32,37 +32,34 @@ import AbstractConverterToSet from './AbstractConverterToSet';
  * AbstractConverterToSet implementation for arrays.
  */
 export default class ArrayConverterToSet<T> extends AbstractConverterToSet<T> {
+
 	/**
 	 * @param source Source array.
 	 * @param config Converter configuration.
 	 */
 	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractConverterToSet.Config<T>) {
-		super(config, source.getKey, source.silent);
-		this._target.tryAddAll(source.items);
+		super(config, source.silent);
+		this._target.tryAddAll(source);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._target.removeItems(this.source.items);
+		this._target.tryDeleteAll(this.source);
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableArray.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
+	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
 		this._target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
-		this._target.trySplice([message.oldItem], [message.newItem]);
+		this._target.trySplice([message.oldValue], [message.newValue]);
 	}
 
-	private _onClear(message: IBindableArray.MessageWithItems<T>) {
-		this._target.tryRemoveAll(message.items);
+	private _onClear(oldContents: readonly T[]) {
+		this._target.tryDeleteAll(oldContents);
 	}
 }
 
@@ -73,8 +70,8 @@ export default class ArrayConverterToSet<T> extends AbstractConverterToSet<T> {
  */
 export function arrayToSet<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
-		return source.toSet();
+		return new BindableSet(source, true);
 	}
-	const target = new BindableSet<T>(source.getKey);
+	const target = new BindableSet<T>();
 	return target.owning(new ArrayConverterToSet<T>(source, {target}));
 }

@@ -22,46 +22,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as ArrayUtils from './ArrayUtils';
+import ArraySpliceResult from './ArraySpliceResult';
+import * as ArrayUtils from "./ArrayUtils";
+import {invert, isIdentity} from "./ArrayUtils";
 import Bindable from './Bindable';
 import Class from './Class';
 import Dispatcher from './Dispatcher';
-import IDispatcher from './IDispatcher';
 import IBindableArray from './IBindableArray';
-import IBindableMap from './IBindableMap';
-import {ADAPTER, CollectionFlags, destroy, SILENT} from './index';
+import IDispatcher from './IDispatcher';
+import {ADAPTER, cmp, CollectionFlags, destroy, identity, SILENT} from './index';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
-import {vid, VidSet} from './internal';
+import {initReduceState} from "./internal";
 import IProperty from './IProperty';
-import IBindableSet from './IBindableSet';
 import Listenable from './Listenable';
-import ArraySpliceResult from './ArraySpliceResult';
-import BindableMap from './BindableMap';
 import Property from './Property';
-import Reducer from './Reducer';
-import BindableSet from './BindableSet';
-import Some from './Some';
+import Reducer from "./Reducer";
 
 /**
  * Implementation of a bindable wrapper over a native array.
  */
 export default class BindableArray<T> extends Class implements IBindableArray<T> {
-	private _ownsItems: Boolean = false;
-	private _length: IProperty<number>;
-	private _items: T[];
 
-	private _onSplice: IDispatcher<IBindableArray.SpliceMessage<T>>;
-	private _onReplace: IDispatcher<IBindableArray.ReplaceMessage<T>>;
-	private _onMove: IDispatcher<IBindableArray.MoveMessage<T>>;
-	private _onReorder: IDispatcher<IBindableArray.ReorderMessage<T>>;
-	private _onClear: IDispatcher<IBindableArray.MessageWithItems<T>>;
-	private _onChange: IDispatcher<IBindableArray.Message<T>>;
+	private _ownsValues = false;
+	private readonly _length: IProperty<number>;
+	private readonly _native: T[];
 
-	/**
-	 * @inheritDoc
-	 */
-	readonly getKey: (item: T) => any;
+	private readonly _onSplice: IDispatcher<IBindableArray.SpliceResult<T>>;
+	private readonly _onReplace: IDispatcher<IBindableArray.ReplaceMessage<T>>;
+	private readonly _onMove: IDispatcher<IBindableArray.MoveMessage<T>>;
+	private readonly _onReorder: IDispatcher<IBindableArray.ReorderMessage<T>>;
+	private readonly _onClear: IDispatcher<readonly T[]>;
+	private readonly _onChange: IDispatcher<void>;
 
 	/**
 	 * @param silent Create a silent array which means that it never dispatches any messages.
@@ -69,51 +61,37 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 	constructor(silent?: boolean);
 
 	/**
-	 * @param getKey Function that identifies an item in this array for optimization of some algorithms.
+	 * @param contents Initial array contents.
 	 * @param silent Create a silent array which means that it never dispatches any messages.
 	 */
-	constructor(getKey: (item: T) => any, silent?: boolean);
+	constructor(contents: Iterable<T>, silent?: boolean);
 
 	/**
-	 * @param items Initial array contents.
+	 * @param contents Initial array contents.
 	 * @param flags Collection configuration flags.
 	 */
-	constructor(items: T[], flags?: CollectionFlags);
-
-	/**
-	 * @param items Initial array contents.
-	 * @param getKey Function that identifies an item in this array for optimization of some algorithms.
-	 * @param flags Collection configuration flags.
-	 */
-	constructor(items: T[], getKey: (item: T) => any, flags?: CollectionFlags);
-	constructor(a?: any, b?: any, c?: CollectionFlags) {
+	constructor(contents: T[], flags?: CollectionFlags);
+	constructor(a?: any, b?: any) {
 		super();
 		if (typeof a === "boolean") {
-			c = a ? SILENT : 0;
+			b = a ? SILENT : 0;
 			a = null;
-		} else if (typeof a === "function" || (a == null && typeof b === "boolean")) {
-			c = b ? SILENT : 0;
-			b = a;
-			a = null;
-		} else if (typeof b === "number") {
-			c = b;
-			b = null;
+		} else if (typeof b === "boolean") {
+			b = b ? SILENT : 0;
 		}
-		const items: T[] = a;
-		const silent = Boolean(c & SILENT);
-		const adapter = (items != null) && Boolean(c & ADAPTER);
+		const contents: T[] = a;
+		const silent = Boolean(b & SILENT);
+		const adapter = (contents != null) && Boolean(b & ADAPTER);
 
-		this.getKey = b || vid;
+		this._native = adapter ? contents : [...(contents || [])];
+		this._length = this.own(new Property(this._native.length, silent));
 
-		this._items = adapter ? items : items ? items.concat() : [];
-		this._length = this.own(new Property(this._items.length, silent));
-
-		this._onSplice = Dispatcher.make<IBindableArray.SpliceMessage<T>>(silent);
+		this._onSplice = Dispatcher.make<IBindableArray.SpliceResult<T>>(silent);
 		this._onReplace = Dispatcher.make<IBindableArray.ReplaceMessage<T>>(silent);
 		this._onMove = Dispatcher.make<IBindableArray.MoveMessage<T>>(silent);
 		this._onReorder = Dispatcher.make<IBindableArray.ReorderMessage<T>>(silent);
-		this._onClear = Dispatcher.make<IBindableArray.MessageWithItems<T>>(silent);
-		this._onChange = Dispatcher.make<IBindableArray.Message<T>>(silent);
+		this._onClear = Dispatcher.make<readonly T[]>(silent);
+		this._onChange = Dispatcher.make<void>(silent);
 	}
 
 	protected destroyObject(): void {
@@ -121,647 +99,369 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		super.destroyObject();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+	[Symbol.iterator](): IterableIterator<T> {
+		return this._native[Symbol.iterator]();
+	}
+
 	get silent() {
 		return this.onChange.dummy;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	get length(): Bindable<number> {
 		return this._length;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get empty() {
-		return this.length.get() === 0;
+	get native(): readonly T[] {
+		return this._native;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get first(): T {
-		return this._items[0];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	get last(): T {
-		return this._items[this._items.length - 1];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	get lastIndex(): number {
-		var l = this._items.length;
-		return (l !== 0) ? (l - 1) : undefined;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	get items(): T[] {
-		return this._items;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	get onSplice(): Listenable<IBindableArray.SpliceMessage<T>> {
+	get onSplice(): Listenable<IBindableArray.SpliceResult<T>> {
 		return this._onSplice;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	get onReplace(): Listenable<IBindableArray.ReplaceMessage<T>> {
 		return this._onReplace;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	get onMove(): Listenable<IBindableArray.MoveMessage<T>> {
 		return this._onMove;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get onClear(): Listenable<IBindableArray.MessageWithItems<T>> {
-		return this._onClear;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	get onReorder(): Listenable<IBindableArray.ReorderMessage<T>> {
 		return this._onReorder;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get onChange(): Listenable<IBindableArray.Message<T>> {
+	get onClear(): Listenable<readonly T[]> {
+		return this._onClear;
+	}
+
+	get onChange(): Listenable<void> {
 		return this._onChange;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	ownItems(): this {
-		this._ownsItems = true;
+	ownValues(): this {
+		this._ownsValues = true;
 		return this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	clone(): IBindableArray<T> {
-		return new BindableArray<T>(this.items, this.getKey, this.silent ? SILENT : 0);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	get(index: number): T {
-		return this._items[index];
+		return this._native[index];
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	contains(item: T): boolean {
-		return ArrayUtils.contains(this._items, item);
+	includes(value: T): boolean {
+		return this._native.includes(value);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	every(callback: (item: T, index: number) => any, scope?: any): boolean {
-		return this._items.every(callback, scope || this);
+	indexOf(value: T): number {
+		return this._native.indexOf(value);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	some(callback: (item: T, index: number) => any, scope?: any): boolean {
-		return this._items.some(callback, scope || this);
+	lastIndexOf(value: T): number {
+		return this._native.lastIndexOf(value);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	forEach(callback: (item: T, index: number) => any, scope?: any): void {
-		this._items.forEach(callback, scope || this);
+	every(callback: (value: T, index: number) => boolean): boolean {
+		return this._native.every(callback);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	findIndex(callback: (item: T, index: number) => any, scope?: any): number {
-		return ArrayUtils.findIndex(this._items, callback, scope);
+	some(callback: (value: T, index: number) => boolean): boolean {
+		return this._native.some(callback);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	find(callback: (item: T, index: number) => any, scope?: any): T {
-		return ArrayUtils.find(this._items, callback, scope);
+	forEach(callback: (value: T, index: number) => void): void {
+		this._native.forEach(callback);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	toSorted(callback?: (item: T, index: number) => any, scope?: any, order?: number): IBindableArray<T> {
-		return new BindableArray<T>(ArrayUtils.toSorted(this._items, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
+	find(callback: (value: T, index: number) => boolean): T {
+		return this._native.find(callback);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IBindableArray<T> {
-		return new BindableArray<T>(ArrayUtils.toSortedComparing(this._items, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
+	findIndex(callback: (value: T, index: number) => boolean): number {
+		return this._native.findIndex(callback);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	getSortingIndices(callback?: (item: T, index: number) => any, scope?: any, order?: number): IBindableArray<number> {
-		return new BindableArray<number>(ArrayUtils.getSortingIndices(this._items, callback, scope || this, order), String, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	getSortingIndicesComparing(compare?: (t1: T, t2: T, k1: number, k2: number) => number, scope?: any, order?: number): IBindableArray<number> {
-		return new BindableArray<number>(ArrayUtils.getSortingIndicesComparing(this._items, compare, scope || this, order), String, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	index(callback: (item: T, index: number) => any, scope?: any): IBindableMap<T> {
-		return new BindableMap<T>(ArrayUtils.index(this._items, callback, scope), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	filter(callback: (item: T, index: number) => any, scope?: any): IBindableArray<T> {
-		return new BindableArray<T>(this._items.filter(callback, scope || this), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	count(callback: (item: T, index: number) => any, scope?: any): number {
-		return ArrayUtils.count(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	map<U>(callback: (item: T, index: number) => U, scope?: any, getKey?: (item: U) => any): IBindableArray<U> {
-		return new BindableArray<U>(this._items.map(callback, scope || this), getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	reduce<U>(reducer: Reducer<T, U>): U;
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
-	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
-		return (typeof reducer === "function") ?
-			this.items.reduce<U>(reducer, initial) :
-			ArrayUtils.reduce<T, U>(this.items, reducer);
+	reduce<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U;
+	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, value: T, index: number) => U), initial?: U): U {
+		const {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
+			value: initial,
+			callback: reducer
+		};
+		return this._native.reduce<U>(callback, value);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	max(callback?: (item: T, index: number) => any, scope?: any, order?: number): T {
-		return ArrayUtils.max(this._items, callback, scope, order);
+	reduceRight<U>(reducer: Reducer<T, U>): U;
+	reduceRight<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U;
+	reduceRight<U>(reducer: Reducer<T, U> | ((accumulator: U, value: T, index: number) => U), initial?: U): U {
+		const {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
+			value: initial,
+			callback: reducer
+		};
+		return this._native.reduceRight<U>(callback, value);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	maxIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number {
-		return ArrayUtils.maxIndex(this._items, callback, scope, order);
+	add(value: T, index?: number) {
+		this.addAll([value], index);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	maxComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T {
-		return ArrayUtils.maxComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	maxIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number {
-		return ArrayUtils.maxIndexComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	min(callback?: (item: T, index: number) => any, scope?: any, order?: number): T {
-		return ArrayUtils.min(this._items, callback, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	minIndex(callback?: (item: T, index: number) => any, scope?: any, order?: number): number {
-		return ArrayUtils.minIndex(this._items, callback, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	minComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): T {
-		return ArrayUtils.minComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	minIndexComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number {
-		return ArrayUtils.minIndexComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toArray(): T[] {
-		return this._items.concat();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toBindableArray(): IBindableArray<T> {
-		return new BindableArray<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toSet(): IBindableSet<T> {
-		return new BindableSet<T>(this.toArray(), this.getKey, true);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	asArray(): T[] {
-		return this._items;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	asBindableArray(): IBindableArray<T> {
-		return this;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	asSet(): IBindableSet<T> {
-		return this.toSet();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	add(item: T, index?: number) {
-		this.addAll([item], index);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	addAll(items: T[], index?: number) {
+	addAll(values: readonly T[], index?: number) {
 		if (index === undefined) {
-			index = this._items.length;
+			index = this._native.length;
 		}
-		this.trySplice([], [new IndexItems<T>(index, items)]);
+		this.trySplice([], [new IndexItems<T>(index, values)]);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	trySet(index: number, item: T): Some<T> {
-		const oldProxy = ArrayUtils.trySet(this._items, index, item);
-		if (oldProxy === undefined) {
+	set(index: number, newValue: T): T {
+		const result = this.trySet(index, newValue);
+		return (result !== undefined) ? result : this._native[index];
+	}
+
+	trySet(index: number, newValue: T): T {
+		const oldValue = this._native[index];
+		if (newValue === oldValue) {
 			return undefined;
 		}
-		this._onReplace.dispatch({sender: this, index: index, oldItem: oldProxy.value, newItem: item});
-		this._onChange.dispatch({sender: this});
-		if (this._ownsItems) {
-			(<any>oldProxy.value).destroy();
+		this._native[index] = newValue;
+		this._onReplace.dispatch({index, oldValue, newValue});
+		this._onChange.dispatch();
+		if (this._ownsValues) {
+			(<any>oldValue).destroy();
 		}
-		return oldProxy;
+		return oldValue;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	set(index: number, item: T): T {
-		const result = this.trySet(index, item);
-		return (result !== undefined) ? result.value : this.get(index);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	remove(index: number): T {
 		const result = this.tryRemoveAll(index, 1);
-		if (result !== undefined) {
-			return result[0];
+		return (result !== undefined) ? result[0] : undefined;
+	}
+
+	removeAll(index: number, count: number): readonly T[] {
+		return this.tryRemoveAll(index, count) || [];
+	}
+
+	tryRemoveAll(index: number, count: number): readonly T[] {
+		const result = this.trySplice([new IndexCount(index, count)], []);
+		return (result !== undefined) ? result.removedSegments[0].items : undefined;
+	}
+
+	removeValue(value: T): number {
+		const index = this._native.indexOf(value);
+		if (index !== -1) {
+			this.remove(index);
 		}
-		return undefined;
+		return index;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	removeItem(item: T): number {
-		const key = this.indexOf(item);
-		if (key !== -1) {
-			this.remove(key);
-		}
-		return key;
+	removeValues(values: readonly T[]) {
+		const valueSet = new Set(values);
+		const newContents = this._native.filter(item => !valueSet.has(item));
+		this.performFilter(newContents);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	removeAll(index: number, count: number): T[] {
-		var result = this.tryRemoveAll(index, count);
-		return result || [];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	tryRemoveAll(index: number, count: number): T[] {
-		var result = this.trySplice([new IndexCount(index, count)], []);
-		if (result !== undefined) {
-			return result.removedSegments[0].items;
-		}
-		return undefined;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	removeItems(items: T[]) {
-		const itemSet = VidSet.fromArray<T>(items, this.getKey);
-		const newItems = this._items.filter((item) => !itemSet.contains(item));
-		this.performFilter(newItems);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	move(fromIndex: number, toIndex: number): T {
 		this.tryMove(fromIndex, toIndex);
-		return this.get(toIndex);
+		return this._native[toIndex];
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	tryMove(fromIndex: number, toIndex: number): T {
-		var item = ArrayUtils.tryMove(this._items, fromIndex, toIndex);
-		if (item === undefined) {
+		if (fromIndex === toIndex) {
 			return undefined;
 		}
-		this._onMove.dispatch({sender: this, fromIndex: fromIndex, toIndex: toIndex, item: item});
-		this._onChange.dispatch({sender: this});
-		return item;
+		const value = this._native[fromIndex];
+		this._native.splice(fromIndex, 1);
+		this._native.splice(toIndex, 0, value);
+		this._onMove.dispatch({fromIndex, toIndex, value});
+		this._onChange.dispatch();
+		return value;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	clear(): T[] {
-		var oldItems = ArrayUtils.tryClear(this._items);
-		if (oldItems === undefined) {
+	clear(): readonly T[] {
+		if (this._native.length === 0) {
 			return undefined;
 		}
+		const oldContents = this._native.concat();
+		this._native.splice(0, this._native.length);
 		this._length.set(0);
-		this._onClear.dispatch({sender: this, items: oldItems});
-		this._onChange.dispatch({sender: this});
-		if (this._ownsItems) {
-			ArrayUtils.backEvery(oldItems, destroy);
+		this._onClear.dispatch(oldContents);
+		this._onChange.dispatch();
+		if (this._ownsValues) {
+			ArrayUtils.backForEach(oldContents, destroy);
 		}
-		return oldItems;
+		return oldContents;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	splice(segmentsToRemove: IBindableArray.IndexCount[], segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T> {
-		var result = this.trySplice(segmentsToRemove, segmentsToAdd);
-		return (result !== undefined) ? result : new ArraySpliceResult(this._items.concat(), [], []);
+	splice(segmentsToRemove: Iterable<IBindableArray.IndexCount>,
+		   segmentsToAdd: Iterable<IBindableArray.IndexItems<T>>): IBindableArray.SpliceResult<T> {
+		const result = this.trySplice(segmentsToRemove, segmentsToAdd);
+		return (result !== undefined) ? result : new ArraySpliceResult(this._native.concat(), [], []);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	trySplice(segmentsToRemove: IBindableArray.IndexCount[], segmentsToAdd: IBindableArray.IndexItems<T>[]): IBindableArray.SpliceResult<T> {
-		var result = ArrayUtils.trySplice(this._items, segmentsToRemove, segmentsToAdd);
+	trySplice(segmentsToRemove: Iterable<IBindableArray.IndexCount>,
+			  segmentsToAdd: Iterable<IBindableArray.IndexItems<T>>): IBindableArray.SpliceResult<T> {
+		const result = ArrayUtils.trySplice(this._native, segmentsToRemove, segmentsToAdd);
 		if (result === undefined) {
 			return undefined;
 		}
-		this._length.set(this._items.length);
-		this._onSplice.dispatch({sender: this, spliceResult: result});
-		this._onChange.dispatch({sender: this});
-		if (this._ownsItems) {
-			ArrayUtils.backEvery(result.removedItems, destroy);
+		this._length.set(this._native.length);
+		this._onSplice.dispatch(result);
+		this._onChange.dispatch();
+		if (this._ownsValues) {
+			ArrayUtils.backForEach(result.removedItems, destroy);
 		}
 		return result;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	reorder(indexArray: number[]) {
-		this.tryReorder(indexArray);
+	reorder(indexMapping: readonly number[]) {
+		this.tryReorder(indexMapping);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	tryReorder(indexArray: number[]): T[] {
-		var items = ArrayUtils.tryReorder(this._items, indexArray);
-		if (items === undefined) {
+	tryReorder(indexMapping: readonly number[]): readonly T[] {
+		const oldContents = ArrayUtils.tryReorder(this._native, indexMapping);
+		if (oldContents === undefined) {
 			return undefined;
 		}
-		this._onReorder.dispatch({sender: this, indexArray: indexArray, items: items});
-		this._onChange.dispatch({sender: this});
-		return items;
+		this._onReorder.dispatch({indexMapping, oldContents});
+		this._onChange.dispatch();
+		return oldContents;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	detectSplice(newItems: T[]): IBindableArray.SpliceParams<T> {
-		return ArrayUtils.detectSplice(this._items, newItems, this.getKey);
+	detectSplice(newContents: readonly T[]): IBindableArray.SpliceParams<T> {
+		const segmentsToRemove: IBindableArray.IndexCount[] = [];
+		const segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
+		const oldIndexMap = new Map<T, number>();
+		for (let i = 0, l = this._native.length; i < l; ++i) {
+			oldIndexMap.set(this._native[i], i);
+		}
+		let nextOldIndex = 0;
+		let offset = 0;
+		let newItemBuffer: T[] = [];
+
+		function flush() {
+			if (newItemBuffer.length === 0) {
+				return;
+			}
+			segmentsToAdd.push(new IndexItems<T>(offset + nextOldIndex, newItemBuffer));
+			offset += newItemBuffer.length;
+			newItemBuffer = [];
+		}
+
+		function testRemove(oldIndex: number) {
+			if (oldIndex > nextOldIndex) {
+				const count = oldIndex - nextOldIndex;
+				segmentsToRemove.push(new IndexCount(nextOldIndex, count));
+				offset -= count;
+			}
+		}
+
+		for (let newIndex = 0, l = newContents.length; newIndex < l; ++newIndex) {
+			const item = newContents[newIndex];
+			const oldIndex = oldIndexMap.get(item);
+			if ((oldIndex === undefined) || (oldIndex < nextOldIndex)) {
+				newItemBuffer.push(item);
+			} else {
+				flush();
+				testRemove(oldIndex);
+				nextOldIndex = oldIndex + 1;
+			}
+		}
+		flush();
+		testRemove(this._native.length);
+		if ((segmentsToRemove.length !== 0) || (segmentsToAdd.length !== 0)) {
+			return {segmentsToRemove, segmentsToAdd};
+		}
+		return undefined;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	detectFilter(newItems: T[]): IBindableArray.IndexCount[] {
-		return ArrayUtils.detectFilter(this._items, newItems);
+	detectFilter(newContents: readonly T[]): readonly IBindableArray.IndexCount[] {
+		const segmentsToRemove: IBindableArray.IndexCount[] = [];
+		let oldIndex = 0;
+		const oldLength = this._native.length;
+		const newLength = newContents.length;
+		for (let newIndex = 0; newIndex <= newLength; ++newIndex) {
+			const newItem = newContents[newIndex];
+			let count = 0;
+			while ((oldIndex + count < oldLength) && (this._native[oldIndex + count] !== newItem)) {
+				++count;
+			}
+			if (count !== 0) {
+				segmentsToRemove.push(new IndexCount(oldIndex, count));
+			}
+			oldIndex += count + 1;
+		}
+		return (segmentsToRemove.length !== 0) ? segmentsToRemove : undefined;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	detectReorder(newItems: T[]): number[] {
-		return ArrayUtils.detectReorder(this._items, newItems, this.getKey);
+	detectReorder(newContents: readonly T[]): readonly number[] {
+		const indexArray: number[] = [];
+		const newIndexMap = new Map<T, number>();
+		for (let i = 0, l = newContents.length; i < l; ++i) {
+			newIndexMap.set(newContents[i], i);
+		}
+		for (let i = 0, l = this._native.length; i < l; ++i) {
+			indexArray.push(newIndexMap.get(this._native[i]));
+		}
+		return isIdentity(indexArray) ? undefined : indexArray;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	detectSort(callback?: (item: T, index: number) => any, scope?: any, order?: number): number[] {
-		return ArrayUtils.detectSort(this._items, callback, scope || this, order);
+	detectSort(callback: (item: T, index: number) => any = identity, order: number = 1): readonly number[] {
+		const pairs = this._native.map((item, index): [number, T] => [index, callback(item, index)]);
+		pairs.sort((x, y) => order * cmp(x[1], y[1]));
+		const indexes = pairs.map(pair => pair[0]);
+		return isIdentity(indexes) ? undefined : invert(indexes);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number): number[] {
-		return ArrayUtils.detectSortComparing(this._items, compare, scope || this, order);
+	detectSortComparing(compare: (t1: T, t2: T, i1: number, i2: number) => number = cmp, order: number = 1): readonly number[] {
+		const pairs = this._native.map((item, index): [number, T] => [index, item]);
+		pairs.sort((x, y) => order * compare(x[1], y[1], x[0], y[0]));
+		const indexes = pairs.map(pair => pair[0]);
+		return isIdentity(indexes) ? undefined : invert(indexes);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	performSplice(newItems: T[]) {
-		var params = this.detectSplice(newItems);
+	performSplice(newContents: readonly T[]) {
+		const params = this.detectSplice(newContents);
 		if (params !== undefined) {
 			this.trySplice(params.segmentsToRemove, params.segmentsToAdd);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	performFilter(newItems: T[]) {
-		var params = this.detectFilter(newItems);
+	performFilter(newContents: readonly T[]) {
+		const params = this.detectFilter(newContents);
 		if (params !== undefined) {
 			this.trySplice(params, []);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	performReorder(newItems: T[]) {
-		var indexArray = this.detectReorder(newItems);
-		if (indexArray !== undefined) {
-			this.tryReorder(indexArray);
+	performReorder(newContents: T[]) {
+		const indexMapping = this.detectReorder(newContents);
+		if (indexMapping !== undefined) {
+			this.tryReorder(indexMapping);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	sort(callback?: (item: T, index: number) => any, scope?: any, order?: number) {
-		var indexArray = this.detectSort(callback, scope, order);
-		if (indexArray !== undefined) {
-			this.tryReorder(indexArray);
+	sort(callback?: (item: T, index: number) => any, order?: number) {
+		const indexMapping = this.detectSort(callback, order);
+		if (indexMapping !== undefined) {
+			this.tryReorder(indexMapping);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	sortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order?: number) {
-		var indexArray = this.detectSortComparing(compare, scope, order);
-		if (indexArray !== undefined) {
-			this.tryReorder(indexArray);
+	sortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, order?: number) {
+		const indexMapping = this.detectSortComparing(compare, order);
+		if (indexMapping !== undefined) {
+			this.tryReorder(indexMapping);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	reverse() {
 		if (this.silent) {
-			this._items.reverse();
+			this._native.reverse();
 			return;
 		}
-		var length = this.length.get();
-		var indices = new Array<number>(length);
-		for (var i = 0; i < length; ++i) {
+		const length = this.length.get();
+		const indices = new Array<number>(length);
+		for (let i = 0; i < length; ++i) {
 			indices[i] = length - i - 1;
 		}
 		this.reorder(indices);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toReversed(): IBindableArray<T> {
-		return new BindableArray(ArrayUtils.toReversed(this._items), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	equal(arr: T[]): boolean {
-		return ArrayUtils.equal(this._items, arr);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	indexOf(item: T): number {
-		return this._items.indexOf(item);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	backEvery(callback: (item: T, index: number) => any, scope?: any): boolean {
-		return ArrayUtils.backEvery(this._items, callback, scope);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	pop(): T {
-		if (this._items.length !== 0) {
-			return this.remove(this._items.length - 1);
-		}
-		return undefined;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	binarySearch(value: T, compare?: (t1: T, t2: T) => number, scope?: any, order?: number): number {
-		return ArrayUtils.binarySearch(this._items, value, compare, scope, order);
 	}
 }

@@ -31,20 +31,15 @@ import ReadonlyBindableSet from "../ReadonlyBindableSet";
  * Converter to set.
  */
 abstract class AbstractConverterToSet<T> extends Class {
+
 	private _targetCreated: boolean;
 
-	/**
-	 * @hidden
-	 */
 	protected _target: IBindableSet<T>;
 
-	/**
-	 * @hidden
-	 */
-	protected constructor(config: AbstractConverterToSet.Config<T>, getKey: (item: T) => any, silent: boolean) {
+	protected constructor(config: AbstractConverterToSet.Config<T>, silent: boolean) {
 		super();
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableSet<T>(getKey, silent) : config.target;
+		this._target = this._targetCreated ? new BindableSet<T>(silent) : config.target;
 	}
 
 	/**
@@ -54,9 +49,6 @@ abstract class AbstractConverterToSet<T> extends Class {
 		return this._target;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		if (this._targetCreated) {
 			this._target.destroy();

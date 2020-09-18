@@ -23,20 +23,26 @@ SOFTWARE.
 */
 
 import jQuery from 'jquery';
-import Dictionary from './Dictionary';
 
 /**
  * Some code is taken from jQuery. We are not happy with standard jQuery.parseHtml, because it is slow.
- * We implement an own parseHtml which omits a good bunch of useless manupulations.
+ * We implement an own parseHtml which omits a good bunch of useless manipulations.
  */
-const wrapMap: Dictionary<any[]> = {
-	option: [1, "<select multiple='multiple'>", "</select>"],
-	thead: [1, "<table>", "</table>"],
-	col: [2, "<table><colgroup>", "</colgroup></table>"],
-	tr: [2, "<table><tbody>", "</tbody></table>"],
-	td: [3, "<table><tbody><tr>", "</tr></tbody></table>"],
-	_default: [0, "", ""]
-};
+const wrapMap = new Map<string, [number, string, string]>([
+	["option", [1, "<select multiple='multiple'>", "</select>"]],
+	["thead", [1, "<table>", "</table>"]],
+	["col", [2, "<table><colgroup>", "</colgroup></table>"]],
+	["tr", [2, "<table><tbody>", "</tbody></table>"]],
+	["td", [3, "<table><tbody><tr>", "</tr></tbody></table>"]],
+	["_default", [0, "", ""]]
+]);
+
+wrapMap.set("optgroup", wrapMap.get("option"));
+wrapMap.set("tbody", wrapMap.get("thead"));
+wrapMap.set("tfoot", wrapMap.get("thead"));
+wrapMap.set("colgroup", wrapMap.get("thead"));
+wrapMap.set("caption", wrapMap.get("thead"));
+wrapMap.set("th", wrapMap.get("td"));
 
 const rtagName = /^<([\w:]+)/;
 
@@ -149,7 +155,7 @@ export function parseHtml(html: string): HTMLElement {
 	let el: HTMLElement = document.createElement("div");
 	_fragment.appendChild(el);
 	const tagName = rtagName.exec(html)[1];
-	const wrap = wrapMap[tagName] || wrapMap['_default'];
+	const wrap = wrapMap.get(tagName) ?? wrapMap.get("_default");
 	el.innerHTML = wrap[1] + html + wrap[2];
 	for (let i = 0; i < wrap[0]; ++i) {
 		el = <HTMLElement>(el.firstChild);
@@ -209,9 +215,3 @@ export function replace(removeEl: HTMLElement, insertEl: HTMLElement, attrs?: bo
 export function _afterAppend(child: { _afterAppend: () => void }) {
 	child._afterAppend();
 }
-
-(function (wrapMap) {
-	wrapMap['optgroup'] = wrapMap['option'];
-	wrapMap['tbody'] = wrapMap['tfoot'] = wrapMap['colgroup'] = wrapMap['caption'] = wrapMap['thead'];
-	wrapMap['th'] = wrapMap['td'];
-})(wrapMap);

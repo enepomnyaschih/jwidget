@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableArray from '../BindableArray';
 import Class from '../Class';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
-import BindableArray from '../BindableArray';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
 /**
@@ -44,8 +44,8 @@ class ArrayReverser<T> extends Class {
 	constructor(readonly source: ReadonlyBindableArray<T>, config: ArrayReverser.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableArray<T>(source.getKey, source.silent) : config.target;
-		this._target.addAll(this._reverse(source.items));
+		this._target = this._targetCreated ? new BindableArray<T>(source.silent) : config.target;
+		this._target.addAll(this._reverse(source.native));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onMove.listen(this._onMove, this));
@@ -53,9 +53,6 @@ class ArrayReverser<T> extends Class {
 		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		this._target.clear();
 		if (this._targetCreated) {
@@ -71,36 +68,35 @@ class ArrayReverser<T> extends Class {
 		return this._target;
 	}
 
-	private _reverse(items: T[]) {
-		items = items.concat();
-		items.reverse();
-		return items;
+	private _reverse(items: readonly T[]) {
+		const result = items.concat();
+		result.reverse();
+		return result;
 	}
 
-	private _onSplice(message: IBindableArray.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
-		var oldLength = this._target.length.get();
-		var newLength = oldLength;
+	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
+		const oldLength = this._target.length.get();
+		let newLength = oldLength;
 
-		var segmentsToRemove = spliceResult.removedSegments.map((indexItems) => {
-			var length = indexItems.items.length;
-			var index = oldLength - indexItems.index - length;
+		const segmentsToRemove = spliceResult.removedSegments.map(indexItems => {
+			const length = indexItems.items.length;
+			const index = oldLength - indexItems.index - length;
 			newLength -= length;
 			return new IndexCount(index, length);
 		});
 		segmentsToRemove.reverse();
 
-		var addedSegments = spliceResult.addedSegments.concat();
+		const addedSegments = spliceResult.addedSegments.concat();
 		addedSegments.reverse();
 
 		addedSegments.forEach(indexItems => {
 			newLength += indexItems.items.length;
 		});
 
-		var segmentsToAdd = addedSegments.map(indexItems => {
-			var items = indexItems.items;
-			var length = items.length;
-			var index = newLength - indexItems.index - length;
+		const segmentsToAdd = addedSegments.map(indexItems => {
+			const items = indexItems.items;
+			const length = items.length;
+			const index = newLength - indexItems.index - length;
 			return new IndexItems<T>(index, this._reverse(items));
 		});
 
@@ -108,7 +104,7 @@ class ArrayReverser<T> extends Class {
 	}
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
-		this._target.trySet(this._target.length.get() - message.index - 1, message.newItem);
+		this._target.trySet(this._target.length.get() - message.index - 1, message.newValue);
 	}
 
 	private _onMove(message: IBindableArray.MoveMessage<T>) {
@@ -122,11 +118,11 @@ class ArrayReverser<T> extends Class {
 	}
 
 	private _onReorder(message: IBindableArray.ReorderMessage<T>) {
-		var indexArray = message.indexArray;
-		var length = indexArray.length;
-		var indexes = new Array<number>(indexArray.length);
-		for (var i = 0; i < length; ++i) {
-			indexes[length - i - 1] = length - indexArray[i] - 1;
+		const {indexMapping} = message;
+		const length = indexMapping.length;
+		const indexes = new Array<number>(indexMapping.length);
+		for (let i = 0; i < length; ++i) {
+			indexes[length - i - 1] = length - indexMapping[i] - 1;
 		}
 		this._target.tryReorder(indexes);
 	}
@@ -153,8 +149,8 @@ namespace ArrayReverser {
  */
 export function reverseArray<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
-		return source.toReversed();
+		return new BindableArray(source.native.concat().reverse(), true);
 	}
-	const target = new BindableArray<T>(source.getKey);
+	const target = new BindableArray<T>();
 	return target.owning(new ArrayReverser<T>(source, {target}));
 }

@@ -24,7 +24,6 @@ SOFTWARE.
 
 import DestroyableReadonlyBindableSet from './DestroyableReadonlyBindableSet';
 import IClass from "./IClass";
-import Listenable from './Listenable';
 
 /**
  * Extension of DestroyableReadonlySet with modification methods.
@@ -32,185 +31,111 @@ import Listenable from './Listenable';
 interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 
 	/**
-	 * The set is cleared.
+	 * Makes this set an owner of its values, which means that its values are alive as long as they are present in
+	 * this set. A value is destroyed when it leaves the set, and all values are destroyed on the set destruction.
 	 */
-	readonly onClear: Listenable<IBindableSet.MessageWithItems<T>>;
+	ownValues(): this;
 
 	/**
-	 * The set is changed. Dispatched right after any another message.
+	 * Adds a value to the set if one is absent and dispatches a splice message.
+	 * @param value Value to add.
+	 * @returns Value is added successfully. False if value is already present.
 	 */
-	readonly onChange: Listenable<IBindableSet.Message<T>>;
+	add(value: T): boolean;
 
 	/**
-	 * @inheritDoc
+	 * Adds multiple values to the set, ones that are absent, and dispatches a splice message.
+	 * @param values Values to add.
+	 * @returns The added values. Never returns null or undefined.
 	 */
-	clone(): IBindableSet<T>;
+	addAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * @inheritDoc
+	 * Removes a value from the set if one is present and dispatches a splice message.
+	 * @param value Value to remove.
+	 * @returns Value is removed successfully. Returns false if value is already absent.
 	 */
-	filter(callback: (item: T) => any, scope?: any): IBindableSet<T>;
+	delete(value: T): boolean;
 
 	/**
-	 * @inheritDoc
+	 * Removes multiple values from the set, ones that are present, and dispatches a splice message.
+	 * @param values Values to remove.
+	 * @returns The removed values. Never returns null or undefined.
 	 */
-	map<U>(callback: (item: T) => U, scope?: any, getKey?: (item: U) => any): IBindableSet<U>;
+	deleteAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * Makes this set an owner of its items, which means that its items are alive as long as they are present in
-	 * this set. The item is destroyed when it leaves the
-	 * set, and all items are destroyed on the set destruction.
+	 * Removes all set values and dispatches a cleanup message.
 	 */
-	ownItems(): this;
+	clear(): ReadonlySet<T>;
 
 	/**
-	 * Adds an item to the set if one is absent.
-	 * @param item Item to add.
-	 * @returns Item is added successfully. False if item is already present.
-	 */
-	add(item: T): boolean;
-
-	/**
-	 * Adds multiple items to the set, ones that are absent.
-	 * @param items Items to add.
-	 * @returns The added items. Never returns null or undefined.
-	 */
-	addAll(items: T[]): T[];
-
-	/**
-	 * Removes an item from the set if one is present.
-	 * @param item Item to remove.
-	 * @returns Item is removed successfully. Returns false if item is already absent.
-	 */
-	remove(item: T): boolean;
-
-	/**
-	 * Removes multiple items from the set, ones that are present.
-	 * @param items Items to remove.
-	 * @returns The removed items. Never returns null or undefined.
-	 */
-	removeAll(items: T[]): T[];
-
-	/**
-	 * Removes the first occurrence of the item in the set.
-	 * @param item Item to remove.
-	 */
-	removeItem(item: T): void;
-
-	/**
-	 * Removes all occurrences of the items in the set.
-	 * For efficient performance, you should define an optimal getKey callback for this set.
-	 * @param items Items to remove.
-	 */
-	removeItems(items: T[]): void;
-
-	/**
-	 * @inheritDoc
-	 */
-	clear(): T[];
-
-	/**
-	 * Removes and adds multiple items in the set. Universal optimized granular operation of removal/insertion.
-	 * @param removedItems Items to remove.
-	 * @param addedItems Items to add.
+	 * Removes and/or adds multiple values in the set granularly and dispatches a splice message.
+	 * @param valuesToRemove Values to remove.
+	 * @param valuesToAdd Values to add.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(removedItems: T[], addedItems: T[]): IBindableSet.SpliceResult<T>;
+	splice(valuesToRemove: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T>;
 
 	/**
-	 * Adds multiple items to the set, ones that are absent.
-	 * @param items Items to add.
-	 * @returns The added items. If the set is not modified, returns undefined.
+	 * Adds multiple values to the set, ones that are absent, and dispatches a splice message.
+	 * @param values Values to add.
+	 * @returns The added values. If the set is not modified, returns undefined.
 	 */
-	tryAddAll(items: T[]): T[];
+	tryAddAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * Removes multiple items from the set, ones that are present.
-	 * @param items Items to remove.
-	 * @returns The removed items. If the set is not modified, returns undefined.
+	 * Removes multiple values from the set, ones that are present, and dispatches a splice message.
+	 * @param values Values to remove.
+	 * @returns The removed values. If the set is not modified, returns undefined.
 	 */
-	tryRemoveAll(items: T[]): T[];
+	tryDeleteAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * Removes and adds multiple items in the set. Universal optimized granular operation of removal/insertion.
-	 * @param removedItems Items to remove.
-	 * @param addedItems Items to add.
+	 * Removes and/or adds multiple values in the set granularly and dispatches a splice message.
+	 * @param valuesToRemove Values to remove.
+	 * @param valuesToAdd Values to add.
 	 * @returns Splice result. If the set is not modified, returns undefined.
 	 */
-	trySplice(removedItems: T[], addedItems: T[]): IBindableSet.SpliceResult<T>;
+	trySplice(valuesToRemove: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T>;
 
 	/**
-	 * Adjusts set contents to `newItems` using `detectSplice` and `splice` methods.
-	 * @param newItems New set contents.
+	 * Adjusts set contents to `newValues` using `detectSplice` and `splice` methods.
+	 * @param newContents New set contents.
 	 */
-	performSplice(newItems: T[]): void;
+	performSplice(newContents: Iterable<T>): void;
 }
 
 export default IBindableSet;
 
 namespace IBindableSet {
 	/**
-	 * Message of ISet.
-	 * @param T Item type.
-	 */
-	export interface Message<T> {
-		/**
-		 * Message sender.
-		 */
-		readonly sender: IBindableSet<T>;
-	}
-
-	/**
-	 * Set splice message.
-	 * @param T Item type.
-	 */
-	export interface SpliceMessage<T> extends Message<T> {
-		/**
-		 * Result of `splice` method.
-		 */
-		readonly spliceResult: SpliceResult<T>;
-	}
-
-	/**
-	 * Set message with items.
-	 * @param T Item type.
-	 */
-	export interface MessageWithItems<T> extends Message<T> {
-		/**
-		 * Old set contents.
-		 */
-		readonly items: T[];
-	}
-
-	/**
-	 * ISet.splice method arguments. Result of `detectSplice` method.
-	 * @param T Item type.
+	 * Set splice method arguments. Result of `detectSplice` method.
 	 */
 	export interface SpliceParams<T> {
 		/**
-		 * Items to remove.
+		 * Values to remove.
 		 */
-		readonly removedItems: T[];
+		readonly valuesToRemove: Iterable<T>;
 
 		/**
-		 * Items to add.
+		 * Values to add.
 		 */
-		readonly addedItems: T[];
+		readonly valuesToAdd: Iterable<T>;
 	}
 
 	/**
-	 * ISet.splice method result.
-	 * @param T Item type.
+	 * Set splice method result.
 	 */
 	export interface SpliceResult<T> {
 		/**
-		 * Removed items.
+		 * Removed values.
 		 */
-		readonly removedItems: T[];
+		readonly removedValues: ReadonlySet<T>;
 
 		/**
-		 * Added items.
+		 * Added values.
 		 */
-		readonly addedItems: T[];
+		readonly addedValues: ReadonlySet<T>;
 	}
 }

@@ -22,12 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableArray from '../BindableArray';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
-import {VidSet} from '../internal';
-import BindableArray from '../BindableArray';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractConverterToArray from './AbstractConverterToArray';
 
@@ -35,42 +34,37 @@ import AbstractConverterToArray from './AbstractConverterToArray';
  * AbstractConverterToArray implementation for arrays.
  */
 export default class ArrayConverterToArray<T> extends AbstractConverterToArray<T> {
+
 	/**
 	 * @param source Source array.
 	 * @param config Converter configuration.
 	 */
 	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractConverterToArray.Config<T>) {
-		super(config, source.getKey, source.silent);
-		this._target.addAll(source.items);
+		super(config, source.silent);
+		this._target.addAll(source.native);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._target.removeItems(this.source.items);
+		this._target.removeValues(this.source.native);
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableArray.SpliceMessage<T>) {
-		const spliceResult = message.spliceResult;
-		this._splice(
-			VidSet.fromArray<T>(spliceResult.removedItems, this.source.getKey),
-			VidSet.fromArray<T>(spliceResult.addedItems, this.source.getKey));
+	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
+		this._splice(new Set(spliceResult.removedItems), new Set(spliceResult.addedItems));
 	}
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
-		const index = this.target.indexOf(message.oldItem);
+		const index = this._target.indexOf(message.oldValue);
 		this._target.trySplice(
 			[new IndexCount(index, 1)],
-			[new IndexItems(this.target.length.get() - 1, [message.newItem])]);
+			[new IndexItems(this._target.length.get() - 1, [message.newValue])]);
 	}
 
-	private _onClear(message: IBindableArray.MessageWithItems<T>) {
-		this._target.removeItems(message.items);
+	private _onClear(oldContents: readonly T[]) {
+		this._target.removeValues(oldContents);
 	}
 }
 
@@ -81,8 +75,8 @@ export default class ArrayConverterToArray<T> extends AbstractConverterToArray<T
  */
 export function arrayToArray<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
-		return source.clone();
+		return new BindableArray(source, true);
 	}
-	const target = new BindableArray<T>(source.getKey);
+	const target = new BindableArray<T>();
 	return target.owning(new ArrayConverterToArray<T>(source, {target}));
 }

@@ -33,13 +33,12 @@ import ComponentBindable from './component/ComponentBindable';
 import ComponentChildren from './component/ComponentChildren';
 import ComponentSet from './component/ComponentSet';
 import Destroyable from "./Destroyable";
-import Dictionary from './Dictionary';
-import * as DictionaryUtils from './DictionaryUtils';
 import DomTemplate from './DomTemplate';
 import * as DomUtils from './DomUtils';
 import HtmlTemplate from './HtmlTemplate';
 import IBindableMap from "./IBindableMap";
-import {apply, destroy} from './index';
+import {destroy} from './index';
+import {map} from "./MapUtils";
 import Property from './Property';
 import ReadonlyBindableArray from './ReadonlyBindableArray';
 import ReadonlyBindableSet from './ReadonlyBindableSet';
@@ -64,10 +63,10 @@ export default class Component extends Class {
 	private _wasAfterAppend: boolean = false;
 	private _template: AbstractTemplate;
 
-	private __elements: Dictionary<JQuery> = null;
-	private __bindables: Dictionary<ComponentBindable> = null;
-	private __arrays: Dictionary<ComponentArray> = null;
-	private __sets: Dictionary<ComponentSet> = null;
+	private __elements: Map<string, JQuery> = null;
+	private __bindables: Map<string, ComponentBindable> = null;
+	private __arrays: Set<ComponentArray> = null;
+	private __sets: Set<ComponentSet> = null;
 
 	/**
 	 * Plain objects of this class can be constructed. They can be used as dummy components or simple containers.
@@ -97,7 +96,7 @@ export default class Component extends Class {
 	 * Mutable named child components. Use this map to add child components in place of
 	 * elements with corresponding `jwid`. Field is available from component rendering beginning.
 	 */
-	get children(): IBindableMap<Component> {
+	get children(): IBindableMap<string, Component> {
 		return this._children;
 	}
 
@@ -108,37 +107,22 @@ export default class Component extends Class {
 		return this._template;
 	}
 
-	/**
-	 * @hidden
-	 */
 	get _elements() {
 		return this.__elements;
 	}
 
-	/**
-	 * @hidden
-	 */
 	get _bindables() {
 		return this.__bindables;
 	}
 
-	/**
-	 * @hidden
-	 */
 	get _arrays() {
 		return this.__arrays;
 	}
 
-	/**
-	 * @hidden
-	 */
 	get _sets() {
 		return this.__sets;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	destroy() {
 		if (this._parent) {
 			throw new Error("JW.UI.Component.destroy must be used for root and detached components only");
@@ -148,11 +132,11 @@ export default class Component extends Class {
 		}
 		if (this._el) {
 			DomUtils.remove(this._el[0]);
-			DictionaryUtils.forEach(this.__sets, destroy);
+			this.__sets.forEach(destroy);
 			this.__sets = null;
-			DictionaryUtils.forEach(this.__arrays, destroy);
+			this.__arrays.forEach(destroy);
 			this.__arrays = null;
-			DictionaryUtils.forEach(this.__bindables, destroy);
+			this.__bindables.forEach(destroy);
 			this.__bindables = null;
 
 			this._children.unrender();
@@ -252,27 +236,22 @@ export default class Component extends Class {
 		}
 		const output = this.createElement();
 		this._el = jQuery(output.root);
-		this.__elements = DictionaryUtils.map(output.groups, function (x) {
-			return jQuery(x);
-		});
+		this.__elements = map(output.groups, group => jQuery(group));
 		this._children = new ComponentChildren(this);
-		this.__bindables = {};
-		this.__arrays = {};
-		this.__sets = {};
+		this.__bindables = new Map<string, ComponentBindable>();
+		this.__arrays = new Set<ComponentArray>();
+		this.__sets = new Set<ComponentSet>();
 		this.beforeRender();
-		const elements = apply({}, this.__elements);
-		for (const jwId in elements) {
-			let element = elements[jwId];
-			const aliveElements = Array.prototype.filter.call(element, (el: HTMLElement) => {
-				return DomUtils.inEl(el, this._el[0]);
-			});
+		const elements = new Map(this.__elements);
+		for (let [jwId, element] of elements) {
+			const aliveElements = Array.from(element).filter(el => DomUtils.inEl(el, this._el[0]));
 			if (aliveElements.length === 0) {
-				delete this.__elements[jwId];
+				this.__elements.delete(jwId);
 				continue;
 			}
 			if (aliveElements.length !== element.length) {
 				element = jQuery(aliveElements);
-				this.__elements[jwId] = element;
+				this.__elements.set(jwId, element);
 			}
 			const jwIdCamel = StringUtils.camel(jwId);
 			const renderMethodName = "render" + StringUtils.capitalize(jwIdCamel);
@@ -286,7 +265,7 @@ export default class Component extends Class {
 					}
 				} else {
 					if (result instanceof Component) {
-						this._children.put(jwId, result);
+						this._children.set(jwId, result);
 					} else if (result instanceof Property) {
 						this.addBindable(result, jwId);
 					} else if (result instanceof BindableArray) {
@@ -349,7 +328,7 @@ export default class Component extends Class {
 	 * @param id `jwid` of the element.
 	 */
 	getElement(id: string) {
-		return this.__elements[id];
+		return this.__elements.get(id);
 	}
 
 	/**
@@ -357,12 +336,12 @@ export default class Component extends Class {
 	 * @param id `jwid` of the element.
 	 */
 	removeElement(id: string): this {
-		const el = this.__elements[id];
+		const el = this.__elements.get(id);
 		if (!el) {
 			return this;
 		}
 		el.remove();
-		delete this.__elements[id];
+		this.__elements.delete(id);
 		return this;
 	}
 
@@ -398,9 +377,6 @@ export default class Component extends Class {
 		return new ComponentSet(this, source, this._getContainerElement(el));
 	}
 
-	/**
-	 * @hidden
-	 */
 	_afterAppend() {
 		if (this._wasAfterAppend || !this._el) {
 			return;
@@ -414,30 +390,21 @@ export default class Component extends Class {
 		this._wasAfterAppend = true;
 		this.afterAppend();
 		this._children.forEach(DomUtils._afterAppend);
-		DictionaryUtils.forEach<ComponentArray>(this.__arrays, DomUtils._afterAppend);
-		DictionaryUtils.forEach<ComponentSet>(this.__sets, DomUtils._afterAppend);
+		this.__arrays.forEach(DomUtils._afterAppend);
+		this.__sets.forEach(DomUtils._afterAppend);
 	}
 
-	/**
-	 * @hidden
-	 */
 	_initChild(component: Component) {
 		component.render();
 		component._parent = this;
 	}
 
-	/**
-	 * @hidden
-	 */
 	_doneChild(component: Component) {
 		component._parent = null;
 	}
 
-	/**
-	 * @hidden
-	 */
 	_getContainerElement(el?: any) {
 		return (el === undefined) ? this._el :
-			(typeof el === "string") ? this.__elements[el] : jQuery(el);
+			(typeof el === "string") ? this.__elements.get(el) : jQuery(el);
 	}
 }

@@ -36,26 +36,24 @@ export default class SetObserver<T> extends AbstractObserver<T> {
 	 */
 	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractObserver.Config<T>) {
 		super(config);
-		this._addItems(source.toArray());
+		this._addItems(source);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._doClearItems(this.source.toArray());
+		if (this.source.native.size !== 0) {
+			this._doClearItems(this.source);
+		}
 		super.destroyObject();
 	}
 
-	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
-		this._removeItems(spliceResult.removedItems);
-		this._addItems(spliceResult.addedItems);
+	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
+		this._removeItems(spliceResult.removedValues);
+		this._addItems(spliceResult.addedValues);
 	}
 
-	private _onClear(message: IBindableSet.MessageWithItems<T>) {
-		this._doClearItems(message.items);
+	private _onClear(oldContents: ReadonlySet<T>) {
+		this._doClearItems(oldContents);
 	}
 }

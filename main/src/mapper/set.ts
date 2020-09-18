@@ -22,25 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableSet from '../BindableSet';
 import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
 import Destructor from '../Destructor';
-import {destroy} from '../index';
-import {VidMap} from '../internal';
 import IBindableSet from '../IBindableSet';
+import {destroy} from '../index';
+import {map} from "../IterableUtils";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
-import BindableSet from '../BindableSet';
 import AbstractMapper from './AbstractMapper';
 
 /**
  * AbstractMapper implementation for sets.
  */
 class SetMapper<T, U> extends AbstractMapper<T, U> {
+
 	private _targetCreated: boolean;
 
-	/**
-	 * @hidden
-	 */
-	protected _items: VidMap<T, U>;
+	protected readonly _items = new Map<T, U>();
 
 	/**
 	 * Target set.
@@ -55,65 +53,56 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	constructor(readonly source: ReadonlyBindableSet<T>, create: (data: T) => U,
 				config: SetMapper.FullConfig<T, U> = {}) {
 		super(create, config);
-		this._items = new VidMap<T, U>(source.getKey);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableSet<U>(config.getKey, this.source.silent) : config.target;
-		this.target.tryAddAll(this._createItems(source.toArray()));
+		this.target = this._targetCreated ? new BindableSet<U>(this.source.silent) : config.target;
+		this.target.tryAddAll(this._createItems(source));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		var datas = this.source.toArray();
-		this.target.tryRemoveAll(this._getItems(datas));
-		this._destroyItems(datas);
+		this.target.tryDeleteAll(this._getItems(this.source));
+		this._destroyItems(this.source);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		super.destroyObject();
 	}
 
-	private _getItems(datas: T[]): U[] {
-		return datas.map((data) => this._items.get(data));
+	private _getItems(datas: Iterable<T>): U[] {
+		return map(datas, data => this._items.get(data));
 	}
 
-	private _createItems(datas: T[]): U[] {
-		var items: U[] = [];
-		for (var i = 0, l = datas.length; i < l; ++i) {
-			var data = datas[i];
-			var item = this._create.call(this._scope || this, data);
+	private _createItems(datas: Iterable<T>): U[] {
+		const items: U[] = [];
+		for (let data of datas) {
+			const item = this._create(data);
 			items.push(item);
-			this._items.put(data, item);
+			this._items.set(data, item);
 		}
 		return items;
 	}
 
-	private _destroyItems(datas: T[]) {
+	private _destroyItems(datas: Iterable<T>) {
 		if (this._destroy === undefined) {
 			return;
 		}
-		for (var i = datas.length - 1; i >= 0; --i) {
-			var data = datas[i];
-			var item = this._items.remove(data);
-			this._destroy.call(this._scope || this, item, data);
+		for (let data of datas) {
+			const item = this._items.get(data);
+			this._items.delete(data);
+			this._destroy.call(item, data);
 		}
 	}
 
-	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
-		var removedDatas = spliceResult.removedItems;
-		var addedDatas = spliceResult.addedItems;
-		this.target.trySplice(this._getItems(removedDatas), this._createItems(addedDatas));
-		this._destroyItems(removedDatas);
+	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
+		const {removedValues, addedValues} = spliceResult;
+		this.target.trySplice(this._getItems(removedValues), this._createItems(addedValues));
+		this._destroyItems(removedValues);
 	}
 
-	private _onClear(message: IBindableSet.MessageWithItems<T>) {
-		var datas = message.items;
-		this.target.tryRemoveAll(this._getItems(datas));
-		this._destroyItems(datas);
+	private _onClear(oldContents: ReadonlySet<T>) {
+		this.target.tryDeleteAll(this._getItems(oldContents));
+		this._destroyItems(oldContents);
 	}
 }
 
@@ -141,22 +130,21 @@ namespace SetMapper {
 export function mapSet<T, U>(source: ReadonlyBindableSet<T>, create: (sourceValue: T) => U,
 							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableSet<U> {
 	if (!source.silent) {
-		const target = new BindableSet<U>(config.getKey);
+		const target = new BindableSet<U>();
 		return target.owning(new SetMapper<T, U>(source, create, {
 			target,
-			destroy: config.destroy,
-			scope: config.scope
+			destroy: config.destroy
 		}));
 	}
-	const target = source.map(create, config.scope, config.getKey);
-	if (config.destroy === destroy) {
-		target.ownItems();
-	} else if (config.destroy) {
-		const items = new VidMap<T, U>(source.getKey);
-		target.own(new Destructor(() => items.every((item, key) => {
-			config.destroy.call(config.scope, item, key);
-			return true;
-		})));
+	if (config.destroy && config.destroy !== destroy) {
+		const mapping = new Map(map(source, data => [data, create(data)]));
+		const target = new BindableSet(mapping.values(), true);
+		target.own(new Destructor(() => mapping.forEach(config.destroy)));
+		return target;
+	}
+	const target = new BindableSet(map(source, create), true);
+	if (config.destroy) {
+		target.ownValues();
 	}
 	return target;
 }

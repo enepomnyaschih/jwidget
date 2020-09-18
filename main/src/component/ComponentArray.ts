@@ -29,13 +29,10 @@ import ArrayMapper from '../mapper/array';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import ComponentInserter from './ComponentInserter';
 
-/**
- * @hidden
- */
 export default class ComponentArray extends Class {
 	constructor(private parent: Component, private source: ReadonlyBindableArray<Component>, el: JQuery) {
 		super();
-		parent._arrays[this.iid] = this;
+		parent._arrays.add(this);
 
 		const mapper = this.own(new ArrayMapper<Component, Component>(source, (child) => {
 			this.parent._initChild(child);
@@ -50,7 +47,7 @@ export default class ComponentArray extends Class {
 	}
 
 	destroy() {
-		delete this.parent._arrays[this.iid];
+		this.parent._arrays.delete(this);
 		super.destroy();
 	}
 

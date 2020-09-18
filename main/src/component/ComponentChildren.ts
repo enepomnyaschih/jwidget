@@ -22,24 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Component from '../Component';
-import Dictionary from '../Dictionary';
-import * as DictionaryUtils from '../DictionaryUtils';
-import IBindableMap from '../IBindableMap';
-import {iidStr} from '../index';
 import BindableMap from '../BindableMap';
+import Component from '../Component';
+import IBindableMap from '../IBindableMap';
+import {map} from "../MapUtils";
+import {getDifference} from "../SetUtils";
 import Some from '../Some';
 import ComponentChild from './ComponentChild';
 import ComponentChildInserter from './ComponentChildInserter';
 
-/**
- * @hidden
- */
-export default class ComponentChildren extends BindableMap<Component> {
+export default class ComponentChildren extends BindableMap<string, Component> {
+
 	private target: ComponentChildInserter;
 
 	constructor(private component: Component) {
-		super(iidStr, true);
+		super(true);
 		this.target = new ComponentChildInserter();
 	}
 
@@ -47,63 +44,61 @@ export default class ComponentChildren extends BindableMap<Component> {
 		this.target.destroy();
 	}
 
-	tryPut(key: string, item: Component): Some<Component> {
-		const result = super.tryPut(key, item);
+	trySet(key: string, value: Component): Some<Component> {
+		const result = super.trySet(key, value);
 		if (result === undefined) {
 			return undefined;
 		}
-		const child = new ComponentChild(this.component, item);
-		this.target.tryPut(key, child);
+		const child = new ComponentChild(this.component, value);
+		this.target.trySet(key, child);
 		return result;
 	}
 
 	trySetKey(oldKey: string, newKey: string): Component {
-		const item = super.trySetKey(oldKey, newKey);
-		if (item === undefined) {
+		const value = super.trySetKey(oldKey, newKey);
+		if (value === undefined) {
 			return undefined;
 		}
 		this.target.trySetKey(oldKey, newKey);
-		return item;
+		return value;
 	}
 
-	tryRemove(key: string): Component {
-		const item = super.tryRemove(key);
-		if (item === undefined) {
+	remove(key: string): Component {
+		const value = super.remove(key);
+		if (value === undefined) {
 			return undefined;
 		}
-		this.target.tryRemove(key);
-		return item;
+		this.target.remove(key);
+		return value;
 	}
 
-	trySplice(removedKeys: string[], updatedItems: Dictionary<Component>): IBindableMap.SpliceResult<Component> {
-		const spliceResult = super.trySplice(removedKeys, updatedItems);
+	trySplice(keysToRemove: Iterable<string>,
+			  entriesToUpdate: ReadonlyMap<string, Component>): IBindableMap.SpliceResult<string, Component> {
+		const spliceResult = super.trySplice(keysToRemove, entriesToUpdate);
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		const removedItems = spliceResult.removedItems;
-		const addedItems = spliceResult.addedItems;
-		const children = DictionaryUtils.map(addedItems, (item) => {
-			return new ComponentChild(this.component, item);
-		}, this);
-		this.target.trySplice(DictionaryUtils.getRemovedKeys(removedItems, addedItems), children);
+		const {removedEntries, addedEntries} = spliceResult;
+		const children = map(addedEntries, value => new ComponentChild(this.component, value));
+		this.target.trySplice(getDifference(removedEntries.keys(), addedEntries), children);
 		return spliceResult;
 	}
 
-	clear(): Dictionary<Component> {
-		const items = super.clear();
-		if (items === undefined) {
+	clear(): Map<string, Component> {
+		const oldContents = super.clear();
+		if (oldContents === undefined) {
 			return undefined;
 		}
 		this.target.clear();
-		return items;
+		return oldContents;
 	}
 
-	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		const result = super.tryReindex(keyMap);
+	tryReindex(keyMapping: ReadonlyMap<string, string>): Map<string, string> {
+		const result = super.tryReindex(keyMapping);
 		if (result === undefined) {
 			return undefined;
 		}
-		this.target.tryReindex(keyMap);
+		this.target.tryReindex(keyMapping);
 		return result;
 	}
 }

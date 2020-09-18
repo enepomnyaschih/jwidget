@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import {backForEach} from "../ArrayUtils";
+import BindableArray from '../BindableArray';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import Destructor from '../Destructor';
 import IBindableArray from '../IBindableArray';
 import {destroy} from '../index';
 import IndexItems from '../IndexItems';
-import BindableArray from '../BindableArray';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractMapper from './AbstractMapper';
 
@@ -35,6 +36,7 @@ import AbstractMapper from './AbstractMapper';
  * AbstractMapper implementation for arrays.
  */
 class ArrayMapper<T, U> extends AbstractMapper<T, U> {
+
 	private _targetCreated: boolean;
 
 	/**
@@ -51,8 +53,8 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 				config: ArrayMapper.FullConfig<T, U> = {}) {
 		super(create, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableArray<U>(config.getKey, this.source.silent) : config.target;
-		this.target.addAll(this._createItems(this.source.items));
+		this.target = this._targetCreated ? new BindableArray<U>(this.source.silent) : config.target;
+		this.target.addAll(this._createItems(this.source.native));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onMove.listen(this._onMove, this));
@@ -60,67 +62,55 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
-		this._destroyItems(this.target.clear() || [], this.source.items);
+		this._destroyItems(this.target.clear() ?? [], this.source.native);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		super.destroyObject();
 	}
 
-	private _createItems(datas: T[]): U[] {
-		var items: U[] = [];
-		for (var i = 0, l = datas.length; i < l; ++i) {
-			items.push(this._create.call(this._scope, datas[i]));
-		}
-		return items;
+	private _createItems(datas: readonly T[]): U[] {
+		return datas.map(this._create);
 	}
 
-	private _destroyItems(items: U[], datas: T[]) {
+	private _destroyItems(items: readonly U[], datas: readonly T[]) {
 		if (this._destroy === undefined) {
 			return;
 		}
-		for (var i = items.length - 1; i >= 0; --i) {
-			this._destroy.call(this._scope, items[i], datas[i]);
+		for (let i = items.length - 1; i >= 0; --i) {
+			this._destroy(items[i], datas[i]);
 		}
 	}
 
-	private _onSplice(message: IBindableArray.SpliceMessage<T>) {
-		var sourceResult = message.spliceResult;
-		var addedSegments = sourceResult.addedSegments;
-		var segmentsToAdd: IBindableArray.IndexItems<U>[] = [];
-		for (var i = 0, l = addedSegments.length; i < l; ++i) {
-			var addParams = addedSegments[i];
-			segmentsToAdd.push(new IndexItems(
-				addParams.index, this._createItems(addParams.items)));
-		}
-		var targetResult = this.target.trySplice(sourceResult.removeParams, segmentsToAdd);
-		var sourceRemovedSegments = sourceResult.removedSegments;
-		var targetRemovedSegments = targetResult.removedSegments;
-		for (var i = targetRemovedSegments.length - 1; i >= 0; --i) {
+	private _onSplice(sourceResult: IBindableArray.SpliceResult<T>) {
+		const {addedSegments} = sourceResult;
+		const segmentsToAdd = addedSegments.map(
+			addParams => new IndexItems(addParams.index, this._createItems(addParams.items)));
+		const targetResult = this.target.trySplice(sourceResult.removeParams, segmentsToAdd);
+		const sourceRemovedSegments = sourceResult.removedSegments;
+		const targetRemovedSegments = targetResult.removedSegments;
+		for (let i = targetRemovedSegments.length - 1; i >= 0; --i) {
 			this._destroyItems(targetRemovedSegments[i].items, sourceRemovedSegments[i].items);
 		}
 	}
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
-		var newItem = this._create.call(this._scope, message.newItem);
-		var oldItem = this.target.trySet(message.index, newItem).value;
-		this._destroy.call(this._scope, oldItem, message.oldItem);
+		const newItem = this._create(message.newValue);
+		const oldItem = this.target.trySet(message.index, newItem);
+		this._destroy(oldItem, message.oldValue);
 	}
 
 	private _onMove(message: IBindableArray.MoveMessage<T>) {
 		this.target.tryMove(message.fromIndex, message.toIndex);
 	}
 
-	private _onClear(message: IBindableArray.MessageWithItems<T>) {
-		this._destroyItems(this.target.clear(), message.items);
+	private _onClear(oldContents: readonly T[]) {
+		this._destroyItems(this.target.clear(), oldContents);
 	}
 
 	private _onReorder(message: IBindableArray.ReorderMessage<T>) {
-		this.target.tryReorder(message.indexArray);
+		this.target.tryReorder(message.indexMapping);
 	}
 }
 
@@ -148,22 +138,16 @@ namespace ArrayMapper {
 export function mapArray<T, U>(source: ReadonlyBindableArray<T>, create: (sourceValue: T) => U,
 							   config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableArray<U> {
 	if (!source.silent) {
-		const target = new BindableArray<U>(config.getKey);
-		return target.owning(new ArrayMapper<T, U>(source, create, {
-			target,
-			destroy: config.destroy,
-			scope: config.scope,
-			getKey: config.getKey
-		}));
+		const target = new BindableArray<U>();
+		return target.owning(new ArrayMapper<T, U>(source, create, {target, destroy: config.destroy}));
 	}
-	const target = source.map(create, config.scope, config.getKey);
+	const target = new BindableArray(source.native.map(create), true);
 	if (config.destroy === destroy) {
-		target.ownItems();
+		target.ownValues();
 	} else if (config.destroy) {
-		const sourceValues = source.items.concat();
-		target.own(new Destructor(() => target.backEvery((item, index) => {
-			config.destroy.call(config.scope, item, sourceValues[index]);
-			return true;
+		const sourceValues = source.native.concat();
+		target.own(new Destructor(() => backForEach(target.native, (item, index) => {
+			config.destroy(item, sourceValues[index]);
 		})));
 	}
 	return target;

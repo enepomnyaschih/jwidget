@@ -29,81 +29,46 @@ import Class from '../Class';
  * item is added and item is removed.
  */
 abstract class AbstractObserver<T> extends Class {
-	/**
-	 * @hidden
-	 */
+
 	protected _add: (item: T) => void;
-
-	/**
-	 * @hidden
-	 */
 	protected _remove: (item: T) => void;
+	protected _clear: (items: Iterable<T>) => void;
 
-	/**
-	 * @hidden
-	 */
-	protected _clear: (items: T[]) => void;
-
-	/**
-	 * @hidden
-	 */
-	protected _scope: any;
-
-	/**
-	 * @hidden
-	 */
 	constructor(config: AbstractObserver.Config<T>) {
 		super();
 		this._add = config.add;
 		this._remove = config.remove;
 		this._clear = config.clear;
-		this._scope = config.scope || this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected destroyObject() {
 		this._add = null;
 		this._remove = null;
 		this._clear = null;
-		this._scope = null;
 		super.destroyObject();
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _addItems(items: T[]) {
+	protected _addItems(items: Iterable<T>) {
 		if (!this._add) {
 			return;
 		}
-		for (var i = 0, l = items.length; i < l; ++i) {
-			this._add.call(this._scope, items[i]);
+		for (let item of items) {
+			this._add(item);
 		}
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _removeItems(items: T[]) {
+	protected _removeItems(items: Iterable<T>) {
 		if (!this._remove) {
 			return;
 		}
-		for (var i = items.length - 1; i >= 0; --i) {
-			this._remove.call(this._scope, items[i]);
+		for (let item of items) {
+			this._remove(item);
 		}
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _doClearItems(items: T[]) {
-		if (items.length === 0) {
-			return;
-		}
+	protected _doClearItems(items: Iterable<T>) {
 		if (this._clear) {
-			this._clear.call(this._scope, items);
+			this._clear(items);
 		} else {
 			this._removeItems(items);
 		}
@@ -130,11 +95,6 @@ namespace AbstractObserver {
 		/**
 		 * Callback to call when the collection is cleared. By default, calls `remove` for all collection items.
 		 */
-		readonly clear?: (items: T[]) => void;
-
-		/**
-		 * Call scope of `add`, `remove` and `clear` callbacks. Defaults to the synchronizer itself.
-		 */
-		readonly scope?: any;
+		readonly clear?: (items: Iterable<T>) => void;
 	}
 }

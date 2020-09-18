@@ -22,46 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
 import Class from './Class';
 import Destroyable from './Destroyable';
-import Dictionary from './Dictionary';
-import * as DictionaryUtils from './DictionaryUtils';
 import Dispatcher from './Dispatcher';
-import IDispatcher from './IDispatcher';
-import IBindableArray from './IBindableArray';
 import IBindableMap from './IBindableMap';
-import {ADAPTER, apply, CollectionFlags, destroy, SILENT} from './index';
-import {vid, VidSet} from './internal';
+import IDispatcher from './IDispatcher';
+import {ADAPTER, CollectionFlags, SILENT} from './index';
 import IProperty from './IProperty';
-import IBindableSet from './IBindableSet';
-import BindableArray from './BindableArray';
 import Listenable from './Listenable';
 import Property from './Property';
-import Reducer from './Reducer';
-import BindableSet from './BindableSet';
 import Some from './Some';
 
 /**
  * Implementation of a bindable wrapper over a native map.
  */
-class BindableMap<T> extends Class implements IBindableMap<T> {
+class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 
-	private _ownsItems: Boolean = false;
-	private _length: IProperty<number>;
-	private _adapter: boolean;
-	private _items: Dictionary<T>;
+	private _ownsKeys = false;
+	private _ownsValues = false;
+	private _size: IProperty<number>;
+	private _native: Map<K, V>;
 
-	private _onSplice: IDispatcher<IBindableMap.SpliceMessage<T>>;
-	private _onReindex: IDispatcher<IBindableMap.ReindexMessage<T>>;
-	private _onClear: IDispatcher<IBindableMap.MessageWithItems<T>>;
-	private _onChange: IDispatcher<IBindableMap.Message<T>>;
-
-	/**
-	 * @inheritDoc
-	 */
-	readonly getKey: (item: T) => any;
+	private _onSplice: IDispatcher<IBindableMap.SpliceResult<K, V>>;
+	private _onReindex: IDispatcher<ReadonlyMap<K, K>>;
+	private _onClear: IDispatcher<ReadonlyMap<K, V>>;
+	private _onChange: IDispatcher<void>;
 
 	/**
 	 * @param silent Create a silent map which means that it never dispatches any messages.
@@ -69,676 +55,371 @@ class BindableMap<T> extends Class implements IBindableMap<T> {
 	constructor(silent?: boolean);
 
 	/**
-	 * @param getKey Function that identifies an item in this map for optimization of some algorithms.
+	 * @param contents Initial map contents.
 	 * @param silent Create a silent map which means that it never dispatches any messages.
 	 */
-	constructor(getKey: (item: T) => any, silent?: boolean);
+	constructor(contents: Iterable<readonly [K, V]>, silent?: boolean);
 
 	/**
-	 * @param items Initial map contents.
+	 * @param contents Initial map contents.
 	 * @param flags Collection configuration flags.
 	 */
-	constructor(items: Dictionary<T>, flags?: CollectionFlags);
-
-	/**
-	 * @param items Initial map contents.
-	 * @param getKey Function that identifies an item in this map for optimization of some algorithms.
-	 * @param flags Collection configuration flags.
-	 */
-	constructor(items: Dictionary<T>, getKey: (item: T) => any, flags?: CollectionFlags);
-	constructor(a?: any, b?: any, c?: CollectionFlags) {
+	constructor(contents: Map<K, V>, flags?: CollectionFlags);
+	constructor(a?: any, b?: any) {
 		super();
 		if (typeof a === "boolean") {
-			c = a ? SILENT : 0;
+			b = a ? SILENT : 0;
 			a = null;
-		} else if (typeof a === "function" || (a == null && typeof b === "boolean")) {
-			c = b ? SILENT : 0;
-			b = a;
-			a = null;
-		} else if (typeof b === "number") {
-			c = b;
-			b = null;
+		} else if (typeof b === "boolean") {
+			b = b ? SILENT : 0;
 		}
-		const items: Dictionary<T> = a;
-		const silent = Boolean(c & SILENT);
-		const adapter = (items != null) && Boolean(c & ADAPTER);
+		const contents: Map<K, V> = a;
+		const silent = Boolean(b & SILENT);
+		const adapter = (contents != null) && Boolean(b & ADAPTER);
 
-		this.getKey = b || vid;
+		this._native = adapter ? contents : new Map(contents);
+		this._size = this.own(new Property(this._native.size, silent));
 
-		this._adapter = adapter;
-		this._items = this._adapter ? items : apply<T>({}, items);
-		this._length = this.own(new Property(DictionaryUtils.getLength(this._items), silent));
-
-		this._onSplice = Dispatcher.make<IBindableMap.SpliceMessage<T>>(silent);
-		this._onReindex = Dispatcher.make<IBindableMap.ReindexMessage<T>>(silent);
-		this._onClear = Dispatcher.make<IBindableMap.MessageWithItems<T>>(silent);
-		this._onChange = Dispatcher.make<IBindableMap.Message<T>>(silent);
+		this._onSplice = Dispatcher.make<IBindableMap.SpliceResult<K, V>>(silent);
+		this._onReindex = Dispatcher.make<ReadonlyMap<K, K>>(silent);
+		this._onClear = Dispatcher.make<ReadonlyMap<K, V>>(silent);
+		this._onChange = Dispatcher.make<void>(silent);
 	}
 
-	protected destroyObject(): void {
+	protected destroyObject() {
 		this.clear();
 		super.destroyObject();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
+	[Symbol.iterator](): IterableIterator<[K, V]> {
+		return this._native[Symbol.iterator]();
+	}
+
 	get silent() {
 		return this.onChange.dummy;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get length(): Bindable<number> {
-		return this._length;
+	get size(): Bindable<number> {
+		return this._size;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get empty() {
-		return this.length.get() === 0;
+	get native(): ReadonlyMap<K, V> {
+		return this._native;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get first(): T {
-		return DictionaryUtils.getFirst(this._items);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	get firstKey(): string {
-		return DictionaryUtils.getFirstKey(this._items);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	get items(): Dictionary<T> {
-		return this._items;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	get onSplice(): Listenable<IBindableMap.SpliceMessage<T>> {
+	get onSplice(): Listenable<IBindableMap.SpliceResult<K, V>> {
 		return this._onSplice;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get onReindex(): Listenable<IBindableMap.ReindexMessage<T>> {
+	get onReindex(): Listenable<ReadonlyMap<K, K>> {
 		return this._onReindex;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get onClear(): Listenable<IBindableMap.MessageWithItems<T>> {
+	get onClear(): Listenable<ReadonlyMap<K, V>> {
 		return this._onClear;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get onChange(): Listenable<IBindableMap.Message<T>> {
+	get onChange(): Listenable<void> {
 		return this._onChange;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	ownItems(): this {
-		this._ownsItems = true;
+	ownKeys(): this {
+		this._ownsKeys = true;
 		return this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	clone(): IBindableMap<T> {
-		return new BindableMap<T>(this.items, this.getKey, this.silent ? SILENT : 0);
+	ownValues(): this {
+		this._ownsValues = true;
+		return this;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	get(key: string): T {
-		return this._items[key];
+	has(key: K): boolean {
+		return this._native.has(key);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	getKeys(): IBindableArray<string> {
-		return new BindableArray<string>(Object.keys(this._items), String, SILENT | ADAPTER);
+	get(key: K): V {
+		return this._native.get(key);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	contains(item: T): boolean {
-		return DictionaryUtils.contains(this._items, item);
+	keys(): IterableIterator<K> {
+		return this._native.keys();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	containsKey(key: string): boolean {
-		return this.get(key) !== undefined;
+	values(): IterableIterator<V> {
+		return this._native.values();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	keyOf(item: T): string {
-		return DictionaryUtils.keyOf(this._items, item);
+	entries(): IterableIterator<readonly [K, V]> {
+		return this._native.entries();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	every(callback: (item: T, key: string) => any, scope?: any): boolean {
-		return DictionaryUtils.every(this._items, callback, scope || this);
+	forEach(callback: (value: V, key: K) => void): void {
+		this._native.forEach(callback);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	some(callback: (item: T, key: string) => any, scope?: any): boolean {
-		return DictionaryUtils.some(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	forEach(callback: (item: T, key: string) => any, scope?: any): void {
-		DictionaryUtils.forEach(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	findKey(callback: (item: T, key: string) => any, scope?: any): string {
-		return DictionaryUtils.findKey(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	find(callback: (item: T, key: string) => any, scope?: any): T {
-		return DictionaryUtils.find(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toSorted(callback?: (item: T, key: string) => any, scope?: any, order?: number): IBindableArray<T> {
-		return new BindableArray<T>(DictionaryUtils.toSorted(this._items, callback, scope || this, order), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toSortedComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IBindableArray<T> {
-		return new BindableArray<T>(DictionaryUtils.toSortedComparing(this._items, compare, scope || this, order), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	getSortingKeys(callback?: (item: T, key: string) => any, scope?: any, order?: number): IBindableArray<string> {
-		return new BindableArray<string>(DictionaryUtils.getSortingKeys(this._items, callback, scope || this, order), String, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	getSortingKeysComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): IBindableArray<string> {
-		return new BindableArray<string>(DictionaryUtils.getSortingKeysComparing(this._items, compare, scope || this, order), String, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	filter(callback: (item: T, key: string) => any, scope?: any): IBindableMap<T> {
-		return new BindableMap<T>(DictionaryUtils.filter(this._items, callback, scope || this), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	count(callback: (item: T, key: string) => any, scope?: any): number {
-		return DictionaryUtils.count(this._items, callback, scope || this);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	map<U>(callback: (item: T, key: string) => U, scope?: any, getKey?: (item: U) => any): IBindableMap<U> {
-		return new BindableMap<U>(DictionaryUtils.map(this._items, callback, scope || this), getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	index(callback: (item: T, key: string) => any, scope?: any): IBindableMap<T> {
-		return new BindableMap<T>(DictionaryUtils.index(this._items, callback, scope || this), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(reducer: Reducer<T, U>): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(callback: (accumulator: U, item: T, key: string) => U, initial: U): U;
-
-	/**
-	 * @inheritDoc
-	 */
-	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, item: T, key: string) => U), initial?: U): U {
-		return (typeof reducer === "function") ?
-			DictionaryUtils.reduce<T, U>(this.items, reducer, initial) :
-			DictionaryUtils.reduce<T, U>(this.items, reducer);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	max(callback?: (item: T, key: string) => any, scope?: any, order?: number): T {
-		return DictionaryUtils.max(this._items, callback, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	maxKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string {
-		return DictionaryUtils.maxKey(this._items, callback, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	maxComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T {
-		return DictionaryUtils.maxComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	maxKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string {
-		return DictionaryUtils.maxKeyComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	min(callback?: (item: T, key: string) => any, scope?: any, order?: number): T {
-		return DictionaryUtils.min(this._items, callback, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	minKey(callback?: (item: T, key: string) => any, scope?: any, order?: number): string {
-		return DictionaryUtils.minKey(this._items, callback, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	minComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): T {
-		return DictionaryUtils.minComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	minKeyComparing(compare?: (t1: T, t2: T, k1: string, k2: string) => number, scope?: any, order?: number): string {
-		return DictionaryUtils.minKeyComparing(this._items, compare, scope, order);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toArray(): T[] {
-		return DictionaryUtils.toArray(this._items);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toBindableArray(): IBindableArray<T> {
-		return new BindableArray<T>(this.toArray(), this.getKey, SILENT | ADAPTER);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toSet(): IBindableSet<T> {
-		return new BindableSet<T>(this.toArray(), this.getKey, true);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	toDictionary(): Dictionary<T> {
-		return apply<T>({}, this._items);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	asArray(): T[] {
-		return this.toArray();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	asBindableArray(): IBindableArray<T> {
-		return this.toBindableArray();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	asSet(): IBindableSet<T> {
-		return this.toSet();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	asDictionary(): Dictionary<T> {
-		return this._items;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	tryPut(key: string, item: T): Some<T> {
-		const result = DictionaryUtils.tryPut(this._items, key, item);
-		if (result === undefined) {
+	trySet(key: K, value: V): Some<V> {
+		const oldValue = this._native.get(key);
+		if (value === oldValue) {
 			return undefined;
 		}
-		const removedItem = result.value;
-		if (removedItem === undefined) {
-			this._length.set(this._length.get() + 1);
+		this._native.set(key, value);
+		if (oldValue === undefined) {
+			this._size.set(this._size.get() + 1);
 		}
 		if (!this.silent) {
-			const removedItems: Dictionary<T> = {};
-			if (removedItem !== undefined) {
-				removedItems[key] = removedItem;
+			const removedEntries = new Map<K, V>();
+			if (oldValue !== undefined) {
+				removedEntries.set(key, oldValue);
 			}
-			const addedItems: Dictionary<T> = {};
-			addedItems[key] = item;
-			const spliceResult = {removedItems: removedItems, addedItems: addedItems};
-			this._onSplice.dispatch({sender: this, spliceResult: spliceResult});
-			this._onChange.dispatch({sender: this});
+			const addedEntries = new Map<K, V>();
+			addedEntries.set(key, value);
+			this._onSplice.dispatch({removedEntries, addedEntries});
+			this._onChange.dispatch();
 		}
-		if (removedItem !== undefined && this._ownsItems) {
-			(<Destroyable><any>removedItem).destroy();
+		if (oldValue !== undefined && this._ownsValues) {
+			(<Destroyable><any>oldValue).destroy();
 		}
-		return result;
+		return {value: oldValue};
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	put(key: string, item: T): T {
-		const result = this.tryPut(key, item);
-		return (result !== undefined) ? result.value : this.get(key);
+	set(key: K, value: V): V {
+		const result = this.trySet(key, value);
+		return (result !== undefined) ? result.value : this._native.get(key);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	putAll(items: Dictionary<T>) {
+	setAll(entries: ReadonlyMap<K, V>) {
 		if (!this.silent) {
-			this.tryPutAll(items);
+			this.trySetAll(entries);
 			return;
 		}
-		for (var key in items) {
-			this.tryPut(key, items[key]);
+		for (let [key, value] of entries) {
+			this.trySet(key, value);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	putAllVerbose(items: Dictionary<T>): IBindableMap.SpliceResult<T> {
-		var spliceResult = this.tryPutAll(items);
-		return (spliceResult !== undefined) ? spliceResult : {removedItems: {}, addedItems: {}};
+	trySetAll(entries: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V> {
+		return this.trySplice([], entries);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	tryPutAll(items: Dictionary<T>): IBindableMap.SpliceResult<T> {
-		return this.trySplice([], items);
+	setKey(oldKey: K, newKey: K) {
+		const value = this.trySetKey(oldKey, newKey);
+		return (value !== undefined) ? value : this._native.get(newKey);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	setKey(oldKey: string, newKey: string): T {
-		this.trySetKey(oldKey, newKey);
-		return this._items[newKey];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	trySetKey(oldKey: string, newKey: string): T {
-		const item = DictionaryUtils.trySetKey(this._items, oldKey, newKey);
-		if (item === undefined) {
+	trySetKey(oldKey: K, newKey: K) {
+		if (oldKey === newKey) {
 			return undefined;
 		}
-		if (!this.silent) {
-			this._onReindex.dispatch({sender: this, keyMap: {[oldKey]: newKey}});
-			this._onChange.dispatch({sender: this});
-		}
-		return item;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	tryRemove(key: string): T {
-		const item = DictionaryUtils.tryRemove(this._items, key);
-		if (item === undefined) {
+		const value = this._native.get(oldKey);
+		if (value === undefined) {
 			return undefined;
 		}
-		this._length.set(this._length.get() - 1);
+		this._native.delete(oldKey);
+		this._native.set(newKey, value);
 		if (!this.silent) {
-			const spliceResult: IBindableMap.SpliceResult<T> = {addedItems: {}, removedItems: {[key]: item}};
-			this._onSplice.dispatch({sender: this, spliceResult: spliceResult});
-			this._onChange.dispatch({sender: this});
+			this._onReindex.dispatch(new Map([[oldKey, newKey]]));
+			this._onChange.dispatch();
 		}
-		if (this._ownsItems) {
-			(<Destroyable><any>item).destroy();
-		}
-		return item;
+		return value;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	remove(key: string): T {
-		return this.tryRemove(key);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	removeItem(item: T): string {
-		var key = this.keyOf(item);
-		if (key !== undefined) {
-			this.tryRemove(key);
+	remove(key: K) {
+		const value = this._native.get(key);
+		if (value === undefined) {
+			return undefined;
 		}
-		return key;
+		this._native.delete(key);
+		this._size.set(this._size.get() - 1);
+		if (!this.silent) {
+			const spliceResult: IBindableMap.SpliceResult<K, V> = {
+				addedEntries: new Map(),
+				removedEntries: new Map([[key, value]])
+			};
+			this._onSplice.dispatch(spliceResult);
+			this._onChange.dispatch();
+		}
+		if (this._ownsValues) {
+			(<Destroyable><any>value).destroy();
+		}
+		if (this._ownsKeys) {
+			(<Destroyable><any>key).destroy();
+		}
+		return value;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	removeAll(keys: string[]) {
+	removeAll(keys: readonly K[]) {
 		if (!this.silent) {
 			this.tryRemoveAll(keys);
 			return;
 		}
 		for (let i = 0, l = keys.length; i < l; ++i) {
-			this.tryRemove(keys[i]);
+			this.remove(keys[i]);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	removeAllVerbose(keys: string[]): Dictionary<T> {
-		const items = this.tryRemoveAll(keys);
-		return (items !== undefined) ? items : {};
+	tryRemoveAll(keys: Iterable<K>) {
+		const spliceResult = this.trySplice(keys, new Map());
+		return (spliceResult !== undefined) ? <Map<K, V>>spliceResult.removedEntries : undefined;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	tryRemoveAll(keys: string[]): Dictionary<T> {
-		const spliceResult = this.trySplice(keys, {});
-		if (spliceResult !== undefined) {
-			return spliceResult.removedItems;
-		}
-		return undefined;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	removeItems(items: T[]) {
-		const itemSet = VidSet.fromArray<T>(items, this.getKey);
-		const newItems = DictionaryUtils.filter(this._items, function (item) {
-			return !itemSet.contains(item);
-		});
-		this.performSplice(newItems);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	clear(): Dictionary<T> {
-		if (this._length.get() === 0) {
+	clear(): Map<K, V> {
+		if (this._size.get() === 0) {
 			return undefined;
 		}
-		let items: Dictionary<T>;
-		this._length.set(0);
-		if (this._adapter) {
-			items = DictionaryUtils.tryClear(this._items);
-		} else {
-			items = this._items;
-			this._items = {};
+		const oldContents = new Map(this._native);
+		this._native.clear();
+		this._size.set(0);
+		this._onClear.dispatch(oldContents);
+		this._onChange.dispatch();
+		if (this._ownsKeys || this._ownsValues) {
+			oldContents.forEach((value, key) => {
+				if (this._ownsKeys) {
+					(<any>key).destroy();
+				}
+				if (this._ownsValues) {
+					(<any>value).destroy();
+				}
+			});
 		}
-		this._onClear.dispatch({sender: this, items: items});
-		this._onChange.dispatch({sender: this});
-		if (this._ownsItems) {
-			ArrayUtils.backEvery(DictionaryUtils.toArray(items), destroy);
-		}
-		return items;
+		return oldContents;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	splice(removedKeys: string[], updatedItems: Dictionary<T>): IBindableMap.SpliceResult<T> {
-		var spliceResult = this.trySplice(removedKeys, updatedItems);
-		return (spliceResult !== undefined) ? spliceResult : {removedItems: {}, addedItems: {}};
+	splice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V> {
+		const spliceResult = this.trySplice(keysToRemove, entriesToUpdate);
+		return (spliceResult !== undefined) ? spliceResult : {removedEntries: new Map(), addedEntries: new Map()};
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	trySplice(removedKeys: string[], updatedItems: Dictionary<T>): IBindableMap.SpliceResult<T> {
-		const spliceResult = DictionaryUtils.trySplice(this._items, removedKeys, updatedItems);
-		if (spliceResult === undefined) {
+	trySplice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V> {
+		const removedEntries = new Map<K, V>();
+		for (let key of keysToRemove) {
+			if (entriesToUpdate.has(key)) {
+				continue;
+			}
+			const value = this._native.get(key);
+			if (value === undefined) {
+				continue;
+			}
+			this._native.delete(key);
+			removedEntries.set(key, value);
+		}
+
+		const addedEntries = new Map<K, V>();
+		for (let [key, value] of entriesToUpdate) {
+			const oldValue = this._native.get(key);
+			if (value === oldValue) {
+				continue;
+			}
+			this._native.set(key, value);
+			addedEntries.set(key, value);
+			if (oldValue !== undefined) {
+				removedEntries.set(key, oldValue);
+			}
+		}
+
+		if (removedEntries.size === 0 && addedEntries.size === 0) {
 			return undefined;
 		}
-		this._length.set(this._length.get() + DictionaryUtils.getLength(spliceResult.addedItems) - DictionaryUtils.getLength(spliceResult.removedItems));
-		this._onSplice.dispatch({sender: this, spliceResult: spliceResult});
-		this._onChange.dispatch({sender: this});
-		if (this._ownsItems) {
-			ArrayUtils.backEvery(DictionaryUtils.toArray(spliceResult.removedItems), destroy);
+		const spliceResult: IBindableMap.SpliceResult<K, V> = {removedEntries, addedEntries};
+		this._size.set(this._size.get() + addedEntries.size - removedEntries.size);
+		this._onSplice.dispatch(spliceResult);
+		this._onChange.dispatch();
+		if (this._ownsKeys || this._ownsValues) {
+			removedEntries.forEach((value, key) => {
+				if (this._ownsKeys) {
+					(<any>key).destroy();
+				}
+				if (this._ownsValues) {
+					(<any>value).destroy();
+				}
+			});
 		}
 		return spliceResult;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	reindex(keyMap: Dictionary<string>): Dictionary<string> {
-		var result = this.tryReindex(keyMap);
-		return (result !== undefined) ? result : {};
+	reindex(keyMapping: ReadonlyMap<K, K>): Map<K, K> {
+		const result = this.tryReindex(keyMapping);
+		return (result !== undefined) ? result : new Map();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	tryReindex(keyMap: Dictionary<string>): Dictionary<string> {
-		const result = DictionaryUtils.tryReindex(this._items, keyMap);
-		if (result === undefined) {
+	tryReindex(keyMapping: ReadonlyMap<K, K>): Map<K, K> {
+		const sanitizedMapping = new Map<K, K>();
+		for (let [oldKey, newKey] of keyMapping) {
+			if (newKey !== undefined && newKey !== oldKey && this._native.has(oldKey)) {
+				sanitizedMapping.set(oldKey, newKey);
+			}
+		}
+		if (sanitizedMapping.size === 0) {
 			return undefined;
 		}
-		this._onReindex.dispatch({sender: this, keyMap: result});
-		this._onChange.dispatch({sender: this});
-		return result;
+
+		const newKeys = new Set<K>();
+		for (let newKey of sanitizedMapping.keys()) {
+			newKeys.add(newKey);
+		}
+
+		const removedKeys: K[] = [];
+		const updatedEntries = new Map<K, V>();
+		for (let [oldKey, newKey] of sanitizedMapping) {
+			updatedEntries.set(newKey, this._native.get(oldKey));
+			if (!newKeys.has(oldKey)) {
+				removedKeys.push(oldKey);
+			}
+		}
+
+		for (let key of removedKeys) {
+			this._native.delete(key);
+		}
+		for (let [key, value] of updatedEntries) {
+			this._native.set(key, value);
+		}
+		this._onReindex.dispatch(sanitizedMapping);
+		this._onChange.dispatch();
+		return sanitizedMapping;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	detectSplice(newItems: Dictionary<T>): IBindableMap.SpliceParams<T> {
-		return DictionaryUtils.detectSplice(this._items, newItems);
+	detectSplice(newContents: ReadonlyMap<K, V>): IBindableMap.SpliceParams<K, V> {
+		const keysToRemove: K[] = [];
+		const entriesToUpdate = new Map<K, V>();
+		for (let key of this._native.keys()) {
+			if (!newContents.has(key)) {
+				keysToRemove.push(key);
+			}
+		}
+		for (let [key, value] of newContents) {
+			if (value !== this._native.get(key)) {
+				entriesToUpdate.set(key, value);
+			}
+		}
+		return (keysToRemove.length === 0 && entriesToUpdate.size === 0) ? undefined : {keysToRemove, entriesToUpdate};
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	detectReindex(newItems: Dictionary<T>): Dictionary<string> {
-		return DictionaryUtils.detectReindex(this._items, newItems, this.getKey);
+	detectReindex(newContents: ReadonlyMap<K, V>): ReadonlyMap<K, K> {
+		const newValueKeys = new Map<V, K>();
+		for (let [key, value] of newContents) {
+			newValueKeys.set(value, key);
+		}
+		const keyMap = new Map<K, K>();
+		for (let [oldKey, value] of this._native) {
+			const newKey = newValueKeys.get(value);
+			if (oldKey !== newKey) {
+				keyMap.set(oldKey, newKey);
+			}
+		}
+		return keyMap.size === 0 ? undefined : keyMap;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	performSplice(newItems: Dictionary<T>) {
-		var params = this.detectSplice(newItems);
+	performSplice(newContents: ReadonlyMap<K, V>) {
+		const params = this.detectSplice(newContents);
 		if (params !== undefined) {
-			this.trySplice(params.removedKeys, params.updatedItems);
+			this.trySplice(params.keysToRemove, params.entriesToUpdate);
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	performReindex(newItems: Dictionary<T>) {
-		var keyMap = this.detectReindex(newItems);
+	performReindex(newContents: ReadonlyMap<K, V>) {
+		const keyMap = this.detectReindex(newContents);
 		if (keyMap !== undefined) {
 			this.tryReindex(keyMap);
 		}
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	equal(map: Dictionary<T>): boolean {
-		return DictionaryUtils.equal(this._items, map);
 	}
 }
 

@@ -23,10 +23,9 @@ SOFTWARE.
 */
 
 import Destroyable from "./Destroyable";
-import Dictionary from "./Dictionary";
 import dummyDispatcher from "./dummyDispatcher";
-import Listener from "./Listener";
 import IDispatcher from "./IDispatcher";
+import Listener from "./Listener";
 
 /**
  * Real implementation of `Listenable` interface.
@@ -34,7 +33,7 @@ import IDispatcher from "./IDispatcher";
  */
 export default class Dispatcher<M> implements IDispatcher<M> {
 
-	private _listeners: Dictionary<Listener<M>> = null;
+	private _listeners: Set<Listener<M>> = null;
 
 	/**
 	 * Checks if this dispatcher is dummy, i.e. it never dispatches any messages.
@@ -61,12 +60,12 @@ export default class Dispatcher<M> implements IDispatcher<M> {
 	 * @param handler Handler function.
 	 * @param scope `handler` call scope.
 	 */
-	listen(handler: (message: M) => any, scope?: any): Destroyable {
+	listen(handler: (message: M) => void, scope?: any): Destroyable {
 		if (this._listeners === null) {
-			this._listeners = {};
+			this._listeners = new Set<Listener<M>>();
 		}
 		const listener = new Listener<M>(this, handler, scope);
-		this._listeners[listener.iid] = listener;
+		this._listeners.add(listener);
 		return listener;
 	}
 
@@ -78,20 +77,14 @@ export default class Dispatcher<M> implements IDispatcher<M> {
 		if (this._listeners === null) {
 			return;
 		}
-		for (let iid in this._listeners) {
-			if (this._listeners.hasOwnProperty(iid)) {
-				const listener = this._listeners[iid];
-				listener.handler.call(listener.scope || listener, message);
-			}
+		for (const listener of this._listeners) {
+			listener.handler.call(listener.scope || listener, message);
 		}
 	}
 
-	/**
-	 * @hidden
-	 */
 	_unbind(listener: Listener<M>) {
 		if (this._listeners !== null) {
-			delete this._listeners[listener.iid];
+			this._listeners.delete(listener);
 		}
 	}
 

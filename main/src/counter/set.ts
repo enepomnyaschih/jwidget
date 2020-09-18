@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as ArrayUtils from '../ArrayUtils';
 import DestroyableBindable from '../DestroyableBindable';
 import IBindableSet from '../IBindableSet';
+import {count} from "../IterableUtils";
 import Property from '../Property';
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractCounter from './AbstractCounter';
@@ -33,26 +33,26 @@ import AbstractCounter from './AbstractCounter';
  * AbstractCounter implementation for sets.
  */
 export default class SetCounter<T> extends AbstractCounter<T> {
+
 	/**
 	 * @param source Source set.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<T>, test: (item: T) => any, config?: AbstractCounter.Config) {
+	constructor(readonly source: ReadonlyBindableSet<T>, test: (item: T) => boolean, config?: AbstractCounter.Config) {
 		super(test, config);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	recount() {
-		this._target.set(this.source.count(this._test, this._scope));
+		this._target.set(count(this.source, this.test));
 	}
 
-	private _onSplice(message: IBindableSet.SpliceMessage<T>) {
-		var spliceResult = message.spliceResult;
+	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
 		this._target.set(this._target.get() -
-			ArrayUtils.count(spliceResult.removedItems, this._test, this._scope) +
-			ArrayUtils.count(spliceResult.addedItems, this._test, this._scope));
+			count(spliceResult.removedValues, this.test) +
+			count(spliceResult.addedValues, this.test));
 	}
 
 	private _onClear() {
@@ -64,14 +64,12 @@ export default class SetCounter<T> extends AbstractCounter<T> {
  * Counts matching items in a set and starts synchronization.
  * @param source Source set.
  * @param test Filtering criteria.
- * @param scope Call scope of `test` function.
  * @returns Target property.
  */
-export function countSet<T>(source: ReadonlyBindableSet<T>, test: (item: T) => any,
-							scope?: any): DestroyableBindable<number> {
+export function countSet<T>(source: ReadonlyBindableSet<T>, test: (item: T) => boolean): DestroyableBindable<number> {
 	if (source.silent) {
-		return new Property(source.count(test, scope), true);
+		return new Property(count(source, test), true);
 	}
 	const target = new Property(0);
-	return target.owning(new SetCounter<T>(source, test, {target, scope}));
+	return target.owning(new SetCounter<T>(source, test, {target}));
 }

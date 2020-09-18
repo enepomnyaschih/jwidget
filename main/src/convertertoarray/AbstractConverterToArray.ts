@@ -26,27 +26,21 @@ import BindableArray from '../BindableArray';
 import Class from '../Class';
 import IBindableArray from '../IBindableArray';
 import IndexItems from '../IndexItems';
-import {VidSet} from '../internal';
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
 
 /**
  * Converter to array.
  */
 abstract class AbstractConverterToArray<T> extends Class {
+
 	private _targetCreated: boolean;
 
-	/**
-	 * @hidden
-	 */
 	protected _target: IBindableArray<T>;
 
-	/**
-	 * @hidden
-	 */
-	protected constructor(config: AbstractConverterToArray.Config<T>, getKey: (item: T) => any, silent: boolean) {
+	protected constructor(config: AbstractConverterToArray.Config<T>, silent: boolean) {
 		super();
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableArray<T>(getKey, silent) : config.target;
+		this._target = this._targetCreated ? new BindableArray<T>(silent) : config.target;
 	}
 
 	protected destroyObject() {
@@ -63,19 +57,13 @@ abstract class AbstractConverterToArray<T> extends Class {
 		return this._target;
 	}
 
-	/**
-	 * @hidden
-	 */
-	protected _splice(removedItemsSet: VidSet<T>, addedItemsSet: VidSet<T>) {
-		const filteredItems = this.target.items.filter((item) => {
-			return !removedItemsSet.contains(item) || !addedItemsSet.contains(item);
-		});
-		const addedItems = addedItemsSet.values.filter((item) => {
-			return !removedItemsSet.contains(item);
-		});
+	protected _splice(removedValueSet: ReadonlySet<T>, addedValueSet: ReadonlySet<T>) {
+		const filteredValues = this.target.native.filter(
+			value => !removedValueSet.has(value) || !addedValueSet.has(value));
+		const addedValues = [...addedValueSet].filter(value => !removedValueSet.has(value));
 		this._target.trySplice(
-			this.target.detectFilter(filteredItems) || [],
-			[new IndexItems(filteredItems.length, addedItems)]);
+			this.target.detectFilter(filteredValues) || [],
+			[new IndexItems(filteredValues.length, addedValues)]);
 	}
 }
 
