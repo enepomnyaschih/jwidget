@@ -1,6 +1,6 @@
 import {assert, expect} from "chai";
-import dummyDestroyable from "../../main/src/dummyDestroyable";
-import dummyDispatcher from "../../main/src/dummyDispatcher";
+import dummyDestroyable from "jwidget/dummyDestroyable";
+import dummyDispatcher from "jwidget/dummyDispatcher";
 
 describe("dummyDispatcher", () => {
 	it("should not call handlers", () => {

@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import Class from "../../main/src/Class";
+import Class from "jwidget/Class";
 
 describe("Class", () => {
 	it("should destroy owned objects in the reverse order", () => {

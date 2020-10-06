@@ -1,6 +1,6 @@
 import {assert, expect} from "chai";
-import Dispatcher from "../../main/src/Dispatcher";
-import dummyDispatcher from "../../main/src/dummyDispatcher";
+import Dispatcher from "jwidget/Dispatcher";
+import dummyDispatcher from "jwidget/dummyDispatcher";
 
 describe("Dispatcher", () => {
 	it("should call handlers", () => {
