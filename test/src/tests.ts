@@ -27,3 +27,4 @@ import "./Copier";
 import "./Dispatcher";
 import "./dummyDispatcher";
 import "./Property";
+import "./Switcher";
