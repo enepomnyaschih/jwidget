@@ -33,7 +33,6 @@ import Property from './Property';
  * @param T Property value type.
  */
 class Copier<V> extends Class {
-	private _targetCreated: boolean;
 	private _target: IProperty<V>;
 
 	/**
@@ -42,8 +41,7 @@ class Copier<V> extends Class {
 	 */
 	constructor(readonly source: Bindable<V>, target?: IProperty<V>) {
 		super();
-		this._targetCreated = target == null;
-		this._target = (target == null) ? new Property<V>(null, source.silent) : target;
+		this._target = target ?? new Property<V>(null, source.silent);
 		this._update();
 		this.own(this.source.onChange.listen(this._update, this));
 	}
@@ -59,9 +57,8 @@ class Copier<V> extends Class {
 	 * @inheritDoc
 	 */
 	protected destroyObject() {
-		if (this._targetCreated) {
-			this._target.destroy();
-		}
+		// We don't have to destroy _target, because its destruction doesn't have a purpose. You can't own anything in
+		// a Bindable object.
 		this._target = null;
 		super.destroyObject();
 	}
