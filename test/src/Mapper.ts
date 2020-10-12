@@ -25,6 +25,7 @@ SOFTWARE.
 import {assert, expect} from "chai";
 import {mapProperties} from "jwidget/Mapper";
 import Property from "jwidget/Property";
+import {sum} from "jwidget/Reducer";
 
 describe("mapProperties(function)", () => {
 	it("should initialize a silent target property if there are no sources", () => {
@@ -162,6 +163,70 @@ describe("mapProperties(function)", () => {
 		const source1 = new Property(2, true),
 			source2 = new Property(3),
 			target = mapProperties([source1, source2], (a, b) => a + b);
+		expect((<any>source2.onChange)._listeners.size).equal(1);
+		target.destroy();
+		expect((<any>source2.onChange)._listeners.size).equal(0);
+	});
+});
+
+describe("mapProperties(reducer)", () => {
+	it("should initialize a silent target property if there are no sources", () => {
+		expect(mapProperties([], sum).silent).equal(true);
+	});
+
+	it("should initialize a silent target property if all sources are silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3, true);
+		expect(mapProperties([source1, source2], sum).silent).equal(true);
+	});
+
+	it("should initialize a non-silent target property if some sources are not silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3);
+		expect(mapProperties([source1, source2], sum).silent).equal(false);
+	});
+
+	it("should initialize the target property with a proper value if there are no sources", () => {
+		expect(mapProperties([], sum).get()).equal(0);
+	});
+
+	it("should initialize the target property with a proper value if all sources are silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3, true);
+		expect(mapProperties([source1, source2], sum).get()).equal(5);
+	});
+
+	it("should initialize the target property with a proper value if some sources are not silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3);
+		expect(mapProperties([source1, source2], sum).get()).equal(5);
+	});
+
+	it("should update the target property with a changed value", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3),
+			target = mapProperties([source1, source2], sum);
+		source2.set(6);
+		expect(target.get()).equal(8);
+	});
+
+	it("should change the target property only once", () => {
+		let step = 0;
+		const source1 = new Property(2, true),
+			source2 = new Property(3),
+			target = mapProperties([source1, source2], sum);
+		target.onChange.listen(() => {
+			++step;
+		});
+		expect(step).equal(0);
+		source2.set(6);
+		expect(step).equal(1);
+	});
+
+	it("should unbind the listener on target destruction", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3),
+			target = mapProperties([source1, source2], sum);
 		expect((<any>source2.onChange)._listeners.size).equal(1);
 		target.destroy();
 		expect((<any>source2.onChange)._listeners.size).equal(0);

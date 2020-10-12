@@ -44,7 +44,6 @@ class Mapper<T> extends Class {
 	private _scope: any;
 	private _sourceValues: any[];
 	private _targetValue: T;
-	private _targetCreated: boolean;
 	private _target: IProperty<T>;
 	private _viaNull: boolean;
 
@@ -58,10 +57,8 @@ class Mapper<T> extends Class {
 		this._create = create;
 		this._destroy = config.destroy;
 		this._scope = config.scope || this;
-		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ?
-			new Property<T>(null, this.sources.every((source) => source.silent)) : config.target;
-		this._viaNull = config.viaNull || false;
+		this._target = config.target ?? new Property<T>(null, this.sources.every(source => source.silent));
+		this._viaNull = config.viaNull ?? false;
 		this._sourceValues = null;
 		this._targetValue = null;
 		this.update();
@@ -84,9 +81,6 @@ class Mapper<T> extends Class {
 			this._target.set(null);
 		}
 		this._done();
-		if (this._targetCreated) {
-			this._target.destroy();
-		}
 		this._create = null;
 		this._destroy = null;
 		this._scope = null;
@@ -204,7 +198,7 @@ namespace Mapper {
 		 */
 		constructor(readonly sources: Bindable<T>[], readonly reducer: Reducer<T, U>, target?: IProperty<U>) {
 			super();
-			this._target = target || this.own(new Property<U>());
+			this._target = target ?? new Property<U>();
 			this._update();
 			this.sources.forEach(this._bind, this);
 		}
@@ -217,7 +211,7 @@ namespace Mapper {
 		}
 
 		private _update() {
-			const values = this.sources.map((source) => source.get());
+			const values = this.sources.map(source => source.get());
 			this._target.set(ArrayUtils.reduce(values, this.reducer));
 		}
 
@@ -255,7 +249,7 @@ export function mapProperties<T>(sources: Bindable<any>[],
 			destroy: config.destroy,
 			scope: config.scope,
 			viaNull: config.viaNull
-		}) : new Mapper.ByReducer(sources, reducer));
+		}) : new Mapper.ByReducer(sources, reducer, target));
 	}
 	const sourceValues = sources.map((source) => source.get());
 	if (typeof reducer !== "function") {
