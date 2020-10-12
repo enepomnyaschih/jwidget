@@ -232,9 +232,10 @@ describe("Property.map", () => {
 		target.onChange.listen(({value}) => {
 			if (step === 0) {
 				expect(value).equal(null);
-			}
-			if (step === 1) {
+			} else if (step === 1) {
 				expect(value).equal(10);
+			} else {
+				assert.fail();
 			}
 			++step;
 		});
@@ -272,12 +273,12 @@ describe("Property.map", () => {
 			});
 		target.onChange.listen(({value}) => {
 			if (value == null) {
-				expect(step).equal(0);
+				expect(step++).equal(0);
+			} else if (value === 10) {
+				expect(step++).equal(2);
+			} else {
+				assert.fail();
 			}
-			if (value === 10) {
-				expect(step).equal(2);
-			}
-			++step;
 		});
 		expect(step).equal(0);
 		source.set(5);
@@ -296,5 +297,13 @@ describe("Property.map", () => {
 		expect(step).equal(0);
 		target.destroy();
 		expect(step).equal(1);
+	});
+
+	it("should unbind the listener on target destruction", () => {
+		const source = new Property(3),
+			target = source.map(x => x * 2);
+		expect((<any>source.onChange)._listeners.size).equal(1);
+		target.destroy();
+		expect((<any>source.onChange)._listeners.size).equal(0);
 	});
 });

@@ -26,5 +26,6 @@ import "./Class";
 import "./Copier";
 import "./Dispatcher";
 import "./dummyDispatcher";
+import "./Mapper";
 import "./Property";
 import "./Switcher";
