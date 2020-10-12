@@ -254,7 +254,8 @@ symbols:
         type: '%Mapper.%DestroyCallback<%T>'
         optional: true
         description: |
-          <p>Destroys target property value if specified.</p>
+          <p>Destroys target property value if specified. Resets target property value to null before the %Mapper's
+          destruction (by default, the target value is preserved).</p>
           <p>Signature: <code>(targetValue: %T, ...sourceValues: any[]) => any</code>
 
       scope:

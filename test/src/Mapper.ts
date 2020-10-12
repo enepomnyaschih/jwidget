@@ -198,10 +198,100 @@ describe("Mapper", () => {
 		expect(target.get()).equal(null);
 	});
 
-	it("should unbind the listener on destruction", () => {
+	it("should unbind the listeners on destruction", () => {
 		const source1 = new Property(2, true),
 			source2 = new Property(3),
 			mapper = new Mapper([source1, source2], (a, b) => a + b);
+		expect((<any>source2.onChange)._listeners.size).equal(1);
+		mapper.destroy();
+		expect((<any>source2.onChange)._listeners.size).equal(0);
+	});
+});
+
+describe("Mapper.ByReducer", () => {
+	it("should create a new target by default", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3, true),
+			mapper = new Mapper.ByReducer([source1, source2], sum);
+		expect(mapper.target).not.equal(source1);
+		expect(mapper.target).not.equal(source2);
+	});
+
+	it("should use the existing target if specified", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3, true),
+			target = new Property(0),
+			mapper = new Mapper.ByReducer([source1, source2], sum, target);
+		expect(mapper.target).equal(target);
+	});
+
+	it("should initialize a silent target property if there are no sources", () => {
+		expect(new Mapper.ByReducer([], sum).target.silent).equal(true);
+	});
+
+	it("should initialize a silent target property if all sources are silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3, true);
+		expect(new Mapper.ByReducer([source1, source2], sum).target.silent).equal(true);
+	});
+
+	it("should initialize a non-silent target property if some sources are not silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3);
+		expect(new Mapper.ByReducer([source1, source2], sum).target.silent).equal(false);
+	});
+
+	it("should initialize the target property with a proper value if there are no sources", () => {
+		expect(new Mapper.ByReducer([], sum).target.get()).equal(0);
+	});
+
+	it("should initialize the target property with a proper value if all sources are silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3, true);
+		expect(new Mapper.ByReducer([source1, source2], sum).target.get()).equal(5);
+	});
+
+	it("should initialize the target property with a proper value if some sources are not silent", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3);
+		expect(new Mapper.ByReducer([source1, source2], sum).target.get()).equal(5);
+	});
+
+	it("should update the target property with a changed value", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3),
+			mapper = new Mapper.ByReducer([source1, source2], sum);
+		source2.set(6);
+		expect(mapper.target.get()).equal(8);
+	});
+
+	it("should change the target property only once", () => {
+		let step = 0;
+		const source1 = new Property(2, true),
+			source2 = new Property(3),
+			mapper = new Mapper.ByReducer([source1, source2], sum);
+		mapper.target.onChange.listen(() => {
+			++step;
+		});
+		expect(step).equal(0);
+		source2.set(6);
+		expect(step).equal(1);
+	});
+
+	it("should leave the target's current value on destruction", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3),
+			target = new Property(0),
+			mapper = new Mapper.ByReducer([source1, source2], sum, target);
+		source2.set(6);
+		mapper.destroy();
+		expect(target.get()).equal(8);
+	});
+
+	it("should unbind the listeners on destruction", () => {
+		const source1 = new Property(2, true),
+			source2 = new Property(3),
+			mapper = new Mapper.ByReducer([source1, source2], sum);
 		expect((<any>source2.onChange)._listeners.size).equal(1);
 		mapper.destroy();
 		expect((<any>source2.onChange)._listeners.size).equal(0);
@@ -340,7 +430,7 @@ describe("mapProperties(function)", () => {
 		expect(step).equal(1);
 	});
 
-	it("should unbind the listener on target destruction", () => {
+	it("should unbind the listeners on target destruction", () => {
 		const source1 = new Property(2, true),
 			source2 = new Property(3),
 			target = mapProperties([source1, source2], (a, b) => a + b);
@@ -404,7 +494,7 @@ describe("mapProperties(reducer)", () => {
 		expect(step).equal(1);
 	});
 
-	it("should unbind the listener on target destruction", () => {
+	it("should unbind the listeners on target destruction", () => {
 		const source1 = new Property(2, true),
 			source2 = new Property(3),
 			target = mapProperties([source1, source2], sum);

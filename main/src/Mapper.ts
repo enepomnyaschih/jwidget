@@ -198,7 +198,7 @@ namespace Mapper {
 		 */
 		constructor(readonly sources: Bindable<T>[], readonly reducer: Reducer<T, U>, target?: IProperty<U>) {
 			super();
-			this._target = target ?? new Property<U>();
+			this._target = target ?? new Property<U>(null, this.sources.every(source => source.silent));
 			this._update();
 			this.sources.forEach(this._bind, this);
 		}
