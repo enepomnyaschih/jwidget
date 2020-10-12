@@ -77,10 +77,10 @@ class Mapper<T> extends Class {
 	 */
 	protected destroyObject() {
 		const oldValue = this.target.get();
-		if (oldValue === this._targetValue) {
+		if (this._destroy && oldValue === this._targetValue) {
 			this._target.set(null);
+			this._done();
 		}
-		this._done();
 		this._create = null;
 		this._destroy = null;
 		this._scope = null;

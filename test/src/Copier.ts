@@ -40,6 +40,18 @@ describe("Copier", () => {
 		expect(copier.target).equal(target);
 	});
 
+	it("should initialize a silent target property if the source is silent", () => {
+		const source = new Property(2, true),
+			copier = new Copier(source);
+		expect(copier.target.silent).equal(true);
+	});
+
+	it("should initialize a non-silent target property if the source is not silent", () => {
+		const source = new Property(2),
+			copier = new Copier(source);
+		expect(copier.target.silent).equal(false);
+	});
+
 	it("should initialize the new target with a proper value", () => {
 		const source = new Property(2),
 			copier = new Copier(source);
@@ -71,13 +83,12 @@ describe("Copier", () => {
 		expect(target.get()).equal(3);
 	});
 
-	it("should not update the target's after destruction", () => {
+	it("should unbind the listener on destruction", () => {
 		const source = new Property(2),
 			target = new Property(0),
 			copier = new Copier(source, target);
-		source.set(3);
+		expect((<any>source.onChange)._listeners.size).equal(1);
 		copier.destroy();
-		source.set(6);
-		expect(target.get()).equal(3);
+		expect((<any>source.onChange)._listeners.size).equal(0);
 	});
 });
