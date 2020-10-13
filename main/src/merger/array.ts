@@ -27,7 +27,7 @@ import BindableArray from '../BindableArray';
 import Class from '../Class';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
-import {ADAPTER, destroy, SILENT} from '../index';
+import {destroy} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import {mapArray} from '../mapper/array';
@@ -231,7 +231,7 @@ export function mergeArrays<T>(source: ReadonlyBindableArray<ReadonlyBindableArr
  * @returns Merged array.
  */
 export function mergeNoSync<T>(source: ReadonlyBindableArray<ReadonlyBindableArray<T>>): IBindableArray<T> {
-	return new BindableArray(ArrayUtils.merge(source.native.map(item => item.native)), SILENT & ADAPTER);
+	return new BindableArray(ArrayUtils.merge(source.native.map(item => item.native)), true);
 }
 
 class Bunch<T> extends Class {

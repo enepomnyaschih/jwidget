@@ -30,7 +30,7 @@ import Class from './Class';
 import Dispatcher from './Dispatcher';
 import IBindableArray from './IBindableArray';
 import IDispatcher from './IDispatcher';
-import {ADAPTER, cmp, CollectionFlags, destroy, identity, SILENT} from './index';
+import {cmp, destroy, identity} from './index';
 import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import {initReduceState} from "./internal";
@@ -65,25 +65,16 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 	 * @param silent Create a silent array which means that it never dispatches any messages.
 	 */
 	constructor(contents: Iterable<T>, silent?: boolean);
-
-	/**
-	 * @param contents Initial array contents.
-	 * @param flags Collection configuration flags.
-	 */
-	constructor(contents: T[], flags?: CollectionFlags);
-	constructor(a?: any, b?: any) {
+	constructor(a?: any, b?: boolean) {
 		super();
 		if (typeof a === "boolean") {
-			b = a ? SILENT : 0;
+			b = a;
 			a = null;
-		} else if (typeof b === "boolean") {
-			b = b ? SILENT : 0;
 		}
 		const contents: T[] = a;
-		const silent = Boolean(b & SILENT);
-		const adapter = (contents != null) && Boolean(b & ADAPTER);
+		const silent = b;
 
-		this._native = adapter ? contents : [...(contents || [])];
+		this._native = [...(contents ?? [])];
 		this._length = this.own(new Property(this._native.length, silent));
 
 		this._onSplice = Dispatcher.make<IBindableArray.SpliceResult<T>>(silent);

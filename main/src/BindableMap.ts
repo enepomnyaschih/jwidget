@@ -28,7 +28,6 @@ import Destroyable from './Destroyable';
 import Dispatcher from './Dispatcher';
 import IBindableMap from './IBindableMap';
 import IDispatcher from './IDispatcher';
-import {ADAPTER, CollectionFlags, SILENT} from './index';
 import IProperty from './IProperty';
 import Listenable from './Listenable';
 import Property from './Property';
@@ -59,25 +58,16 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 	 * @param silent Create a silent map which means that it never dispatches any messages.
 	 */
 	constructor(contents: Iterable<readonly [K, V]>, silent?: boolean);
-
-	/**
-	 * @param contents Initial map contents.
-	 * @param flags Collection configuration flags.
-	 */
-	constructor(contents: Map<K, V>, flags?: CollectionFlags);
-	constructor(a?: any, b?: any) {
+	constructor(a?: any, b?: boolean) {
 		super();
 		if (typeof a === "boolean") {
-			b = a ? SILENT : 0;
+			b = a;
 			a = null;
-		} else if (typeof b === "boolean") {
-			b = b ? SILENT : 0;
 		}
 		const contents: Map<K, V> = a;
-		const silent = Boolean(b & SILENT);
-		const adapter = (contents != null) && Boolean(b & ADAPTER);
+		const silent = b;
 
-		this._native = adapter ? contents : new Map(contents);
+		this._native = new Map(contents);
 		this._size = this.own(new Property(this._native.size, silent));
 
 		this._onSplice = Dispatcher.make<IBindableMap.SpliceResult<K, V>>(silent);

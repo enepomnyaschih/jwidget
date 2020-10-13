@@ -27,7 +27,7 @@ import Class from './Class';
 import Dispatcher from './Dispatcher';
 import IBindableSet from './IBindableSet';
 import IDispatcher from './IDispatcher';
-import {ADAPTER, CollectionFlags, destroy, SILENT} from './index';
+import {destroy} from './index';
 import IProperty from './IProperty';
 import Listenable from './Listenable';
 import Property from './Property';
@@ -55,25 +55,16 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 	 * @param silent Create a silent set which means that it never dispatches any messages.
 	 */
 	constructor(contents: Iterable<T>, silent?: boolean);
-
-	/**
-	 * @param contents Initial set contents.
-	 * @param flags Collection configuration flags.
-	 */
-	constructor(contents: Set<T>, flags?: CollectionFlags);
-	constructor(a?: any, b?: any) {
+	constructor(a?: any, b?: boolean) {
 		super();
 		if (typeof a === "boolean") {
-			b = a ? SILENT : 0;
+			b = a;
 			a = null;
-		} else if (typeof b === "boolean") {
-			b = b ? SILENT : 0;
 		}
 		const contents: Set<T> = a;
-		const silent = Boolean(b & SILENT);
-		const adapter = (contents != null) && Boolean(b & ADAPTER);
+		const silent = b;
 
-		this._native = adapter ? contents : new Set(contents);
+		this._native = new Set(contents);
 		this._size = this.own(new Property(this._native.size, silent));
 
 		this._onSplice = Dispatcher.make<IBindableSet.SpliceResult<T>>(silent);
