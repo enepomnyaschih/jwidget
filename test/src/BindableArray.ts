@@ -47,6 +47,88 @@ describe("new BindableArray", () => {
 	});
 });
 
+describe("BindableArray.length", () => {
+	it("should not be silent for a non-silent array", () => {
+		expect(new BindableArray().length.silent).equal(false);
+	});
+
+	it("should be silent for a silent array", () => {
+		expect(new BindableArray(true).length.silent).equal(true);
+	});
+
+	it("should be 0 for empty array", () => {
+		expect(new BindableArray().length.get()).equal(0);
+	});
+
+	it("should return number of items for non-empty array", () => {
+		expect(new BindableArray([5, 2, 8, 7, 8]).length.get()).equal(5);
+	});
+
+	// ... all tests for reaction to concrete mutation methods are among tests for those methods
+});
+
+describe("BindableArray.destroy", () => {
+	it("should clear the array", () => {
+		const array = new BindableArray([5, 2, 8, 7, 8]);
+		array.destroy();
+		expect(array.native).eql([]);
+		expect(array.length.get()).eql(0);
+	});
+
+	it("should not destroy items if not owned", () => {
+		const array = new BindableArray([
+			{
+				destroy: () => {
+					assert.fail();
+				}
+			},
+			{
+				destroy: () => {
+					assert.fail();
+				}
+			}
+		]);
+		array.destroy();
+	});
+
+	it("should destroy all items in reverse order if owned", () => {
+		let step = 0;
+		const array = new BindableArray([
+			{
+				destroy: () => {
+					expect(++step).equal(2)
+				}
+			},
+			{
+				destroy: () => {
+					expect(++step).equal(1)
+				}
+			}
+		]).ownValues();
+		array.destroy();
+		expect(step).eql(2);
+	});
+});
+
+describe("BindableArray.get", () => {
+	it("should return a proper value", () => {
+		const input = [5, 2, 8, 7, 8];
+		const array = new BindableArray(input);
+		expect(array.get(0)).equal(5);
+		expect(array.get(1)).equal(2);
+		expect(array.get(2)).equal(8);
+		expect(array.get(3)).equal(7);
+		expect(array.get(4)).equal(8);
+	});
+
+	it("should return undefined if out of bounds", () => {
+		const input = [5, 2, 8, 7, 8];
+		const array = new BindableArray(input);
+		assert.isUndefined(array.get(-1));
+		assert.isUndefined(array.get(5));
+	});
+});
+
 describe("BindableArray.set", () => {
 	it("should not change the original array", () => {
 		const input = [5, 2, 8, 7, 8];
