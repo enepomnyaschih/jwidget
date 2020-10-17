@@ -159,7 +159,35 @@ describe("BindableArray.includes", () => {
 		assert.isFalse(new BindableArray([NaN]).includes(Number.POSITIVE_INFINITY));
 	});
 
-	// ... extending this block any further would just be testing of native array.includes method
+	// ... extending this block any further would just be testing of the native array.includes method
+});
+
+// ... same for all other methods-delegators. It doesn't make much sense to cover them with tests
+
+describe("BindableArray.reduce(callback)", () => {
+	it("should return the initial value for an empty array", () => {
+		expect(new BindableArray<number>().reduce((acc, value) => acc + value, 10)).equal(10);
+	});
+
+	it("should properly reduce the array to a value", () => {
+		expect(new BindableArray([5, 2, 8, 7, 8]).reduce((acc, value) => acc + value, 10)).equal(40);
+	});
+});
+
+describe("BindableArray.reduce(reducer)", () => {
+	it("should return the initial value for an empty array", () => {
+		expect(new BindableArray<number>().reduce({
+			initial: 10,
+			callback: (acc, value) => acc + value
+		})).equal(10);
+	});
+
+	it("should properly reduce the array to a value", () => {
+		expect(new BindableArray([5, 2, 8, 7, 8]).reduce({
+			initial: 10,
+			callback: (acc, value) => acc + value
+		})).equal(40);
+	});
 });
 
 describe("BindableArray.set", () => {
