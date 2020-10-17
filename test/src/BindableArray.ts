@@ -129,6 +129,39 @@ describe("BindableArray.get", () => {
 	});
 });
 
+describe("BindableArray.includes", () => {
+	it("should return true for an existing value", () => {
+		const input = [5, 2, 8, 7, 8];
+		const array = new BindableArray(input);
+		assert.isTrue(array.includes(2));
+		assert.isTrue(array.includes(5));
+		assert.isTrue(array.includes(7));
+		assert.isTrue(array.includes(5));
+	});
+
+	it("should return false for non-existent value", () => {
+		const input = [5, 2, 8, 7, 8];
+		const array = new BindableArray(input);
+		assert.isFalse(array.includes(0));
+		assert.isFalse(array.includes(10));
+		assert.isFalse(array.includes(null));
+	});
+
+	it("should recognize NaN", () => {
+		assert.isTrue(new BindableArray([NaN]).includes(NaN));
+		assert.isFalse(new BindableArray([1]).includes(NaN));
+		assert.isFalse(new BindableArray([Number.POSITIVE_INFINITY]).includes(NaN));
+	});
+
+	it("should recognize Infinity", () => {
+		assert.isTrue(new BindableArray([Number.POSITIVE_INFINITY]).includes(Number.POSITIVE_INFINITY));
+		assert.isFalse(new BindableArray([1]).includes(Number.POSITIVE_INFINITY));
+		assert.isFalse(new BindableArray([NaN]).includes(Number.POSITIVE_INFINITY));
+	});
+
+	// ... extending this block any further would just be testing of native array.includes method
+});
+
 describe("BindableArray.set", () => {
 	it("should not change the original array", () => {
 		const input = [5, 2, 8, 7, 8];
