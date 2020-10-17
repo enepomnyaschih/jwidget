@@ -46,3 +46,31 @@ describe("new BindableArray", () => {
 		expect(new BindableArray(input, true).native).not.equal(input);
 	});
 });
+
+describe("BindableArray.set", () => {
+	it("should not change the original array", () => {
+		const input = [5, 2, 8, 7, 8];
+		const array = new BindableArray(input);
+		array.set(0, 3);
+		expect(input).eql([5, 2, 8, 7, 8]);
+	});
+});
+
+describe("BindableArray[Symbol.iterator]", () => {
+	it("should support empty arrays", () => {
+		const array = new BindableArray();
+		for (let _item of array) {
+			assert.fail();
+		}
+	});
+
+	it("should iterate through items", () => {
+		const input = [5, 2, 8, 7, 8];
+		const array = new BindableArray(input);
+		let i = 0;
+		for (let item of array) {
+			expect(item).equal(input[i++]);
+		}
+		expect(i).equal(5);
+	});
+});
