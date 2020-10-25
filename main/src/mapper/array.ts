@@ -63,7 +63,7 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 	}
 
 	protected destroyObject() {
-		this._destroyItems(this.target.clear() ?? [], this.source.native);
+		this._destroyItems(this.target.clear(), this.source.native);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}

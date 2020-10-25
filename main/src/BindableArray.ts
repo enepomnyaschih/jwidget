@@ -222,8 +222,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 	}
 
 	remove(index: number): T {
-		const result = this.tryRemoveAll(index, 1);
-		return (result !== undefined) ? result[0] : undefined;
+		return this.tryRemoveAll(index, 1)[0];
 	}
 
 	removeAll(index: number, count: number): readonly T[] {
@@ -235,15 +234,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return (result !== undefined) ? result.removedSegments[0].items : undefined;
 	}
 
-	removeValue(value: T): number {
-		const index = this._native.indexOf(value);
-		if (index !== -1) {
-			this.remove(index);
-		}
-		return index;
-	}
-
-	removeValues(values: readonly T[]) {
+	removeValues(values: Iterable<T>) {
 		const valueSet = new Set(values);
 		const newContents = this._native.filter(item => !valueSet.has(item));
 		this.performFilter(newContents);
@@ -268,7 +259,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 
 	clear(): readonly T[] {
 		if (this._native.length === 0) {
-			return undefined;
+			return [];
 		}
 		const oldContents = this._native.concat();
 		this._native.splice(0, this._native.length);

@@ -75,12 +75,6 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	removeAll(index: number, count: number): readonly T[];
 
 	/**
-	 * Removes the first occurrence of the value in the array and dispatches a splice message.
-	 * @param value Value to remove.
-	 */
-	removeValue(value: T): void;
-
-	/**
 	 * Removes all occurrences of the values in the array and dispatches a splice message.
 	 * @param values Values to remove.
 	 */
