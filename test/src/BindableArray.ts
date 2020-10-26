@@ -24,6 +24,9 @@ SOFTWARE.
 
 import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
+import IBindableArray from "jwidget/IBindableArray";
+import IndexCount from "jwidget/IndexCount";
+import IndexItems from "jwidget/IndexItems";
 
 describe("new BindableArray", () => {
 	it("should assign silent flag properly", () => {
@@ -562,14 +565,113 @@ describe("BindableArray.clear", () => {
 	});
 });
 
+describe("BindableArray.splice", () => {
+	it("should remove and add items in middle as documented", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+		array.splice([
+			new IndexCount(2, 2),
+			new IndexCount(6, 1)
+		], [ // [1, 2, 5, 6, 8, 9]
+			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
+			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+		]);
+		expect(array.native).eql([1, 10, 11, 2, 5, 12, 13, 6, 8, 9]);
+	});
+
+	it("should remove and add items in front and rear as documented", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+		array.splice([
+			new IndexCount(0, 2),
+			new IndexCount(7, 2)
+		], [ // [3, 4, 5, 6, 7]
+			new IndexItems(0, [10, 11]), // [10, 11, 3, 4, 5, 6, 7]
+			new IndexItems(7, [12, 13])  // [10, 11, 3, 4, 5, 6, 7, 12, 13]
+		]);
+		expect(array.native).eql([10, 11, 3, 4, 5, 6, 7, 12, 13]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+		const messages = listen(array);
+		array.splice([
+			new IndexCount(2, 2),
+			new IndexCount(6, 1)
+		], [ // [1, 2, 5, 6, 8, 9]
+			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
+			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+		]);
+		expect(messages).eql([
+			["length", 9, 10],
+			[
+				"splice",
+				[1, 2, 3, 4, 5, 6, 7, 8, 9],
+				[[2, [3, 4]], [6, [7]]],
+				[[1, [10, 11]], [5, [12, 13]]]
+			],
+			["change"]
+		]);
+	});
+
+	it("should return the splice result", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+		expect(parseSpliceResult(array.splice([
+			new IndexCount(2, 2),
+			new IndexCount(6, 1)
+		], [ // [1, 2, 5, 6, 8, 9]
+			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
+			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+		]))).eql([
+			[1, 2, 3, 4, 5, 6, 7, 8, 9],
+			[[2, [3, 4]], [6, [7]]],
+			[[1, [10, 11]], [5, [12, 13]]]
+		]);
+	});
+
+	it("should not change the array if no segments provided", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5]);
+		array.splice([], []);
+		expect(array.native).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should not dispatch any messages if no segments provided", () => {
+		const array = new BindableArray([]);
+		const messages = listen(array);
+		array.splice([], []);
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty splice result if no segments provided", () => {
+		const array = new BindableArray([]);
+		assert.isTrue(array.splice([], []).empty);
+	});
+
+	it("should ignore empty segments", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5]);
+		const messages = listen(array);
+		const result = array.splice([new IndexCount(1, 0)], [new IndexItems(1, [])]);
+		expect(array.native).eql([1, 2, 3, 4, 5]);
+		expect(messages).eql([]);
+		assert.isTrue(result.empty);
+	});
+
+	it("should merge consequent segments", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5]);
+		const messages = listen(array);
+		array.splice(
+			[new IndexCount(1, 1), new IndexCount(2, 1)],
+			[new IndexItems(1, [6]), new IndexItems(2, [7])]);
+		expect(array.native).eql([1, 6, 7, 4, 5]);
+		expect(messages).eql([
+			["splice", [1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]],
+			["change"]
+		]);
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
-		result.push([
-			"splice", spliceResult.oldContents,
-			spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
-			spliceResult.addedSegments.map(segment => [segment.index, segment.items])
-		]);
+		result.push(["splice", ...parseSpliceResult(spliceResult)]);
 	});
 	array.onReplace.listen(message => {
 		result.push(["replace", message.index, message.oldValue, message.newValue]);
@@ -590,4 +692,12 @@ function listen(array: BindableArray<any>) {
 		result.push(["length", message.oldValue, message.value]);
 	});
 	return result;
+}
+
+function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
+	return [
+		spliceResult.oldContents,
+		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
+		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+	];
 }
