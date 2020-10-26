@@ -668,6 +668,33 @@ describe("BindableArray.splice", () => {
 	});
 });
 
+describe("BindableArray.trySplice", () => {
+	it("should return the splice result", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+		expect(parseSpliceResult(array.trySplice([
+			new IndexCount(2, 2),
+			new IndexCount(6, 1)
+		], [ // [1, 2, 5, 6, 8, 9]
+			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
+			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+		]))).eql([
+			[1, 2, 3, 4, 5, 6, 7, 8, 9],
+			[[2, [3, 4]], [6, [7]]],
+			[[1, [10, 11]], [5, [12, 13]]]
+		]);
+	});
+
+	it("should return undefined if no segments provided", () => {
+		const array = new BindableArray([]);
+		assert.isUndefined(array.trySplice([], []));
+	});
+
+	it("should return undefined if only empty segments are provided", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5]);
+		assert.isUndefined(array.trySplice([new IndexCount(1, 0)], [new IndexItems(1, [])]));
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
