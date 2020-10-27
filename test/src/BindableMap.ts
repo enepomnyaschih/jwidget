@@ -47,3 +47,23 @@ describe("new BindableMap", () => {
 		expect(new BindableMap(input, true).native).not.equal(input);
 	});
 });
+
+describe("BindableMap.size", () => {
+	it("should not be silent for a non-silent map", () => {
+		expect(new BindableMap().size.silent).equal(false);
+	});
+
+	it("should be silent for a silent map", () => {
+		expect(new BindableMap(true).size.silent).equal(true);
+	});
+
+	it("should be zero for an empty map", () => {
+		expect(new BindableMap().size.get()).equal(0);
+	});
+
+	it("should return number of items for a non-empty map", () => {
+		expect(new BindableMap([["a", 2], ["b", 7]]).size.get()).equal(2);
+	});
+
+	// ... all tests for reaction to concrete mutation methods are among tests for those methods
+});

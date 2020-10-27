@@ -59,11 +59,11 @@ describe("BindableArray.length", () => {
 		expect(new BindableArray(true).length.silent).equal(true);
 	});
 
-	it("should be 0 for empty array", () => {
+	it("should be zero for an empty array", () => {
 		expect(new BindableArray().length.get()).equal(0);
 	});
 
-	it("should return number of items for non-empty array", () => {
+	it("should return number of items for a non-empty array", () => {
 		expect(new BindableArray([5, 2, 8, 7, 8]).length.get()).equal(5);
 	});
 
