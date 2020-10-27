@@ -73,9 +73,15 @@ describe("BindableArray.length", () => {
 describe("BindableArray.destroy", () => {
 	it("should clear the array", () => {
 		const array = new BindableArray([5, 2, 8, 7, 8]);
+		const messages = listen(array);
 		array.destroy();
 		expect(array.native).eql([]);
 		expect(array.length.get()).eql(0);
+		expect(messages).eql([
+			["length", 5, 0],
+			["clear", [5, 2, 8, 7, 8]],
+			["change"]
+		]);
 	});
 
 	it("should not destroy items if not owned", () => {
