@@ -875,6 +875,44 @@ describe("BindableArray.detectSort", () => {
 	});
 });
 
+describe("BindableArray.detectSortComparing", () => {
+	it("should return a proper index array by default", () => {
+		const array = new BindableArray([5, 2, 1, 6, 3, 4]);
+		expect(array.detectSortComparing()).eql([4, 1, 0, 5, 2, 3]);
+	});
+
+	it("should return a proper index array by callback", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		expect(array.detectSortComparing((x, y) => y - x)).eql([5, 4, 3, 2, 1, 0]);
+	});
+
+	it("should return a proper index array by order", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		expect(array.detectSortComparing(undefined, -1)).eql([5, 4, 3, 2, 1, 0]);
+	});
+
+	it("should return a proper index array by callback and order", () => {
+		const array = new BindableArray([5, 2, 1, 6, 3, 4]);
+		expect(array.detectSortComparing((x, y) => y - x, -1)).eql([4, 1, 0, 5, 2, 3]);
+	});
+
+	it("should not change the array", () => {
+		const array = new BindableArray([5, 2, 1, 6, 3, 4]);
+		array.detectSortComparing();
+		expect(array.native).eql([5, 2, 1, 6, 3, 4]);
+	});
+
+	it("should return undefined if the array is empty", () => {
+		const array = new BindableArray([]);
+		assert.isUndefined(array.detectSortComparing());
+	});
+
+	it("should return undefined if the order stays the same", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		assert.isUndefined(array.detectSortComparing((x, y) => y - x, -1));
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
