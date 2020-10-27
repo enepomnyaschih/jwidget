@@ -1181,6 +1181,38 @@ describe("BindableArray.sortComparing", () => {
 	});
 });
 
+describe("BindableArray.reverse", () => {
+	it("should update the array contents", () => {
+		const array = new BindableArray([1, 2, 3, 4]);
+		array.reverse();
+		expect(array.native).eql([4, 3, 2, 1])
+	});
+
+	it("should dispatch proper messages", () => {
+		const array = new BindableArray([1, 2, 3, 4]);
+		const messages = listen(array);
+		array.reverse();
+		expect(messages).eql([
+			["reorder", [1, 2, 3, 4], [3, 2, 1, 0]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the array is empty", () => {
+		const array = new BindableArray([]);
+		const messages = listen(array);
+		array.reverse();
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the array contains only one item", () => {
+		const array = new BindableArray([1]);
+		const messages = listen(array);
+		array.reverse();
+		expect(messages).eql([]);
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
