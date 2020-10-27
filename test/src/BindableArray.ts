@@ -989,6 +989,38 @@ describe("BindableArray.performFilter", () => {
 	});
 });
 
+describe("BindableArray.performReorder", () => {
+	it("should update the array contents", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		array.performReorder([5, 2, 1, 6, 3, 4]);
+		expect(array.native).eql([5, 2, 1, 6, 3, 4]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.performReorder([5, 2, 1, 6, 3, 4])
+		expect(messages).eql([
+			["reorder", [1, 2, 3, 4, 5, 6], [2, 1, 4, 5, 0, 3]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the array is empty", () => {
+		const array = new BindableArray([]);
+		const messages = listen(array);
+		array.performReorder([]);
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the contents are identical", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.performReorder([1, 2, 3, 4, 5, 6]);
+		expect(messages).eql([]);
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
