@@ -913,6 +913,38 @@ describe("BindableArray.detectSortComparing", () => {
 	});
 });
 
+describe("BindableArray.performSplice", () => {
+	it("should update the array contents", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		array.performSplice([7, 8, 10, 1, 4, 9]);
+		expect(array.native).eql([7, 8, 10, 1, 4, 9]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.performSplice([7, 8, 10, 1, 4, 9]);
+		expect(messages).eql([
+			["splice", [1, 2, 3, 4, 5, 6], [[1, [2, 3]], [4, [5, 6]]], [[0, [7, 8, 10]], [5, [9]]]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the array is empty", () => {
+		const array = new BindableArray([]);
+		const messages = listen(array);
+		array.performSplice([]);
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the contents are identical", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.performSplice([1, 2, 3, 4, 5, 6]);
+		expect(messages).eql([]);
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
