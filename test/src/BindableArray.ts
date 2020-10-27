@@ -778,6 +778,24 @@ describe("BindableArray.detectSplice", () => {
 	});
 });
 
+describe("BindableArray.detectFilter", () => {
+	it("should infer proper segments to remove", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		expect(array.detectFilter([1, 4]).map(segment => [segment.index, segment.count]))
+			.eql([[1, 2], [4, 2]]);
+	});
+
+	it("should return undefined if the array is empty", () => {
+		const array = new BindableArray([]);
+		assert.isUndefined(array.detectFilter([]));
+	});
+
+	it("should return undefined if the contents are identical", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		assert.isUndefined(array.detectFilter([1, 2, 3, 4, 5, 6]));
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
