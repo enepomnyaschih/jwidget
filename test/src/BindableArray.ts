@@ -1101,6 +1101,86 @@ describe("BindableArray.sort", () => {
 	});
 });
 
+describe("BindableArray.sortComparing", () => {
+	it("should sort the array by default", () => {
+		const array = new BindableArray([5, 2, 1, 6, 3, 4]);
+		array.sortComparing();
+		expect(array.native).eql([1, 2, 3, 4, 5, 6])
+	});
+
+	it("should sort the array by callback", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		array.sortComparing((x, y) => y - x);
+		expect(array.native).eql([6, 5, 4, 3, 2, 1]);
+	});
+
+	it("should sort the array by order", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		array.sortComparing(undefined, -1);
+		expect(array.native).eql([6, 5, 4, 3, 2, 1]);
+	});
+
+	it("should sort the array by callback and order", () => {
+		const array = new BindableArray([5, 2, 1, 6, 3, 4]);
+		array.sortComparing((x, y) => y - x, -1);
+		expect(array.native).eql([1, 2, 3, 4, 5, 6])
+	});
+
+	it("should dispatch proper messages by default", () => {
+		const array = new BindableArray([5, 2, 1, 6, 3, 4]);
+		const messages = listen(array);
+		array.sortComparing();
+		expect(messages).eql([
+			["reorder", [5, 2, 1, 6, 3, 4], [4, 1, 0, 5, 2, 3]],
+			["change"]
+		]);
+	});
+
+	it("should dispatch proper messages by callback", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.sortComparing((x, y) => y - x)
+		expect(messages).eql([
+			["reorder", [1, 2, 3, 4, 5, 6], [5, 4, 3, 2, 1, 0]],
+			["change"]
+		]);
+	});
+
+	it("should dispatch proper messages by order", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.sortComparing(undefined, -1)
+		expect(messages).eql([
+			["reorder", [1, 2, 3, 4, 5, 6], [5, 4, 3, 2, 1, 0]],
+			["change"]
+		]);
+	});
+
+	it("should dispatch proper messages by callback and order", () => {
+		const array = new BindableArray([5, 2, 1, 6, 3, 4]);
+		const messages = listen(array);
+		array.sortComparing((x, y) => y - x, -1)
+		expect(messages).eql([
+			["reorder", [5, 2, 1, 6, 3, 4], [4, 1, 0, 5, 2, 3]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the array is empty", () => {
+		const array = new BindableArray([]);
+		const messages = listen(array);
+		array.sortComparing();
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the order stays the same", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.sortComparing((x, y) => y - x, -1);
+		expect(messages).eql([]);
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
