@@ -802,6 +802,23 @@ describe("BindableArray.detectFilter", () => {
 	});
 });
 
+describe("BindableArray.detectReorder", () => {
+	it("should infer proper index array", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		expect(array.detectReorder([5, 2, 1, 6, 3, 4])).eql([2, 1, 4, 5, 0, 3]);
+	});
+
+	it("should return undefined if the array is empty", () => {
+		const array = new BindableArray([]);
+		assert.isUndefined(array.detectReorder([]));
+	});
+
+	it("should return undefined if the contents are identical", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		assert.isUndefined(array.detectReorder([1, 2, 3, 4, 5, 6]));
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
