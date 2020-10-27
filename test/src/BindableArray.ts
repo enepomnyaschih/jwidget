@@ -695,6 +695,50 @@ describe("BindableArray.trySplice", () => {
 	});
 });
 
+describe("BindableArray.reorder", () => {
+	it("should reorder array items", () => {
+		const array = new BindableArray([5, 2, 8, 7, 8]);
+		array.reorder([2, 4, 3, 0, 1]);
+		expect(array.native).eql([7, 8, 5, 8, 2]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const array = new BindableArray([5, 2, 8, 7, 8]);
+		const messages = listen(array);
+		array.reorder([2, 4, 3, 0, 1]);
+		expect(messages).eql([
+			["reorder", [5, 2, 8, 7, 8], [2, 4, 3, 0, 1]],
+			["change"]
+		]);
+	});
+
+	it("should not change the array if empty", () => {
+		const array = new BindableArray([]);
+		array.reorder([]);
+		expect(array.native).eql([]);
+	});
+
+	it("should not dispatch any messages if empty", () => {
+		const array = new BindableArray([]);
+		const messages = listen(array);
+		array.reorder([]);
+		expect(messages).eql([]);
+	});
+
+	it("should not change the array if the indexes are identical", () => {
+		const array = new BindableArray([5, 2, 8, 7, 8]);
+		array.reorder([0, 1, 2, 3, 4]);
+		expect(array.native).eql([5, 2, 8, 7, 8]);
+	});
+
+	it("should not dispatch any messages if the indexes are identical", () => {
+		const array = new BindableArray([5, 2, 8, 7, 8]);
+		const messages = listen(array);
+		array.reorder([0, 1, 2, 3, 4]);
+		expect(messages).eql([]);
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
