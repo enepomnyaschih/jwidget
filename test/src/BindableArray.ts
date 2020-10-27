@@ -794,6 +794,12 @@ describe("BindableArray.detectFilter", () => {
 		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
 		assert.isUndefined(array.detectFilter([1, 2, 3, 4, 5, 6]));
 	});
+
+	it("should support duplicating values and pick the leftmost ones", () => {
+		const array = new BindableArray([1, 2, 1, 3, 4, 4, 5, 6, 1]);
+		expect(array.detectFilter([1, 4, 4]).map(segment => [segment.index, segment.count]))
+			.eql([[1, 3], [6, 3]]);
+	});
 });
 
 function listen(array: BindableArray<any>) {
