@@ -22,12 +22,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import "./BindableArray";
-import "./BindableMap";
-import "./Class";
-import "./Copier";
-import "./Dispatcher";
-import "./dummyDispatcher";
-import "./Mapper";
-import "./Property";
-import "./Switcher";
+import {assert, expect} from "chai";
+import BindableMap from "jwidget/BindableMap";
+//import IBindableMap from "jwidget/IBindableMap";
+
+describe("new BindableMap", () => {
+	it("should assign silent flag properly", () => {
+		expect(new BindableMap().silent).equal(false);
+		expect(new BindableMap(true).silent).equal(true);
+		expect(new BindableMap([]).silent).equal(false);
+		expect(new BindableMap([], true).silent).equal(true);
+	});
+
+	it("should contain a native map", () => {
+		assert.isTrue(new BindableMap().native instanceof Map);
+		assert.isTrue(new BindableMap(true).native instanceof Map);
+		assert.isTrue(new BindableMap([]).native instanceof Map);
+		assert.isTrue(new BindableMap([], true).native instanceof Map);
+	});
+
+	it("should create a new map", () => {
+		const input = new Map();
+		expect(new BindableMap(input).native).not.equal(input);
+		expect(new BindableMap(input, true).native).not.equal(input);
+	});
+});
