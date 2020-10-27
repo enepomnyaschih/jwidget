@@ -945,6 +945,50 @@ describe("BindableArray.performSplice", () => {
 	});
 });
 
+describe("BindableArray.performFilter", () => {
+	it("should update the array contents", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		array.performFilter([1, 4]);
+		expect(array.native).eql([1, 4]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.performFilter([1, 4]);
+		expect(messages).eql([
+			["length", 6, 2],
+			["splice", [1, 2, 3, 4, 5, 6], [[1, [2, 3]], [4, [5, 6]]], []],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the array is empty", () => {
+		const array = new BindableArray([]);
+		const messages = listen(array);
+		array.performFilter([]);
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the contents are identical", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		const messages = listen(array);
+		array.performFilter([1, 2, 3, 4, 5, 6]);
+		expect(messages).eql([]);
+	});
+
+	it("should support duplicating values and pick the leftmost ones", () => {
+		const array = new BindableArray([1, 2, 1, 3, 4, 4, 5, 6, 1]);
+		const messages = listen(array);
+		array.performFilter([1, 4, 4]);
+		expect(messages).eql([
+			["length", 9, 3],
+			["splice", [1, 2, 1, 3, 4, 4, 5, 6, 1], [[1, [2, 1, 3]], [6, [5, 6, 1]]], []],
+			["change"]
+		])
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
