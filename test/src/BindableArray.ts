@@ -739,6 +739,25 @@ describe("BindableArray.reorder", () => {
 	});
 });
 
+describe("BindableArray.tryReorder", () => {
+	// While reorder delegates its logic to tryReorder, it doesn't make sense to copy all tests over here.
+
+	it("should return old array contents", () => {
+		const array = new BindableArray([5, 2, 8, 7, 8]);
+		expect(array.tryReorder([2, 4, 3, 0, 1])).eql([5, 2, 8, 7, 8]);
+	});
+
+	it("should return undefined if empty", () => {
+		const array = new BindableArray([]);
+		assert.isUndefined(array.tryReorder([]));
+	});
+
+	it("should return undefined if the indexes are identical", () => {
+		const array = new BindableArray([5, 2, 8, 7, 8]);
+		assert.isUndefined(array.tryReorder([0, 1, 2, 3, 4]));
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
