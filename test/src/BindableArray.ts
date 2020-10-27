@@ -758,6 +758,26 @@ describe("BindableArray.tryReorder", () => {
 	});
 });
 
+describe("BindableArray.detectSplice", () => {
+	it("should infer proper splice parameters", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		expect(parseSpliceParams(array.detectSplice([7, 8, 10, 1, 4, 9]))).eql([
+			[[1, 2], [4, 2]],
+			[[0, [7, 8, 10]], [5, [9]]]
+		]);
+	});
+
+	it("should return undefined if the array is empty", () => {
+		const array = new BindableArray([]);
+		assert.isUndefined(array.detectSplice([]));
+	});
+
+	it("should return undefined if the contents are identical", () => {
+		const array = new BindableArray([1, 2, 3, 4, 5, 6]);
+		assert.isUndefined(array.detectSplice([1, 2, 3, 4, 5, 6]));
+	});
+});
+
 function listen(array: BindableArray<any>) {
 	const result: any[] = [];
 	array.onSplice.listen(spliceResult => {
@@ -782,6 +802,13 @@ function listen(array: BindableArray<any>) {
 		result.push(["length", message.oldValue, message.value]);
 	});
 	return result;
+}
+
+function parseSpliceParams(spliceParams: IBindableArray.SpliceParams<any>) {
+	return [
+		spliceParams.segmentsToRemove.map(segment => [segment.index, segment.count]),
+		spliceParams.segmentsToAdd.map(segment => [segment.index, segment.items])
+	];
 }
 
 function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
