@@ -369,6 +369,69 @@ describe("BindableMap.trySetKey", () => {
 	});
 });
 
+describe("BindableMap.remove", () => {
+	it("should change the map if the key exists", () => {
+		const map = new BindableMap(getTestInput());
+		map.remove("c");
+		expect(Array.from(map.native)).eql(getTestInput().filter(x => x[0] !== "c"));
+	});
+
+	it("should dispatch proper messages if the key exists", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.remove("c");
+		expect(messages).eql([
+			["size", 5, 4],
+			["splice", [["c", 8]], []],
+			["change"]
+		]);
+	});
+
+	it("should return the entry value if the key exists", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.remove("c")).equal(8);
+	});
+
+	it("should not change the map if the key doesn't exist", () => {
+		const map = new BindableMap(getTestInput());
+		map.remove("f");
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the key doesn't exist", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.remove("f");
+		expect(messages).eql([]);
+	});
+
+	it("should return undefined if the key doesn't exist", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.remove("f"));
+	});
+
+	it("should not destroy the value by default", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()]
+		]);
+		map.remove("b");
+	});
+
+	it("should destroy the value if owned", () => {
+		let step = 0;
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyStepObject(() => ++step, 1)],
+			["c", newDestroyFailObject()]
+		]).ownValues();
+		expect(step).equal(0);
+		map.remove("b");
+		expect(step).equal(1);
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
