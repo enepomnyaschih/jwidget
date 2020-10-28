@@ -76,8 +76,8 @@ export default class ComponentChildInserter extends BindableMap<string, Componen
 		return spliceResult;
 	}
 
-	clear(): Map<string, ComponentChild> {
-		const oldContents = super.clear();
+	tryClear(): Map<string, ComponentChild> {
+		const oldContents = super.tryClear();
 		if (oldContents === undefined) {
 			return undefined;
 		}

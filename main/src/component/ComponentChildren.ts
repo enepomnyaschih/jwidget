@@ -84,12 +84,12 @@ export default class ComponentChildren extends BindableMap<string, Component> {
 		return spliceResult;
 	}
 
-	clear(): Map<string, Component> {
-		const oldContents = super.clear();
+	tryClear(): Map<string, Component> {
+		const oldContents = super.tryClear();
 		if (oldContents === undefined) {
 			return undefined;
 		}
-		this.target.clear();
+		this.target.tryClear();
 		return oldContents;
 	}
 

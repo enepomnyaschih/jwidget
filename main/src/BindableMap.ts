@@ -76,7 +76,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 	}
 
 	protected destroyObject() {
-		this.clear();
+		this.tryClear();
 		super.destroyObject();
 	}
 
@@ -244,6 +244,10 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 	}
 
 	clear(): Map<K, V> {
+		return this.tryClear() ?? new Map<K, V>();
+	}
+
+	tryClear(): Map<K, V> {
 		if (this._size.get() === 0) {
 			return undefined;
 		}

@@ -637,20 +637,20 @@ describe("BindableArray.clear", () => {
 	});
 
 	it("should not change the array if it is empty", () => {
-		const array = new BindableArray([]);
+		const array = new BindableArray();
 		array.clear();
 		expect(array.native).eql([]);
 	});
 
 	it("should not dispatch any messages if the array is empty", () => {
-		const array = new BindableArray([]);
+		const array = new BindableArray();
 		const messages = listen(array);
 		array.clear();
 		expect(messages).eql([]);
 	});
 
 	it("should return an empty array if the array is empty", () => {
-		const array = new BindableArray([]);
+		const array = new BindableArray();
 		expect(array.clear()).eql([]);
 	});
 

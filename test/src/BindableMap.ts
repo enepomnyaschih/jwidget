@@ -450,6 +450,19 @@ describe("BindableMap.removeAll", () => {
 		]);
 	});
 
+	it("should not change the map if the list of keys is empty", () => {
+		const map = new BindableMap(getTestInput());
+		map.removeAll([]);
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the list of keys is empty", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.removeAll([]);
+		expect(messages).eql([]);
+	});
+
 	it("should not change the map if the keys don't exist", () => {
 		const map = new BindableMap(getTestInput());
 		map.removeAll(["f", "g"]);
@@ -500,6 +513,76 @@ describe("BindableMap.tryRemoveAll", () => {
 	it("should return undefined if unchanged", () => {
 		const map = new BindableMap(getTestInput());
 		assert.isUndefined(map.tryRemoveAll(["f", "g"]));
+	});
+});
+
+describe("BindableMap.clear", () => {
+	it("should clear the map", () => {
+		const map = new BindableMap(getTestInput());
+		map.clear();
+		expect(Array.from(map.native)).eql([]);
+	});
+
+	it("should not change the native reference", () => {
+		const map = new BindableMap(getTestInput());
+		const native = map.native;
+		map.clear();
+		expect(map.native).equal(native);
+	});
+
+	it("should dispatch proper messages", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.clear();
+		expect(messages).eql([
+			["size", 5, 0],
+			["clear", getTestInput()],
+			["change"]
+		]);
+	});
+
+	it("should return the old contents", () => {
+		const map = new BindableMap(getTestInput());
+		expect(Array.from(map.clear())).eql(getTestInput());
+	});
+
+	it("should not change the map if it is empty", () => {
+		const map = new BindableMap();
+		map.clear();
+		expect(Array.from(map.native)).eql([]);
+	});
+
+	it("should not dispatch any messages if the map is empty", () => {
+		const map = new BindableMap();
+		const messages = listen(map);
+		map.clear();
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty map if the map is empty", () => {
+		const map = new BindableMap();
+		expect(Array.from(map.clear())).eql([]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()]
+		]);
+		map.clear();
+	});
+
+	it("should destroy the values in direct order if owned", () => {
+		let step = 0;
+		const map = new BindableMap<string, any>([
+			["a", newDestroyStepObject(() => ++step, 1)],
+			["b", newDestroyStepObject(() => ++step, 2)],
+			["c", newDestroyStepObject(() => ++step, 3)]
+		]).ownValues();
+		expect(step).equal(0);
+		map.clear();
+		expect(step).equal(3);
 	});
 });
 
