@@ -86,16 +86,8 @@ describe("BindableArray.destroy", () => {
 
 	it("should not destroy items if not owned", () => {
 		const array = new BindableArray([
-			{
-				destroy: () => {
-					assert.fail();
-				}
-			},
-			{
-				destroy: () => {
-					assert.fail();
-				}
-			}
+			newDestroyFailObject(),
+			newDestroyFailObject()
 		]);
 		array.destroy();
 	});
@@ -103,16 +95,8 @@ describe("BindableArray.destroy", () => {
 	it("should destroy all items in reverse order if owned", () => {
 		let step = 0;
 		const array = new BindableArray([
-			{
-				destroy: () => {
-					expect(++step).equal(2)
-				}
-			},
-			{
-				destroy: () => {
-					expect(++step).equal(1)
-				}
-			}
+			newDestroyStepObject(() => ++step, 2),
+			newDestroyStepObject(() => ++step, 1)
 		]).ownValues();
 		array.destroy();
 		expect(step).eql(2);
@@ -320,6 +304,27 @@ describe("BindableArray.set", () => {
 		const array = new BindableArray([5, 2, 8, 7, 8]);
 		expect(array.set(2, 8)).equal(8);
 	});
+
+	it("should not destroy the value by default", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.set(1, newDestroyFailObject());
+	});
+
+	it("should destroy the value if owned", () => {
+		let step = 0;
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 1),
+			newDestroyFailObject()
+		]).ownValues();
+		expect(step).equal(0);
+		array.set(1, newDestroyFailObject());
+		expect(step).equal(1);
+	});
 });
 
 describe("BindableArray.trySet", () => {
@@ -357,6 +362,27 @@ describe("BindableArray.remove", () => {
 	it("should return the old value", () => {
 		const array = new BindableArray([5, 2, 8, 7, 8]);
 		expect(array.remove(2)).equal(8);
+	});
+
+	it("should not destroy the value by default", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.remove(1);
+	});
+
+	it("should destroy the value if owned", () => {
+		let step = 0;
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 1),
+			newDestroyFailObject()
+		]).ownValues();
+		expect(step).equal(0);
+		array.remove(1);
+		expect(step).equal(1);
 	});
 });
 
@@ -399,6 +425,29 @@ describe("BindableArray.removeAll", () => {
 	it("should return an empty array if the count is zero", () => {
 		const array = new BindableArray([5, 2, 8, 7, 8]);
 		expect(array.removeAll(2, 0)).eql([]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.removeAll(1, 2);
+	});
+
+	it("should destroy the values in reverse order if owned", () => {
+		let step = 0;
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 2),
+			newDestroyStepObject(() => ++step, 1),
+			newDestroyFailObject()
+		]).ownValues();
+		expect(step).equal(0);
+		array.removeAll(1, 2);
+		expect(step).equal(2);
 	});
 });
 
@@ -459,6 +508,33 @@ describe("BindableArray.removeValues", () => {
 		array.removeValues([]);
 		expect(messages).eql([]);
 	});
+
+	it("should not destroy the values by default", () => {
+		const objects = [
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		];
+		const array = new BindableArray<any>(objects.concat());
+		array.removeValues([objects[1], objects[2], objects[4]]);
+	});
+
+	it("should destroy the values in reverse order if owned", () => {
+		let step = 0;
+		const objects = [
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 3),
+			newDestroyStepObject(() => ++step, 2),
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 1)
+		];
+		const array = new BindableArray<any>(objects.concat()).ownValues();
+		expect(step).equal(0);
+		array.removeValues([objects[1], objects[2], objects[4]]);
+		expect(step).equal(3);
+	});
 });
 
 describe("BindableArray.move", () => {
@@ -505,6 +581,14 @@ describe("BindableArray.move", () => {
 	it("should return the value if the index is the same", () => {
 		const array = new BindableArray([5, 2, 8, 7, 8]);
 		expect(array.move(1, 1)).equal(2);
+	});
+
+	it("should not destroy the value even if owned", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]).ownValues();
+		array.move(0, 1);
 	});
 });
 
@@ -568,6 +652,31 @@ describe("BindableArray.clear", () => {
 	it("should return an empty array if the array is empty", () => {
 		const array = new BindableArray([]);
 		expect(array.clear()).eql([]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.clear();
+	});
+
+	it("should destroy the values in reverse order if owned", () => {
+		let step = 0;
+		const array = new BindableArray<any>([
+			newDestroyStepObject(() => ++step, 5),
+			newDestroyStepObject(() => ++step, 4),
+			newDestroyStepObject(() => ++step, 3),
+			newDestroyStepObject(() => ++step, 2),
+			newDestroyStepObject(() => ++step, 1)
+		]).ownValues();
+		expect(step).equal(0);
+		array.clear();
+		expect(step).equal(5);
 	});
 });
 
@@ -672,6 +781,31 @@ describe("BindableArray.splice", () => {
 			["change"]
 		]);
 	});
+
+	it("should not destroy the values by default", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.splice([new IndexCount(1, 2), new IndexCount(4, 1)], [new IndexItems(1, [newDestroyFailObject()])]);
+	});
+
+	it("should destroy the values in reverse order if owned", () => {
+		let step = 0;
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 3),
+			newDestroyStepObject(() => ++step, 2),
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 1)
+		]).ownValues();
+		expect(step).equal(0);
+		array.splice([new IndexCount(1, 2), new IndexCount(4, 1)], [new IndexItems(1, [newDestroyFailObject()])]);
+		expect(step).equal(3);
+	});
 });
 
 describe("BindableArray.trySplice", () => {
@@ -742,6 +876,17 @@ describe("BindableArray.reorder", () => {
 		const messages = listen(array);
 		array.reorder([0, 1, 2, 3, 4]);
 		expect(messages).eql([]);
+	});
+
+	it("should not destroy the values even if owned", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]).ownValues();
+		array.reorder([2, 4, 3, 0, 1]);
 	});
 });
 
@@ -949,6 +1094,41 @@ describe("BindableArray.performSplice", () => {
 		array.performSplice([1, 2, 3, 4, 5, 6]);
 		expect(messages).eql([]);
 	});
+
+	it("should not destroy the values by default", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.performSplice([
+			array.get(0),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			array.get(3)
+		]);
+	});
+
+	it("should destroy the values in reverse order if owned", () => {
+		let step = 0;
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 3),
+			newDestroyStepObject(() => ++step, 2),
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 1)
+		]).ownValues();
+		expect(step).equal(0);
+		array.performSplice([
+			array.get(0),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			array.get(3)
+		]);
+		expect(step).equal(3);
+	});
 });
 
 describe("BindableArray.performFilter", () => {
@@ -993,6 +1173,37 @@ describe("BindableArray.performFilter", () => {
 			["change"]
 		])
 	});
+
+	it("should not destroy the values by default", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.performFilter([
+			array.get(0),
+			array.get(3)
+		]);
+	});
+
+	it("should destroy the values in reverse order if owned", () => {
+		let step = 0;
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 3),
+			newDestroyStepObject(() => ++step, 2),
+			newDestroyFailObject(),
+			newDestroyStepObject(() => ++step, 1)
+		]).ownValues();
+		expect(step).equal(0);
+		array.performFilter([
+			array.get(0),
+			array.get(3)
+		]);
+		expect(step).equal(3);
+	});
 });
 
 describe("BindableArray.performReorder", () => {
@@ -1024,6 +1235,17 @@ describe("BindableArray.performReorder", () => {
 		const messages = listen(array);
 		array.performReorder([1, 2, 3, 4, 5, 6]);
 		expect(messages).eql([]);
+	});
+
+	it("should not destroy the values even if owned", () => {
+		const array = new BindableArray<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		array.reorder([2, 4, 3, 0, 1]);
 	});
 });
 
@@ -1258,4 +1480,20 @@ function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
 		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
 	];
+}
+
+function newDestroyFailObject() {
+	return {
+		destroy: () => {
+			assert.fail();
+		}
+	};
+}
+
+function newDestroyStepObject(postIncrement: () => number, expectedValue: number) {
+	return {
+		destroy: () => {
+			expect(postIncrement()).equal(expectedValue);
+		}
+	};
 }
