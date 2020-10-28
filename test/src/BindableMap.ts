@@ -586,6 +586,20 @@ describe("BindableMap.clear", () => {
 	});
 });
 
+describe("BindableMap.tryClear", () => {
+	// While clear delegates its logic to tryClear, it doesn't make sense to copy all tests over here.
+
+	it("should return the old contents", () => {
+		const map = new BindableMap(getTestInput());
+		expect(Array.from(map.tryClear())).eql(getTestInput());
+	});
+
+	it("should return undefined if the map is empty", () => {
+		const map = new BindableMap();
+		assert.isUndefined(map.tryClear());
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
