@@ -432,6 +432,63 @@ describe("BindableMap.remove", () => {
 	});
 });
 
+describe("BindableMap.removeAll", () => {
+	it("should change the map if some keys exist", () => {
+		const map = new BindableMap(getTestInput());
+		map.removeAll(["c", "d", "f"]);
+		expect(Array.from(map.native)).eql(getTestInput().filter(x => !["c", "d"].includes(x[0])));
+	});
+
+	it("should dispatch proper messages if some keys exist", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.removeAll(["c", "d", "f"]);
+		expect(messages).eql([
+			["size", 5, 3],
+			["splice", [["c", 8], ["d", 7]], []],
+			["change"]
+		]);
+	});
+
+	it("should not change the map if the keys don't exist", () => {
+		const map = new BindableMap(getTestInput());
+		map.removeAll(["f", "g"]);
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the keys don't exist", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.removeAll(["f", "g"]);
+		expect(messages).eql([]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()],
+			["d", newDestroyFailObject()],
+			["e", newDestroyFailObject()]
+		]);
+		map.removeAll(["c", "d", "f"]);
+	});
+
+	it("should destroy the values in direct order if owned", () => {
+		let step = 0;
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyStepObject(() => ++step, 1)],
+			["d", newDestroyStepObject(() => ++step, 2)],
+			["e", newDestroyFailObject()]
+		]).ownValues();
+		expect(step).equal(0);
+		map.removeAll(["c", "d", "f"]);
+		expect(step).equal(2);
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }

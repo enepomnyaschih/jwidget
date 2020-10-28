@@ -228,13 +228,13 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		return value;
 	}
 
-	removeAll(keys: readonly K[]) {
+	removeAll(keys: Iterable<K>) {
 		if (!this.silent) {
 			this.tryRemoveAll(keys);
 			return;
 		}
-		for (let i = 0, l = keys.length; i < l; ++i) {
-			this.remove(keys[i]);
+		for (let key of keys) {
+			this.remove(key);
 		}
 	}
 
