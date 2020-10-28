@@ -290,6 +290,21 @@ describe("BindableMap.setAll", () => {
 	});
 });
 
+describe("BindableMap.trySetAll", () => {
+	// While setAll delegates its logic to trySetAll, it doesn't make sense to copy all tests over here.
+
+	it("should return a splice result if changed", () => {
+		const map = new BindableMap(getTestInput());
+		expect(parseSpliceResult(map.trySetAll(new Map([["c", 3], ["d", 7], ["f", 3]]))))
+			.eql([[["c", 8]], [["c", 3], ["f", 3]]]);
+	});
+
+	it("should return undefined if unchanged", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.trySetAll(new Map([["c", 8], ["d", 7]])));
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
