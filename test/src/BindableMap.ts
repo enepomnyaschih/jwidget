@@ -355,6 +355,20 @@ describe("BindableMap.setKey", () => {
 	});
 });
 
+describe("BindableMap.trySetKey", () => {
+	// While setKey delegates its logic to trySetKey, it doesn't make sense to copy all tests over here.
+
+	it("should return the entry value if changed", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.trySetKey("c", "f")).equal(8);
+	});
+
+	it("should return undefined if unchanged", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.trySetKey("c", "c"));
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
