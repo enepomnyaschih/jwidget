@@ -489,6 +489,20 @@ describe("BindableMap.removeAll", () => {
 	});
 });
 
+describe("BindableMap.tryRemoveAll", () => {
+	// While removeAll delegates its logic to tryRemoveAll, it doesn't make sense to copy all tests over here.
+
+	it("should return the removed entries if changed", () => {
+		const map = new BindableMap(getTestInput());
+		expect(Array.from(map.tryRemoveAll(["c", "d", "f"]))).eql([["c", 8], ["d", 7]]);
+	});
+
+	it("should return undefined if unchanged", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.tryRemoveAll(["f", "g"]));
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
