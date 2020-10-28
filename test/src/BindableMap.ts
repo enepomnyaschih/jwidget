@@ -224,6 +224,72 @@ describe("BindableMap.set", () => {
 	});
 });
 
+describe("BindableMap.trySet", () => {
+	// While set delegates its logic to trySet, it doesn't make sense to copy all tests over here.
+
+	it("should return a wrapper over the old value if changed", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.trySet("c", 3)).eql({value: 8});
+	});
+
+	it("should return a wrapper over undefined if absent", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.trySet("f", 3)).eql({value: undefined});
+	});
+
+	it("should return undefined if the value is the same", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.trySet("c", 8));
+	});
+});
+
+describe("BindableMap.setAll", () => {
+	it("should add new entries and update the existing ones", () => {
+		const map = new BindableMap(getTestInput());
+		map.setAll(new Map([["c", 3], ["d", 7], ["f", 3]]));
+		expect(Array.from(map.native)).eql([...getTestInput().slice(0, 2), ["c", 3], ...getTestInput().slice(3, 5), ["f", 3]]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.setAll(new Map([["c", 3], ["d", 7], ["f", 3]]));
+		expect(messages).eql([
+			["size", 5, 6],
+			["splice", [["c", 8]], [["c", 3], ["f", 3]]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if all values are the same", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.setAll(new Map([["c", 8], ["d", 7]]));
+		expect(messages).eql([]);
+	});
+
+	it("should not destroy the value by default", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()]
+		]);
+		map.setAll(new Map([["b", newDestroyFailObject()], ["c", newDestroyFailObject()]]));
+	});
+
+	it("should destroy the values in direct order if owned", () => {
+		let step = 0;
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyStepObject(() => ++step, 1)],
+			["c", newDestroyStepObject(() => ++step, 2)]
+		]).ownValues();
+		expect(step).equal(0);
+		map.setAll(new Map([["b", newDestroyFailObject()], ["c", newDestroyFailObject()]]));
+		expect(step).equal(2);
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
