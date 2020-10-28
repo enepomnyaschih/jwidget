@@ -305,6 +305,56 @@ describe("BindableMap.trySetAll", () => {
 	});
 });
 
+describe("BindableMap.setKey", () => {
+	it("should change the entry key", () => {
+		const map = new BindableMap(getTestInput());
+		map.setKey("c", "f");
+		expect(Array.from(map.native)).eql([...getTestInput().filter(x => x[0] !== "c"), ["f", 8]]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.setKey("c", "f");
+		expect(messages).eql([
+			["reindex", [["c", "f"]]],
+			["change"]
+		]);
+	});
+
+	it("should return the entry value", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.setKey("c", "f")).equal(8);
+	});
+
+	it("should not change the map if the key is the same", () => {
+		const map = new BindableMap(getTestInput());
+		map.setKey("c", "c");
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the key is the same", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.setKey("c", "c");
+		expect(messages).eql([]);
+	});
+
+	it("should return the value if the key is the same", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.setKey("c", "c")).equal(8);
+	});
+
+	it("should not destroy the value even if owned", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()]
+		]).ownValues();
+		map.setKey("b", "d");
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
