@@ -62,7 +62,7 @@ describe("BindableMap.size", () => {
 	});
 
 	it("should return number of items for a non-empty map", () => {
-		expect(new BindableMap([["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]]).size.get()).equal(5);
+		expect(new BindableMap(getTestInput()).size.get()).equal(5);
 	});
 
 	// ... all tests for reaction to concrete mutation methods are among tests for those methods
@@ -70,14 +70,14 @@ describe("BindableMap.size", () => {
 
 describe("BindableMap.destroy", () => {
 	it("should clear the map", () => {
-		const map = new BindableMap([["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]]);
+		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
 		map.destroy();
 		expect(Array.from(map.native)).eql([]);
 		expect(map.size.get()).eql(0);
 		expect(messages).eql([
 			["size", 5, 0],
-			["clear", [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]]],
+			["clear", getTestInput()],
 			["change"]
 		]);
 	});
@@ -186,7 +186,7 @@ describe("BindableMap[Symbol.iterator]", () => {
 	});
 
 	it("should iterate through entries", () => {
-		const input: [string, number][] = [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
+		const input = getTestInput();
 		const map = new BindableMap(input);
 		let i = 0;
 		for (let entry of map) {
@@ -195,6 +195,28 @@ describe("BindableMap[Symbol.iterator]", () => {
 		expect(i).equal(5);
 	});
 });
+
+describe("BindableMap.get", () => {
+	it("should return a proper value", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.get("a")).equal(5);
+		expect(map.get("b")).equal(2);
+		expect(map.get("c")).equal(8);
+		expect(map.get("d")).equal(7);
+		expect(map.get("e")).equal(8);
+	});
+
+	it("should return undefined if doesn't have the specified key", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.get(""));
+		assert.isUndefined(map.get(null));
+		assert.isUndefined(map.get("f"));
+	});
+});
+
+function getTestInput(): [string, number][] {
+	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
+}
 
 function listen(map: BindableMap<any, any>) {
 	const result: any[] = [];
