@@ -82,98 +82,22 @@ describe("BindableMap.destroy", () => {
 		]);
 	});
 
-	it("should not destroy keys if not owned", () => {
-		const map = new BindableMap([
-			[{
-				destroy: () => {
-					assert.fail();
-				}
-			}, "a"],
-			[{
-				destroy: () => {
-					assert.fail();
-				}
-			}, "b"]
-		]);
-		map.destroy();
-	});
-
 	it("should not destroy values if not owned", () => {
 		const map = new BindableMap([
-			["a", {
-				destroy: () => {
-					assert.fail();
-				}
-			}],
-			["b", {
-				destroy: () => {
-					assert.fail();
-				}
-			}]
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()]
 		]);
 		map.destroy();
-	});
-
-	it("should destroy all keys in direct order if owned", () => {
-		let step = 0;
-		const map = new BindableMap([
-			[{
-				destroy: () => {
-					expect(++step).equal(1)
-				}
-			}, "a"],
-			[{
-				destroy: () => {
-					expect(++step).equal(2)
-				}
-			}, "b"]
-		]).ownKeys();
-		map.destroy();
-		expect(step).eql(2);
 	});
 
 	it("should destroy all values in direct order if owned", () => {
 		let step = 0;
 		const map = new BindableMap([
-			["a", {
-				destroy: () => {
-					expect(++step).equal(1)
-				}
-			}],
-			["b", {
-				destroy: () => {
-					expect(++step).equal(2)
-				}
-			}]
+			["a", newDestroyStepObject(() => ++step, 1)],
+			["b", newDestroyStepObject(() => ++step, 2)]
 		]).ownValues();
 		map.destroy();
 		expect(step).eql(2);
-	});
-
-	it("should destroy each key before the respective value if owned", () => {
-		let step = 0;
-		const map = new BindableMap([
-			[{
-				destroy: () => {
-					expect(++step).equal(1)
-				}
-			}, {
-				destroy: () => {
-					expect(++step).equal(2)
-				}
-			}],
-			[{
-				destroy: () => {
-					expect(++step).equal(3)
-				}
-			}, {
-				destroy: () => {
-					expect(++step).equal(4)
-				}
-			}]
-		]).ownKeys().ownValues();
-		map.destroy();
-		expect(step).eql(4);
 	});
 });
 
@@ -214,6 +138,92 @@ describe("BindableMap.get", () => {
 	});
 });
 
+// ... testing methods-delegators any further would just be testing of the native Map methods. Skipping...
+
+describe("BindableMap.set", () => {
+	it("should add a new entry if the key is absent", () => {
+		const map = new BindableMap(getTestInput());
+		map.set("f", 3);
+		expect(Array.from(map.native)).eql([...getTestInput(), ["f", 3]]);
+	});
+
+	it("should change an existing entry if the key is present", () => {
+		const map = new BindableMap(getTestInput());
+		map.set("c", 3);
+		expect(Array.from(map.native)).eql([...getTestInput().slice(0, 2), ["c", 3], ...getTestInput().slice(3, 5)]);
+	});
+
+	it("should dispatch proper messages if the key is absent", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.set("f", 3);
+		expect(messages).eql([
+			["size", 5, 6],
+			["splice", [], [["f", 3]]],
+			["change"]
+		]);
+	});
+
+	it("should dispatch proper messages if the key is present", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.set("c", 3);
+		expect(messages).eql([
+			["splice", [["c", 8]], [["c", 3]]],
+			["change"]
+		]);
+	});
+
+	it("should return undefined if absent", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.set("f", 3));
+	});
+
+	it("should return the old value if present", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.set("c", 3)).equal(8);
+	});
+
+	it("should not change the map if the value is the same", () => {
+		const map = new BindableMap(getTestInput());
+		map.set("c", 8);
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the value is the same", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.set("c", 8);
+		expect(messages).eql([]);
+	});
+
+	it("should return the value if it is the same", () => {
+		const map = new BindableMap(getTestInput());
+		expect(map.set("c", 8)).equal(8);
+	});
+
+	it("should not destroy the value by default", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()]
+		]);
+		map.set("b", newDestroyFailObject());
+	});
+
+	it("should destroy the value if owned", () => {
+		let step = 0;
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyStepObject(() => ++step, 1)],
+			["c", newDestroyFailObject()]
+		]).ownValues();
+		expect(step).equal(0);
+		map.set("b", newDestroyFailObject());
+		expect(step).equal(1);
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
@@ -243,4 +253,20 @@ function parseSpliceResult(spliceResult: IBindableMap.SpliceResult<any, any>) {
 		Array.from(spliceResult.removedEntries.entries()),
 		Array.from(spliceResult.addedEntries.entries())
 	];
+}
+
+function newDestroyFailObject() {
+	return {
+		destroy: () => {
+			assert.fail();
+		}
+	};
+}
+
+function newDestroyStepObject(postIncrement: () => number, expectedValue: number) {
+	return {
+		destroy: () => {
+			expect(postIncrement()).equal(expectedValue);
+		}
+	};
 }

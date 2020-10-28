@@ -38,7 +38,6 @@ import Some from './Some';
  */
 class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 
-	private _ownsKeys = false;
 	private _ownsValues = false;
 	private _size: IProperty<number>;
 	private _native: Map<K, V>;
@@ -113,11 +112,6 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		return this._onChange;
 	}
 
-	ownKeys(): this {
-		this._ownsKeys = true;
-		return this;
-	}
-
 	ownValues(): this {
 		this._ownsValues = true;
 		return this;
@@ -147,6 +141,11 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		this._native.forEach(callback);
 	}
 
+	set(key: K, value: V): V {
+		const result = this.trySet(key, value);
+		return (result !== undefined) ? result.value : this._native.get(key);
+	}
+
 	trySet(key: K, value: V): Some<V> {
 		const oldValue = this._native.get(key);
 		if (value === oldValue) {
@@ -170,11 +169,6 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 			(<Destroyable><any>oldValue).destroy();
 		}
 		return {value: oldValue};
-	}
-
-	set(key: K, value: V): V {
-		const result = this.trySet(key, value);
-		return (result !== undefined) ? result.value : this._native.get(key);
 	}
 
 	setAll(entries: ReadonlyMap<K, V>) {
@@ -231,9 +225,6 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		if (this._ownsValues) {
 			(<Destroyable><any>value).destroy();
 		}
-		if (this._ownsKeys) {
-			(<Destroyable><any>key).destroy();
-		}
 		return value;
 	}
 
@@ -261,14 +252,9 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		this._size.set(0);
 		this._onClear.dispatch(oldContents);
 		this._onChange.dispatch();
-		if (this._ownsKeys || this._ownsValues) {
-			oldContents.forEach((value, key) => {
-				if (this._ownsKeys) {
-					(<any>key).destroy();
-				}
-				if (this._ownsValues) {
-					(<any>value).destroy();
-				}
+		if (this._ownsValues) {
+			oldContents.forEach((value: any) => {
+				value.destroy();
 			});
 		}
 		return oldContents;
@@ -313,14 +299,9 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		this._size.set(this._size.get() + addedEntries.size - removedEntries.size);
 		this._onSplice.dispatch(spliceResult);
 		this._onChange.dispatch();
-		if (this._ownsKeys || this._ownsValues) {
-			removedEntries.forEach((value, key) => {
-				if (this._ownsKeys) {
-					(<any>key).destroy();
-				}
-				if (this._ownsValues) {
-					(<any>value).destroy();
-				}
+		if (this._ownsValues) {
+			removedEntries.forEach((value: any) => {
+				value.destroy();
 			});
 		}
 		return spliceResult;

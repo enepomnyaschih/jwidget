@@ -32,12 +32,6 @@ import Some from './Some';
 interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V> {
 
 	/**
-	 * Makes this map an owner of its keys, which means that the keys are alive as long as they are present in
-	 * this map. A key is destroyed when it leaves the map, and all keys are destroyed on the map destruction.
-	 */
-	ownKeys(): this;
-
-	/**
 	 * Makes this map an owner of its values, which means that the values are alive as long as they are present in
 	 * this map. A value is destroyed when it leaves the map, and all values are destroyed on the map destruction.
 	 */
