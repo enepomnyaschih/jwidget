@@ -177,6 +177,25 @@ describe("BindableMap.destroy", () => {
 	});
 });
 
+describe("BindableMap[Symbol.iterator]", () => {
+	it("should support empty maps", () => {
+		const map = new BindableMap();
+		for (let _entry of map) {
+			assert.fail();
+		}
+	});
+
+	it("should iterate through entries", () => {
+		const input: [string, number][] = [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
+		const map = new BindableMap(input);
+		let i = 0;
+		for (let entry of map) {
+			expect(entry).eql(input[i++]);
+		}
+		expect(i).equal(5);
+	});
+});
+
 function listen(map: BindableMap<any, any>) {
 	const result: any[] = [];
 	map.onSplice.listen(spliceResult => {
