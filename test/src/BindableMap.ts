@@ -25,6 +25,7 @@ SOFTWARE.
 import {assert, expect} from "chai";
 import BindableMap from "jwidget/BindableMap";
 import IBindableMap from "jwidget/IBindableMap";
+import {cmpPrimitives} from "../../main/src/internal";
 
 describe("new BindableMap", () => {
 	it("should assign silent flag properly", () => {
@@ -600,6 +601,119 @@ describe("BindableMap.tryClear", () => {
 	});
 });
 
+describe("BindableMap.splice", () => {
+	it("should remove and add entries as documented", () => {
+		const map = new BindableMap(getTestInput());
+		map.splice(["c"], new Map([["b", 3], ["f", 3], ["h", 9]]));
+		expect(Array.from(map.native)).eql([["a", 5], ["b", 3], ["d", 7], ["e", 8], ["f", 3], ["h", 9]]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.splice(["c"], new Map([["b", 3], ["f", 3], ["h", 9]]));
+		expect(messages).eql([
+			["size", 5, 6],
+			["splice", [["b", 2], ["c", 8]], [["b", 3], ["f", 3], ["h", 9]]],
+			["change"]
+		]);
+	});
+
+	it("should return the splice result", () => {
+		const map = new BindableMap(getTestInput());
+		expect(parseSpliceResult(map.splice(["c"], new Map([["b", 3], ["f", 3], ["h", 9]]))))
+			.eql([[["b", 2], ["c", 8]], [["b", 3], ["f", 3], ["h", 9]]]);
+	});
+
+	it("should not change the map if the arguments are empty", () => {
+		const map = new BindableMap(getTestInput());
+		map.splice([], new Map());
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the arguments are empty", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.splice([], new Map());
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty splice result if the arguments are empty", () => {
+		const map = new BindableMap(getTestInput());
+		expect(parseSpliceResult(map.splice([], new Map()))).eql([[], []]);
+	});
+
+	it("should not change the map if the entries stay unchanged", () => {
+		const map = new BindableMap(getTestInput());
+		map.splice([], new Map([["b", 2], ["c", 8]]));
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the entries stay unchanged", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.splice([], new Map([["b", 2], ["c", 8]]));
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty splice result if the arguments are empty", () => {
+		const map = new BindableMap(getTestInput());
+		expect(parseSpliceResult(map.splice([], new Map([["b", 2], ["c", 8]])))).eql([[], []]);
+	});
+
+	it("should ignore non-existent keys to remove", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		expect(parseSpliceResult(map.splice(["f", "g"], new Map()))).eql([[], []]);
+		expect(Array.from(map.native)).eql(getTestInput());
+		expect(messages).eql([]);
+	});
+
+	it("should ignore keys to remove that are being also updated", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		expect(parseSpliceResult(map.splice(["b"], new Map([["b", 3]])))).eql([[["b", 2]], [["b", 3]]]);
+		expect(Array.from(map.native)).eql([["a", 5], ["b", 3], ["c", 8], ["d", 7], ["e", 8]]);
+		expect(messages).eql([
+			["splice", [["b", 2]], [["b", 3]]],
+			["change"]
+		]);
+	});
+
+	it("should ignore keys to remove that are being also added", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		expect(parseSpliceResult(map.splice(["f"], new Map([["f", 3]])))).eql([[], [["f", 3]]]);
+		expect(Array.from(map.native)).eql([["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8], ["f", 3]]);
+		expect(messages).eql([
+			["size", 5, 6],
+			["splice", [], [["f", 3]]],
+			["change"]
+		]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()]
+		]);
+		map.splice(["b"], new Map([["c", newDestroyFailObject()], ["d", newDestroyFailObject()]]));
+	});
+
+	it("should destroy the values in direct order if owned", () => {
+		let step = 0;
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyStepObject(() => ++step, 1)],
+			["c", newDestroyStepObject(() => ++step, 2)]
+		]).ownValues();
+		expect(step).equal(0);
+		map.splice(["b"], new Map([["c", newDestroyFailObject()], ["d", newDestroyFailObject()]]));
+		expect(step).equal(2);
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
@@ -626,8 +740,8 @@ function listen(map: BindableMap<any, any>) {
 
 function parseSpliceResult(spliceResult: IBindableMap.SpliceResult<any, any>) {
 	return [
-		Array.from(spliceResult.removedEntries.entries()),
-		Array.from(spliceResult.addedEntries.entries())
+		Array.from(spliceResult.removedEntries.entries()).sort((x, y) => cmpPrimitives(x[0], y[0])),
+		Array.from(spliceResult.addedEntries.entries()).sort((x, y) => cmpPrimitives(x[0], y[0]))
 	];
 }
 
