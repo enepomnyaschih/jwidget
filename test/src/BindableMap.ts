@@ -888,6 +888,30 @@ describe("BindableMap.detectSplice", () => {
 	});
 });
 
+describe("BindableMap.detectReindex", () => {
+	it("should infer a proper key mapping", () => {
+		const map = new BindableMap([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+		expect(normalizeEntries(map.detectReindex(new Map([["d", 3], ["a", 1], ["f", 2], ["c", 4]]))))
+			.eql([["b", "f"], ["c", "d"], ["d", "c"]]);
+	});
+
+	it("should not change the map", () => {
+		const map = new BindableMap([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+		map.detectReindex(new Map([["d", 3], ["a", 1], ["f", 2], ["c", 4]]))
+		expect(normalizeEntries(map.native)).eql([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+	});
+
+	it("should return undefined if the map is empty", () => {
+		const map = new BindableMap();
+		assert.isUndefined(map.detectReindex(new Map()));
+	});
+
+	it("should return undefined if the contents are identical", () => {
+		const map = new BindableMap([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+		assert.isUndefined(map.detectReindex(new Map([["a", 1], ["b", 2], ["c", 3], ["d", 4]])));
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
@@ -912,18 +936,26 @@ function listen(map: BindableMap<any, any>) {
 	return result;
 }
 
-function parseSpliceParams(spliceParams: IBindableMap.SpliceParams<any, any>) {
+function parseSpliceParams<K, V>(spliceParams: IBindableMap.SpliceParams<K, V>) {
 	return [
-		Array.from(spliceParams.keysToRemove).sort(),
-		Array.from(spliceParams.entriesToUpdate.entries()).sort((x, y) => cmpPrimitives(x[0], y[0]))
+		normalizeKeys(spliceParams.keysToRemove),
+		normalizeEntries(spliceParams.entriesToUpdate.entries())
 	];
 }
 
-function parseSpliceResult(spliceResult: IBindableMap.SpliceResult<any, any>) {
+function parseSpliceResult<K, V>(spliceResult: IBindableMap.SpliceResult<K, V>) {
 	return [
-		Array.from(spliceResult.removedEntries.entries()).sort((x, y) => cmpPrimitives(x[0], y[0])),
-		Array.from(spliceResult.addedEntries.entries()).sort((x, y) => cmpPrimitives(x[0], y[0]))
+		normalizeEntries(spliceResult.removedEntries.entries()),
+		normalizeEntries(spliceResult.addedEntries.entries())
 	];
+}
+
+function normalizeKeys<K>(keys: Iterable<K>) {
+	return Array.from(keys).sort();
+}
+
+function normalizeEntries<K, V>(entries: Iterable<readonly [K, V]>) {
+	return Array.from(entries).sort((x, y) => cmpPrimitives(x[0], y[0]))
 }
 
 function newDestroyFailObject() {
