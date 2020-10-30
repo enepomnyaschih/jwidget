@@ -202,6 +202,8 @@ describe("BindableSet.addAll", () => {
 });
 
 describe("BindableSet.tryAddAll", () => {
+	// While addAll delegates its logic to tryAddAll, it doesn't make sense to copy all tests over here.
+
 	it("should return the absent values", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		expect(normalizeValues(set.tryAddAll([2, 3, 6, 7]))).eql([6, 7]);
@@ -253,6 +255,29 @@ describe("BindableSet.delete", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		assert.isFalse(set.delete(6));
 	});
+
+	it("should not destroy the value by default", () => {
+		const values = [
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		];
+		const set = new BindableSet(values);
+		set.delete(values[1]);
+	});
+
+	it("should destroy the value if owned", () => {
+		const container = new Set<number>();
+		const values = [
+			newDestroyFailObject(),
+			newDestroyStepObject(container, 1),
+			newDestroyFailObject()
+		];
+		const set = new BindableSet(values).ownValues();
+		expect(normalizeValues(container)).eql([]);
+		set.delete(values[1]);
+		expect(normalizeValues(container)).eql([1]);
+	});
 });
 
 describe("BindableSet.deleteAll", () => {
@@ -289,9 +314,34 @@ describe("BindableSet.deleteAll", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		expect(normalizeValues(set.deleteAll([6, 7]))).eql([]);
 	});
+
+	it("should not destroy the values by default", () => {
+		const values = [
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		];
+		const set = new BindableSet(values);
+		set.deleteAll([values[1], values[2]]);
+	});
+
+	it("should destroy the values if owned", () => {
+		const container = new Set<number>();
+		const values = [
+			newDestroyFailObject(),
+			newDestroyStepObject(container, 1),
+			newDestroyStepObject(container, 2)
+		];
+		const set = new BindableSet(values).ownValues();
+		expect(normalizeValues(container)).eql([]);
+		set.deleteAll([values[1], values[2]]);
+		expect(normalizeValues(container)).eql([1, 2]);
+	});
 });
 
 describe("BindableSet.tryDeleteAll", () => {
+	// While deleteAll delegates its logic to tryDeleteAll, it doesn't make sense to copy all tests over here.
+
 	it("should return the present values", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		expect(normalizeValues(set.tryDeleteAll([2, 3, 6, 7]))).eql([2, 3]);
