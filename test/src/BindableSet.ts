@@ -165,6 +165,42 @@ describe("BindableSet.add", () => {
 	});
 });
 
+describe("BindableSet.addAll", () => {
+	it("should add the absent values and ignore the present values", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.addAll([2, 3, 6, 7]);
+		expect(normalizeValues(set.native)).eql([1, 2, 3, 4, 5, 6, 7]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.addAll([2, 3, 6, 7]);
+		expect(messages).eql([
+			["size", 5, 7],
+			["splice", [], [6, 7]],
+			["change"]
+		]);
+	});
+
+	it("should return the absent values", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.addAll([2, 3, 6, 7]))).eql([6, 7]);
+	});
+
+	it("should not dispatch any messages if all values are present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.addAll([2, 3]);
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty set if all values are present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.addAll([2, 3]))).eql([]);
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {
