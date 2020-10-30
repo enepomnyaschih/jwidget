@@ -25,7 +25,7 @@ SOFTWARE.
 import {assert, expect} from "chai";
 import BindableMap from "jwidget/BindableMap";
 import IBindableMap from "jwidget/IBindableMap";
-import {cmpPrimitives} from "../../main/src/internal";
+import {cmpPrimitives} from "jwidget/internal";
 
 describe("new BindableMap", () => {
 	it("should assign silent flag properly", () => {
@@ -711,6 +711,26 @@ describe("BindableMap.splice", () => {
 		expect(step).equal(0);
 		map.splice(["b"], new Map([["c", newDestroyFailObject()], ["d", newDestroyFailObject()]]));
 		expect(step).equal(2);
+	});
+});
+
+describe("BindableMap.trySplice", () => {
+	// While splice delegates its logic to trySplice, it doesn't make sense to copy all tests over here.
+
+	it("should return the splice result", () => {
+		const map = new BindableMap(getTestInput());
+		expect(parseSpliceResult(map.splice(["c"], new Map([["b", 3], ["f", 3], ["h", 9]]))))
+			.eql([[["b", 2], ["c", 8]], [["b", 3], ["f", 3], ["h", 9]]]);
+	});
+
+	it("should return undefined if the map is empty", () => {
+		const map = new BindableMap();
+		assert.isUndefined(map.trySplice([], new Map()));
+	});
+
+	it("should return undefined if the keys to remove don't exist", () => {
+		const map = new BindableMap();
+		assert.isUndefined(map.trySplice(["b", "c"], new Map()));
 	});
 });
 
