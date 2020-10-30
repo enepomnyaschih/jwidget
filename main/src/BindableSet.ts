@@ -73,7 +73,7 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 	}
 
 	protected destroyObject() {
-		this.clear();
+		this.tryClear();
 		super.destroyObject();
 	}
 
@@ -147,6 +147,10 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 	}
 
 	clear(): ReadonlySet<T> {
+		return this.tryClear() ?? new Set<T>();
+	}
+
+	tryClear(): ReadonlySet<T> {
 		if (this._size.get() === 0) {
 			return undefined;
 		}

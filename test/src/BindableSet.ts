@@ -353,6 +353,77 @@ describe("BindableSet.tryDeleteAll", () => {
 	});
 });
 
+describe("BindableSet.clear", () => {
+	it("should clear the set", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.clear();
+		expect(normalizeValues(set.native)).eql([]);
+	});
+
+	it("should not change the native reference", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const native = set.native;
+		set.clear();
+		expect(set.native).equal(native);
+	});
+
+	it("should dispatch proper messages", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.clear();
+		expect(messages).eql([
+			["size", 5, 0],
+			["clear", [1, 2, 3, 4, 5]],
+			["change"]
+		]);
+	});
+
+	it("should return the old contents", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.clear())).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should not change the set if it is empty", () => {
+		const set = new BindableSet();
+		set.clear();
+		expect(normalizeValues(set.native)).eql([]);
+	});
+
+	it("should not dispatch any messages if the set is empty", () => {
+		const set = new BindableSet();
+		const messages = listen(set);
+		set.clear();
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty set if the set is empty", () => {
+		const set = new BindableSet();
+		expect(normalizeValues(set.clear())).eql([]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const set = new BindableSet<any>([
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		]);
+		set.clear();
+	});
+
+	it("should destroy the values if owned", () => {
+		const container = new Set<number>();
+		const values = [
+			newDestroyStepObject(container, 1),
+			newDestroyStepObject(container, 2),
+			newDestroyStepObject(container, 3)
+		];
+		const set = new BindableSet<any>(values).ownValues();
+		expect(normalizeValues(container)).eql([]);
+		set.clear();
+		expect(normalizeValues(container)).eql([1, 2, 3]);
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {
