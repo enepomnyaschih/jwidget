@@ -424,6 +424,20 @@ describe("BindableSet.clear", () => {
 	});
 });
 
+describe("BindableSet.tryClear", () => {
+	// While clear delegates its logic to tryClear, it doesn't make sense to copy all tests over here.
+
+	it("should return the old contents", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.tryClear())).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should return undefined if the set is empty", () => {
+		const set = new BindableSet();
+		assert.isUndefined(set.tryClear());
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {
