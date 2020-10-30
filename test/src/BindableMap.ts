@@ -864,6 +864,30 @@ describe("BindableMap.tryReindex", () => {
 	});
 });
 
+describe("BindableMap.detectSplice", () => {
+	it("should infer proper splice parameters", () => {
+		const map = new BindableMap(getTestInput());
+		expect(parseSpliceParams(map.detectSplice(new Map([["a", 5], ["c", 5], ["d", 7], ["e", 8], ["f", 3]]))))
+			.eql([["b"], [["c", 5], ["f", 3]]]);
+	});
+
+	it("should not change the map", () => {
+		const map = new BindableMap(getTestInput());
+		map.detectSplice(new Map([["a", 5], ["c", 5], ["d", 7], ["e", 8], ["f", 3]]))
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should return undefined if the map is empty", () => {
+		const map = new BindableMap();
+		assert.isUndefined(map.detectSplice(new Map()));
+	});
+
+	it("should return undefined if the contents are identical", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.detectSplice(new Map(getTestInput())));
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
@@ -886,6 +910,13 @@ function listen(map: BindableMap<any, any>) {
 		result.push(["size", message.oldValue, message.value]);
 	});
 	return result;
+}
+
+function parseSpliceParams(spliceParams: IBindableMap.SpliceParams<any, any>) {
+	return [
+		Array.from(spliceParams.keysToRemove).sort(),
+		Array.from(spliceParams.entriesToUpdate.entries()).sort((x, y) => cmpPrimitives(x[0], y[0]))
+	];
 }
 
 function parseSpliceResult(spliceResult: IBindableMap.SpliceResult<any, any>) {
