@@ -98,6 +98,7 @@ describe("BindableArray.destroy", () => {
 			newDestroyStepObject(() => ++step, 2),
 			newDestroyStepObject(() => ++step, 1)
 		]).ownValues();
+		expect(step).eql(0);
 		array.destroy();
 		expect(step).eql(2);
 	});

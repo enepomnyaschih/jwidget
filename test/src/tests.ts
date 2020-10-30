@@ -24,6 +24,7 @@ SOFTWARE.
 
 import "./BindableArray";
 import "./BindableMap";
+import "./BindableSet";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";

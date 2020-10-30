@@ -97,6 +97,7 @@ describe("BindableMap.destroy", () => {
 			["a", newDestroyStepObject(() => ++step, 1)],
 			["b", newDestroyStepObject(() => ++step, 2)]
 		]).ownValues();
+		expect(step).eql(0);
 		map.destroy();
 		expect(step).eql(2);
 	});
