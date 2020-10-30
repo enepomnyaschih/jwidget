@@ -1224,7 +1224,7 @@ describe("BindableArray.performReorder", () => {
 	});
 
 	it("should not dispatch any messages if the array is empty", () => {
-		const array = new BindableArray([]);
+		const array = new BindableArray();
 		const messages = listen(array);
 		array.performReorder([]);
 		expect(messages).eql([]);

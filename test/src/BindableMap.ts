@@ -973,6 +973,53 @@ describe("BindableMap.performSplice", () => {
 	});
 });
 
+describe("BindableMap.performReindex", () => {
+	it("should update the map contents", () => {
+		const map = new BindableMap([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+		map.performReindex(new Map([["d", 3], ["a", 1], ["f", 2], ["c", 4]]));
+		expect(normalizeEntries(map.native)).eql([["a", 1], ["c", 4], ["d", 3], ["f", 2]]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const map = new BindableMap([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+		const messages = listen(map);
+		map.performReindex(new Map([["d", 3], ["a", 1], ["f", 2], ["c", 4]]));
+		expect(messages).eql([
+			["reindex", [["b", "f"], ["c", "d"], ["d", "c"]]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the map is empty", () => {
+		const map = new BindableMap();
+		const messages = listen(map);
+		map.performReindex(new Map());
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the contents are identical", () => {
+		const map = new BindableMap([["a", 1], ["b", 2], ["c", 3], ["d", 4]]);
+		const messages = listen(map);
+		map.performReindex(new Map([["a", 1], ["b", 2], ["c", 3], ["d", 4]]));
+		expect(messages).eql([]);
+	});
+
+	it("should not destroy the values even if owned", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()],
+			["d", newDestroyFailObject()]
+		]).ownValues();
+		map.reindex(new Map([
+			["a", map.get("a")],
+			["b", map.get("c")],
+			["c", map.get("d")],
+			["d", map.get("b")]
+		]));
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
