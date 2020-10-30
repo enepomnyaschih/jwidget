@@ -912,6 +912,67 @@ describe("BindableMap.detectReindex", () => {
 	});
 });
 
+describe("BindableMap.performSplice", () => {
+	it("should update the map contents", () => {
+		const map = new BindableMap(getTestInput());
+		map.performSplice(new Map([["a", 5], ["c", 5], ["d", 7], ["e", 8], ["f", 3]]));
+		expect(normalizeEntries(map.native)).eql([["a", 5], ["c", 5], ["d", 7], ["e", 8], ["f", 3]]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.performSplice(new Map([["a", 5], ["c", 5], ["d", 7], ["e", 8], ["f", 3]]));
+		expect(messages).eql([
+			["splice", [["b", 2], ["c", 8]], [["c", 5], ["f", 3]]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the map is empty", () => {
+		const map = new BindableMap();
+		const messages = listen(map);
+		map.performSplice(new Map());
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the contents are identical", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.performSplice(new Map(getTestInput()));
+		expect(messages).eql([]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()]
+		]);
+		map.performSplice(new Map([
+			["a", map.get("a")],
+			["b", newDestroyFailObject()],
+			["d", newDestroyFailObject()]
+		]));
+	});
+
+	it("should destroy the removed values and then replaced values if owned", () => {
+		let step = 0;
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyStepObject(() => ++step, 2)],
+			["c", newDestroyStepObject(() => ++step, 1)]
+		]).ownValues();
+		expect(step).equal(0);
+		map.performSplice(new Map([
+			["a", map.get("a")],
+			["b", newDestroyFailObject()],
+			["d", newDestroyFailObject()]
+		]));
+		expect(step).equal(2);
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }
