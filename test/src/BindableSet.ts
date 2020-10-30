@@ -159,7 +159,7 @@ describe("BindableSet.add", () => {
 		expect(messages).eql([]);
 	});
 
-	it("should return false if absent", () => {
+	it("should return false if present", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		assert.isFalse(set.add(3));
 	});
@@ -198,6 +198,108 @@ describe("BindableSet.addAll", () => {
 	it("should return an empty set if all values are present", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		expect(normalizeValues(set.addAll([2, 3]))).eql([]);
+	});
+});
+
+describe("BindableSet.tryAddAll", () => {
+	it("should return the absent values", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.tryAddAll([2, 3, 6, 7]))).eql([6, 7]);
+	});
+
+	it("should return undefined if all values are present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isUndefined(set.tryAddAll([2, 3]));
+	});
+});
+
+describe("BindableSet.delete", () => {
+	it("should delete the value if present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.delete(3);
+		expect(normalizeValues(set.native)).eql([1, 2, 4, 5]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.delete(3);
+		expect(messages).eql([
+			["size", 5, 4],
+			["splice", [3], []],
+			["change"]
+		]);
+	});
+
+	it("should return true if present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isTrue(set.delete(3));
+	});
+
+	it("should not delete the value if absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.delete(6);
+		expect(normalizeValues(set.native)).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should not dispatch any messages if absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.delete(6);
+		expect(messages).eql([]);
+	});
+
+	it("should return false if absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isFalse(set.delete(6));
+	});
+});
+
+describe("BindableSet.deleteAll", () => {
+	it("should delete the present values and ignore the absent values", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.deleteAll([2, 3, 6, 7]);
+		expect(normalizeValues(set.native)).eql([1, 4, 5]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.deleteAll([2, 3, 6, 7]);
+		expect(messages).eql([
+			["size", 5, 3],
+			["splice", [2, 3], []],
+			["change"]
+		]);
+	});
+
+	it("should return the present values", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.deleteAll([2, 3, 6, 7]))).eql([2, 3]);
+	});
+
+	it("should not dispatch any messages if all values are absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.deleteAll([6, 7]);
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty set if all values are absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.deleteAll([6, 7]))).eql([]);
+	});
+});
+
+describe("BindableSet.tryDeleteAll", () => {
+	it("should return the present values", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(normalizeValues(set.tryDeleteAll([2, 3, 6, 7]))).eql([2, 3]);
+	});
+
+	it("should return undefined if all values are absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isUndefined(set.tryDeleteAll([6, 7]));
 	});
 });
 
