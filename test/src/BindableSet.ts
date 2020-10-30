@@ -102,6 +102,69 @@ describe("BindableSet.destroy", () => {
 	});
 });
 
+describe("BindableSet[Symbol.iterator]", () => {
+	it("should support empty sets", () => {
+		const set = new BindableSet();
+		for (let _value of set) {
+			assert.fail();
+		}
+	});
+
+	it("should iterate through values", () => {
+		const input = [1, 2, 3, 4, 5];
+		const set = new BindableSet(input);
+		let i = 0;
+		for (let value of set) {
+			expect(value).equal(input[i++]);
+		}
+		expect(i).equal(5);
+	});
+});
+
+// ... testing methods-delegators any further would just be testing of the native Set methods. Skipping...
+
+describe("BindableSet.add", () => {
+	it("should add the value if absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.add(6);
+		expect(normalizeValues(set.native)).eql([1, 2, 3, 4, 5, 6]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.add(6);
+		expect(messages).eql([
+			["size", 5, 6],
+			["splice", [], [6]],
+			["change"]
+		]);
+	});
+
+	it("should return true if absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isTrue(set.add(6));
+	});
+
+	it("should not add the value if present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.add(3);
+		expect(normalizeValues(set.native)).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should not dispatch any messages if present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.add(3);
+		expect(messages).eql([]);
+	});
+
+	it("should return false if absent", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isFalse(set.add(3));
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {

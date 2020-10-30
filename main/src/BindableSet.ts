@@ -170,12 +170,14 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 		const addedValues = new Set<T>();
 		for (let value of valuesToAdd) {
 			if (!this._native.has(value)) {
+				this._native.add(value);
 				addedValues.add(value);
 			}
 		}
 		const removedValues = new Set<T>();
 		for (let value of valuesToRemove) {
 			if (!addedValues.has(value) && this._native.has(value)) {
+				this._native.delete(value);
 				removedValues.add(value);
 			}
 		}
