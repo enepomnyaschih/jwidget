@@ -734,6 +734,112 @@ describe("BindableMap.trySplice", () => {
 	});
 });
 
+describe("BindableMap.reindex", () => {
+	it("should reindex map entries", () => {
+		const map = new BindableMap(getTestInput());
+		map.reindex(new Map([["b", "f"], ["c", "g"]]));
+		expect(Array.from(map.native)).eql([["a", 5], ["d", 7], ["e", 8], ["f", 2], ["g", 8]]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.reindex(new Map([["b", "f"], ["c", "g"]]));
+		expect(messages).eql([
+			["reindex", [["b", "f"], ["c", "g"]]],
+			["change"]
+		]);
+	});
+
+	it("should return the key mapping", () => {
+		const map = new BindableMap(getTestInput());
+		expect(Array.from(map.reindex(new Map([["b", "f"], ["c", "g"]])))).eql([["b", "f"], ["c", "g"]]);
+	});
+
+	it("should not change the map if the mapping empty", () => {
+		const map = new BindableMap(getTestInput());
+		map.reindex(new Map());
+		expect(Array.from(map.native)).eql(getTestInput());
+	});
+
+	it("should not dispatch any messages if the mapping is empty", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.reindex(new Map());
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty mapping if the mapping empty", () => {
+		const map = new BindableMap(getTestInput());
+		expect(Array.from(map.reindex(new Map([["b", "f"], ["c", "g"]])))).eql([["b", "f"], ["c", "g"]]);
+	});
+
+	it("should ignore unchanged keys", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		const result = map.reindex(new Map([["b", "b"], ["c", "c"]]));
+		expect(Array.from(map.native)).eql(getTestInput());
+		expect(messages).eql([]);
+		expect(Array.from(result)).eql([]);
+	});
+
+	it("should ignore non-existent keys", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		const result = map.reindex(new Map([["f", "a"], ["g", "h"]]));
+		expect(Array.from(map.native)).eql(getTestInput());
+		expect(messages).eql([]);
+		expect(Array.from(result)).eql([]);
+	});
+
+	it("should support key exchange", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		const result = map.reindex(new Map([["b", "c"], ["c", "b"]]));
+		expect(Array.from(map.native)).eql([["a", 5], ["b", 8], ["c", 2], ["d", 7], ["e", 8]]);
+		expect(messages).eql([
+			["reindex", [["b", "c"], ["c", "b"]]],
+			["change"]
+		]);
+		expect(Array.from(result)).eql([["b", "c"], ["c", "b"]]);
+	});
+
+	it("should support key loop", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		const result = map.reindex(new Map([["b", "c"], ["c", "d"], ["d", "b"]]));
+		expect(Array.from(map.native)).eql([["a", 5], ["b", 7], ["c", 2], ["d", 8], ["e", 8]]);
+		expect(messages).eql([
+			["reindex", [["b", "c"], ["c", "d"], ["d", "b"]]],
+			["change"]
+		]);
+		expect(Array.from(result)).eql([["b", "c"], ["c", "d"], ["d", "b"]]);
+	});
+
+	it("should support key back loop", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		const result = map.reindex(new Map([["b", "c"], ["d", "b"], ["c", "d"]]));
+		expect(Array.from(map.native)).eql([["a", 5], ["b", 7], ["c", 2], ["d", 8], ["e", 8]]);
+		expect(messages).eql([
+			["reindex", [["b", "c"], ["d", "b"], ["c", "d"]]],
+			["change"]
+		]);
+		expect(Array.from(result)).eql([["b", "c"], ["d", "b"], ["c", "d"]]);
+	});
+
+	it("should not destroy the values even if owned", () => {
+		const map = new BindableMap<string, any>([
+			["a", newDestroyFailObject()],
+			["b", newDestroyFailObject()],
+			["c", newDestroyFailObject()],
+			["d", newDestroyFailObject()],
+			["e", newDestroyFailObject()]
+		]).ownValues();
+		map.reindex(new Map([["b", "f"], ["c", "d"], ["d", "c"]]));
+	});
+});
+
 function getTestInput(): [string, number][] {
 	return [["a", 5], ["b", 2], ["c", 8], ["d", 7], ["e", 8]];
 }

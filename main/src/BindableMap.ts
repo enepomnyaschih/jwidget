@@ -328,7 +328,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		}
 
 		const newKeys = new Set<K>();
-		for (let newKey of sanitizedMapping.keys()) {
+		for (let newKey of sanitizedMapping.values()) {
 			newKeys.add(newKey);
 		}
 
