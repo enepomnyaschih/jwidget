@@ -724,13 +724,13 @@ describe("BindableMap.trySplice", () => {
 	});
 
 	it("should return undefined if the map is empty", () => {
-		const map = new BindableMap();
+		const map = new BindableMap(getTestInput());
 		assert.isUndefined(map.trySplice([], new Map()));
 	});
 
 	it("should return undefined if the keys to remove don't exist", () => {
-		const map = new BindableMap();
-		assert.isUndefined(map.trySplice(["b", "c"], new Map()));
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.trySplice(["f", "g"], new Map()));
 	});
 });
 
@@ -792,6 +792,11 @@ describe("BindableMap.reindex", () => {
 		expect(Array.from(result)).eql([]);
 	});
 
+	it("should return a sanitized key mapping", () => {
+		const map = new BindableMap(getTestInput());
+		expect(Array.from(map.reindex(new Map([["b", "f"], ["c", "c"], ["g", "d"]])))).eql([["b", "f"]]);
+	});
+
 	it("should support key exchange", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
@@ -837,6 +842,25 @@ describe("BindableMap.reindex", () => {
 			["e", newDestroyFailObject()]
 		]).ownValues();
 		map.reindex(new Map([["b", "f"], ["c", "d"], ["d", "c"]]));
+	});
+});
+
+describe("BindableMap.tryReindex", () => {
+	// While reindex delegates its logic to tryReindex, it doesn't make sense to copy all tests over here.
+
+	it("should return a sanitized key mapping", () => {
+		const map = new BindableMap(getTestInput());
+		expect(Array.from(map.tryReindex(new Map([["b", "f"], ["c", "c"], ["g", "d"]])))).eql([["b", "f"]]);
+	});
+
+	it("should return undefined if the mapping is empty", () => {
+		const map = new BindableMap(getTestInput());
+		assert.isUndefined(map.tryReindex(new Map()));
+	});
+
+	it("should return undefined if the mapping contains only repeating and non-existent keys", () => {
+		const map = new BindableMap();
+		assert.isUndefined(map.tryReindex(new Map([["b", "b"], ["f", "g"]])));
 	});
 });
 
