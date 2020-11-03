@@ -566,6 +566,76 @@ describe("BindableSet.detectSplice", () => {
 	});
 });
 
+describe("BindableSet.performSplice", () => {
+	it("should update the set contents", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.performSplice([7, 2, 1, 6]);
+		expect(normalizeValues(set.native)).eql([1, 2, 6, 7]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.performSplice([7, 2, 1, 6]);
+		expect(messages).eql([
+			["size", 5, 4],
+			["splice", [3, 4, 5], [6, 7]],
+			["change"]
+		]);
+	});
+
+	it("should not dispatch any messages if the set is empty", () => {
+		const set = new BindableSet();
+		const messages = listen(set);
+		set.performSplice([]);
+		expect(messages).eql([]);
+	});
+
+	it("should not dispatch any messages if the contents are identical", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.performSplice([4, 1, 3, 2, 5]);
+		expect(messages).eql([]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const values = [
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		];
+		const set = new BindableSet(values);
+		set.performSplice([
+			values[0],
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			values[3]
+		]);
+	});
+
+	it("should destroy the values if owned", () => {
+		const container = new Set<number>();
+		const values = [
+			newDestroyFailObject(),
+			newDestroyStepObject(container, 1),
+			newDestroyStepObject(container, 2),
+			newDestroyFailObject(),
+			newDestroyStepObject(container, 3)
+		];
+		const set = new BindableSet(values).ownValues();
+		expect(normalizeValues(container)).eql([]);
+		set.performSplice([
+			values[0],
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			values[3]
+		]);
+		expect(normalizeValues(container)).eql([1, 2, 3]);
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {
