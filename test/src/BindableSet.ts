@@ -543,6 +543,29 @@ describe("BindableSet.trySplice", () => {
 	});
 });
 
+describe("BindableSet.detectSplice", () => {
+	it("should infer proper splice parameters", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(parseSpliceParams(set.detectSplice([7, 2, 1, 6]))).eql([[3, 4, 5], [6, 7]]);
+	});
+
+	it("should not change the set", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.detectSplice([7, 2, 1, 6]);
+		expect(normalizeValues(set.native)).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should return undefined if the set is empty", () => {
+		const set = new BindableSet();
+		assert.isUndefined(set.detectSplice([]));
+	});
+
+	it("should return undefined if the contents are identical", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isUndefined(set.detectSplice([4, 1, 3, 2, 5]));
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {
@@ -560,12 +583,12 @@ function listen(set: BindableSet<any>) {
 	return result;
 }
 
-// function parseSpliceParams<T>(spliceParams: IBindableSet.SpliceParams<T>) {
-// 	return [
-// 		normalizeValues(spliceParams.valuesToRemove),
-// 		normalizeValues(spliceParams.valuesToAdd)
-// 	];
-// }
+function parseSpliceParams<T>(spliceParams: IBindableSet.SpliceParams<T>) {
+	return [
+		normalizeValues(spliceParams.valuesToRemove),
+		normalizeValues(spliceParams.valuesToAdd)
+	];
+}
 
 function parseSpliceResult<T>(spliceResult: IBindableSet.SpliceResult<T>) {
 	return [

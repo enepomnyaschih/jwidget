@@ -926,7 +926,7 @@ describe("BindableArray.detectSplice", () => {
 	});
 
 	it("should return undefined if the array is empty", () => {
-		const array = new BindableArray([]);
+		const array = new BindableArray();
 		assert.isUndefined(array.detectSplice([]));
 	});
 
