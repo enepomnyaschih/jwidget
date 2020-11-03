@@ -524,6 +524,25 @@ describe("BindableSet.splice", () => {
 	});
 });
 
+describe("BindableSet.trySplice", () => {
+	// While splice delegates its logic to trySplice, it doesn't make sense to copy all tests over here.
+
+	it("should return the splice result", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(parseSpliceResult(set.trySplice([2, 3, 6, 7], [4, 5, 8]))).eql([[2, 3], [8]]);
+	});
+
+	it("should return undefined if no values provided", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isUndefined(set.trySplice([], []));
+	});
+
+	it("should return undefined if all values to remove are absent and all values to add are present", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		assert.isUndefined(set.trySplice([6, 7], [2, 3]));
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {
