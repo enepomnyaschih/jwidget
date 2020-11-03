@@ -438,6 +438,92 @@ describe("BindableSet.tryClear", () => {
 	});
 });
 
+describe("BindableSet.splice", () => {
+	it("should remove and add values as documented", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.splice([2, 3, 6, 7], [4, 5, 8]);
+		expect(normalizeValues(set.native)).eql([1, 4, 5, 8]);
+	});
+
+	it("should dispatch proper messages", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.splice([2, 3, 6, 7], [4, 5, 8]);
+		expect(messages).eql([
+			["size", 5, 4],
+			["splice", [2, 3], [8]],
+			["change"]
+		]);
+	});
+
+	it("should return the splice result", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(parseSpliceResult(set.splice([2, 3, 6, 7], [4, 5, 8]))).eql([[2, 3], [8]]);
+	});
+
+	it("should not change the set if no values provided", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		set.splice([], []);
+		expect(normalizeValues(set.native)).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should not dispatch any messages if no values provided", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.splice([], []);
+		expect(messages).eql([]);
+	});
+
+	it("should return an empty splice result if no values provided", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		expect(parseSpliceResult(set.splice([], []))).eql([[], []]);
+	});
+
+	it("should ignore present values to add and absent values to remove", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		const result = set.splice([6, 7], [2, 3]);
+		expect(normalizeValues(set.native)).eql([1, 2, 3, 4, 5]);
+		expect(messages).eql([]);
+		expect(parseSpliceResult(result)).eql([[], []]);
+	});
+
+	it("should merge equal values", () => {
+		const set = new BindableSet([1, 2, 3]);
+		const messages = listen(set);
+		const result = set.splice([2, 2], [4, 4]);
+		expect(normalizeValues(set.native)).eql([1, 3, 4]);
+		expect(messages).eql([
+			["splice", [2], [4]],
+			["change"]
+		]);
+		expect(parseSpliceResult(result)).eql([[2], [4]]);
+	});
+
+	it("should not destroy the values by default", () => {
+		const values = [
+			newDestroyFailObject(),
+			newDestroyFailObject(),
+			newDestroyFailObject()
+		];
+		const set = new BindableSet<any>(values);
+		set.splice([values[1], values[2]], [newDestroyFailObject()]);
+	});
+
+	it("should destroy the values if owned", () => {
+		const container = new Set<number>();
+		const values = [
+			newDestroyFailObject(),
+			newDestroyStepObject(container, 1),
+			newDestroyStepObject(container, 2)
+		];
+		const set = new BindableSet<any>(values).ownValues();
+		expect(normalizeValues(container)).eql([]);
+		set.splice([values[1], values[2]], [newDestroyFailObject()]);
+		expect(normalizeValues(container)).eql([1, 2]);
+	});
+});
+
 function listen(set: BindableSet<any>) {
 	const result: any[] = [];
 	set.onSplice.listen(spliceResult => {

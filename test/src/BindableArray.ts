@@ -750,14 +750,14 @@ describe("BindableArray.splice", () => {
 	});
 
 	it("should not dispatch any messages if no segments provided", () => {
-		const array = new BindableArray([]);
+		const array = new BindableArray([1, 2, 3, 4, 5]);
 		const messages = listen(array);
 		array.splice([], []);
 		expect(messages).eql([]);
 	});
 
 	it("should return an empty splice result if no segments provided", () => {
-		const array = new BindableArray([]);
+		const array = new BindableArray([1, 2, 3, 4, 5]);
 		assert.isTrue(array.splice([], []).empty);
 	});
 
