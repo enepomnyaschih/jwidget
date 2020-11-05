@@ -95,18 +95,6 @@ class ArrayFilterer<T> extends Class {
 	}
 
 	/**
-	 * Refilters the target collection item. Call this method when collection item properties change the way that
-	 * it must be refiltered.
-	 * @param item Item to refilter.
-	 */
-	refilterItem(item: T) {
-		const index = this.source.indexOf(item);
-		if (index !== -1) {
-			this.refilterAt(index);
-		}
-	}
-
-	/**
 	 * Refilters the target collection. Call this method when collection item properties change the way that
 	 * they must be refiltered.
 	 */
