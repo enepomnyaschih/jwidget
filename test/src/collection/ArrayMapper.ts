@@ -41,17 +41,27 @@ describe("startMappingArray", () => {
 	});
 
 	it("should map the target initially", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startMappingArray(source, makeDoubler(() => ++step));
+		const target = startMappingArray(source, x => 2 * x);
 		expect(target.native).eql([10, 4, 16, 14, 16]);
-		expect(step).equal(5);
+	});
+
+	it("should make proper calls on initialization", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		expect(calls).eql([
+			["create", 5],
+			["create", 2],
+			["create", 8],
+			["create", 7],
+			["create", 8]
+		]);
 	});
 
 	it("should handle splice message", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startMappingArray(source, makeDoubler(() => ++step));
+		const target = startMappingArray(source, x => 2 * x);
 		const messages = listen(target);
 		source.splice(
 			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7
@@ -62,13 +72,30 @@ describe("startMappingArray", () => {
 			["splice", [10, 4, 16, 14, 16], [[0, [10, 4]], [4, [16]]], [[1, [6, 8]], [4, [2, 2]]]],
 			["change"]
 		]);
-		expect(step).equal(9);
+	});
+
+	it("should make proper calls on splice", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		source.splice(
+			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7
+			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
+		expect(calls).eql([
+			["create", 3],
+			["create", 4],
+			["create", 1],
+			["create", 1],
+			["destroy", 16, 8],
+			["destroy", 4, 2],
+			["destroy", 10, 5]
+		]);
 	});
 
 	it("should handle replace message", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startMappingArray(source, makeDoubler(() => ++step));
+		const target = startMappingArray(source, x => 2 * x);
 		const messages = listen(target);
 		source.set(2, 1); // 5, 2, 1, 7, 8
 		expect(target.native).eql([10, 4, 2, 14, 16]);
@@ -76,13 +103,23 @@ describe("startMappingArray", () => {
 			["replace", 2, 16, 2],
 			["change"]
 		]);
-		expect(step).equal(6);
+	});
+
+	it("should make proper calls on replace", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		source.set(2, 1); // 5, 2, 1, 7, 8
+		expect(calls).eql([
+			["create", 1],
+			["destroy", 16, 8]
+		]);
 	});
 
 	it("should handle move message for a present value", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startMappingArray(source, makeDoubler(() => ++step));
+		const target = startMappingArray(source, x => 2 * x);
 		const messages = listen(target);
 		source.move(1, 3); // 5, 8, 7, 2, 8
 		expect(target.native).eql([10, 16, 14, 4, 16]);
@@ -90,13 +127,20 @@ describe("startMappingArray", () => {
 			["move", 1, 3, 4],
 			["change"]
 		]);
-		expect(step).equal(5);
+	});
+
+	it("should make no calls on move", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		source.move(1, 3); // 5, 8, 7, 2, 8
+		expect(calls).eql([]);
 	});
 
 	it("should handle reorder message", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startMappingArray(source, makeDoubler(() => ++step));
+		const target = startMappingArray(source, x => 2 * x);
 		const messages = listen(target);
 		source.reorder([2, 4, 3, 0, 1]); // 7, 8, 5, 8, 2
 		expect(target.native).eql([14, 16, 10, 16, 4]);
@@ -104,13 +148,20 @@ describe("startMappingArray", () => {
 			["reorder", [10, 4, 16, 14, 16], [2, 4, 3, 0, 1]],
 			["change"]
 		]);
-		expect(step).equal(5);
 	});
 
-	it("should handle clear message for a non-empty array", () => {
-		let step = 0;
+	it("should make no calls on reorder", () => {
+		const calls: any[] = [];
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startMappingArray(source, makeDoubler(() => ++step));
+		startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		source.reorder([2, 4, 3, 0, 1]); // 7, 8, 5, 8, 2
+		expect(calls).eql([]);
+	});
+
+	it("should handle clear message", () => {
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		const target = startMappingArray(source, x => 2 * x);
 		const messages = listen(target);
 		source.clear();
 		expect(target.native).eql([]);
@@ -119,7 +170,21 @@ describe("startMappingArray", () => {
 			["clear", [10, 4, 16, 14, 16]],
 			["change"]
 		]);
-		expect(step).equal(5);
+	});
+
+	it("should make proper calls on clear", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		source.clear();
+		expect(calls).eql([
+			["destroy", 16, 8],
+			["destroy", 14, 7],
+			["destroy", 16, 8],
+			["destroy", 4, 2],
+			["destroy", 10, 5]
+		]);
 	});
 
 	it("should create a silent array with proper contents if the source is silent", () => {
@@ -136,9 +201,26 @@ describe("startMappingArray", () => {
 		target.destroy();
 		assert.isFalse(hasBindings(source));
 	});
+
+	it("should make proper calls on destruction", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		const target = startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		target.destroy();
+		expect(calls).eql([
+			["destroy", 16, 8],
+			["destroy", 14, 7],
+			["destroy", 16, 8],
+			["destroy", 4, 2],
+			["destroy", 10, 5]
+		]);
+	});
 });
 
 describe("ArrayMapper", () => {
+	// Tests above are not repeated here.
+
 	it("should create a new array by default", () => {
 		const source = new BindableArray<number>();
 		const mapper = new ArrayMapper(source, x => x);
@@ -154,116 +236,44 @@ describe("ArrayMapper", () => {
 		expect(mapper.target).equal(target);
 	});
 
-	// All the following tests have been written for an auto-created target case already above, so we skip them.
-
 	it("should map the target initially", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
 		const messages = listen(target);
-		new ArrayMapper(source, makeDoubler(() => ++step), {target});
+		new ArrayMapper(source, x => 2 * x, {target});
 		expect(target.native).eql([10, 4, 16, 14, 16]);
 		expect(messages).eql([
 			["length", 0, 5],
 			["splice", [], [], [[0, [10, 4, 16, 14, 16]]]],
 			["change"]
 		]);
-		expect(step).equal(5);
 	});
 
-	it("should handle splice message", () => {
-		let step = 0;
+	it("should make proper calls on initialization", () => {
+		const calls: any[] = [];
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayMapper(source, makeDoubler(() => ++step), {target});
-		const messages = listen(target);
-		source.splice(
-			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
-		expect(target.native).eql([16, 6, 8, 14, 2, 2]);
-		expect(messages).eql([
-			["length", 5, 6],
-			["splice", [10, 4, 16, 14, 16], [[0, [10, 4]], [4, [16]]], [[1, [6, 8]], [4, [2, 2]]]],
-			["change"]
-		]);
-		expect(step).equal(9);
-	});
-
-	it("should handle replace message", () => {
-		let step = 0;
-		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = new BindableArray<number>();
-		new ArrayMapper(source, makeDoubler(() => ++step), {target});
-		const messages = listen(target);
-		source.set(2, 1); // 5, 2, 1, 7, 8
-		expect(target.native).eql([10, 4, 2, 14, 16]);
-		expect(messages).eql([
-			["replace", 2, 16, 2],
-			["change"]
-		]);
-		expect(step).equal(6);
-	});
-
-	it("should handle move message", () => {
-		let step = 0;
-		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = new BindableArray<number>();
-		new ArrayMapper(source, makeDoubler(() => ++step), {target});
-		const messages = listen(target);
-		source.move(1, 3); // 5, 8, 7, 2, 8
-		expect(target.native).eql([10, 16, 14, 4, 16]);
-		expect(messages).eql([
-			["move", 1, 3, 4],
-			["change"]
-		]);
-		expect(step).equal(5);
-	});
-
-	it("should handle reorder message", () => {
-		let step = 0;
-		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = new BindableArray<number>();
-		new ArrayMapper(source, makeDoubler(() => ++step), {target});
-		const messages = listen(target);
-		source.reorder([2, 4, 3, 0, 1]); // 7, 8, 5, 8, 2
-		expect(target.native).eql([14, 16, 10, 16, 4]);
-		expect(messages).eql([
-			["reorder", [10, 4, 16, 14, 16], [2, 4, 3, 0, 1]],
-			["change"]
-		]);
-		expect(step).equal(5);
-	});
-
-	it("should handle clear message", () => {
-		let step = 0;
-		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = new BindableArray<number>();
-		new ArrayMapper(source, makeDoubler(() => ++step), {target});
-		const messages = listen(target);
-		source.clear();
-		expect(target.native).eql([]);
-		expect(messages).eql([
-			["length", 5, 0],
-			["clear", [10, 4, 16, 14, 16]],
-			["change"]
-		]);
-		expect(step).equal(5);
+		new ArrayMapper(source, makeCreator(x => 2 * x, calls), {target, destroy: makeDestroyer(calls)});
+		expect(calls).eql([
+			["create", 5],
+			["create", 2],
+			["create", 8],
+			["create", 7],
+			["create", 8]
+		])
 	});
 
 	it("should initialize proper contents if the source is silent", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8], true);
 		const target = new BindableArray<number>();
-		new ArrayMapper(source, makeDoubler(() => ++step), {target});
+		new ArrayMapper(source, x => 2 * x, {target});
 		expect(target.native).eql([10, 4, 16, 14, 16]);
-		expect(step).equal(5);
 	});
 
 	it("should clear the target and unbind all listeners on destruction", () => {
-		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const mapper = new ArrayMapper(source, makeDoubler(() => ++step), {target});
+		const mapper = new ArrayMapper(source, x => 2 * x, {target});
 		const messages = listen(target);
 		assert.isTrue(hasBindings(source));
 		mapper.destroy();
@@ -273,6 +283,22 @@ describe("ArrayMapper", () => {
 			["length", 5, 0],
 			["clear", [10, 4, 16, 14, 16]],
 			["change"]
+		]);
+	});
+
+	it("should make proper calls on destruction", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		const target = new BindableArray<number>();
+		const mapper = new ArrayMapper(source, makeCreator(x => 2 * x, calls), {target, destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		mapper.destroy();
+		expect(calls).eql([
+			["destroy", 16, 8],
+			["destroy", 14, 7],
+			["destroy", 16, 8],
+			["destroy", 4, 2],
+			["destroy", 10, 5]
 		]);
 	});
 
@@ -326,9 +352,15 @@ function hasListeners(dispatcher: Listenable<unknown>) {
 	return listeners != null && listeners.size !== 0;
 }
 
-function makeDoubler(incrementer: () => void) {
-	return (value: number) => {
-		incrementer();
-		return 2 * value;
+function makeCreator<T, U>(creator: (value: T) => U, calls: any[]) {
+	return (value: T) => {
+		calls.push(["create", value]);
+		return creator(value);
+	};
+}
+
+function makeDestroyer<T, U>(calls: any[]) {
+	return (targetValue: U, sourceValue: T) => {
+		calls.push(["destroy", targetValue, sourceValue]);
 	};
 }
