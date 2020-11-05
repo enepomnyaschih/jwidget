@@ -41,14 +41,17 @@ describe("startFilteringArray", () => {
 	});
 
 	it("should filter the target initially", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0);
+		const target = startFilteringArray(source, makeTester(() => ++step));
 		expect(target.native).eql([2, 8, 8]);
+		expect(step).equal(5);
 	});
 
 	it("should handle splice message", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.splice(
 			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7 => 8
@@ -59,11 +62,13 @@ describe("startFilteringArray", () => {
 			["splice", [2, 8, 8], [[0, [2]], [2, [8]]], [[1, [4]]]],
 			["change"]
 		]);
+		expect(step).equal(9);
 	});
 
 	it("should handle replace message by removing a value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.set(2, 1); // 5, 2, 1, 7, 8 => 2, 8
 		expect(target.native).eql([2, 8]);
@@ -72,11 +77,13 @@ describe("startFilteringArray", () => {
 			["splice", [2, 8, 8], [[1, [8]]], []],
 			["change"]
 		]);
+		expect(step).equal(6);
 	});
 
 	it("should handle replace message by adding a value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.set(3, 6); // 5, 2, 8, 6, 8 => 2, 8, 6, 8
 		expect(target.native).eql([2, 8, 6, 8]);
@@ -85,11 +92,13 @@ describe("startFilteringArray", () => {
 			["splice", [2, 8, 8], [], [[2, [6]]]],
 			["change"]
 		]);
+		expect(step).equal(6);
 	});
 
 	it("should handle replace message by updating a value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.set(2, 6); // 5, 2, 6, 7, 8 => 2, 6, 8
 		expect(target.native).eql([2, 6, 8]);
@@ -97,20 +106,24 @@ describe("startFilteringArray", () => {
 			["replace", 1, 8, 6],
 			["change"]
 		]);
+		expect(step).equal(6);
 	});
 
 	it("should handle replace message for a missing value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.set(3, 5); // 5, 2, 8, 5, 8 => 2, 8, 8
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(6);
 	});
 
 	it("should handle move message for a present value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.move(1, 3); // 5, 8, 7, 2, 8 => 8, 2, 8
 		expect(target.native).eql([8, 2, 8]);
@@ -118,20 +131,24 @@ describe("startFilteringArray", () => {
 			["move", 0, 1, 2],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should handle move message for a missing value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.move(3, 0); // 7, 5, 2, 8, 8 => 2, 8, 8
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
 	});
 
 	it("should handle reorder message", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.reorder([2, 4, 3, 0, 1]); // 7, 8, 5, 8, 2 => 8, 8, 2
 		expect(target.native).eql([8, 8, 2]);
@@ -139,20 +156,24 @@ describe("startFilteringArray", () => {
 			["reorder", [2, 8, 8], [2, 1, 0]],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should handle reorder message for identity", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.reorder([4, 0, 2, 1, 3]); // 2, 7, 8, 8, 5 => 2, 8, 8
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
 	});
 
 	it("should handle clear message for a non-empty array", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
+		const target = startFilteringArray(source, makeTester(() => ++step)); // 2, 8, 8
 		const messages = listen(target);
 		source.clear();
 		expect(target.native).eql([]);
@@ -161,15 +182,18 @@ describe("startFilteringArray", () => {
 			["clear", [2, 8, 8]],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should handle clear message for an empty array", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, () => false);
+		const target = startFilteringArray(source, makeTester(() => ++step, () => 3));
 		const messages = listen(target);
 		source.clear();
 		expect(target.native).eql([]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
 	});
 
 	it("should create a silent array with proper contents if the source is silent", () => {
@@ -180,11 +204,13 @@ describe("startFilteringArray", () => {
 	});
 
 	it("should unbind all listeners on destruction", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = startFilteringArray(source, x => x % 2 === 0);
+		const target = startFilteringArray(source, makeTester(() => ++step));
 		assert.isTrue(hasBindings(source));
 		target.destroy();
 		assert.isFalse(hasBindings(source));
+		expect(step).equal(5);
 	});
 });
 
@@ -207,31 +233,36 @@ describe("ArrayFilterer", () => {
 	// All the following tests have been written for an auto-created target case already above, so we skip them.
 
 	it("should filter the target initially", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
 		const messages = listen(target);
-		new ArrayFilterer(source, x => x % 2 === 0, {target});
+		new ArrayFilterer(source, makeTester(() => ++step), {target});
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([
 			["length", 0, 3],
 			["splice", [], [], [[0, [2, 8, 8]]]],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should filter the target initially if no matching items available", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
 		const messages = listen(target);
-		new ArrayFilterer(source, () => false, {target});
+		new ArrayFilterer(source, makeTester(() => ++step, () => 3), {target});
 		expect(target.native).eql([]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
 	});
 
 	it("should handle splice message", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.splice(
 			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7 => 8
@@ -242,12 +273,14 @@ describe("ArrayFilterer", () => {
 			["splice", [2, 8, 8], [[0, [2]], [2, [8]]], [[1, [4]]]],
 			["change"]
 		]);
+		expect(step).equal(9);
 	});
 
 	it("should handle replace message by removing a value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.set(2, 1); // 5, 2, 1, 7, 8 => 2, 8
 		expect(target.native).eql([2, 8]);
@@ -256,12 +289,14 @@ describe("ArrayFilterer", () => {
 			["splice", [2, 8, 8], [[1, [8]]], []],
 			["change"]
 		]);
+		expect(step).equal(6);
 	});
 
 	it("should handle replace message by adding a value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.set(3, 6); // 5, 2, 8, 6, 8 => 2, 8, 6, 8
 		expect(target.native).eql([2, 8, 6, 8]);
@@ -270,12 +305,14 @@ describe("ArrayFilterer", () => {
 			["splice", [2, 8, 8], [], [[2, [6]]]],
 			["change"]
 		]);
+		expect(step).equal(6);
 	});
 
 	it("should handle replace message by updating a value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.set(2, 6); // 5, 2, 6, 7, 8 => 2, 6, 8
 		expect(target.native).eql([2, 6, 8]);
@@ -283,22 +320,26 @@ describe("ArrayFilterer", () => {
 			["replace", 1, 8, 6],
 			["change"]
 		]);
+		expect(step).equal(6);
 	});
 
 	it("should handle replace message for a missing value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.set(3, 5); // 5, 2, 8, 5, 8 => 2, 8, 8
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(6);
 	});
 
 	it("should handle move message for a present value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.move(1, 3); // 5, 8, 7, 2, 8 => 8, 2, 8
 		expect(target.native).eql([8, 2, 8]);
@@ -306,22 +347,26 @@ describe("ArrayFilterer", () => {
 			["move", 0, 1, 2],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should handle move message for a missing value", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.move(3, 0); // 7, 5, 2, 8, 8 => 2, 8, 8
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
 	});
 
 	it("should handle reorder message", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.reorder([2, 4, 3, 0, 1]); // 7, 8, 5, 8, 2 => 8, 8, 2
 		expect(target.native).eql([8, 8, 2]);
@@ -329,22 +374,26 @@ describe("ArrayFilterer", () => {
 			["reorder", [2, 8, 8], [2, 1, 0]],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should handle reorder message for identity", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.reorder([4, 0, 2, 1, 3]); // 2, 7, 8, 8, 5 => 2, 8, 8
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
 	});
 
 	it("should handle clear message for a non-empty array", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		source.clear();
 		expect(target.native).eql([]);
@@ -353,16 +402,19 @@ describe("ArrayFilterer", () => {
 			["clear", [2, 8, 8]],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should handle clear message for an empty array", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		new ArrayFilterer(source, () => false, {target});
+		new ArrayFilterer(source, makeTester(() => ++step, () => 3), {target});
 		const messages = listen(target);
 		source.clear();
 		expect(target.native).eql([]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
 	});
 
 	it("should initialize proper contents if the source is silent", () => {
@@ -373,9 +425,10 @@ describe("ArrayFilterer", () => {
 	});
 
 	it("should clear the target and unbind all listeners on destruction", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		const filterer = new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		assert.isTrue(hasBindings(source));
 		filterer.destroy();
@@ -386,37 +439,47 @@ describe("ArrayFilterer", () => {
 			["clear", [2, 8, 8]],
 			["change"]
 		]);
+		expect(step).equal(5);
 	});
 
 	it("should support reconfiguring", () => {
+		let step = 0;
+		let step2 = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		const filterer = new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
-		filterer.reconfigure({test: x => x % 2 === 1}); // 5, 7
-		expect(target.native).eql([5, 7]);
+		filterer.reconfigure({test: makeTester(() => ++step2, () => 5)}); // 5
+		expect(target.native).eql([5]);
 		expect(messages).eql([
-			["length", 3, 2],
-			["splice", [2, 8, 8], [[0, [2, 8, 8]]], [[0, [5, 7]]]],
+			["length", 3, 1],
+			["splice", [2, 8, 8], [[0, [2, 8, 8]]], [[0, [5]]]],
 			["change"]
 		]);
+		expect(step).equal(5);
+		expect(step2).equal(5);
 	});
 
 	it("should support reconfiguring with no changes", () => {
+		let step = 0;
+		let step2 = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		const filterer = new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
-		filterer.reconfigure({test: x => x % 2 === 0});
+		filterer.reconfigure({test: makeTester(() => ++step2)});
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(5);
+		expect(step2).equal(5);
 	});
 
 	it("should support refiltering", () => {
+		let step = 0;
 		let divisor = 2;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % divisor === 0, {target}); // 2, 8, 8
+		const filterer = new ArrayFilterer(source, makeTester(() => ++step, () => divisor), {target}); // 2, 8, 8
 		const messages = listen(target);
 		divisor = 4;
 		filterer.refilter();
@@ -426,23 +489,27 @@ describe("ArrayFilterer", () => {
 			["splice", [2, 8, 8], [[0, [2]]], []],
 			["change"]
 		]);
+		expect(step).equal(10);
 	});
 
 	it("should support refiltering with no changes", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		const filterer = new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		filterer.refilter();
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(10);
 	});
 
 	it("should support refiltering of a specific item", () => {
+		let step = 0;
 		let divisor = 4;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % divisor === 0, {target}); // 8, 8
+		const filterer = new ArrayFilterer(source, makeTester(() => ++step, () => divisor), {target}); // 8, 8
 		const messages = listen(target);
 		divisor = 2;
 		filterer.refilterAt(1);
@@ -452,17 +519,20 @@ describe("ArrayFilterer", () => {
 			["splice", [8, 8], [], [[0, [2]]]],
 			["change"]
 		]);
+		expect(step).equal(6);
 	});
 
 	it("should support refiltering of a specific item with no changes", () => {
+		let step = 0;
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		const filterer = new ArrayFilterer(source, makeTester(() => ++step), {target}); // 2, 8, 8
 		const messages = listen(target);
 		filterer.refilterAt(0);
 		filterer.refilterAt(1);
 		expect(target.native).eql([2, 8, 8]);
 		expect(messages).eql([]);
+		expect(step).equal(7);
 	});
 
 	// This synchronizer doesn't support multiple sources for one target.
@@ -513,4 +583,11 @@ function hasBindings(array: ReadonlyBindableArray<unknown>) {
 function hasListeners(dispatcher: Listenable<unknown>) {
 	const listeners = (<any>dispatcher)._listeners;
 	return listeners != null && listeners.size !== 0;
+}
+
+function makeTester(incrementer: () => void, divisorGetter: () => number = () => 2) {
+	return (value: number) => {
+		incrementer();
+		return value % divisorGetter() === 0;
+	};
 }
