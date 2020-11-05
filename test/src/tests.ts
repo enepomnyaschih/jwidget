@@ -33,3 +33,4 @@ import "./Mapper";
 import "./Property";
 import "./Switcher";
 import "./collection/ArrayFilterer";
+import "./collection/ArrayInserter";

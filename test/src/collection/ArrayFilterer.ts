@@ -172,12 +172,11 @@ describe("startFilteringArray", () => {
 		expect(messages).eql([]);
 	});
 
-	it("should create a silent array with proper contents and without bindings if the source is silent", () => {
+	it("should create a silent array with proper contents if the source is silent", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8], true);
 		const target = startFilteringArray(source, x => x % 2 === 0);
 		assert.isTrue(target.silent);
 		expect(target.native).eql([2, 8, 8]);
-		assert.isFalse(hasBindings(source));
 	});
 
 	it("should unbind all listeners on destruction", () => {
@@ -185,7 +184,7 @@ describe("startFilteringArray", () => {
 		const target = startFilteringArray(source, x => x % 2 === 0);
 		assert.isTrue(hasBindings(source));
 		target.destroy();
-		assert.isTrue(hasBindings(source));
+		assert.isFalse(hasBindings(source));
 	});
 });
 
@@ -366,38 +365,21 @@ describe("ArrayFilterer", () => {
 		expect(messages).eql([]);
 	});
 
-	it("should initialize proper contents without bindings if the source is silent", () => {
+	it("should initialize proper contents if the source is silent", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8], true);
 		const target = new BindableArray<number>();
 		new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
 		expect(target.native).eql([2, 8, 8]);
+	});
+
+	it("should clear the target and unbind all listeners on destruction", () => {
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		const target = new BindableArray<number>();
+		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
+		const messages = listen(target);
+		assert.isTrue(hasBindings(source));
+		filterer.destroy();
 		assert.isFalse(hasBindings(source));
-	});
-
-	it("should clear the target and unbind all listeners on destruction", () => {
-		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
-		const messages = listen(target);
-		assert.isTrue(hasBindings(source));
-		filterer.destroy();
-		assert.isTrue(hasBindings(source));
-		expect(target.native).eql([]);
-		expect(messages).eql([
-			["length", 3, 0],
-			["clear", [2, 8, 8]],
-			["change"]
-		]);
-	});
-
-	it("should clear the target and unbind all listeners on destruction", () => {
-		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const target = new BindableArray<number>();
-		const filterer = new ArrayFilterer(source, x => x % 2 === 0, {target}); // 2, 8, 8
-		const messages = listen(target);
-		assert.isTrue(hasBindings(source));
-		filterer.destroy();
-		assert.isTrue(hasBindings(source));
 		expect(target.native).eql([]);
 		expect(messages).eql([
 			["length", 3, 0],
@@ -483,7 +465,7 @@ describe("ArrayFilterer", () => {
 		expect(messages).eql([]);
 	});
 
-	// This synchronizer doesn't support multiple sources for one target
+	// This synchronizer doesn't support multiple sources for one target.
 });
 
 function listen(array: ReadonlyBindableArray<any>) {
@@ -530,5 +512,5 @@ function hasBindings(array: ReadonlyBindableArray<unknown>) {
 
 function hasListeners(dispatcher: Listenable<unknown>) {
 	const listeners = (<any>dispatcher)._listeners;
-	return listeners != null && listeners.length !== 0;
+	return listeners != null && listeners.size !== 0;
 }
