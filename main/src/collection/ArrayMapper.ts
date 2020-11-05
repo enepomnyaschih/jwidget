@@ -98,7 +98,9 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
 		const newItem = this._create(message.newValue);
 		const oldItem = this.target.trySet(message.index, newItem);
-		this._destroy(oldItem, message.oldValue);
+		if (this._destroy != null) {
+			this._destroy(oldItem, message.oldValue);
+		}
 	}
 
 	private _onMove(message: IBindableArray.MoveMessage<T>) {
