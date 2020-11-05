@@ -27,7 +27,6 @@ import BindableArray from '../BindableArray';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import Destructor from '../Destructor';
 import IBindableArray from '../IBindableArray';
-import {destroy} from '../index';
 import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractMapper from './AbstractMapper';
@@ -144,9 +143,7 @@ export function startMappingArray<T, U>(source: ReadonlyBindableArray<T>, create
 		return target.owning(new ArrayMapper<T, U>(source, create, {target, destroy: config.destroy}));
 	}
 	const target = new BindableArray(source.native.map(create), true);
-	if (config.destroy === destroy) {
-		target.ownValues();
-	} else if (config.destroy) {
+	if (config.destroy) {
 		const sourceValues = source.native.concat();
 		target.own(new Destructor(() => backForEach(target.native, (item, index) => {
 			config.destroy(item, sourceValues[index]);

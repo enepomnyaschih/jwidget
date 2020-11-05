@@ -216,6 +216,21 @@ describe("startMappingArray", () => {
 			["destroy", 10, 5]
 		]);
 	});
+
+	it("should make proper calls on destruction even if the source is silent", () => {
+		const calls: any[] = [];
+		const source = new BindableArray([5, 2, 8, 7, 8], true);
+		const target = startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
+		calls.splice(0);
+		target.destroy();
+		expect(calls).eql([
+			["destroy", 16, 8],
+			["destroy", 14, 7],
+			["destroy", 16, 8],
+			["destroy", 4, 2],
+			["destroy", 10, 5]
+		]);
+	});
 });
 
 describe("ArrayMapper", () => {
