@@ -270,20 +270,27 @@ describe("ArrayMapper", () => {
 		expect(target.native).eql([10, 4, 16, 14, 16]);
 	});
 
-	it("should clear the target and unbind all listeners on destruction", () => {
+	it("should clear the target on destruction", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = new BindableArray<number>();
 		const mapper = new ArrayMapper(source, x => 2 * x, {target});
 		const messages = listen(target);
-		assert.isTrue(hasBindings(source));
 		mapper.destroy();
-		assert.isFalse(hasBindings(source));
 		expect(target.native).eql([]);
 		expect(messages).eql([
 			["length", 5, 0],
 			["clear", [10, 4, 16, 14, 16]],
 			["change"]
 		]);
+	});
+
+	it("should unbind all listeners on destruction", () => {
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		const target = new BindableArray<number>();
+		const mapper = new ArrayMapper(source, x => 2 * x, {target});
+		assert.isTrue(hasBindings(source));
+		mapper.destroy();
+		assert.isFalse(hasBindings(source));
 	});
 
 	it("should make proper calls on destruction", () => {
