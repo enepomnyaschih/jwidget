@@ -28,6 +28,7 @@ import {startFilteringArray} from "jwidget/collection/ArrayFilterer";
 import IBindableArray from "jwidget/IBindableArray";
 import IndexCount from "jwidget/IndexCount";
 import IndexItems from "jwidget/IndexItems";
+import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 
 describe("startFilteringArray", () => {
@@ -171,11 +172,23 @@ describe("startFilteringArray", () => {
 		expect(messages).eql([]);
 	});
 
-	// Add tests for silent collections
+	it("should create a silent array with proper contents and without bindings if the source is silent", () => {
+		const source = new BindableArray([5, 2, 8, 7, 8], true);
+		const target = startFilteringArray(source, x => x % 2 === 0);
+		assert.isTrue(target.silent);
+		expect(target.native).eql([2, 8, 8]);
+		assert.isFalse(hasBindings(source));
+	});
 
-	// Add tests for destruction
+	it("should unbind all listeners on destruction", () => {
+		const source = new BindableArray([5, 2, 8, 7, 8]);
+		const target = startFilteringArray(source, x => x % 2 === 0);
+		assert.isTrue(hasBindings(source));
+		target.destroy();
+		assert.isTrue(hasBindings(source));
+	});
 
-	// Add tests for multiple sources
+	// This synchronizer doesn't support multiple sources for one target
 });
 
 function listen(array: ReadonlyBindableArray<any>) {
@@ -210,4 +223,17 @@ function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
 		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
 	];
+}
+
+function hasBindings(array: ReadonlyBindableArray<unknown>) {
+	return hasListeners(array.onSplice) ||
+		hasListeners(array.onReplace) ||
+		hasListeners(array.onMove) ||
+		hasListeners(array.onReorder) ||
+		hasListeners(array.onClear);
+}
+
+function hasListeners(dispatcher: Listenable<unknown>) {
+	const listeners = (<any>dispatcher)._listeners;
+	return listeners != null && listeners.length !== 0;
 }
