@@ -127,8 +127,8 @@ namespace SetMapper {
  * @param config Mapper configuration.
  * @returns Target set.
  */
-export function mapSet<T, U>(source: ReadonlyBindableSet<T>, create: (sourceValue: T) => U,
-							 config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableSet<U> {
+export function startMappingSet<T, U>(source: ReadonlyBindableSet<T>, create: (sourceValue: T) => U,
+									  config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableSet<U> {
 	if (!source.silent) {
 		const target = new BindableSet<U>();
 		return target.owning(new SetMapper<T, U>(source, create, {

@@ -24,25 +24,22 @@ SOFTWARE.
 
 import * as ArrayUtils from '../ArrayUtils';
 import BindableArray from '../BindableArray';
+import Class from "../Class";
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import {filter} from "../IterableUtils";
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
-import AbstractFilterer from './AbstractFilterer';
 
 /**
- * AbstractFilterer implementation for arrays.
+ * Array filterer. Builds a new array consisting of values the callback function returns a truthy value for, and
+ * starts continuous synchronization. Preserves item order.
  */
-class ArrayFilterer<T> extends AbstractFilterer<T> {
+class ArrayFilterer<T> extends Class {
 
+	private _targetCreated: boolean;
 	private _filtered: number[] = [];
-
-	/**
-	 * Source array.
-	 */
-	readonly source: ReadonlyBindableArray<T>;
 
 	/**
 	 * Target array.
@@ -54,9 +51,11 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(source: ReadonlyBindableArray<T>, test: (item: T) => boolean, config: ArrayFilterer.Config<T> = {}) {
-		super(test);
-		this.target = config.target ?? this.own(new BindableArray<T>(this.source.silent));
+	constructor(readonly source: ReadonlyBindableArray<T>, private test: (value: T) => boolean,
+				config: ArrayFilterer.Config<T> = {}) {
+		super();
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? new BindableArray<T>(this.source.silent) : config.target;
 		this._splice([], [new IndexItems(0, this.source.native)]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
@@ -182,6 +181,10 @@ class ArrayFilterer<T> extends AbstractFilterer<T> {
 
 	protected destroyObject() {
 		this.target.clear();
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.test = null;
 		super.destroyObject();
 	}
 
@@ -322,8 +325,8 @@ namespace ArrayFilterer {
  * @param test Filtering criteria.
  * @returns Target array.
  */
-export function filterArray<T>(source: ReadonlyBindableArray<T>,
-							   test: (item: T) => boolean): DestroyableReadonlyBindableArray<T> {
+export function startFilteringArray<T>(source: ReadonlyBindableArray<T>,
+									   test: (item: T) => boolean): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
 		return new BindableArray(filter(source, test), true);
 	}

@@ -22,18 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableSet from '../BindableSet';
+import Class from "../Class";
 import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
 import IBindableSet from '../IBindableSet';
 import {filter} from "../IterableUtils";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
-import BindableSet from '../BindableSet';
-import AbstractFilterer from './AbstractFilterer';
 
 /**
- * AbstractFilterer implementation for sets.
+ * Map filterer. Builds a new map consisting of values the callback function returns a truthy value for, and
+ * starts continuous synchronization. Preserves value keys.
  */
-class SetFilterer<T> extends AbstractFilterer<T> {
+class SetFilterer<T> extends Class {
 
+	private _targetCreated: boolean;
+
+	/**
+	 * Target set.
+	 */
 	readonly target: IBindableSet<T>;
 
 	/**
@@ -41,10 +47,11 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<T>, test: (value: T) => boolean,
+	constructor(readonly source: ReadonlyBindableSet<T>, private test: (value: T) => boolean,
 				config: SetFilterer.Config<T> = {}) {
-		super(test);
-		this.target = config.target ?? this.own(new BindableSet<T>(this.source.silent));
+		super();
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? new BindableSet<T>(this.source.silent) : config.target;
 		this.target.tryAddAll(filter(source, this.test));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
@@ -52,6 +59,10 @@ class SetFilterer<T> extends AbstractFilterer<T> {
 
 	protected destroyObject() {
 		this.target.tryDeleteAll(this.source);
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.test = null;
 		super.destroyObject();
 	}
 
@@ -86,8 +97,8 @@ namespace SetFilterer {
  * @param test Filtering criteria.
  * @returns Target set.
  */
-export function filterSet<T>(source: ReadonlyBindableSet<T>,
-							 test: (value: T) => boolean): DestroyableReadonlyBindableSet<T> {
+export function startFilteringSet<T>(source: ReadonlyBindableSet<T>,
+									 test: (value: T) => boolean): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
 		return new BindableSet(filter(source, test));
 	}

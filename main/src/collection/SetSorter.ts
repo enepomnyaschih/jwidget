@@ -22,44 +22,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as ArrayUtils from '../ArrayUtils';
+import * as ArrayUtils from "../ArrayUtils";
 import BindableArray from '../BindableArray';
-import Class from '../Class';
-import IBindableArray from '../IBindableArray';
-import {cmp} from '../index';
-import IndexCount from '../IndexCount';
-import IndexItems from '../IndexItems';
+import Class from "../Class";
+import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
+import IBindableArray from "../IBindableArray";
+import IBindableSet from '../IBindableSet';
+import {cmp} from "../index";
+import IndexCount from "../IndexCount";
+import IndexItems from "../IndexItems";
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 /**
- * Sorter (comparing). Builds a new array containing the items of source collection sorter by comparer.
+ * Sorter (comparing). Builds an array containing the values of a set sorted by a comparer.
  */
-abstract class AbstractSorterComparing<T> extends Class {
+export default class SetSorter<T> extends Class {
 
+	private _compare: (x: T, y: T) => number;
+	private _order: number;
 	private _targetCreated: boolean;
+	private _target: IBindableArray<T>;
 
-	protected _compare: (x: T, y: T) => number;
-	protected _order: number;
-	protected _target: IBindableArray<T>;
-
-	protected constructor(config: AbstractSorterComparing.FullConfig<T>, silent: boolean) {
+	/**
+	 * @param source Source set.
+	 * @param config Sorter configuration.
+	 */
+	constructor(readonly source: ReadonlyBindableSet<T>, config: SetSorter.FullConfig<T> = {}) {
 		super();
 		this._compare = config.compare || cmp;
 		this._order = config.order || 1;
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableArray<T>(silent) : config.target;
+		this._target = this._targetCreated ? new BindableArray<T>(source.silent) : config.target;
+		this._splice([], source.native);
+		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target array.
+	 */
 	get target(): ReadonlyBindableArray<T> {
 		return this._target;
-	}
-
-	protected destroyObject() {
-		if (this._targetCreated) {
-			this._target.destroy();
-		}
-		this._compare = null;
-		super.destroyObject();
 	}
 
 	/**
@@ -69,7 +73,24 @@ abstract class AbstractSorterComparing<T> extends Class {
 		this._target.sortComparing(this._compare, this._order);
 	}
 
-	protected _splice(removedValues: Iterable<T>, addedValues: Iterable<T>) {
+	protected destroyObject() {
+		this._splice(this.source, []);
+		if (this._targetCreated) {
+			this._target.destroy();
+		}
+		this._compare = null;
+		super.destroyObject();
+	}
+
+	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
+		this._splice(spliceResult.removedValues, spliceResult.addedValues);
+	}
+
+	private _onClear(oldContents: ReadonlySet<T>) {
+		this._splice(oldContents, []);
+	}
+
+	private _splice(removedValues: Iterable<T>, addedValues: Iterable<T>) {
 		const removedValuesSorted = [...removedValues].sort((x, y) => this._order * this._compare(x, y));
 		const addedValuesSorted = [...addedValues].sort((x, y) => this._order * this._compare(x, y));
 		const valuesToRemove = new Array<T>(removedValuesSorted.length);
@@ -132,9 +153,8 @@ abstract class AbstractSorterComparing<T> extends Class {
 	}
 }
 
-export default AbstractSorterComparing;
+namespace SetSorter {
 
-namespace AbstractSorterComparing {
 	/**
 	 * AbstractSorterComparing configuration.
 	 */
@@ -159,4 +179,25 @@ namespace AbstractSorterComparing {
 		 */
 		readonly target?: IBindableArray<T>;
 	}
+}
+
+/**
+ * Sorts a set and starts synchronization.
+ * @param source Source set.
+ * @param config Sorter configuration.
+ * @returns Sorted list.
+ */
+export function startSortingSet<T>(source: ReadonlyBindableSet<T>,
+								   config: SetSorter.Config<T> = {}): DestroyableReadonlyBindableArray<T> {
+	if (source.silent) {
+		const compare = config.compare || cmp,
+			order = config.order || 1;
+		return new BindableArray([...source].sort((x, y) => order * compare(x, y)), true);
+	}
+	const target = new BindableArray<T>();
+	return target.owning(new SetSorter<T>(source, {
+		target,
+		compare: config.compare,
+		order: config.order
+	}));
 }

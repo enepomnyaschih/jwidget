@@ -25,18 +25,19 @@ SOFTWARE.
 import * as ArrayUtils from '../ArrayUtils';
 import BindableArray from '../BindableArray';
 import Class from '../Class';
+import {startMappingArray} from "../collection/ArrayMapper";
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
 import {destroy} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
-import {mapArray} from '../mapper/array';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
 /**
  * Array merger.
  */
 class ArrayMerger<T> extends Class {
+
 	private _targetCreated: boolean;
 	private _bunches: DestroyableReadonlyBindableArray<Bunch<T>>;
 	private _target: IBindableArray<T>;
@@ -49,7 +50,7 @@ class ArrayMerger<T> extends Class {
 		super();
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? this._createTarget(source) : config.target;
-		this._bunches = mapArray<ReadonlyBindableArray<T>, Bunch<T>>(source,
+		this._bunches = startMappingArray<ReadonlyBindableArray<T>, Bunch<T>>(source,
 				bunch => new Bunch<T>(this.source, this._target, bunch), {destroy});
 		this._target.addAll(this._getAllItems());
 		this.own(source.onSplice.listen(this._onSplice, this));
@@ -217,24 +218,16 @@ namespace ArrayMerger {
  * @param source Source array.
  * @returns Merged array.
  */
-export function mergeArrays<T>(source: ReadonlyBindableArray<ReadonlyBindableArray<T>>): DestroyableReadonlyBindableArray<T> {
+export function startMergingArrays<T>(source: ReadonlyBindableArray<ReadonlyBindableArray<T>>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent && source.every(item => item.silent)) {
-		return mergeNoSync(source);
+		return new BindableArray(ArrayUtils.merge(source.native.map(item => item.native)), true);
 	}
 	const target = new BindableArray<T>();
 	return target.owning(new ArrayMerger<T>(source, {target}));
 }
 
-/**
- * Merges arrays without synchronization.
- * @param source Source array.
- * @returns Merged array.
- */
-export function mergeNoSync<T>(source: ReadonlyBindableArray<ReadonlyBindableArray<T>>): IBindableArray<T> {
-	return new BindableArray(ArrayUtils.merge(source.native.map(item => item.native)), true);
-}
-
 class Bunch<T> extends Class {
+
 	private source: ReadonlyBindableArray<ReadonlyBindableArray<T>>;
 	private target: IBindableArray<T>;
 	private bunch: ReadonlyBindableArray<T>;

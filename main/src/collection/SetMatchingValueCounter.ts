@@ -22,29 +22,69 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import Bindable from "../Bindable";
+import Class from "../Class";
 import DestroyableBindable from '../DestroyableBindable';
 import IBindableSet from '../IBindableSet';
+import IProperty from "../IProperty";
 import {count} from "../IterableUtils";
 import Property from '../Property';
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
-import AbstractCounter from './AbstractCounter';
 
 /**
- * AbstractCounter implementation for sets.
+ * Set matching value counter. Builds a new Property containing number of set values the callback
+ * returns a truthy value for, and starts continuous synchronization.
  */
-export default class SetCounter<T> extends AbstractCounter<T> {
+export default class SetMatchingValueCounter<T> extends Class {
+
+	private _targetCreated: boolean;
+	private _target: IProperty<number>;
 
 	/**
 	 * @param source Source set.
 	 * @param test Filtering criteria.
 	 * @param config Counter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<T>, test: (item: T) => boolean, config?: AbstractCounter.Config) {
-		super(test, config);
+	constructor(readonly source: ReadonlyBindableSet<T>, private test: (value: T) => boolean,
+				config: SetMatchingValueCounter.Config = {}) {
+		super();
+		this._targetCreated = config.target == null;
+		this._target = this._targetCreated ? new Property<number>(0) : config.target;
+		this.recount();
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target property.
+	 */
+	get target(): Bindable<number> {
+		return this._target;
+	}
+
+	protected destroyObject() {
+		this._target.set(0);
+		if (this._targetCreated) {
+			this._target.destroy();
+		}
+		this.test = null;
+		this._target = null;
+		super.destroyObject();
+	}
+
+	/**
+	 * Changes counter configuration and recounts matching values.
+	 * @param config Options to modify.
+	 */
+	reconfigure(config: SetMatchingValueCounter.Reconfig<T>) {
+		this.test = config.test ?? this.test;
+		this.recount();
+	}
+
+	/**
+	 * Recounts matching values. Call this method when set value properties change in such a way that
+	 * they must be retested.
+	 */
 	recount() {
 		this._target.set(count(this.source, this.test));
 	}
@@ -60,16 +100,38 @@ export default class SetCounter<T> extends AbstractCounter<T> {
 	}
 }
 
+namespace SetMatchingValueCounter {
+	/**
+	 * AbstractCounter configuration.
+	 */
+	export interface Config {
+		/**
+		 * Target property. By default, created automatically.
+		 */
+		readonly target?: IProperty<number>;
+	}
+
+	/**
+	 * AbstractCounter.reconfigure method configuration.
+	 */
+	export interface Reconfig<T> {
+		/**
+		 * Filtering criteria.
+		 */
+		readonly test?: (value: T) => boolean;
+	}
+}
+
 /**
- * Counts matching items in a set and starts synchronization.
+ * Counts matching values in a set and starts synchronization.
  * @param source Source set.
  * @param test Filtering criteria.
  * @returns Target property.
  */
-export function countSet<T>(source: ReadonlyBindableSet<T>, test: (item: T) => boolean): DestroyableBindable<number> {
+export function countSet<T>(source: ReadonlyBindableSet<T>, test: (value: T) => boolean): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(count(source, test), true);
 	}
 	const target = new Property(0);
-	return target.owning(new SetCounter<T>(source, test, {target}));
+	return target.owning(new SetMatchingValueCounter<T>(source, test, {target}));
 }

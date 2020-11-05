@@ -23,9 +23,9 @@ SOFTWARE.
 */
 
 import Class from '../Class';
+import SetObserver from "../collection/SetObserver";
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
-import SetObserver from "../observer/set";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 export default class ComponentObserver extends Class {

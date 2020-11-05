@@ -135,8 +135,8 @@ namespace ArrayMapper {
  * @param config Mapper configuration.
  * @returns Target array.
  */
-export function mapArray<T, U>(source: ReadonlyBindableArray<T>, create: (sourceValue: T) => U,
-							   config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableArray<U> {
+export function startMappingArray<T, U>(source: ReadonlyBindableArray<T>, create: (sourceValue: T) => U,
+										config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableArray<U> {
 	if (!source.silent) {
 		const target = new BindableArray<U>();
 		return target.owning(new ArrayMapper<T, U>(source, create, {target, destroy: config.destroy}));

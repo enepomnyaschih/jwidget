@@ -147,7 +147,7 @@ namespace ArrayReverser {
  * @param source Source array.
  * @returns Reversed array.
  */
-export function reverseArray<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableArray<T> {
+export function startReversingArray<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
 		return new BindableArray(source.native.concat().reverse(), true);
 	}

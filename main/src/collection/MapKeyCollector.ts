@@ -22,56 +22,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
-import IBindableArray from '../IBindableArray';
-import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import BindableSet from '../BindableSet';
-import AbstractConverterToSet from './AbstractConverterToSet';
+import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
+import IBindableMap from '../IBindableMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
+import AbstractValueCollector from './AbstractValueCollector';
 
 /**
- * AbstractConverterToSet implementation for arrays.
+ * Value collector implementation for maps.
  */
-export default class ArrayConverterToSet<T> extends AbstractConverterToSet<T> {
+export default class MapKeyCollector<K> extends AbstractValueCollector<K> {
 
 	/**
-	 * @param source Source array.
+	 * @param source Source map.
 	 * @param config Converter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractConverterToSet.Config<T>) {
+	constructor(readonly source: ReadonlyBindableMap<K, unknown>, config: AbstractValueCollector.Config<K>) {
 		super(config, source.silent);
-		this._target.tryAddAll(source);
+		this._target.tryAddAll(source.keys());
 		this.own(source.onSplice.listen(this._onSplice, this));
-		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	protected destroyObject() {
-		this._target.tryDeleteAll(this.source);
+		this._target.tryDeleteAll(this.source.keys());
 		super.destroyObject();
 	}
 
-	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
-		this._target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
+	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, unknown>) {
+		this._target.trySplice(
+			spliceResult.removedEntries.keys(),
+			spliceResult.addedEntries.keys());
 	}
 
-	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
-		this._target.trySplice([message.oldValue], [message.newValue]);
-	}
-
-	private _onClear(oldContents: readonly T[]) {
-		this._target.tryDeleteAll(oldContents);
+	private _onClear(oldContents: ReadonlyMap<K, unknown>) {
+		this._target.tryDeleteAll(oldContents.keys());
 	}
 }
 
 /**
- * Converts an array to a set and starts synchronization.
- * @param source Source array.
+ * Creates a set containing all map keys and starts synchronization.
+ * @param source Source map.
  * @returns Target set.
  */
-export function arrayToSet<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableSet<T> {
+export function startCollectingMapKeys<K>(source: ReadonlyBindableMap<K, unknown>): DestroyableReadonlyBindableSet<K> {
 	if (source.silent) {
-		return new BindableSet(source, true);
+		return new BindableSet(source.keys(), true);
 	}
-	const target = new BindableSet<T>();
-	return target.owning(new ArrayConverterToSet<T>(source, {target}));
+	const target = new BindableSet<K>();
+	return target.owning(new MapKeyCollector<K>(source, {target}));
 }

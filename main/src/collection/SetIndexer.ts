@@ -23,32 +23,51 @@ SOFTWARE.
 */
 
 import BindableMap from '../BindableMap';
+import Class from "../Class";
 import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
+import IBindableMap from "../IBindableMap";
 import IBindableSet from '../IBindableSet';
 import {index, map} from "../IterableUtils";
+import ReadonlyBindableMap from "../ReadonlyBindableMap";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
-import AbstractIndexer from './AbstractIndexer';
 
 /**
- * AbstractIndexer implementation for sets.
+ * Set indexer. Builds a new map by rule: key is the result of the function call, value is the
+ * corresponding set value. Can be used for value search optimization.
  */
-export default class SetIndexer<V, K> extends AbstractIndexer<V, K> {
+export default class SetIndexer<V, K> extends Class {
+
+	private _targetCreated: boolean;
+	private _target: IBindableMap<K, V>;
 
 	/**
 	 * @param source Source set.
 	 * @param getKey Indexer function.
 	 * @param config Indexer configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<V>, getKey: (value: V) => K,
-				config?: AbstractIndexer.Config<V, K>) {
-		super(getKey, config, source.silent);
+	constructor(readonly source: ReadonlyBindableSet<V>, private getKey: (value: V) => K,
+				config: SetIndexer.Config<V, K> = {}) {
+		super();
+		this._targetCreated = config.target == null;
+		this._target = this._targetCreated ? new BindableMap<K, V>(source.silent) : config.target;
 		this._target.trySetAll(index(source, getKey));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target map.
+	 */
+	get target(): ReadonlyBindableMap<K, V> {
+		return this._target;
+	}
+
 	protected destroyObject() {
 		this._target.tryRemoveAll(map(this.source, this.getKey));
+		if (this._targetCreated) {
+			this._target.destroy();
+		}
+		this.getKey = null;
 		super.destroyObject();
 	}
 
@@ -64,14 +83,26 @@ export default class SetIndexer<V, K> extends AbstractIndexer<V, K> {
 	}
 }
 
+namespace SetIndexer {
+	/**
+	 * SetIndexer configuration.
+	 */
+	export interface Config<V, K> {
+		/**
+		 * Target map. By default, created automatically.
+		 */
+		readonly target?: IBindableMap<K, V>;
+	}
+}
+
 /**
  * Indexes set and starts synchronization.
  * @param source Source set.
  * @param getKey Indexer function.
  * @returns Set index map.
  */
-export function indexSet<V, K>(source: ReadonlyBindableSet<V>,
-							   getKey: (value: V) => K): DestroyableReadonlyBindableMap<K, V> {
+export function startIndexingSet<V, K>(source: ReadonlyBindableSet<V>,
+									   getKey: (value: V) => K): DestroyableReadonlyBindableMap<K, V> {
 	if (source.silent) {
 		return new BindableMap(index(source, getKey));
 	}

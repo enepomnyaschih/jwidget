@@ -22,25 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import BindableArray from '../BindableArray';
 import Class from '../Class';
-import IBindableArray from '../IBindableArray';
-import IndexItems from '../IndexItems';
-import ReadonlyBindableArray from "../ReadonlyBindableArray";
+import IBindableSet from '../IBindableSet';
+import BindableSet from '../BindableSet';
+import ReadonlyBindableSet from "../ReadonlyBindableSet";
 
 /**
- * Converter to array.
+ * Abstract value collector.
  */
-abstract class AbstractConverterToArray<T> extends Class {
+abstract class AbstractValueCollector<T> extends Class {
 
 	private _targetCreated: boolean;
 
-	protected _target: IBindableArray<T>;
+	protected _target: IBindableSet<T>;
 
-	protected constructor(config: AbstractConverterToArray.Config<T>, silent: boolean) {
+	protected constructor(config: AbstractValueCollector.Config<T>, silent: boolean) {
 		super();
 		this._targetCreated = config.target == null;
-		this._target = this._targetCreated ? new BindableArray<T>(silent) : config.target;
+		this._target = this._targetCreated ? new BindableSet<T>(silent) : config.target;
+	}
+
+	/**
+	 * Target set.
+	 */
+	get target(): ReadonlyBindableSet<T> {
+		return this._target;
 	}
 
 	protected destroyObject() {
@@ -49,34 +55,18 @@ abstract class AbstractConverterToArray<T> extends Class {
 		}
 		super.destroyObject();
 	}
-
-	/**
-	 * Target array.
-	 */
-	get target(): ReadonlyBindableArray<T> {
-		return this._target;
-	}
-
-	protected _splice(removedValueSet: ReadonlySet<T>, addedValueSet: ReadonlySet<T>) {
-		const filteredValues = this.target.native.filter(
-			value => !removedValueSet.has(value) || !addedValueSet.has(value));
-		const addedValues = [...addedValueSet].filter(value => !removedValueSet.has(value));
-		this._target.trySplice(
-			this.target.detectFilter(filteredValues) || [],
-			[new IndexItems(filteredValues.length, addedValues)]);
-	}
 }
 
-export default AbstractConverterToArray;
+export default AbstractValueCollector;
 
-namespace AbstractConverterToArray {
+namespace AbstractValueCollector {
 	/**
-	 * AbstractConverterToArray configuration.
+	 * AbstractValueCollector configuration.
 	 */
 	export interface Config<T> {
 		/**
-		 * Target array. By default, created automatically.
+		 * Target set. By default, created automatically.
 		 */
-		readonly target?: IBindableArray<T>;
+		readonly target?: IBindableSet<T>;
 	}
 }

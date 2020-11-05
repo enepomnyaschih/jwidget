@@ -22,61 +22,56 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import BindableArray from '../BindableArray';
-import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
+import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
 import IBindableArray from '../IBindableArray';
-import IndexCount from '../IndexCount';
-import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
-import AbstractConverterToArray from './AbstractConverterToArray';
+import BindableSet from '../BindableSet';
+import AbstractValueCollector from './AbstractValueCollector';
 
 /**
- * AbstractConverterToArray implementation for arrays.
+ * Value collector implementation for arrays.
  */
-export default class ArrayConverterToArray<T> extends AbstractConverterToArray<T> {
+export default class ArrayValueCollector<T> extends AbstractValueCollector<T> {
 
 	/**
 	 * @param source Source array.
-	 * @param config Converter configuration.
+	 * @param config Collector configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractConverterToArray.Config<T>) {
+	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractValueCollector.Config<T>) {
 		super(config, source.silent);
-		this._target.addAll(source.native);
+		this._target.tryAddAll(source);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	protected destroyObject() {
-		this._target.removeValues(this.source.native);
+		this._target.tryDeleteAll(this.source);
 		super.destroyObject();
 	}
 
 	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
-		this._splice(new Set(spliceResult.removedItems), new Set(spliceResult.addedItems));
+		this._target.trySplice(spliceResult.removedItems, spliceResult.addedItems);
 	}
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
-		const index = this._target.indexOf(message.oldValue);
-		this._target.trySplice(
-			[new IndexCount(index, 1)],
-			[new IndexItems(this._target.length.get() - 1, [message.newValue])]);
+		this._target.trySplice([message.oldValue], [message.newValue]);
 	}
 
 	private _onClear(oldContents: readonly T[]) {
-		this._target.removeValues(oldContents);
+		this._target.tryDeleteAll(oldContents);
 	}
 }
 
 /**
- * Creates a copy of an array and starts synchronization.
+ * Creates a set containing all array values and starts synchronization.
  * @param source Source array.
- * @returns Target array.
+ * @returns Target set.
  */
-export function arrayToArray<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableArray<T> {
+export function startCollectingArrayValues<T>(source: ReadonlyBindableArray<T>): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
-		return new BindableArray(source, true);
+		return new BindableSet(source, true);
 	}
-	const target = new BindableArray<T>();
-	return target.owning(new ArrayConverterToArray<T>(source, {target}));
+	const target = new BindableSet<T>();
+	return target.owning(new ArrayValueCollector<T>(source, {target}));
 }

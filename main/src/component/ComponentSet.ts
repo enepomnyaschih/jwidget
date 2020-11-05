@@ -23,9 +23,9 @@ SOFTWARE.
 */
 
 import Class from '../Class';
+import SetMapper from "../collection/SetMapper";
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
-import SetMapper from "../mapper/set";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import ComponentObserver from './ComponentObserver';
 

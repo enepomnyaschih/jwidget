@@ -23,9 +23,9 @@ SOFTWARE.
 */
 
 import Class from '../Class';
+import ArrayMapper from '../collection/ArrayMapper';
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
-import ArrayMapper from '../mapper/array';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import ComponentInserter from './ComponentInserter';
 

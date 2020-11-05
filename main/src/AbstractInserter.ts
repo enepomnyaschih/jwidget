@@ -24,7 +24,7 @@ SOFTWARE.
 
 import Class from './Class';
 import * as DomUtils from './DomUtils';
-import ArrayInserter from './inserter/array';
+import ArrayInserter from './collection/ArrayInserter';
 import ReadonlyBindableArray from './ReadonlyBindableArray';
 
 export default abstract class AbstractInserter<T> extends Class {

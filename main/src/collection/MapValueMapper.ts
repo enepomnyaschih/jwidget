@@ -35,7 +35,7 @@ import AbstractMapper from './AbstractMapper';
 /**
  * AbstractMapper implementation for maps.
  */
-class MapMapper<K, T, U> extends AbstractMapper<T, U> {
+class MapValueMapper<K, T, U> extends AbstractMapper<T, U> {
 
 	private _targetCreated: boolean;
 
@@ -50,7 +50,7 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	 * @param config Mapper configuration.
 	 */
 	constructor(readonly source: ReadonlyBindableMap<K, T>, create: (data: T) => U,
-				config: MapMapper.FullConfig<K, T, U> = {}) {
+				config: MapValueMapper.FullConfig<K, T, U> = {}) {
 		super(create, config);
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new BindableMap<K, U>(this.source.silent) : config.target;
@@ -96,9 +96,9 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	}
 }
 
-export default MapMapper;
+export default MapValueMapper;
 
-namespace MapMapper {
+namespace MapValueMapper {
 	/**
 	 * MapMapper configuration.
 	 */
@@ -117,11 +117,11 @@ namespace MapMapper {
  * @param config Mapper configuration.
  * @returns Target map.
  */
-export function mapMap<K, T, U>(source: ReadonlyBindableMap<K, T>, create: (sourceValue: T) => U,
-								config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableMap<K, U> {
+export function startMappingMapValues<K, T, U>(source: ReadonlyBindableMap<K, T>, create: (sourceValue: T) => U,
+											   config: AbstractMapper.Config<T, U> = {}): DestroyableReadonlyBindableMap<K, U> {
 	if (!source.silent) {
 		const target = new BindableMap<K, U>();
-		return target.owning(new MapMapper<K, T, U>(source, create, {
+		return target.owning(new MapValueMapper<K, T, U>(source, create, {
 			target,
 			destroy: config.destroy
 		}));

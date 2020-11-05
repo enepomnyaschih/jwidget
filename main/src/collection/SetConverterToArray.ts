@@ -23,29 +23,47 @@ SOFTWARE.
 */
 
 import BindableArray from '../BindableArray';
+import Class from "../Class";
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
+import IBindableArray from "../IBindableArray";
 import IBindableSet from '../IBindableSet';
+import IndexItems from "../IndexItems";
+import ReadonlyBindableArray from "../ReadonlyBindableArray";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
-import AbstractConverterToArray from './AbstractConverterToArray';
 
 /**
  * AbstractConverterToArray implementation for sets.
  */
-export default class SetConverterToArray<T> extends AbstractConverterToArray<T> {
+export default class SetConverterToArray<T> extends Class {
+
+	private _targetCreated: boolean;
+	private _target: IBindableArray<T>;
 
 	/**
 	 * @param source Source set.
 	 * @param config Converter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractConverterToArray.Config<T>) {
-		super(config, source.silent);
+	constructor(readonly source: ReadonlyBindableSet<T>, config: SetConverterToArray.Config<T>) {
+		super();
+		this._targetCreated = config.target == null;
+		this._target = this._targetCreated ? new BindableArray<T>(source.silent) : config.target;
 		this._target.addAll([...source]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target array.
+	 */
+	get target(): ReadonlyBindableArray<T> {
+		return this._target;
+	}
+
 	protected destroyObject() {
 		this._target.removeValues(this.source);
+		if (this._targetCreated) {
+			this._target.destroy();
+		}
 		super.destroyObject();
 	}
 
@@ -56,6 +74,27 @@ export default class SetConverterToArray<T> extends AbstractConverterToArray<T> 
 	private _onClear(oldContents: ReadonlySet<T>) {
 		this._target.removeValues(oldContents);
 	}
+
+	protected _splice(removedValueSet: ReadonlySet<T>, addedValueSet: ReadonlySet<T>) {
+		const filteredValues = this.target.native.filter(
+			value => !removedValueSet.has(value) || !addedValueSet.has(value));
+		const addedValues = [...addedValueSet].filter(value => !removedValueSet.has(value));
+		this._target.trySplice(
+			this.target.detectFilter(filteredValues) || [],
+			[new IndexItems(filteredValues.length, addedValues)]);
+	}
+}
+
+namespace SetConverterToArray {
+	/**
+	 * SetConverterToArray configuration.
+	 */
+	export interface Config<T> {
+		/**
+		 * Target array. By default, created automatically.
+		 */
+		readonly target?: IBindableArray<T>;
+	}
 }
 
 /**
@@ -63,7 +102,7 @@ export default class SetConverterToArray<T> extends AbstractConverterToArray<T> 
  * @param source Source set.
  * @returns Target array.
  */
-export function setToArray<T>(source: ReadonlyBindableSet<T>): DestroyableReadonlyBindableArray<T> {
+export function startConvertingSetToArray<T>(source: ReadonlyBindableSet<T>): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
 		return new BindableArray(source, true);
 	}

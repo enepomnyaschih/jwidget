@@ -24,51 +24,51 @@ SOFTWARE.
 
 import BindableSet from '../BindableSet';
 import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
-import IBindableMap from '../IBindableMap';
-import ReadonlyBindableMap from '../ReadonlyBindableMap';
-import AbstractConverterToSet from './AbstractConverterToSet';
+import IBindableSet from '../IBindableSet';
+import ReadonlyBindableSet from '../ReadonlyBindableSet';
+import AbstractValueCollector from './AbstractValueCollector';
 
 /**
- * AbstractConverterToSet implementation for maps.
+ * Value collector implementation for sets. Can also be served as a set copier.
  */
-export default class MapConverterToSet<V> extends AbstractConverterToSet<V> {
+export default class SetValueCollector<T> extends AbstractValueCollector<T> {
 
 	/**
-	 * @param source Source map.
-	 * @param config Converter configuration.
+	 * @param source Source set.
+	 * @param config Collector configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<unknown, V>, config: AbstractConverterToSet.Config<V>) {
+	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractValueCollector.Config<T>) {
 		super(config, source.silent);
-		this._target.tryAddAll(source.values());
+		this._target.tryAddAll(source);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	protected destroyObject() {
-		this._target.tryDeleteAll(this.source.values());
+		this._target.tryDeleteAll(this.source);
 		super.destroyObject();
 	}
 
-	private _onSplice(spliceResult: IBindableMap.SpliceResult<unknown, V>) {
-		this._target.trySplice(
-			spliceResult.removedEntries.values(),
-			spliceResult.addedEntries.values());
+	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
+		this._target.trySplice(spliceResult.removedValues, spliceResult.addedValues);
 	}
 
-	private _onClear(oldContents: ReadonlyMap<unknown, V>) {
-		this._target.tryDeleteAll(oldContents.values());
+	private _onClear(oldContents: ReadonlySet<T>) {
+		this._target.tryDeleteAll(oldContents);
 	}
 }
 
 /**
- * Converts map to set and starts synchronization.
- * @param source Source map.
+ * Creates a copy of a set and starts synchronization.
+ * @param source Source set.
  * @returns Target set.
  */
-export function mapToSet<T>(source: ReadonlyBindableMap<unknown, T>): DestroyableReadonlyBindableSet<T> {
+export function startCollectingSetValues<T>(source: ReadonlyBindableSet<T>): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
-		return new BindableSet(source.values(), true);
+		return new BindableSet(source, true);
 	}
 	const target = new BindableSet<T>();
-	return target.owning(new MapConverterToSet<T>(source, {target}));
+	return target.owning(new SetValueCollector<T>(source, {target}));
 }
+
+export const startCopyingSet = startCollectingSetValues;

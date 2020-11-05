@@ -23,17 +23,23 @@ SOFTWARE.
 */
 
 import BindableMap from '../BindableMap';
+import Class from "../Class";
 import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import IBindableMap from '../IBindableMap';
 import {filter} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
-import AbstractFilterer from './AbstractFilterer';
 
 /**
- * AbstractFilterer implementation for maps.
+ * Map filterer. Builds a new map consisting of values the callback function returns a truthy value for, and
+ * starts continuous synchronization. Preserves value keys.
  */
-class MapFilterer<K, V> extends AbstractFilterer<V> {
+class MapFilterer<K, V> extends Class {
 
+	private _targetCreated: boolean;
+
+	/**
+	 * Target map.
+	 */
 	readonly target: IBindableMap<K, V>;
 
 	/**
@@ -41,10 +47,11 @@ class MapFilterer<K, V> extends AbstractFilterer<V> {
 	 * @param test Filtering criteria.
 	 * @param config Filterer configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<K, V>, test: (value: V) => boolean,
+	constructor(readonly source: ReadonlyBindableMap<K, V>, private test: (value: V) => boolean,
 				config: MapFilterer.Config<K, V> = {}) {
-		super(test);
-		this.target = config.target ?? this.own(new BindableMap<K, V>(this.source.silent));
+		super();
+		this._targetCreated = config.target == null;
+		this.target = this._targetCreated ? new BindableMap<K, V>(this.source.silent) : config.target;
 		this.target.trySetAll(filter(source.native, this.test));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
@@ -53,6 +60,10 @@ class MapFilterer<K, V> extends AbstractFilterer<V> {
 
 	protected destroyObject() {
 		this.target.tryRemoveAll(this.source.keys());
+		if (this._targetCreated) {
+			this.target.destroy();
+		}
+		this.test = null;
 		super.destroyObject();
 	}
 
@@ -91,8 +102,8 @@ namespace MapFilterer {
  * @param test Filtering criteria.
  * @returns Target map.
  */
-export function filterMap<K, V>(source: ReadonlyBindableMap<K, V>,
-								test: (value: V) => boolean): DestroyableReadonlyBindableMap<K, V> {
+export function startFilteringMap<K, V>(source: ReadonlyBindableMap<K, V>,
+										test: (value: V) => boolean): DestroyableReadonlyBindableMap<K, V> {
 	if (source.silent) {
 		return new BindableMap(filter(source.native, test));
 	}
