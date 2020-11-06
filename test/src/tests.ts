@@ -37,3 +37,4 @@ import "./collection/ArrayInserter";
 import "./collection/ArrayMapper";
 import "./collection/ArrayMerger";
 import "./collection/ArrayObserver";
+import "./collection/ArrayReverser";
