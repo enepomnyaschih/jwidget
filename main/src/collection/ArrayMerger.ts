@@ -130,8 +130,19 @@ class ArrayMerger<T> extends Class {
 				indexes[i] -= count;
 			}
 		});
-		const segmentsToAdd = spliceResult.addedSegments.map(
-			indexItems => new IndexItems<T>(indexes[indexItems.index], this._merge(indexItems.items)));
+		const segmentsToAdd = spliceResult.addedSegments.map(indexItems => {
+			let startIndex = indexes[indexItems.index];
+			const segment = new IndexItems<T>(startIndex, this._merge(indexItems.items));
+			for (let i = 0; i < indexItems.items.length; ++i) {
+				const length = indexItems.items[i].length.get();
+				indexes.splice(indexItems.index + i, 0, startIndex);
+				for (let j = indexItems.index + i + 1; j < indexes.length; ++j) {
+					indexes[j] += length;
+				}
+				startIndex += length;
+			}
+			return segment;
+		});
 		this._target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
 

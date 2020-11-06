@@ -35,3 +35,4 @@ import "./Switcher";
 import "./collection/ArrayFilterer";
 import "./collection/ArrayInserter";
 import "./collection/ArrayMapper";
+import "./collection/ArrayMerger";
