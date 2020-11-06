@@ -179,7 +179,28 @@ describe("ArrayValueCollector", () => {
 		assert.isFalse(hasBindings(source));
 	});
 
-	// This synchronizer doesn't support multiple sources for one target.
+	it("should support multiple sources", () => {
+		const source1 = new BindableArray([1, 2, 3]);
+		const source2 = new BindableArray([4, 5]);
+		const target = new BindableSet<number>();
+		const collector1 = new ArrayValueCollector(source1, {target});
+		const collector2 = new ArrayValueCollector(source2, {target});
+		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5]);
+		source1.add(6);
+		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 6]);
+		source2.remove(0);
+		expect(normalizeValues(target)).eql([1, 2, 3, 5, 6]);
+		collector1.destroy();
+		expect(normalizeValues(target)).eql([5]);
+		source2.add(6);
+		expect(normalizeValues(target)).eql([5, 6]);
+		collector2.destroy();
+		expect(normalizeValues(target)).eql([]);
+		source1.add(10);
+		expect(normalizeValues(target)).eql([]);
+		source2.add(11);
+		expect(normalizeValues(target)).eql([]);
+	});
 });
 
 function listen(set: ReadonlyBindableSet<any>) {
