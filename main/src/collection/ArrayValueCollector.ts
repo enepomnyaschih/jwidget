@@ -22,10 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableSet from '../BindableSet';
 import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
 import IBindableArray from '../IBindableArray';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
-import BindableSet from '../BindableSet';
 import AbstractValueCollector from './AbstractValueCollector';
 
 /**

@@ -25,13 +25,13 @@ SOFTWARE.
 import * as ArrayUtils from '../ArrayUtils';
 import BindableArray from '../BindableArray';
 import Class from '../Class';
-import {startMappingArray} from "../collection/ArrayMapper";
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
 import {destroy} from '../index';
 import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
+import {startMappingArray} from "./ArrayMapper";
 
 /**
  * Array merger.
@@ -51,7 +51,7 @@ class ArrayMerger<T> extends Class {
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? this._createTarget(source) : config.target;
 		this._bunches = startMappingArray<ReadonlyBindableArray<T>, Bunch<T>>(source,
-				bunch => new Bunch<T>(this.source, this._target, bunch), {destroy});
+			bunch => new Bunch<T>(this.source, this._target, bunch), {destroy});
 		this._target.addAll(this._getAllItems());
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));

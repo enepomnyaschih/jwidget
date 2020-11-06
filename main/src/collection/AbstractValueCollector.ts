@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import BindableSet from '../BindableSet';
 import Class from '../Class';
 import IBindableSet from '../IBindableSet';
-import BindableSet from '../BindableSet';
 import ReadonlyBindableSet from "../ReadonlyBindableSet";
 
 /**
