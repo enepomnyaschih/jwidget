@@ -66,7 +66,7 @@ abstract class AbstractObserver<T> extends Class {
 		}
 	}
 
-	protected _doClearItems(items: Iterable<T>) {
+	protected _clearItems(items: Iterable<T>) {
 		if (this._clear) {
 			this._clear(items);
 		} else {

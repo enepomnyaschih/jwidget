@@ -22,38 +22,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import IBindableSet from '../IBindableSet';
-import ReadonlyBindableSet from '../ReadonlyBindableSet';
+import IBindableMap from '../IBindableMap';
+import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractObserver from './AbstractObserver';
 
 /**
- * AbstractObserver implementation for sets.
+ * AbstractObserver implementation for maps.
  */
-export default class SetObserver<T> extends AbstractObserver<T> {
+export default class MapKeyObserver<T> extends AbstractObserver<T> {
 	/**
-	 * @param source Source set.
+	 * @param source Source map.
 	 * @param config Observer configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractObserver.Config<T>) {
+	constructor(readonly source: ReadonlyBindableMap<T, unknown>, config: AbstractObserver.Config<T>) {
 		super(config);
-		this._addItems(source);
+		this._addItems(source.keys());
 		this.own(source.onSplice.listen(this._onSplice, this));
+		this.own(source.onReindex.listen(this._onReindex, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	protected destroyObject() {
 		if (this.source.native.size !== 0) {
-			this._clearItems(this.source);
+			this._clearItems(this.source.keys());
 		}
 		super.destroyObject();
 	}
 
-	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
-		this._removeItems(spliceResult.removedValues);
-		this._addItems(spliceResult.addedValues);
+	private _onSplice(spliceResult: IBindableMap.SpliceResult<T, unknown>) {
+		this._removeItems(spliceResult.removedEntries.keys());
+		this._addItems(spliceResult.addedEntries.keys());
 	}
 
-	private _onClear(oldContents: ReadonlySet<T>) {
-		this._clearItems(oldContents);
+	private _onReindex(keyMapping: ReadonlyMap<T, T>) {
+		this._clearItems(keyMapping.keys());
+		this._addItems(keyMapping.values());
+	}
+
+	private _onClear(oldContents: ReadonlyMap<T, unknown>) {
+		this._clearItems(oldContents.keys());
 	}
 }

@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import {backForEach} from "../ArrayUtils";
 import IBindableArray from '../IBindableArray';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractObserver from './AbstractObserver';
@@ -44,7 +45,7 @@ export default class ArrayObserver<T> extends AbstractObserver<T> {
 
 	protected destroyObject() {
 		if (this.source.native.length !== 0) {
-			this._doClearItems(this.source.native);
+			this._clearArrayItems(this.source.native);
 		}
 		super.destroyObject();
 	}
@@ -57,7 +58,7 @@ export default class ArrayObserver<T> extends AbstractObserver<T> {
 			this._addItems(this.source.native);
 		} else {
 			// else, splice the elements
-			this._removeItems(removedItems);
+			this._removeArrayItems(removedItems);
 			this._addItems(spliceResult.addedItems);
 		}
 	}
@@ -72,6 +73,21 @@ export default class ArrayObserver<T> extends AbstractObserver<T> {
 	}
 
 	private _onClear(oldContents: readonly T[]) {
-		this._doClearItems(oldContents);
+		this._clearArrayItems(oldContents);
+	}
+
+	private _removeArrayItems(items: readonly T[]) {
+		if (!this._remove) {
+			return;
+		}
+		backForEach(items, this._remove);
+	}
+
+	private _clearArrayItems(items: readonly T[]) {
+		if (this._clear) {
+			this._clear(items);
+		} else {
+			this._removeArrayItems(items);
+		}
 	}
 }

@@ -29,7 +29,7 @@ import AbstractObserver from './AbstractObserver';
 /**
  * AbstractObserver implementation for maps.
  */
-export default class MapObserver<T> extends AbstractObserver<T> {
+export default class MapValueObserver<T> extends AbstractObserver<T> {
 	/**
 	 * @param source Source map.
 	 * @param config Observer configuration.
@@ -43,7 +43,7 @@ export default class MapObserver<T> extends AbstractObserver<T> {
 
 	protected destroyObject() {
 		if (this.source.native.size !== 0) {
-			this._doClearItems(this.source.values());
+			this._clearItems(this.source.values());
 		}
 		super.destroyObject();
 	}
@@ -54,6 +54,6 @@ export default class MapObserver<T> extends AbstractObserver<T> {
 	}
 
 	private _onClear(oldContents: ReadonlyMap<unknown, T>) {
-		this._doClearItems(oldContents.values());
+		this._clearItems(oldContents.values());
 	}
 }

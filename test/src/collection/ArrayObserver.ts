@@ -24,27 +24,27 @@ SOFTWARE.
 
 import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
-import ArrayInserter from "jwidget/collection/ArrayInserter";
+import ArrayObserver from "jwidget/collection/ArrayObserver";
 import IndexCount from "jwidget/IndexCount";
 import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 
-describe("ArrayInserter", () => {
+describe("ArrayObserver", () => {
 	it("should call add callback in direct order initially", () => {
 		const source = new BindableArray([5, 2, 8]);
 		const {messages} = observe(source);
 		expect(messages).eql([
-			["add", 5, 0],
-			["add", 2, 1],
-			["add", 8, 2]
+			["add", 5],
+			["add", 2],
+			["add", 8]
 		]);
 	});
 
 	it("should call clear callback on destruction", () => {
 		const source = new BindableArray([5, 2, 8]);
-		const {messages, inserter} = observe(source, true);
-		inserter.destroy();
+		const {messages, observer} = observe(source, true);
+		observer.destroy();
 		expect(messages).eql([
 			["clear", [5, 2, 8]]
 		]);
@@ -52,19 +52,19 @@ describe("ArrayInserter", () => {
 
 	it("should call remove callback on destruction if clear callback is omitted", () => {
 		const source = new BindableArray([5, 2, 8]);
-		const {messages, inserter} = observe(source, true, true);
-		inserter.destroy();
+		const {messages, observer} = observe(source, true, true);
+		observer.destroy();
 		expect(messages).eql([
-			["remove", 8, 2],
-			["remove", 2, 1],
-			["remove", 5, 0]
+			["remove", 8],
+			["remove", 2],
+			["remove", 5]
 		]);
 	});
 
 	it("should not call clear callback on destruction if the source empty", () => {
 		const source = new BindableArray();
-		const {messages, inserter} = observe(source, true, true);
-		inserter.destroy();
+		const {messages, observer} = observe(source, true, true);
+		observer.destroy();
 		expect(messages).eql([]);
 	});
 
@@ -75,13 +75,13 @@ describe("ArrayInserter", () => {
 			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7
 			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
 		expect(messages).eql([
-			["remove", 8, 4],
-			["remove", 2, 1],
-			["remove", 5, 0],
-			["add", 3, 1],
-			["add", 4, 2],
-			["add", 1, 4],
-			["add", 1, 5]
+			["remove", 8],
+			["remove", 2],
+			["remove", 5],
+			["add", 3],
+			["add", 4],
+			["add", 1],
+			["add", 1]
 		]);
 	});
 
@@ -90,33 +90,23 @@ describe("ArrayInserter", () => {
 		const {messages} = observe(source, true);
 		source.set(2, 1); // 5, 2, 1, 7, 8
 		expect(messages).eql([
-			["remove", 8, 2],
-			["add", 1, 2]
+			["remove", 8],
+			["add", 1]
 		]);
 	});
 
-	it("should handle move message", () => {
+	it("should not handle move message", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const {messages} = observe(source, true);
 		source.move(1, 3); // 5, 8, 7, 2, 8
-		expect(messages).eql([
-			["remove", 2, 1],
-			["add", 2, 3]
-		]);
+		expect(messages).eql([]);
 	});
 
-	it("should handle reorder message", () => {
+	it("should not handle reorder message", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const {messages} = observe(source, true);
 		source.reorder([2, 4, 3, 0, 1]); // 7, 8, 5, 8, 2
-		expect(messages).eql([
-			["clear", [5, 2, 8, 7, 8]],
-			["add", 7, 0],
-			["add", 8, 1],
-			["add", 5, 2],
-			["add", 8, 3],
-			["add", 2, 4]
-		]);
+		expect(messages).eql([]);
 	});
 
 	it("should handle clear message", () => {
@@ -130,21 +120,21 @@ describe("ArrayInserter", () => {
 
 	it("should unbind all listeners on destruction", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
-		const {inserter} = observe(source, true);
+		const {observer} = observe(source, true);
 		assert.isTrue(hasBindings(source));
-		inserter.destroy();
+		observer.destroy();
 		assert.isFalse(hasBindings(source));
 	});
 });
 
 function observe<T>(array: ReadonlyBindableArray<T>, withoutInit: boolean = false, withoutClear: boolean = false) {
 	const messages: any[] = [];
-	const inserter = new ArrayInserter(array, {
-		add: (item, index) => {
-			messages.push(["add", item, index]);
+	const observer = new ArrayObserver(array, {
+		add: item => {
+			messages.push(["add", item]);
 		},
-		remove: (item, index) => {
-			messages.push(["remove", item, index]);
+		remove: item => {
+			messages.push(["remove", item]);
 		},
 		clear: withoutClear ? null : items => {
 			messages.push(["clear", items]);
@@ -153,7 +143,7 @@ function observe<T>(array: ReadonlyBindableArray<T>, withoutInit: boolean = fals
 	if (withoutInit) {
 		messages.splice(0);
 	}
-	return {messages, inserter};
+	return {messages, observer};
 }
 
 function hasBindings(array: ReadonlyBindableArray<unknown>) {
