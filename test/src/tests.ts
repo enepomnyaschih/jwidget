@@ -38,3 +38,4 @@ import "./collection/ArrayMapper";
 import "./collection/ArrayMerger";
 import "./collection/ArrayObserver";
 import "./collection/ArrayReverser";
+import "./collection/ArrayValueCollector";

@@ -500,6 +500,18 @@ describe("BindableSet.splice", () => {
 		expect(parseSpliceResult(result)).eql([[2], [4]]);
 	});
 
+	it("should ignore values removed and added back", () => {
+		const set = new BindableSet([1, 2, 3]);
+		const messages = listen(set);
+		const result = set.splice([2, 3], [4, 2]);
+		expect(normalizeValues(set.native)).eql([1, 2, 4]);
+		expect(messages).eql([
+			["splice", [3], [4]],
+			["change"]
+		]);
+		expect(parseSpliceResult(result)).eql([[3], [4]]);
+	});
+
 	it("should not destroy the values by default", () => {
 		const values = [
 			newDestroyFailObject(),

@@ -37,7 +37,7 @@ export default class ArrayValueCollector<T> extends AbstractValueCollector<T> {
 	 * @param source Source array.
 	 * @param config Collector configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableArray<T>, config: AbstractValueCollector.Config<T>) {
+	constructor(readonly source: ReadonlyBindableArray<T>, config?: AbstractValueCollector.Config<T>) {
 		super(config, source.silent);
 		this._target.tryAddAll(source);
 		this.own(source.onSplice.listen(this._onSplice, this));

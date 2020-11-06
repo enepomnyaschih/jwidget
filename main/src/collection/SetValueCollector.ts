@@ -37,7 +37,7 @@ export default class SetValueCollector<T> extends AbstractValueCollector<T> {
 	 * @param source Source set.
 	 * @param config Collector configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<T>, config: AbstractValueCollector.Config<T>) {
+	constructor(readonly source: ReadonlyBindableSet<T>, config?: AbstractValueCollector.Config<T>) {
 		super(config, source.silent);
 		this._target.tryAddAll(source);
 		this.own(source.onSplice.listen(this._onSplice, this));

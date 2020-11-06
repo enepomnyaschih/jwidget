@@ -37,7 +37,7 @@ export default class MapValueCollector<V> extends AbstractValueCollector<V> {
 	 * @param source Source map.
 	 * @param config Converter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableMap<unknown, V>, config: AbstractValueCollector.Config<V>) {
+	constructor(readonly source: ReadonlyBindableMap<unknown, V>, config?: AbstractValueCollector.Config<V>) {
 		super(config, source.silent);
 		this._target.tryAddAll(source.values());
 		this.own(source.onSplice.listen(this._onSplice, this));

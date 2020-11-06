@@ -178,9 +178,10 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 				addedValues.add(value);
 			}
 		}
+		const valuesToAddSet = new Set(valuesToAdd);
 		const removedValues = new Set<T>();
 		for (let value of valuesToRemove) {
-			if (!addedValues.has(value) && this._native.has(value)) {
+			if (!valuesToAddSet.has(value) && this._native.has(value)) {
 				this._native.delete(value);
 				removedValues.add(value);
 			}
@@ -191,7 +192,11 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 
 		const spliceResult: IBindableSet.SpliceResult<T> = {removedValues, addedValues};
 		this._size.set(this._size.get() - removedValues.size + addedValues.size);
-		this._onSplice.dispatch(spliceResult);
+		if (this._size.get() === 0) {
+			this._onClear.dispatch(removedValues);
+		} else {
+			this._onSplice.dispatch(spliceResult);
+		}
 		this._onChange.dispatch();
 		if (this._ownsValues) {
 			removedValues.forEach(destroy);

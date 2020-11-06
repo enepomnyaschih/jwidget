@@ -36,7 +36,7 @@ abstract class AbstractValueCollector<T> extends Class {
 
 	protected _target: IBindableSet<T>;
 
-	protected constructor(config: AbstractValueCollector.Config<T>, silent: boolean) {
+	protected constructor(config: AbstractValueCollector.Config<T> = {}, silent: boolean) {
 		super();
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new BindableSet<T>(silent) : config.target;
