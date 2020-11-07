@@ -28,6 +28,7 @@ import Destructor from '../Destructor';
 import IBindableSet from '../IBindableSet';
 import {destroy} from '../index';
 import {map} from "../IterableUtils";
+import {healthyManValues} from "../MapUtils";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractMapper from './AbstractMapper';
 
@@ -138,7 +139,7 @@ export function startMappingSet<T, U>(source: ReadonlyBindableSet<T>, create: (s
 	}
 	if (config.destroy && config.destroy !== destroy) {
 		const mapping = new Map(map(source, data => [data, create(data)]));
-		const target = new BindableSet(mapping.values(), true);
+		const target = new BindableSet(healthyManValues(mapping), true);
 		target.own(new Destructor(() => mapping.forEach(config.destroy)));
 		return target;
 	}

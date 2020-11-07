@@ -27,7 +27,7 @@ import Class from "../Class";
 import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import IBindableMap from '../IBindableMap';
 import {filter as filterKeys} from "../IterableUtils";
-import {filter as filterEntries} from "../MapUtils";
+import {filter as filterEntries, healthyManKeys} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 
 /**
@@ -61,7 +61,7 @@ class MapFilterer<K, V> extends Class {
 	}
 
 	protected destroyObject() {
-		this.target.tryRemoveAll(this._prepareToRemove(this.source.keys()));
+		this.target.tryRemoveAll(this._prepareToRemove(this.source.native));
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -72,7 +72,7 @@ class MapFilterer<K, V> extends Class {
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, V>) {
 		this.target.trySplice(
-			this._prepareToRemove(spliceResult.removedEntries.keys()),
+			this._prepareToRemove(spliceResult.removedEntries),
 			this._prepareToSet(spliceResult.addedEntries));
 	}
 
@@ -81,7 +81,7 @@ class MapFilterer<K, V> extends Class {
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, V>) {
-		this.target.tryRemoveAll(this._prepareToRemove(oldContents.keys()));
+		this.target.tryRemoveAll(this._prepareToRemove(oldContents));
 	}
 
 	private _prepareToSet(entries: ReadonlyMap<K, V>) {
@@ -92,8 +92,8 @@ class MapFilterer<K, V> extends Class {
 		return entriesToAdd;
 	}
 
-	private _prepareToRemove(keys: Iterable<K>) {
-		const keysToRemove = filterKeys(keys, key => this.controlledKeys.has(key));
+	private _prepareToRemove(entries: ReadonlyMap<K, V>) {
+		const keysToRemove = filterKeys(healthyManKeys(entries), key => this.controlledKeys.has(key));
 		for (let key of keysToRemove) {
 			this.controlledKeys.delete(key);
 		}

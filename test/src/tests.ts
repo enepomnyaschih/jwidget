@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 import "./BindableArray";
 import "./BindableMap";
 import "./BindableSet";
@@ -40,5 +43,6 @@ import "./collection/ArrayReverser";
 import "./collection/ArrayValueCollector";
 import "./collection/MapFilterer";
 import "./collection/MapInserter";
+import "./collection/MapKeyCollector";
 import "./collection/MapMapper";
 import "./collection/MapValueCollector";

@@ -67,13 +67,13 @@ abstract class AbstractTemplate {
 		this._backtrace("root");
 
 		// check for trash
-		const parentIds = this.parentIds.keys();
+		const parentIds = Array.from(this.parentIds.keys());
 		// some ID's may not have been backtraced if they are assigned to the root element,
 		// so we must backtrace them to make sure that everything is processed
 		for (let id of parentIds) {
 			this._backtrace(id);
 		}
-		const remainingIds = this.parentIds.keys();
+		const remainingIds = Array.from(this.parentIds.keys());
 		if (this.parentIds.size !== 0) {
 			console.warn("jWidget template '" + this.prefixes.join(" ") +
 				"' has cyclic dependencies between the next jwid's: " + [...remainingIds].join(", ") +

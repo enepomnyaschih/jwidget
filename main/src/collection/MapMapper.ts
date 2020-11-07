@@ -27,7 +27,7 @@ import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import Destructor from '../Destructor';
 import IBindableMap from '../IBindableMap';
 import {destroy} from '../index';
-import {map} from "../MapUtils";
+import {healthyManKeys, map} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import {getDifference} from "../SetUtils";
 import AbstractMapper from './AbstractMapper';
@@ -61,7 +61,7 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	}
 
 	protected destroyObject() {
-		this._destroyItems(this.target.tryRemoveAll(this.source.keys()) ?? new Map(), this.source.native);
+		this._destroyItems(this.target.tryRemoveAll(healthyManKeys(this.source)) ?? new Map(), this.source.native);
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
@@ -80,7 +80,7 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	private _onSplice(sourceResult: IBindableMap.SpliceResult<K, T>) {
 		const {removedEntries, addedEntries} = sourceResult;
 		const targetResult = this.target.trySplice(
-			getDifference(removedEntries.keys(), addedEntries),
+			getDifference(healthyManKeys(removedEntries), addedEntries),
 			map(addedEntries, this._create));
 		if (targetResult !== undefined) {
 			this._destroyItems(targetResult.removedEntries, removedEntries);
@@ -92,7 +92,7 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, T>) {
-		this._destroyItems(this.target.tryRemoveAll(oldContents.keys()), oldContents);
+		this._destroyItems(this.target.tryRemoveAll(healthyManKeys(oldContents)), oldContents);
 	}
 }
 
