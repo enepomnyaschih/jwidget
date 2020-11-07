@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import Class from '../Class';
-import SetObserver from "../collection/SetObserver";
 import Component from '../Component';
 import * as DomUtils from '../DomUtils';
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
@@ -33,10 +32,19 @@ export default class ComponentObserver extends Class {
 
 	constructor(source: ReadonlyBindableSet<Component>, private el: HTMLElement) {
 		super();
-		this.own(new SetObserver(source, {
-			add: value => this._addValue(value),
-			remove: value => this._removeValue(value)
+		this.own(source.onSplice.listen(spliceResult => {
+			for (const value of spliceResult.removedValues) {
+				this._removeValue(value);
+			}
+			for (const value of spliceResult.addedValues) {
+				this._addValue(value);
+			}
 		}));
+		this.own(source.onClear.listen(values => {
+			for (const value of values) {
+				this._removeValue(value);
+			}
+		}))
 	}
 
 	private _addValue(value: Component) {
