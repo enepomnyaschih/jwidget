@@ -25,7 +25,7 @@ SOFTWARE.
 import BindableMap from '../BindableMap';
 import Component from '../Component';
 import IBindableMap from '../IBindableMap';
-import {healthyManKeys, map} from "../MapUtils";
+import {healthyPersonKeys, map} from "../MapUtils";
 import {getDifference} from "../SetUtils";
 import Some from '../Some';
 import ComponentChild from './ComponentChild';
@@ -80,7 +80,7 @@ export default class ComponentChildren extends BindableMap<string, Component> {
 		}
 		const {removedEntries, addedEntries} = spliceResult;
 		const children = map(addedEntries, value => new ComponentChild(this.component, value));
-		this.target.trySplice(getDifference(healthyManKeys(removedEntries), addedEntries), children);
+		this.target.trySplice(getDifference(healthyPersonKeys(removedEntries), addedEntries), children);
 		return spliceResult;
 	}
 

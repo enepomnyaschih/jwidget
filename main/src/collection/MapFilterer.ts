@@ -27,7 +27,7 @@ import Class from "../Class";
 import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import IBindableMap from '../IBindableMap';
 import {filter as filterKeys} from "../IterableUtils";
-import {filter as filterEntries, healthyManKeys} from "../MapUtils";
+import {filter as filterEntries, healthyPersonKeys} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 
 /**
@@ -93,7 +93,7 @@ class MapFilterer<K, V> extends Class {
 	}
 
 	private _prepareToRemove(entries: ReadonlyMap<K, V>) {
-		const keysToRemove = filterKeys(healthyManKeys(entries), key => this.controlledKeys.has(key));
+		const keysToRemove = filterKeys(healthyPersonKeys(entries), key => this.controlledKeys.has(key));
 		for (let key of keysToRemove) {
 			this.controlledKeys.delete(key);
 		}

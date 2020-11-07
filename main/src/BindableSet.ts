@@ -172,7 +172,7 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 
 	trySplice(valuesToRemove: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T> {
 		const addedValues = new Set<T>();
-		for (let value of valuesToAdd) {
+		for (const value of valuesToAdd) {
 			if (!this._native.has(value)) {
 				this._native.add(value);
 				addedValues.add(value);
@@ -180,7 +180,7 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 		}
 		const valuesToAddSet = new Set(valuesToAdd);
 		const removedValues = new Set<T>();
-		for (let value of valuesToRemove) {
+		for (const value of valuesToRemove) {
 			if (!valuesToAddSet.has(value) && this._native.has(value)) {
 				this._native.delete(value);
 				removedValues.add(value);
