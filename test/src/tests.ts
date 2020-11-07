@@ -40,3 +40,4 @@ import "./collection/ArrayReverser";
 import "./collection/ArrayValueCollector";
 import "./collection/MapFilterer";
 import "./collection/MapInserter";
+import "./collection/MapMapper";
