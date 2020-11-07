@@ -280,10 +280,10 @@ function parseSpliceResult<K, V>(spliceResult: IBindableMap.SpliceResult<K, V>) 
 	];
 }
 
-function hasBindings(array: ReadonlyBindableMap<unknown, unknown>) {
-	return hasListeners(array.onSplice) ||
-		hasListeners(array.onReindex) ||
-		hasListeners(array.onClear);
+function hasBindings(map: ReadonlyBindableMap<unknown, unknown>) {
+	return hasListeners(map.onSplice) ||
+		hasListeners(map.onReindex) ||
+		hasListeners(map.onClear);
 }
 
 function hasListeners(dispatcher: Listenable<unknown>) {

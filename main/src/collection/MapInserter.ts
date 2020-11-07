@@ -93,13 +93,14 @@ class MapInserter<K, V> extends Class {
 	}
 
 	private _onReindex(keyMapping: ReadonlyMap<K, K>) {
-		for (let [oldKey, newKey] of keyMapping) {
-			const value = this.source.get(newKey);
-			if (this._remove) {
-				this._remove(value, oldKey);
+		if (this._remove) {
+			for (let [oldKey, newKey] of keyMapping) {
+				this._remove(this.source.get(newKey), oldKey);
 			}
-			if (this._add) {
-				this._add(value, newKey);
+		}
+		if (this._add) {
+			for (let newKey of keyMapping.values()) {
+				this._add(this.source.get(newKey), newKey);
 			}
 		}
 	}
