@@ -456,6 +456,17 @@ describe("BindableSet.splice", () => {
 		]);
 	});
 
+	it("should dispatch clear message when applicable", () => {
+		const set = new BindableSet([1, 2, 3, 4, 5]);
+		const messages = listen(set);
+		set.splice([1, 2, 3, 4, 5, 6], []);
+		expect(messages).eql([
+			["size", 5, 0],
+			["clear", [1, 2, 3, 4, 5]],
+			["change"]
+		]);
+	});
+
 	it("should return the splice result", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		expect(parseSpliceResult(set.splice([2, 3, 6, 7], [4, 5, 8]))).eql([[2, 3], [8]]);

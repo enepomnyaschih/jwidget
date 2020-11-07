@@ -182,24 +182,24 @@ describe("ArrayValueCollector", () => {
 	it("should support multiple sources", () => {
 		const source1 = new BindableArray([1, 2, 3]);
 		const source2 = new BindableArray([4, 5]);
-		const target = new BindableSet<number>();
+		const target = new BindableSet<number>([9]);
 		const collector1 = new ArrayValueCollector(source1, {target});
 		const collector2 = new ArrayValueCollector(source2, {target});
-		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5]);
+		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 9]);
 		source1.add(6);
-		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 6]);
+		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 6, 9]);
 		source2.remove(0);
-		expect(normalizeValues(target)).eql([1, 2, 3, 5, 6]);
+		expect(normalizeValues(target)).eql([1, 2, 3, 5, 6, 9]);
 		collector1.destroy();
-		expect(normalizeValues(target)).eql([5]);
+		expect(normalizeValues(target)).eql([5, 9]);
 		source2.add(6);
-		expect(normalizeValues(target)).eql([5, 6]);
+		expect(normalizeValues(target)).eql([5, 6, 9]);
 		collector2.destroy();
-		expect(normalizeValues(target)).eql([]);
+		expect(normalizeValues(target)).eql([9]);
 		source1.add(10);
-		expect(normalizeValues(target)).eql([]);
+		expect(normalizeValues(target)).eql([9]);
 		source2.add(11);
-		expect(normalizeValues(target)).eql([]);
+		expect(normalizeValues(target)).eql([9]);
 	});
 });
 

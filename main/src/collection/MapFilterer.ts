@@ -26,7 +26,8 @@ import BindableMap from '../BindableMap';
 import Class from "../Class";
 import DestroyableReadonlyBindableMap from '../DestroyableReadonlyBindableMap';
 import IBindableMap from '../IBindableMap';
-import {filter} from "../MapUtils";
+import {filter as filterKeys} from "../IterableUtils";
+import {filter as filterEntries} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 
 /**
@@ -36,6 +37,7 @@ import ReadonlyBindableMap from '../ReadonlyBindableMap';
 class MapFilterer<K, V> extends Class {
 
 	private _targetCreated: boolean;
+	private controlledKeys = new Set<K>();
 
 	/**
 	 * Target map.
@@ -52,25 +54,26 @@ class MapFilterer<K, V> extends Class {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new BindableMap<K, V>(this.source.silent) : config.target;
-		this.target.trySetAll(filter(source.native, this.test));
+		this.target.trySetAll(this._prepareToSet(source.native));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	protected destroyObject() {
-		this.target.tryRemoveAll(this.source.keys());
+		this.target.tryRemoveAll(this._prepareToRemove(this.source.keys()));
 		if (this._targetCreated) {
 			this.target.destroy();
 		}
 		this.test = null;
+		this.controlledKeys = null;
 		super.destroyObject();
 	}
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, V>) {
 		this.target.trySplice(
-			spliceResult.removedEntries.keys(),
-			filter(spliceResult.addedEntries, this.test));
+			this._prepareToRemove(spliceResult.removedEntries.keys()),
+			this._prepareToSet(spliceResult.addedEntries));
 	}
 
 	private _onReindex(keyMapping: ReadonlyMap<K, K>) {
@@ -78,7 +81,23 @@ class MapFilterer<K, V> extends Class {
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, V>) {
-		this.target.tryRemoveAll(oldContents.keys());
+		this.target.tryRemoveAll(this._prepareToRemove(oldContents.keys()));
+	}
+
+	private _prepareToSet(entries: ReadonlyMap<K, V>) {
+		const entriesToAdd = filterEntries(entries, this.test);
+		for (let key of entriesToAdd.keys()) {
+			this.controlledKeys.add(key);
+		}
+		return entriesToAdd;
+	}
+
+	private _prepareToRemove(keys: Iterable<K>) {
+		const keysToRemove = filterKeys(keys, key => this.controlledKeys.has(key));
+		for (let key of keysToRemove) {
+			this.controlledKeys.delete(key);
+		}
+		return keysToRemove;
 	}
 }
 
@@ -105,7 +124,7 @@ namespace MapFilterer {
 export function startFilteringMap<K, V>(source: ReadonlyBindableMap<K, V>,
 										test: (value: V) => boolean): DestroyableReadonlyBindableMap<K, V> {
 	if (source.silent) {
-		return new BindableMap(filter(source.native, test));
+		return new BindableMap(filterEntries(source.native, test), true);
 	}
 	const target = new BindableMap<K, V>();
 	return target.owning(new MapFilterer<K, V>(source, test, {target}));

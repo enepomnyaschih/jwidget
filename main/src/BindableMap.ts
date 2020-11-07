@@ -301,7 +301,11 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		}
 		const spliceResult: IBindableMap.SpliceResult<K, V> = {removedEntries, addedEntries};
 		this._size.set(this._size.get() + addedEntries.size - removedEntries.size);
-		this._onSplice.dispatch(spliceResult);
+		if (this._size.get() === 0) {
+			this._onClear.dispatch(removedEntries);
+		} else {
+			this._onSplice.dispatch(spliceResult);
+		}
 		this._onChange.dispatch();
 		if (this._ownsValues) {
 			removedEntries.forEach((value: any) => {

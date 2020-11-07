@@ -117,7 +117,7 @@ describe("startFilteringArray", () => {
 		]);
 	});
 
-	it("should handle replace message for a missing value", () => {
+	it("should ignore replace message for a missing value", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
 		const messages = listen(target);
@@ -147,7 +147,7 @@ describe("startFilteringArray", () => {
 		]);
 	});
 
-	it("should handle move message for a missing value", () => {
+	it("should ignore move message for a missing value", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
 		const messages = listen(target);
@@ -177,7 +177,7 @@ describe("startFilteringArray", () => {
 		]);
 	});
 
-	it("should handle reorder message for identity", () => {
+	it("should ignore reorder message for identity", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
 		const messages = listen(target);
@@ -208,7 +208,7 @@ describe("startFilteringArray", () => {
 		]);
 	});
 
-	it("should handle clear message for an empty array", () => {
+	it("should ignore clear message for an empty array", () => {
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		const target = startFilteringArray(source, x => x % 3 === 0);
 		const messages = listen(target);
@@ -217,7 +217,7 @@ describe("startFilteringArray", () => {
 		expect(messages).eql([]);
 	});
 
-	it("should handle clear message for a non-empty array", () => {
+	it("should not make any calls on clear", () => {
 		const calls: number[] = [];
 		const source = new BindableArray([5, 2, 8, 7, 8]);
 		startFilteringArray(source, makeTester(x => x % 2 === 0, calls)); // 2, 8, 8

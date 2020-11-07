@@ -620,6 +620,17 @@ describe("BindableMap.splice", () => {
 		]);
 	});
 
+	it("should dispatch clear message when applicable", () => {
+		const map = new BindableMap(getTestInput());
+		const messages = listen(map);
+		map.splice(["a", "b", "c", "d", "e", "f"], new Map());
+		expect(messages).eql([
+			["size", 5, 0],
+			["clear", getTestInput()],
+			["change"]
+		]);
+	});
+
 	it("should return the splice result", () => {
 		const map = new BindableMap(getTestInput());
 		expect(parseSpliceResult(map.splice(["c"], new Map([["b", 3], ["f", 3], ["h", 9]]))))
