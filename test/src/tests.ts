@@ -41,3 +41,4 @@ import "./collection/ArrayValueCollector";
 import "./collection/MapFilterer";
 import "./collection/MapInserter";
 import "./collection/MapMapper";
+import "./collection/MapValueCollector";
