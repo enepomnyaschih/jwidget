@@ -86,7 +86,7 @@ describe("startFilteringSet", () => {
 		]);
 	});
 
-	it("should ignore clear message for an empty array", () => {
+	it("should ignore clear message for an empty set", () => {
 		const source = new BindableSet([5, 2, 8, 7, 10]);
 		const target = startFilteringSet(source, x => x % 3 === 0);
 		const messages = listen(target);
@@ -129,7 +129,7 @@ describe("startFilteringSet", () => {
 	});
 });
 
-describe("ArrayFilterer", () => {
+describe("SetFilterer", () => {
 	// Tests above are not repeated here.
 
 	it("should create a new set by default", () => {

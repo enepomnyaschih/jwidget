@@ -48,4 +48,5 @@ import "./collection/MapMapper";
 import "./collection/MapValueCollector";
 import "./collection/SetConverterToArray";
 import "./collection/SetFilterer";
+import "./collection/SetIndexer";
 import "./collection/SetValueCollector";

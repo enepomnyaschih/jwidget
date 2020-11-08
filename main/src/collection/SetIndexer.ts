@@ -63,7 +63,7 @@ export default class SetIndexer<V, K> extends Class {
 	}
 
 	protected destroyObject() {
-		this._target.tryRemoveAll(map(this.source, this.getKey));
+		this._onClear(this.source.native);
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
@@ -78,8 +78,11 @@ export default class SetIndexer<V, K> extends Class {
 	}
 
 	private _onClear(oldContents: ReadonlySet<V>) {
-		this._target.tryRemoveAll(
-			map(oldContents, this.getKey));
+		if (oldContents.size === this._target.size.get()) {
+			this._target.tryClear();
+		} else {
+			this._target.tryRemoveAll(map(oldContents, this.getKey));
+		}
 	}
 }
 
@@ -104,7 +107,7 @@ namespace SetIndexer {
 export function startIndexingSet<V, K>(source: ReadonlyBindableSet<V>,
 									   getKey: (value: V) => K): DestroyableReadonlyBindableMap<K, V> {
 	if (source.silent) {
-		return new BindableMap(index(source, getKey));
+		return new BindableMap(index(source, getKey), true);
 	}
 	const target = new BindableMap<K, V>();
 	return target.owning(new SetIndexer<V, K>(source, getKey, {target}));
