@@ -91,7 +91,7 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 		for (let data of datas) {
 			const item = this._items.get(data);
 			this._items.delete(data);
-			this._destroy.call(item, data);
+			this._destroy(item, data);
 		}
 	}
 
