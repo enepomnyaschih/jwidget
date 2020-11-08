@@ -100,7 +100,7 @@ namespace SetFilterer {
 export function startFilteringSet<T>(source: ReadonlyBindableSet<T>,
 									 test: (value: T) => boolean): DestroyableReadonlyBindableSet<T> {
 	if (source.silent) {
-		return new BindableSet(filter(source, test));
+		return new BindableSet(filter(source, test), true);
 	}
 	const target = new BindableSet<T>();
 	return target.owning(new SetFilterer<T>(source, test, {target}));
