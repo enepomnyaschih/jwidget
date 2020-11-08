@@ -39,6 +39,7 @@ export default class SetMatchingValueCounter<T> extends Class {
 
 	private _targetCreated: boolean;
 	private _target: IProperty<number>;
+	private _matchingFromThisSource = 0;
 
 	/**
 	 * @param source Source set.
@@ -63,7 +64,7 @@ export default class SetMatchingValueCounter<T> extends Class {
 	}
 
 	protected destroyObject() {
-		this._target.set(0);
+		this._onClear();
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
@@ -86,17 +87,21 @@ export default class SetMatchingValueCounter<T> extends Class {
 	 * they must be retested.
 	 */
 	recount() {
-		this._target.set(count(this.source, this.test));
+		const matching = this._matchingFromThisSource;
+		this._matchingFromThisSource = count(this.source, this.test);
+		this._target.set(this._target.get() + this._matchingFromThisSource - matching);
 	}
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
-		this._target.set(this._target.get() -
-			count(spliceResult.removedValues, this.test) +
-			count(spliceResult.addedValues, this.test));
+		const diff = count(spliceResult.removedValues, this.test) - count(spliceResult.addedValues, this.test);
+		this._matchingFromThisSource -= diff;
+		this._target.set(this._target.get() - diff);
 	}
 
 	private _onClear() {
-		this._target.set(0);
+		const matching = this._matchingFromThisSource;
+		this._matchingFromThisSource = 0;
+		this._target.set(this._target.get() - matching);
 	}
 }
 
@@ -128,7 +133,8 @@ namespace SetMatchingValueCounter {
  * @param test Filtering criteria.
  * @returns Target property.
  */
-export function countSet<T>(source: ReadonlyBindableSet<T>, test: (value: T) => boolean): DestroyableBindable<number> {
+export function startCountingMatchingSetValues<T>(source: ReadonlyBindableSet<T>,
+												  test: (value: T) => boolean): DestroyableBindable<number> {
 	if (source.silent) {
 		return new Property(count(source, test), true);
 	}
