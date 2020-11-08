@@ -51,4 +51,5 @@ import "./collection/SetFilterer";
 import "./collection/SetIndexer";
 import "./collection/SetMapper";
 import "./collection/SetMatchingValueCounter";
+import "./collection/SetSorter";
 import "./collection/SetValueCollector";
