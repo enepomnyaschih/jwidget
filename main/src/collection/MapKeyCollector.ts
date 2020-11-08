@@ -25,7 +25,7 @@ SOFTWARE.
 import BindableSet from '../BindableSet';
 import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
 import IBindableMap from '../IBindableMap';
-import {healthyPersonKeys, healthyPersonValues} from "../MapUtils";
+import {getIterableKeys, getIterableValues} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractValueCollector from './AbstractValueCollector';
 
@@ -40,31 +40,31 @@ export default class MapKeyCollector<K> extends AbstractValueCollector<K> {
 	 */
 	constructor(readonly source: ReadonlyBindableMap<K, unknown>, config?: AbstractValueCollector.Config<K>) {
 		super(config, source.silent);
-		this._target.tryAddAll(healthyPersonKeys(source));
+		this._target.tryAddAll(getIterableKeys(source));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
 	protected destroyObject() {
-		this._target.tryDeleteAll(healthyPersonKeys(this.source));
+		this._target.tryDeleteAll(getIterableKeys(this.source));
 		super.destroyObject();
 	}
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, unknown>) {
 		this._target.trySplice(
-			healthyPersonKeys(spliceResult.removedEntries),
-			healthyPersonKeys(spliceResult.addedEntries));
+			getIterableKeys(spliceResult.removedEntries),
+			getIterableKeys(spliceResult.addedEntries));
 	}
 
 	private _onReindex(keyMapping: ReadonlyMap<K, K>) {
 		this._target.trySplice(
-			healthyPersonKeys(keyMapping),
-			healthyPersonValues(keyMapping));
+			getIterableKeys(keyMapping),
+			getIterableValues(keyMapping));
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, unknown>) {
-		this._target.tryDeleteAll(healthyPersonKeys(oldContents));
+		this._target.tryDeleteAll(getIterableKeys(oldContents));
 	}
 }
 
@@ -75,7 +75,7 @@ export default class MapKeyCollector<K> extends AbstractValueCollector<K> {
  */
 export function startCollectingMapKeys<K>(source: ReadonlyBindableMap<K, unknown>): DestroyableReadonlyBindableSet<K> {
 	if (source.silent) {
-		return new BindableSet(healthyPersonKeys(source), true);
+		return new BindableSet(getIterableKeys(source), true);
 	}
 	const target = new BindableSet<K>();
 	return target.owning(new MapKeyCollector<K>(source, {target}));

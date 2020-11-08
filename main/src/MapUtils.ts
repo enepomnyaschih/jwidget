@@ -30,7 +30,7 @@ export function filter<K, V>(map: ReadonlyMap<K, V>, callback: (value: V, key: K
 
 // Some functions mitigating stupidity of modern JS API. Native methods return Iterator instead of Iterable.
 
-export function healthyPersonKeys<K, V>(map: Iterable<readonly [K, V]>): Iterable<K> {
+export function getIterableKeys<K, V>(map: Iterable<readonly [K, V]>): Iterable<K> {
 	return {
 		[Symbol.iterator]: function* () {
 			for (const [key, _] of map) {
@@ -40,7 +40,7 @@ export function healthyPersonKeys<K, V>(map: Iterable<readonly [K, V]>): Iterabl
 	};
 }
 
-export function healthyPersonValues<K, V>(map: Iterable<readonly [K, V]>): Iterable<V> {
+export function getIterableValues<K, V>(map: Iterable<readonly [K, V]>): Iterable<V> {
 	return {
 		[Symbol.iterator]: function* () {
 			for (const [_, value] of map) {

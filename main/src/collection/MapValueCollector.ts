@@ -25,7 +25,7 @@ SOFTWARE.
 import BindableSet from '../BindableSet';
 import DestroyableReadonlyBindableSet from '../DestroyableReadonlyBindableSet';
 import IBindableMap from '../IBindableMap';
-import {healthyPersonValues} from "../MapUtils";
+import {getIterableValues} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractValueCollector from './AbstractValueCollector';
 
@@ -52,12 +52,12 @@ export default class MapValueCollector<V> extends AbstractValueCollector<V> {
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<unknown, V>) {
 		this._target.trySplice(
-			healthyPersonValues(spliceResult.removedEntries),
-			healthyPersonValues(spliceResult.addedEntries));
+			getIterableValues(spliceResult.removedEntries),
+			getIterableValues(spliceResult.addedEntries));
 	}
 
 	private _onClear(oldContents: ReadonlyMap<unknown, V>) {
-		this._target.tryDeleteAll(healthyPersonValues(oldContents));
+		this._target.tryDeleteAll(getIterableValues(oldContents));
 	}
 }
 
@@ -68,7 +68,7 @@ export default class MapValueCollector<V> extends AbstractValueCollector<V> {
  */
 export function startCollectingMapValues<V>(source: ReadonlyBindableMap<unknown, V>): DestroyableReadonlyBindableSet<V> {
 	if (source.silent) {
-		return new BindableSet(healthyPersonValues(source), true);
+		return new BindableSet(getIterableValues(source), true);
 	}
 	const target = new BindableSet<V>();
 	return target.owning(new MapValueCollector<V>(source, {target}));
