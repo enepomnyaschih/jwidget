@@ -285,7 +285,11 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 			return undefined;
 		}
 		this._length.set(this._native.length);
-		this._onSplice.dispatch(result);
+		if (this._length.get() === 0) {
+			this._onClear.dispatch(result.oldContents);
+		} else {
+			this._onSplice.dispatch(result);
+		}
 		this._onChange.dispatch();
 		if (this._ownsValues) {
 			ArrayUtils.backForEach(result.removedItems, destroy);

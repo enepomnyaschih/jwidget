@@ -43,7 +43,7 @@ export default class SetConverterToArray<T> extends Class {
 	 * @param source Source set.
 	 * @param config Converter configuration.
 	 */
-	constructor(readonly source: ReadonlyBindableSet<T>, config: SetConverterToArray.Config<T>) {
+	constructor(readonly source: ReadonlyBindableSet<T>, config: SetConverterToArray.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
 		this._target = this._targetCreated ? new BindableArray<T>(source.silent) : config.target;
@@ -77,7 +77,7 @@ export default class SetConverterToArray<T> extends Class {
 
 	protected _splice(removedValueSet: ReadonlySet<T>, addedValueSet: ReadonlySet<T>) {
 		const filteredValues = this.target.native.filter(
-			value => !removedValueSet.has(value) || !addedValueSet.has(value));
+			value => !removedValueSet.has(value) || addedValueSet.has(value));
 		const addedValues = [...addedValueSet].filter(value => !removedValueSet.has(value));
 		this._target.trySplice(
 			this.target.detectFilter(filteredValues) || [],

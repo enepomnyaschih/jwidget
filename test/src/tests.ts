@@ -46,4 +46,5 @@ import "./collection/MapInserter";
 import "./collection/MapKeyCollector";
 import "./collection/MapMapper";
 import "./collection/MapValueCollector";
+import "./collection/SetConverterToArray";
 import "./collection/SetValueCollector";
