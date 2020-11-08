@@ -30,6 +30,7 @@ import IBindableArray from "jwidget/IBindableArray";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 import ReadonlyBindableSet from "jwidget/ReadonlyBindableSet";
+import {cmpPrimitives} from "jwidget/internal";
 
 describe("startSortingArray", () => {
 	it("should create a new array", () => {
@@ -83,6 +84,20 @@ describe("startSortingArray", () => {
 		assert.isTrue(hasBindings(source));
 		target.destroy();
 		assert.isFalse(hasBindings(source));
+	});
+
+	it("should support custom comparer", () => {
+		const source = new BindableSet([5, 2, 8, 7, 9]);
+		const target = startSortingSet(source, {
+			compare: (x, y) => cmpPrimitives(x % 2, y % 2) || cmpPrimitives(x, y) // even first
+		});
+		expect(target.native).eql([2, 8, 5, 7, 9]);
+	});
+
+	it("should support custom order", () => {
+		const source = new BindableSet([5, 2, 8, 7, 9]);
+		const target = startSortingSet(source, {order: -1});
+		expect(target.native).eql([9, 8, 7, 5, 2]);
 	});
 });
 
@@ -143,6 +158,26 @@ describe("SetSorter", () => {
 		assert.isTrue(hasBindings(source));
 		collector.destroy();
 		assert.isFalse(hasBindings(source));
+	});
+
+	it("should support resorting", () => {
+		let basis = 0;
+		const source = new BindableSet([5, 2, 8, 7, 9]);
+		const target = new BindableArray<number>();
+		const collector = new SetSorter(source, {
+			target,
+			compare: (x, y) => cmpPrimitives((basis + x) % 2, (basis + y) % 2) || cmpPrimitives(x, y)
+			// basis === 0 - even first
+			// basis === 1 - odd first
+		});
+		const messages = listen(target);
+		basis = 1;
+		collector.resort();
+		expect(target.native).eql([5, 7, 9, 2, 8]);
+		expect(messages).eql([
+			["reorder", [2, 8, 5, 7, 9], [3, 4, 0, 1, 2]],
+			["change"]
+		]);
 	});
 
 	it("should support multiple sources", () => {
