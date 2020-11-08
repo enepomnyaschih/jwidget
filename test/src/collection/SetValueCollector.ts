@@ -23,36 +23,30 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import BindableArray from "jwidget/BindableArray";
 import BindableSet from "jwidget/BindableSet";
-import ArrayValueCollector, {startCollectingArrayValues} from "jwidget/collection/ArrayValueCollector";
+import SetValueCollector, {startCollectingSetValues} from "jwidget/collection/SetValueCollector";
 import IBindableSet from "jwidget/IBindableSet";
-import IndexCount from "jwidget/IndexCount";
-import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
-import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 import ReadonlyBindableSet from "jwidget/ReadonlyBindableSet";
 
 describe("startCollectingArrayValues", () => {
 	it("should create a new set", () => {
-		const source = new BindableArray<number>();
-		const target = startCollectingArrayValues(source);
+		const source = new BindableSet<number>();
+		const target = startCollectingSetValues(source);
 		assert.isTrue(target instanceof BindableSet);
 	});
 
 	it("should collect the values initially", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
-		const target = startCollectingArrayValues(source);
+		const source = new BindableSet([5, 2, 8, 7, 9]);
+		const target = startCollectingSetValues(source);
 		expect(normalizeValues(target)).eql([2, 5, 7, 8, 9]);
 	});
 
 	it("should handle splice message", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
-		const target = startCollectingArrayValues(source); // 2, 5, 7, 8, 9
+		const source = new BindableSet([5, 2, 8, 7, 9]);
+		const target = startCollectingSetValues(source); // 2, 5, 7, 8, 9
 		const messages = listen(target);
-		source.splice(
-			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 2])]); // 8, 3, 4, 7, 1, 2
+		source.splice([5, 9], [3, 4, 1]); // 1, 2, 3, 4, 7, 8
 		expect(normalizeValues(target)).eql([1, 2, 3, 4, 7, 8]);
 		expect(messages).eql([
 			["size", 5, 6],
@@ -61,39 +55,9 @@ describe("startCollectingArrayValues", () => {
 		]);
 	});
 
-	it("should handle replace message", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
-		const target = startCollectingArrayValues(source); // 2, 5, 7, 8, 9
-		const messages = listen(target);
-		source.set(1, 1); // 5, 1, 8, 7, 9 => 1, 5, 7, 8, 9
-		expect(normalizeValues(target)).eql([1, 5, 7, 8, 9]);
-		expect(messages).eql([
-			["splice", [2], [1]],
-			["change"]
-		]);
-	});
-
-	it("should ignore move message", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
-		const target = startCollectingArrayValues(source); // 2, 5, 7, 8, 9
-		const messages = listen(target);
-		source.move(1, 3);
-		expect(normalizeValues(target)).eql([2, 5, 7, 8, 9]);
-		expect(messages).eql([]);
-	});
-
-	it("should ignore reorder message", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
-		const target = startCollectingArrayValues(source); // 2, 5, 7, 8, 9
-		const messages = listen(target);
-		source.reorder([2, 4, 3, 0, 1]);
-		expect(normalizeValues(target)).eql([2, 5, 7, 8, 9]);
-		expect(messages).eql([]);
-	});
-
 	it("should handle clear message", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
-		const target = startCollectingArrayValues(source); // 2, 5, 7, 8, 9
+		const source = new BindableSet([5, 2, 8, 7, 9]);
+		const target = startCollectingSetValues(source); // 2, 5, 7, 8, 9
 		const messages = listen(target);
 		source.clear();
 		expect(normalizeValues(target)).eql([]);
@@ -105,42 +69,42 @@ describe("startCollectingArrayValues", () => {
 	});
 
 	it("should create a silent set with proper contents if the source is silent", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9], true);
-		const target = startCollectingArrayValues(source); // 2, 5, 7, 8, 9
+		const source = new BindableSet([5, 2, 8, 7, 9], true);
+		const target = startCollectingSetValues(source); // 2, 5, 7, 8, 9
 		assert.isTrue(target.silent);
 		expect(normalizeValues(target)).eql([2, 5, 7, 8, 9]);
 	});
 
 	it("should unbind all listeners on destruction", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
-		const target = startCollectingArrayValues(source); // 2, 5, 7, 8, 9
+		const source = new BindableSet([5, 2, 8, 7, 9]);
+		const target = startCollectingSetValues(source); // 2, 5, 7, 8, 9
 		assert.isTrue(hasBindings(source));
 		target.destroy();
 		assert.isFalse(hasBindings(source));
 	});
 });
 
-describe("ArrayValueCollector", () => {
+describe("SetValueCollector", () => {
 	// Tests above are not repeated here.
 
 	it("should create a new set by default", () => {
-		const source = new BindableArray<number>();
-		const collector = new ArrayValueCollector(source);
+		const source = new BindableSet<number>();
+		const collector = new SetValueCollector(source);
 		assert.isTrue(collector.target instanceof BindableSet);
 	});
 
 	it("should accept an existing target", () => {
-		const source = new BindableArray<number>();
+		const source = new BindableSet<number>();
 		const target = new BindableSet<number>();
-		const collector = new ArrayValueCollector(source, {target});
+		const collector = new SetValueCollector(source, {target});
 		expect(collector.target).equal(target);
 	});
 
 	it("should fill the target initially", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
+		const source = new BindableSet([5, 2, 8, 7, 9]);
 		const target = new BindableSet<number>();
 		const messages = listen(target);
-		new ArrayValueCollector(source, {target});
+		new SetValueCollector(source, {target});
 		expect(normalizeValues(target)).eql([2, 5, 7, 8, 9]);
 		expect(messages).eql([
 			["size", 0, 5],
@@ -150,16 +114,16 @@ describe("ArrayValueCollector", () => {
 	});
 
 	it("should initialize proper contents if the source is silent", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9], true);
+		const source = new BindableSet([5, 2, 8, 7, 9], true);
 		const target = new BindableSet<number>();
-		new ArrayValueCollector(source, {target});
+		new SetValueCollector(source, {target});
 		expect(normalizeValues(target)).eql([2, 5, 7, 8, 9]);
 	});
 
 	it("should clear the target on destruction", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
+		const source = new BindableSet([5, 2, 8, 7, 9]);
 		const target = new BindableSet<number>();
-		const collector = new ArrayValueCollector(source, {target});
+		const collector = new SetValueCollector(source, {target});
 		const messages = listen(target);
 		collector.destroy();
 		expect(normalizeValues(target)).eql([]);
@@ -171,24 +135,24 @@ describe("ArrayValueCollector", () => {
 	});
 
 	it("should unbind all listeners on destruction", () => {
-		const source = new BindableArray([5, 2, 8, 7, 9]);
+		const source = new BindableSet([5, 2, 8, 7, 9]);
 		const target = new BindableSet<number>();
-		const collector = new ArrayValueCollector(source, {target});
+		const collector = new SetValueCollector(source, {target});
 		assert.isTrue(hasBindings(source));
 		collector.destroy();
 		assert.isFalse(hasBindings(source));
 	});
 
 	it("should support multiple sources", () => {
-		const source1 = new BindableArray([1, 2, 3]);
-		const source2 = new BindableArray([4, 5]);
+		const source1 = new BindableSet([1, 2, 3]);
+		const source2 = new BindableSet([4, 5]);
 		const target = new BindableSet<number>([9]);
-		const collector1 = new ArrayValueCollector(source1, {target});
-		const collector2 = new ArrayValueCollector(source2, {target});
+		const collector1 = new SetValueCollector(source1, {target});
+		const collector2 = new SetValueCollector(source2, {target});
 		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 9]);
 		source1.add(6);
 		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 6, 9]);
-		source2.remove(0);
+		source2.delete(4);
 		expect(normalizeValues(target)).eql([1, 2, 3, 5, 6, 9]);
 		collector1.destroy();
 		expect(normalizeValues(target)).eql([5, 9]);
@@ -227,11 +191,8 @@ function parseSpliceResult<T>(spliceResult: IBindableSet.SpliceResult<T>) {
 	];
 }
 
-function hasBindings(array: ReadonlyBindableArray<unknown>) {
+function hasBindings(array: ReadonlyBindableSet<unknown>) {
 	return hasListeners(array.onSplice) ||
-		hasListeners(array.onReplace) ||
-		hasListeners(array.onMove) ||
-		hasListeners(array.onReorder) ||
 		hasListeners(array.onClear);
 }
 

@@ -29,7 +29,7 @@ import MapKeyCollector, {startCollectingMapKeys} from "jwidget/collection/MapKey
 import IBindableSet from "jwidget/IBindableSet";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableMap from "jwidget/ReadonlyBindableMap";
-import ReadonlyBindableSet from "../../../main/src/ReadonlyBindableSet";
+import ReadonlyBindableSet from "jwidget/ReadonlyBindableSet";
 
 describe("startCollectingMapKeys", () => {
 	it("should create a new set", () => {
