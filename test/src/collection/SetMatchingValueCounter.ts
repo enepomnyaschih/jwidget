@@ -179,6 +179,73 @@ describe("SetMatchingValueCounter", () => {
 		assert.isFalse(hasBindings(source));
 	});
 
+	it("should support reconfiguring", () => {
+		const source = new BindableSet([5, 2, 8, 7, 6]);
+		const target = new Property<number>();
+		const counter = new SetMatchingValueCounter(source, x => x % 2 === 0, {target}); // 2, 6, 8
+		const messages = listen(target);
+		counter.reconfigure({test: x => x % 2 === 1}); // 5, 7
+		expect(target.get()).equal(2);
+		expect(messages).eql([[3, 2]]);
+	});
+
+	it("should support reconfiguring with no changes", () => {
+		const source = new BindableSet([5, 2, 8, 7, 6]);
+		const target = new Property<number>();
+		const counter = new SetMatchingValueCounter(source, x => x % 2 === 0, {target}); // 2, 6, 8
+		const messages = listen(target);
+		counter.reconfigure({test: x => x % 2 === 0});
+		expect(target.get()).equal(3);
+		expect(messages).eql([]);
+	});
+
+	it("should make proper calls on reconfiguring", () => {
+		const calls1: number[] = [];
+		const calls2: number[] = [];
+		const source = new BindableSet([5, 2, 8, 7, 6]);
+		const target = new Property<number>();
+		const counter = new SetMatchingValueCounter(source, makeTester(x => x % 2 === 0, calls1), {target}); // 2, 6, 8
+		calls1.splice(0);
+		counter.reconfigure({test: makeTester(x => x % 2 === 1, calls2)}); // 5, 7
+		expect(normalizeValues(calls1)).eql([]);
+		expect(normalizeValues(calls2)).eql([2, 5, 6, 7, 8]);
+	});
+
+	it("should support recounting", () => {
+		let divisor = 2;
+		const source = new BindableSet([5, 2, 8, 7, 6]);
+		const target = new Property<number>();
+		const counter = new SetMatchingValueCounter(source, x => x % divisor === 0, {target}); // 2, 6, 8
+		const messages = listen(target);
+		divisor = 4;
+		counter.recount();
+		expect(target.get()).equal(1);
+		expect(messages).eql([[3, 1]]);
+	});
+
+	it("should support recounting with no changes", () => {
+		const source = new BindableSet([5, 2, 8, 7, 6]);
+		const target = new Property<number>();
+		const counter = new SetMatchingValueCounter(source, x => x % 2 === 0, {target}); // 2, 6, 8
+		const messages = listen(target);
+		counter.recount();
+		expect(target.get()).equal(3);
+		expect(messages).eql([]);
+	});
+
+	it("should make proper calls on recounting", () => {
+		const calls: number[] = [];
+		let divisor = 2;
+		const source = new BindableSet([5, 2, 8, 7, 6]);
+		const target = new Property<number>();
+		const counter = new SetMatchingValueCounter(source, makeTester(x => x % divisor === 0, calls), {target}); // 2, 6, 8
+		divisor = 4;
+		calls.splice(0);
+		counter.recount();
+		expect(target.get()).eql(1);
+		expect(normalizeValues(calls)).eql([2, 5, 6, 7, 8]);
+	});
+
 	it("should support multiple sources", () => {
 		const source1 = new BindableSet([1, 2, 3]);
 		const source2 = new BindableSet([4, 5, 6]);
@@ -190,6 +257,8 @@ describe("SetMatchingValueCounter", () => {
 		expect(target.get()).equal(5);
 		source2.deleteAll([4, 5]);
 		expect(target.get()).equal(4);
+		collector1.reconfigure({test: x => x % 4 === 0});
+		expect(target.get()).equal(3);
 		collector1.destroy();
 		expect(target.get()).equal(2);
 		source2.add(8);
