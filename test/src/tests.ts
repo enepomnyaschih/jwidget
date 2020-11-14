@@ -25,6 +25,7 @@ SOFTWARE.
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
+import "./ArraySpliceResult";
 import "./BindableArray";
 import "./BindableMap";
 import "./BindableSet";
