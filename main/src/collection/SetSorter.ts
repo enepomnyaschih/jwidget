@@ -127,7 +127,8 @@ export default class SetSorter<T> extends Class {
 		const lTarget = this.target.length.get();
 		for (let iTarget = 0; iTarget < lTarget; ++iTarget) {
 			const value = this.target.get(iTarget);
-			if (valuesToRemove[ArrayUtils.binarySearch(valuesToRemove, value, this._compare, this._order) - 1] === value) {
+			const index = ArrayUtils.binarySearch(valuesToRemove, x => this._order * this._compare(x, value) > 0) - 1;
+			if (valuesToRemove[index] === value) {
 				if (!removeParams) {
 					removeParams = new IndexCount(iTarget, 0);
 					segmentsToRemove.push(removeParams);

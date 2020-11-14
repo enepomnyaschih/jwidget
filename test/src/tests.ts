@@ -26,6 +26,7 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 import "./ArraySpliceResult";
+import "./ArrayUtils";
 import "./BindableArray";
 import "./BindableMap";
 import "./BindableSet";

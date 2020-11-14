@@ -31,21 +31,13 @@ import {identity, initReduceState} from './internal';
 import Reducer from './Reducer';
 
 /**
- * Determines index of the first item which is more (or less if `order` < 0) than the specified value by `compare` function,
- * using binary search. Array must be sorted by `compare` function.
- * Can be used for item insertion easily.
- * If you want to use this method for item removal, you must look at previous item and compare it to `value` first.
+ * Determines index of the first item the `isHigher` callback returns true for. The input array must be ordered in such
+ * a way that all values such that `!isHigher(value)` go before `isHigher(value)`.
  * @param arr Sorted array.
- * @param value Searched value.
- * @param compare Comparer function. Should return positive value if t1 > t2;
- * negative value if t1 < t2; 0 if t1 == t2.
- * Defaults to `cmp`.
- * @param order Sorting order. Positive number if array is sorted ascending, negative if descending.
- * @returns Item index.
+ * @param isHigher Should return true if the argument is "higher" than the searched value.
+ * @returns Array index.
  */
-export function binarySearch<T>(arr: readonly T[], value: T, compare?: (t1: T, t2: T) => number, order?: number): number {
-	compare = compare || cmp;
-	order = order || 1;
+export function binarySearch<T>(arr: readonly T[], isHigher: (value: T) => boolean): number {
 	const length = arr.length;
 	const len2 = length >> 1;
 	let step = 1;
@@ -54,7 +46,7 @@ export function binarySearch<T>(arr: readonly T[], value: T, compare?: (t1: T, t
 	}
 	let index = 0;
 	while (step) {
-		if ((index + step <= length) && (order * compare(value, arr[index + step - 1]) >= 0)) {
+		if ((index + step <= length) && !isHigher(arr[index + step - 1])) {
 			index += step;
 		}
 		step >>= 1;
