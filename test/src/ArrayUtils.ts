@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import {backForEach, binarySearch, reduce} from "jwidget/ArrayUtils";
+import {backForEach, binarySearch, invert, isIdentity, reduce} from "jwidget/ArrayUtils";
 import Reducer from "jwidget/Reducer";
 
 describe("ArrayUtils.binarySearch", () => {
@@ -145,9 +145,54 @@ describe("ArrayUtils.backForEach", () => {
 	});
 });
 
+describe("ArrayUtils.isIdentity", () => {
+	it("should return true for an empty array", () => {
+		assert.isTrue(isIdentity([]));
+	});
+
+	it("should return true for a show identity array", () => {
+		assert.isTrue(isIdentity([0]));
+	});
+
+	it("should return true for a long identity array", () => {
+		assert.isTrue(isIdentity([0, 1, 2, 3, 4]));
+	});
+
+	it("should return false for a short non-identity array", () => {
+		assert.isFalse(isIdentity([1]));
+	});
+
+	it("should return false for a long non-identity array", () => {
+		assert.isFalse(isIdentity([0, 1, 3, 2, 4]));
+	});
+});
+
+describe("ArrayUtils.invert", () => {
+	it("should return a new array instance", () => {
+		const array: number[] = [];
+		expect(invert(array)).not.equal(array);
+	});
+
+	it("should an empty array for an empty array", () => {
+		expect(invert([])).eql([]);
+	});
+
+	it("should return the same array for an identity array", () => {
+		expect(invert([0, 1, 2, 3, 4])).eql([0, 1, 2, 3, 4]);
+	});
+
+	it("should return an inverted array for a non-identity array", () => {
+		expect(invert([0, 3, 2, 4, 1])).eql([0, 4, 2, 1, 3]);
+	});
+
+	it("may return the same array for a special identity array", () => {
+		expect(invert([2, 3, 0, 1, 4])).eql([2, 3, 0, 1, 4]);
+	});
+});
+
 function spy(captureThis: boolean = false) {
 	const calls: any[][] = [];
-	const fn = function(this: any): any {
+	const fn = function (this: any): any {
 		calls.push([...(captureThis ? [this] : []), ...arguments]);
 	};
 	fn.calls = calls;
