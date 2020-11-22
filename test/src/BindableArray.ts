@@ -773,10 +773,11 @@ describe("BindableArray.splice", () => {
 	it("should merge consequent segments", () => {
 		const array = new BindableArray([1, 2, 3, 4, 5]);
 		const messages = listen(array);
-		array.splice(
+		const result = array.splice(
 			[new IndexCount(1, 1), new IndexCount(2, 1)],
 			[new IndexItems(1, [6]), new IndexItems(2, [7])]);
 		expect(array.native).eql([1, 6, 7, 4, 5]);
+		expect(parseSpliceResult(result)).eql([[1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]]);
 		expect(messages).eql([
 			["splice", [1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]],
 			["change"]

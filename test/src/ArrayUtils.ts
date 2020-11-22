@@ -23,9 +23,21 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import {backForEach, binarySearch, invert, isIdentity, merge, move, reduce} from "jwidget/ArrayUtils";
+import {
+	addAll,
+	backForEach,
+	binarySearch,
+	invert,
+	isIdentity,
+	merge,
+	move,
+	reduce,
+	trySplice
+} from "jwidget/ArrayUtils";
+import IBindableArray from "jwidget/IBindableArray";
+import IndexCount from "jwidget/IndexCount";
+import IndexItems from "jwidget/IndexItems";
 import Reducer from "jwidget/Reducer";
-import {addAll} from "../../main/src/ArrayUtils";
 
 describe("ArrayUtils.binarySearch", () => {
 	it("should immediately return 0 for an empty array", () => {
@@ -250,6 +262,73 @@ describe("ArrayUtils.move", () => {
 	});
 });
 
+describe("ArrayUtils.trySplice", () => {
+	it("should remove and add items in middle as documented", () => {
+		const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+		trySplice(array, [
+			new IndexCount(2, 2),
+			new IndexCount(6, 1)
+		], [ // [1, 2, 5, 6, 8, 9]
+			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
+			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+		]);
+		expect(array).eql([1, 10, 11, 2, 5, 12, 13, 6, 8, 9]);
+	});
+
+	it("should remove and add items in front and rear as documented", () => {
+		const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+		trySplice(array, [
+			new IndexCount(0, 2),
+			new IndexCount(7, 2)
+		], [ // [3, 4, 5, 6, 7]
+			new IndexItems(0, [10, 11]), // [10, 11, 3, 4, 5, 6, 7]
+			new IndexItems(7, [12, 13])  // [10, 11, 3, 4, 5, 6, 7, 12, 13]
+		]);
+		expect(array).eql([10, 11, 3, 4, 5, 6, 7, 12, 13]);
+	});
+
+	it("should return the splice result", () => {
+		const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+		expect(parseSpliceResult(trySplice(array, [
+			new IndexCount(2, 2),
+			new IndexCount(6, 1)
+		], [ // [1, 2, 5, 6, 8, 9]
+			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
+			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+		]))).eql([
+			[1, 2, 3, 4, 5, 6, 7, 8, 9],
+			[[2, [3, 4]], [6, [7]]],
+			[[1, [10, 11]], [5, [12, 13]]]
+		]);
+	});
+
+	it("should not change the array if no segments provided", () => {
+		const array = [1, 2, 3, 4, 5];
+		trySplice(array, [], []);
+		expect(array).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should return undefined if no segments provided", () => {
+		const array = [1, 2, 3, 4, 5];
+		assert.isUndefined(trySplice(array, [], []));
+	});
+
+	it("should ignore empty segments", () => {
+		const array = [1, 2, 3, 4, 5];
+		assert.isUndefined(trySplice(array, [new IndexCount(1, 0)], [new IndexItems(1, [])]));
+		expect(array).eql([1, 2, 3, 4, 5]);
+	});
+
+	it("should merge consequent segments", () => {
+		const array = [1, 2, 3, 4, 5];
+		const result = trySplice(array,
+			[new IndexCount(1, 1), new IndexCount(2, 1)],
+			[new IndexItems(1, [6]), new IndexItems(2, [7])]);
+		expect(array).eql([1, 6, 7, 4, 5]);
+		expect(parseSpliceResult(result)).eql([[1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]]);
+	});
+});
+
 function spy(captureThis: boolean = false) {
 	const calls: any[][] = [];
 	const fn = function (this: any): any {
@@ -273,4 +352,12 @@ function assertCalls(expected: any[][], calls: any[][]) {
 			expect(calls[i][j]).equal(expected[i][j]);
 		}
 	}
+}
+
+function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
+	return [
+		spliceResult.oldContents,
+		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
+		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+	];
 }
