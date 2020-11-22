@@ -33,6 +33,7 @@ import "./BindableSet";
 import "./bindAttr";
 import "./bindClass";
 import "./bindCss";
+import "./bindDisplay";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";

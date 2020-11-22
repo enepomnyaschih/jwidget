@@ -26,8 +26,8 @@ import Bindable from './Bindable';
 import Class from './Class';
 import Destroyable from './Destroyable';
 
-class VisibleUpdater extends Class {
-	constructor(private el: JQuery, private property: Bindable<any>) {
+class DisplayUpdater extends Class {
+	constructor(private el: DisplayElement, private property: Bindable<boolean>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
@@ -44,6 +44,10 @@ class VisibleUpdater extends Class {
  * @param property Element visibility.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindDisplay(el: JQuery, property: Bindable<any>): Destroyable {
-	return new VisibleUpdater(el, property);
+export default function bindDisplay(el: DisplayElement, property: Bindable<boolean>): Destroyable {
+	return new DisplayUpdater(el, property);
+}
+
+export interface DisplayElement {
+	css(style: "display", value: "" | "none"): void;
 }
