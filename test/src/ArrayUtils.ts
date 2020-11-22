@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import {backForEach, binarySearch, invert, isIdentity, reduce} from "jwidget/ArrayUtils";
+import {backForEach, binarySearch, invert, isIdentity, merge, reduce} from "jwidget/ArrayUtils";
 import Reducer from "jwidget/Reducer";
 
 describe("ArrayUtils.binarySearch", () => {
@@ -177,7 +177,7 @@ describe("ArrayUtils.invert", () => {
 		expect(invert([])).eql([]);
 	});
 
-	it("should return the same array for an identity array", () => {
+	it("should return an equal array for an identity array", () => {
 		expect(invert([0, 1, 2, 3, 4])).eql([0, 1, 2, 3, 4]);
 	});
 
@@ -185,8 +185,23 @@ describe("ArrayUtils.invert", () => {
 		expect(invert([0, 3, 2, 4, 1])).eql([0, 4, 2, 1, 3]);
 	});
 
-	it("may return the same array for a special identity array", () => {
+	it("may return an equal array for a special identity array", () => {
 		expect(invert([2, 3, 0, 1, 4])).eql([2, 3, 0, 1, 4]);
+	});
+});
+
+describe("ArrayUtils.merge", () => {
+	it("should return a new array instance", () => {
+		const array: number[][] = [];
+		expect(merge(array)).not.equal(array);
+	});
+
+	it("should an empty array for an empty array", () => {
+		expect(merge([])).eql([]);
+	});
+
+	it("should return a merged array", () => {
+		expect(merge([[5, 2], [], [8], [7, 8, 1]])).eql([5, 2, 8, 7, 8, 1]);
 	});
 });
 
