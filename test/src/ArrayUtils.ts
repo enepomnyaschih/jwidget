@@ -32,6 +32,7 @@ import {
 	merge,
 	move,
 	reduce,
+	tryReorder,
 	trySplice
 } from "jwidget/ArrayUtils";
 import IBindableArray from "jwidget/IBindableArray";
@@ -326,6 +327,41 @@ describe("ArrayUtils.trySplice", () => {
 			[new IndexItems(1, [6]), new IndexItems(2, [7])]);
 		expect(array).eql([1, 6, 7, 4, 5]);
 		expect(parseSpliceResult(result)).eql([[1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]]);
+	});
+});
+
+describe("ArrayUtils.tryReorder", () => {
+	it("should reorder array items", () => {
+		const array = [5, 2, 8, 7, 8];
+		tryReorder(array, [2, 4, 3, 0, 1]);
+		expect(array).eql([7, 8, 5, 8, 2]);
+	});
+
+	it("should not change the array if empty", () => {
+		const array: number[] = [];
+		tryReorder(array, []);
+		expect(array).eql([]);
+	});
+
+	it("should not change the array if the indexes are identical", () => {
+		const array = [5, 2, 8, 7, 8];
+		tryReorder(array, [0, 1, 2, 3, 4]);
+		expect(array).eql([5, 2, 8, 7, 8]);
+	});
+
+	it("should return old array contents", () => {
+		const array = [5, 2, 8, 7, 8];
+		expect(tryReorder(array, [2, 4, 3, 0, 1])).eql([5, 2, 8, 7, 8]);
+	});
+
+	it("should return undefined if empty", () => {
+		const array: number[] = [];
+		assert.isUndefined(tryReorder(array, []));
+	});
+
+	it("should return undefined if the indexes are identical", () => {
+		const array = [5, 2, 8, 7, 8];
+		assert.isUndefined(tryReorder(array, [0, 1, 2, 3, 4]));
 	});
 });
 
