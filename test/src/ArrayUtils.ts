@@ -23,7 +23,8 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import {binarySearch} from "jwidget/ArrayUtils";
+import {binarySearch, reduce} from "jwidget/ArrayUtils";
+import Reducer from "jwidget/Reducer";
 
 describe("ArrayUtils.binarySearch", () => {
 	it("should immediately return 0 for an empty array", () => {
@@ -74,3 +75,70 @@ describe("ArrayUtils.binarySearch", () => {
 		expect(binarySearch([-6, -5, -4, -3, -2, -1, 0], value => value > 0)).equal(7);
 	});
 });
+
+describe("ArrayUtils.reduce(Reducer)", () => {
+	it("should call the native method if the initial value is a constant", () => {
+		// given
+		const array = [5, 2, 8, 7, 8];
+		const calls = spy(array, "reduce");
+		const reducer: Reducer<number, number> = {
+			initial: 0,
+			callback: (acc, item) => acc + item
+		};
+
+		// when
+		reduce(array, reducer);
+
+		// then
+		assertCalls([[array, reducer.callback, 0]], calls);
+	});
+
+	it("should call the native method if the initial value is a function", () => {
+		// given
+		const array = [5, 2, 8, 7, 8];
+		const calls = spy(array, "reduce");
+		const reducer: Reducer<number, number> = {
+			initial: () => 0,
+			callback: (acc, item) => acc + item
+		};
+
+		// when
+		reduce(array, reducer);
+
+		// then
+		assertCalls([[array, reducer.callback, 0]], calls);
+	});
+});
+
+describe("ArrayUtils.reduce(callback)", () => {
+	it("should call the native method", () => {
+		// given
+		const array = [5, 2, 8, 7, 8];
+		const calls = spy(array, "reduce");
+		const cb = () => 0;
+
+		// when
+		reduce(array, cb, 0);
+
+		// then
+		assertCalls([[array, cb, 0]], calls);
+	});
+});
+
+function spy(object: any, method: string) {
+	const calls: any[][] = [];
+	object[method] = function() {
+		calls.push([this, ...arguments]);
+	};
+	return calls;
+}
+
+function assertCalls(expected: any[][], calls: any[][]) {
+	expect(calls.length).equal(expected.length);
+	for (let i = 0; i < calls.length; ++i) {
+		expect(calls[i].length).equal(expected[i].length);
+		for (let j = 0; j < calls[i].length; ++j) {
+			expect(calls[i][j]).equal(expected[i][j]);
+		}
+	}
+}
