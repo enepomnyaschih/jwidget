@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import {backForEach, binarySearch, invert, isIdentity, merge, reduce} from "jwidget/ArrayUtils";
+import {backForEach, binarySearch, invert, isIdentity, merge, move, reduce} from "jwidget/ArrayUtils";
 import Reducer from "jwidget/Reducer";
 import {addAll} from "../../main/src/ArrayUtils";
 
@@ -217,6 +217,36 @@ describe("ArrayUtils.addAll", () => {
 		const array = [5, 2, 8, 7, 8];
 		addAll(array, [1, 2], 2)
 		expect(array).eql([5, 2, 1, 2, 8, 7, 8]);
+	});
+});
+
+describe("ArrayUtils.move", () => {
+	it("should move the specified item forwards", () => {
+		const array = [5, 2, 8, 7, 8];
+		move(array, 1, 3);
+		expect(array).eql([5, 8, 7, 2, 8]);
+	});
+
+	it("should move the specified item backwards", () => {
+		const array = [5, 2, 8, 7, 8];
+		move(array, 3, 1);
+		expect(array).eql([5, 7, 2, 8, 8]);
+	});
+
+	it("should return the moved value", () => {
+		const array = [5, 2, 8, 7, 8];
+		expect(move(array, 1, 3)).equal(2);
+	});
+
+	it("should not change the array if the index is the same", () => {
+		const array = [5, 2, 8, 7, 8];
+		move(array, 1, 1);
+		expect(array).eql([5, 2, 8, 7, 8]);
+	});
+
+	it("should return the value if the index is the same", () => {
+		const array = [5, 2, 8, 7, 8];
+		expect(move(array, 1, 1)).equal(2);
 	});
 });
 
