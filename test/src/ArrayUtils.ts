@@ -25,6 +25,7 @@ SOFTWARE.
 import {assert, expect} from "chai";
 import {backForEach, binarySearch, invert, isIdentity, merge, reduce} from "jwidget/ArrayUtils";
 import Reducer from "jwidget/Reducer";
+import {addAll} from "../../main/src/ArrayUtils";
 
 describe("ArrayUtils.binarySearch", () => {
 	it("should immediately return 0 for an empty array", () => {
@@ -202,6 +203,20 @@ describe("ArrayUtils.merge", () => {
 
 	it("should return a merged array", () => {
 		expect(merge([[5, 2], [], [8], [7, 8, 1]])).eql([5, 2, 8, 7, 8, 1]);
+	});
+});
+
+describe("ArrayUtils.addAll", () => {
+	it("should add items to the end by default", () => {
+		const array = [5, 2, 8, 7, 8];
+		addAll(array, [1, 2])
+		expect(array).eql([5, 2, 8, 7, 8, 1, 2]);
+	});
+
+	it("should add items to the middle", () => {
+		const array = [5, 2, 8, 7, 8];
+		addAll(array, [1, 2], 2)
+		expect(array).eql([5, 2, 1, 2, 8, 7, 8]);
 	});
 });
 
