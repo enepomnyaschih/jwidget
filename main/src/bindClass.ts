@@ -25,20 +25,20 @@ SOFTWARE.
 import Bindable from './Bindable';
 import Class from './Class';
 import Destroyable from './Destroyable';
-import Switcher from './Switcher';
 
 class ClassNameUpdater extends Class {
-	constructor(private el: JQuery, property: Bindable<string>) {
+	constructor(private el: ClassNameUpdaterElement, property: Bindable<string>) {
 		super();
-		this.own(new Switcher(property, {
-			init: value => this.el.addClass(value),
-			done: value => this.el.removeClass(value)
+		this.el.addClass(property.get());
+		this.own(property.onChange.listen(({value, oldValue}) => {
+			this.el.removeClass(oldValue);
+			this.el.addClass(value);
 		}));
 	}
 }
 
 class ClassUpdater extends Class {
-	constructor(private el: JQuery, private cls: string, private property: Bindable<any>) {
+	constructor(private el: ClassUpdaterElement, private cls: string, private property: Bindable<any>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
@@ -56,7 +56,7 @@ class ClassUpdater extends Class {
  * @param property Boolean property to bind CSS class to.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindClass(el: JQuery, cls: string, property: Bindable<any>): Destroyable;
+export default function bindClass(el: ClassUpdaterElement, cls: string, property: Bindable<any>): Destroyable;
 
 /**
  * Watches string property modification and updates CSS class name in the DOM element.
@@ -64,7 +64,18 @@ export default function bindClass(el: JQuery, cls: string, property: Bindable<an
  * @param cls CSS class name.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindClass(el: JQuery, cls: Bindable<string>): Destroyable;
-export default function bindClass(el: JQuery, a: any, b?: any): Destroyable {
+export default function bindClass(el: ClassNameUpdaterElement, cls: Bindable<string>): Destroyable;
+export default function bindClass(el: any, a: any, b?: any): Destroyable {
 	return (b != null) ? new ClassUpdater(el, a, b) : new ClassNameUpdater(el, a);
+}
+
+export interface ClassNameUpdaterElement {
+
+	addClass(cls: string): void;
+
+	removeClass(cls: string): void;
+}
+
+export interface ClassUpdaterElement {
+	toggleClass(cls: string, value: boolean): void;
 }
