@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import {binarySearch, reduce} from "jwidget/ArrayUtils";
+import {backForEach, binarySearch, reduce} from "jwidget/ArrayUtils";
 import Reducer from "jwidget/Reducer";
 
 describe("ArrayUtils.binarySearch", () => {
@@ -80,7 +80,7 @@ describe("ArrayUtils.reduce(Reducer)", () => {
 	it("should call the native method if the initial value is a constant", () => {
 		// given
 		const array = [5, 2, 8, 7, 8];
-		const calls = spy(array, "reduce");
+		const calls = spyMethod(array, "reduce");
 		const reducer: Reducer<number, number> = {
 			initial: 0,
 			callback: (acc, item) => acc + item
@@ -96,7 +96,7 @@ describe("ArrayUtils.reduce(Reducer)", () => {
 	it("should call the native method if the initial value is a function", () => {
 		// given
 		const array = [5, 2, 8, 7, 8];
-		const calls = spy(array, "reduce");
+		const calls = spyMethod(array, "reduce");
 		const reducer: Reducer<number, number> = {
 			initial: () => 0,
 			callback: (acc, item) => acc + item
@@ -114,7 +114,7 @@ describe("ArrayUtils.reduce(callback)", () => {
 	it("should call the native method", () => {
 		// given
 		const array = [5, 2, 8, 7, 8];
-		const calls = spy(array, "reduce");
+		const calls = spyMethod(array, "reduce");
 		const cb = () => 0;
 
 		// when
@@ -125,11 +125,38 @@ describe("ArrayUtils.reduce(callback)", () => {
 	});
 });
 
-function spy(object: any, method: string) {
+describe("ArrayUtils.backForEach", () => {
+	it("should call the callback in reverse order", () => {
+		// given
+		const array = [5, 2, 8, 7, 8];
+		const {calls, fn} = spy();
+
+		// when
+		backForEach(array, fn);
+
+		// then
+		assertCalls([
+			[8, 4],
+			[7, 3],
+			[8, 2],
+			[2, 1],
+			[5, 0]
+		], calls);
+	});
+});
+
+function spy(captureThis: boolean = false) {
 	const calls: any[][] = [];
-	object[method] = function() {
-		calls.push([this, ...arguments]);
+	const fn = function(this: any): any {
+		calls.push([...(captureThis ? [this] : []), ...arguments]);
 	};
+	fn.calls = calls;
+	return {calls, fn};
+}
+
+function spyMethod(obj: any, method: string) {
+	const {calls, fn} = spy(true);
+	obj[method] = fn;
 	return calls;
 }
 
