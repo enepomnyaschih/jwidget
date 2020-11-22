@@ -23,44 +23,44 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import bindDisplay, {DisplayUpdaterElement} from "jwidget/bindDisplay";
+import bindHtml, {HtmlUpdaterElement} from "jwidget/bindHtml";
 import Property from "jwidget/Property";
 
-describe("bindDisplay", () => {
-	it("should assign the style on initialization", () => {
+describe("bindHtml", () => {
+	it("should assign html on initialization", () => {
 		// given
 		const calls: any[][] = [];
 		const el = spyElement(calls);
-		const property = new Property(true);
+		const property = new Property("<div></div>");
 
 		// when
-		bindDisplay(el, property);
+		bindHtml(el, property);
 
 		// then
-		assertCalls([[el, "display", ""]], calls);
+		assertCalls([[el, "<div></div>"]], calls);
 	});
 
-	it("should reassign the style on property change", () => {
+	it("should reassign html on property change", () => {
 		// given
 		const calls: any[][] = [];
 		const el = spyElement(calls);
-		const property = new Property(true);
-		bindDisplay(el, property);
+		const property = new Property("<div></div>");
+		bindHtml(el, property);
 		calls.splice(0);
 
 		// when
-		property.set(false);
+		property.set("<span></span>");
 
 		// then
-		assertCalls([[el, "display", "none"]], calls);
+		assertCalls([[el, "<span></span>"]], calls);
 	});
 
 	it("should unbind on destruction", () => {
 		// given
 		const calls: any[][] = [];
 		const el = spyElement(calls);
-		const property = new Property(true);
-		const binding = bindDisplay(el, property);
+		const property = new Property("<div></div>");
+		const binding = bindHtml(el, property);
 		calls.splice(0);
 
 		// when
@@ -71,7 +71,7 @@ describe("bindDisplay", () => {
 		assert.isFalse(hasBindings(property));
 
 		// when
-		property.set(false);
+		property.set("<span></span>");
 
 		// then
 		assertCalls([], calls);
@@ -84,9 +84,9 @@ function spy(calls: any[][], captureThis: boolean, name?: string) {
 	};
 }
 
-function spyElement(calls: any[][]): DisplayUpdaterElement {
+function spyElement(calls: any[][]): HtmlUpdaterElement {
 	return {
-		css: spy(calls, true)
+		html: spy(calls, true)
 	};
 }
 

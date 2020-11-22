@@ -27,7 +27,7 @@ import Class from './Class';
 import Destroyable from './Destroyable';
 
 class DisplayUpdater extends Class {
-	constructor(private el: DisplayElement, private property: Bindable<boolean>) {
+	constructor(private el: DisplayUpdaterElement, private property: Bindable<boolean>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
@@ -44,10 +44,10 @@ class DisplayUpdater extends Class {
  * @param property Element visibility.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindDisplay(el: DisplayElement, property: Bindable<boolean>): Destroyable {
+export default function bindDisplay(el: DisplayUpdaterElement, property: Bindable<boolean>): Destroyable {
 	return new DisplayUpdater(el, property);
 }
 
-export interface DisplayElement {
+export interface DisplayUpdaterElement {
 	css(style: "display", value: "" | "none"): void;
 }

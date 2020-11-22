@@ -31,7 +31,7 @@ class HtmlUpdater extends Class {
 	 * @param el DOM element.
 	 * @param property Source property.
 	 */
-	constructor(private el: JQuery, private property: Bindable<any>) {
+	constructor(private el: HtmlUpdaterElement, private property: Bindable<string>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
@@ -48,6 +48,10 @@ class HtmlUpdater extends Class {
  * @param property HTML value.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindHtml(el: JQuery, property: Bindable<any>): Destroyable {
+export default function bindHtml(el: HtmlUpdaterElement, property: Bindable<string>): Destroyable {
 	return new HtmlUpdater(el, property);
+}
+
+export interface HtmlUpdaterElement {
+	html(html: string): void;
 }

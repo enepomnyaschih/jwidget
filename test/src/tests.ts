@@ -34,6 +34,7 @@ import "./bindAttr";
 import "./bindClass";
 import "./bindCss";
 import "./bindDisplay";
+import "./bindHtml";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";
