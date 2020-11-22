@@ -27,7 +27,7 @@ import Class from './Class';
 import Destroyable from './Destroyable';
 
 class CssUpdater extends Class {
-	constructor(private el: JQuery, private style: string, private property: Bindable<any>) {
+	constructor(private el: CssUpdaterElement, private style: string, private property: Bindable<string>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
@@ -45,6 +45,10 @@ class CssUpdater extends Class {
  * @param property Style value.
  * @returns Binding object. You must %destroy it to stop the synchronization.
  */
-export default function bindCss(el: JQuery, style: string, property: Bindable<any>): Destroyable {
+export default function bindCss(el: CssUpdaterElement, style: string, property: Bindable<string>): Destroyable {
 	return new CssUpdater(el, style, property);
+}
+
+export interface CssUpdaterElement {
+	css(style: string, value: string): void;
 }

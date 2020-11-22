@@ -32,6 +32,7 @@ import "./BindableMap";
 import "./BindableSet";
 import "./bindAttr";
 import "./bindClass";
+import "./bindCss";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";
