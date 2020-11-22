@@ -27,7 +27,7 @@ import Class from './Class';
 import Destroyable from './Destroyable';
 
 class AttrUpdater extends Class {
-	constructor(private el: JQuery, private attr: string, private property: Bindable<any>) {
+	constructor(private el: AttrUpdaterElement, private attr: string, private property: Bindable<string>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
@@ -45,6 +45,10 @@ class AttrUpdater extends Class {
  * @param attr Attribute name.
  * @param property Attribute value to assign.
  */
-export default function bindAttr(el: JQuery, attr: string, property: Bindable<any>): Destroyable {
+export default function bindAttr(el: AttrUpdaterElement, attr: string, property: Bindable<string>): Destroyable {
 	return new AttrUpdater(el, attr, property);
+}
+
+export interface AttrUpdaterElement {
+	attr(attr: string, value: string): void;
 }

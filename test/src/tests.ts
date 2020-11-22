@@ -30,6 +30,7 @@ import "./ArrayUtils";
 import "./BindableArray";
 import "./BindableMap";
 import "./BindableSet";
+import "./bindAttr";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";
