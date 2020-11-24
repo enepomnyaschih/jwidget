@@ -26,26 +26,11 @@ import Bindable from './Bindable';
 import Class from './Class';
 import Destroyable from './Destroyable';
 import DestroyableBindable from './DestroyableBindable';
-import {Binding, UPDATE, WATCH} from './index';
 import IProperty from './IProperty';
 import Property from './Property';
 
-class PropBinding extends Class {
-	constructor(el: JQuery, prop: string, property: Bindable<any>);
-	constructor(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding);
-	constructor(el: JQuery, prop: string, property: any, binding: Binding = UPDATE) {
-		super();
-		if (binding & UPDATE) {
-			this.own(new PropUpdater(el, prop, property));
-		}
-		if (prop === "checked" && (binding & WATCH)) {
-			this.own(new CheckedListener(el, {target: property}));
-		}
-	}
-}
-
 class PropUpdater extends Class {
-	constructor(private el: JQuery, private prop: string, private property: Bindable<any>) {
+	constructor(private el: PropUpdaterElement, private prop: string, private property: Bindable<boolean>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
@@ -59,35 +44,56 @@ class PropUpdater extends Class {
 	}
 }
 
-class CheckedListener extends Class {
-	private _target: IProperty<boolean>;
-	private update: () => void;
+class CheckedWatcher extends Class {
+	private sync: () => void;
 
-	constructor(private el: JQuery, config: CheckedListener.Config = {}) {
+	constructor(private el: CheckedWatcherElement, private target: IProperty<boolean>) {
 		super();
-		this.update = () => this._update();
-		this._target = config.target || this.own(new Property<boolean>());
-		this._update();
-		this.el.bind("change", this.update);
-	}
-
-	get target(): Bindable<boolean> {
-		return this._target;
+		this.sync = () => this._sync();
+		this._sync();
+		this.el.on("change", this.sync);
 	}
 
 	protected destroyObject() {
-		this.el.unbind("change", this.update);
-		super.destroy();
+		this.el.off("change", this.sync);
+		super.destroyObject();
 	}
 
-	private _update() {
-		this._target.set(this.el.prop("checked"));
+	private _sync() {
+		this.target.set(this.el.prop("checked"));
 	}
 }
 
-namespace CheckedListener {
-	export interface Config {
-		readonly target?: IProperty<boolean>;
+class CheckedBinding extends Class {
+	private sync: () => void;
+	private syncing = false;
+
+	constructor(private el: PropUpdaterElement & CheckedWatcherElement, private property: IProperty<boolean>) {
+		super();
+		this.sync = () => this._sync();
+		this._update();
+		this._sync();
+		this.own(property.onChange.listen(this._update, this));
+		this.el.on("change", this.sync);
+	}
+
+	protected destroyObject() {
+		this.el.off("change", this.sync);
+		super.destroyObject();
+	}
+
+	private _update() {
+		if (this.syncing) {
+			return;
+		}
+		this.el.prop("checked", this.property.get());
+		this.el.change();
+	}
+
+	private _sync() {
+		this.syncing = true;
+		this.property.set(this.el.prop("checked"));
+		this.syncing = false;
 	}
 }
 
@@ -98,7 +104,7 @@ namespace CheckedListener {
  * @param prop Element's property name.
  * @returns Bound property. You must destroy it to stop the synchronization.
  */
-export default function bindProp(el: JQuery, prop: string): DestroyableBindable<boolean>;
+export default function bindProp(el: CheckedWatcherElement, prop: "checked"): DestroyableBindable<boolean>;
 
 /**
  * Watches boolean property modification and updates the specified property of the DOM element.
@@ -107,7 +113,16 @@ export default function bindProp(el: JQuery, prop: string): DestroyableBindable<
  * @param property Property value to assign.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindProp(el: JQuery, prop: string, property: Bindable<any>): Destroyable;
+export default function bindProp(el: PropUpdaterElement, prop: string, property: Bindable<any>, binding?: 1): Destroyable;
+
+/**
+ * Returns a boolean property containing current checkbox state and starts watching for its modification.
+ * Only "checked" prop is supported.
+ * @param el DOM element.
+ * @param prop Element's property name.
+ * @returns Bound property. You must destroy it to stop the synchronization.
+ */
+export default function bindProp(el: CheckedWatcherElement, prop: "checked", property: IProperty<boolean>, binding: 2): Destroyable;
 
 /**
  * Watches boolean property modification and updates the specified property of the DOM element and/or vice versa.
@@ -117,14 +132,34 @@ export default function bindProp(el: JQuery, prop: string, property: Bindable<an
  * @param binding Binding direction.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindProp(el: JQuery, prop: string, property: IProperty<boolean>, binding: Binding): Destroyable;
-export default function bindProp(el: JQuery, prop: string, property?: any, binding?: Binding): Destroyable {
-	if (property != null) {
-		return new PropBinding(el, prop, property, binding);
-	}
-	if (prop === "checked") {
+export default function bindProp(el: PropUpdaterElement & CheckedWatcherElement, prop: "checked",
+								 property: IProperty<boolean>, binding: 3): Destroyable;
+export default function bindProp(el: any, prop: string, property?: any, binding?: number): Destroyable {
+	if (property == null) {
 		const target = new Property<boolean>();
-		return target.owning(new CheckedListener(el, {target: target}));
+		return target.owning(new CheckedWatcher(el, target));
 	}
-	throw new Error("Invalid argument");
+	if (binding === 2) {
+		return new CheckedWatcher(el, property);
+	}
+	if (binding === 3) {
+		return new CheckedBinding(el, property);
+	}
+	return new PropUpdater(el, prop, property);
+}
+
+export interface PropUpdaterElement {
+
+	prop(prop: string, value: boolean): void;
+
+	change(): void;
+}
+
+export interface CheckedWatcherElement {
+
+	prop(prop: "checked"): boolean;
+
+	on(event: "change", callback: () => void): void;
+
+	off(event: "change", callback: () => void): void;
 }

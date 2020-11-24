@@ -35,6 +35,7 @@ import "./bindClass";
 import "./bindCss";
 import "./bindDisplay";
 import "./bindHtml";
+import "./bindProp";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";
