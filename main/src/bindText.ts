@@ -27,14 +27,14 @@ import Class from './Class';
 import Destroyable from './Destroyable';
 
 class TextUpdater extends Class {
-	constructor(private el: JQuery, private property: Bindable<any>) {
+	constructor(private el: TextUpdaterElement, private property: Bindable<string>) {
 		super();
 		this._update();
 		this.own(property.onChange.listen(this._update, this));
 	}
 
 	private _update() {
-		this.el[0].textContent = this.property.get();
+		this.el.text(this.property.get());
 	}
 }
 
@@ -44,6 +44,10 @@ class TextUpdater extends Class {
  * @param property Text value.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindText(el: JQuery, property: Bindable<any>): Destroyable {
+export default function bindText(el: TextUpdaterElement, property: Bindable<string>): Destroyable {
 	return new TextUpdater(el, property);
+}
+
+export interface TextUpdaterElement {
+	text(text: string): void;
 }

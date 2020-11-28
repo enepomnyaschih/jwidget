@@ -37,6 +37,7 @@ import "./bindDisplay";
 import "./bindHtml";
 import "./bindProp";
 import "./bindRadio";
+import "./bindText";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";
