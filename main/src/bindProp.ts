@@ -72,7 +72,6 @@ class CheckedBinding extends Class {
 		super();
 		this.sync = () => this._sync();
 		this._update();
-		this._sync();
 		this.own(property.onChange.listen(this._update, this));
 		this.el.on("change", this.sync);
 	}
@@ -113,7 +112,7 @@ export default function bindProp(el: CheckedWatcherElement, prop: "checked"): De
  * @param property Property value to assign.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindProp(el: PropUpdaterElement, prop: string, property: Bindable<any>, binding?: 1): Destroyable;
+export default function bindProp(el: PropUpdaterElement, prop: string, property: Bindable<boolean>, binding?: 1): Destroyable;
 
 /**
  * Returns a boolean property containing current checkbox state and starts watching for its modification.
