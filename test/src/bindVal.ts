@@ -23,8 +23,9 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import {TWOWAY, WATCH} from "jwidget";
-import bindVal, {ValueWatcherElement, ValueUpdaterElement} from "jwidget/bindVal";
+import {destroy, TWOWAY, WATCH} from "jwidget";
+import bindVal, {ValueUpdaterElement, ValueWatcherElement} from "jwidget/bindVal";
+import Destroyable from "jwidget/Destroyable";
 import Property from "jwidget/Property";
 
 describe("bindVal(UPDATE)", () => {
@@ -73,6 +74,74 @@ describe("bindVal(UPDATE)", () => {
 
 		// then
 		expect(el.calls).eql([]);
+	});
+});
+
+describe("bindVal(WATCH, advanced)", () => {
+	it("should assign property on initialization", () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty(null, updates);
+
+			// when
+			binding = bindVal(el, property, WATCH);
+
+			// then
+			expect(updates).eql([""]);
+		} finally {
+			destroy(binding);
+		}
+	});
+
+	it("should reassign property on value change", () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty(null, updates);
+			binding = bindVal(el, property, WATCH);
+			updates.splice(0);
+
+			// when
+			el.enter("Hello", true);
+
+			// then
+			expect(updates).eql(["Hello"]);
+		} finally {
+			destroy(binding);
+		}
+	});
+
+	it("should unbind on destruction", () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty(null, updates);
+			binding = bindVal(el, property, WATCH);
+			updates.splice(0);
+
+			// when
+			assert.isTrue(el.hasListeners());
+			binding.destroy();
+			binding = null;
+
+			// then
+			assert.isFalse(el.hasListeners());
+
+			// when
+			el.enter("Hello", true);
+
+			// then
+			expect(updates).eql([]);
+		} finally {
+			destroy(binding);
+		}
 	});
 });
 
@@ -125,6 +194,106 @@ describe("bindVal(WATCH, simple)", () => {
 
 		// then
 		expect(updates).eql([]);
+	});
+});
+
+describe("bindVal(TWOWAY, advanced)", () => {
+	it("should assign value on initialization", () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty("Hello", updates);
+
+			// when
+			binding = bindVal(el, property, TWOWAY);
+
+			// then
+			expect(el.calls).eql([["val", "Hello"], ["change"]]);
+			expect(updates).eql([]);
+		} finally {
+			destroy(binding);
+		}
+	});
+
+	it("should reassign value on property change", () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty("Hello", updates);
+			binding = bindVal(el, property, TWOWAY);
+			el.calls.splice(0);
+			updates.splice(0);
+
+			// when
+			property.set("Bye");
+
+			// then
+			expect(el.calls).eql([["val", "Bye"], ["change"]]);
+			expect(updates).eql(["Bye"]);
+		} finally {
+			destroy(binding);
+		}
+	});
+
+	it("should reassign property on value change", () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty("Hello", updates);
+			binding = bindVal(el, property, TWOWAY);
+			el.calls.splice(0);
+			updates.splice(0);
+
+			// when
+			el.enter("Bye", true);
+
+			// then
+			expect(el.calls).eql([]);
+			expect(updates).eql(["Bye"]);
+		} finally {
+			destroy(binding);
+		}
+	});
+
+	it("should unbind on destruction", () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty("Hello", updates);
+			binding = bindVal(el, property, TWOWAY);
+			el.calls.splice(0);
+			updates.splice(0);
+
+			// when
+			assert.isTrue(el.hasListeners());
+			assert.isTrue(hasBindingsExceptForSpy(property));
+			binding.destroy();
+			binding = null;
+
+			// then
+			assert.isFalse(el.hasListeners());
+			assert.isFalse(hasBindingsExceptForSpy(property));
+
+			// when
+			el.enter("Bye", true);
+
+			// then
+			expect(updates).eql([]);
+
+			// when
+			property.set("Wow");
+			expect(el.calls).eql([]);
+		} finally {
+			destroy(binding);
+		}
 	});
 });
 
