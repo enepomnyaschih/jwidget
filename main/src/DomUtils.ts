@@ -63,23 +63,20 @@ const lifeInputTags = ["text", "password", "email", "number", "search", "tel", "
  * @param el Element.
  * @returns Element is a text input.
  */
-export function isTextInput(el: JQuery): boolean;
-
-/**
- * Checks if the element is a text input.
- *
- * @param el Element.
- * @returns Element is a text input.
- */
-export function isTextInput(el: Element): boolean;
-export function isTextInput(el: any): boolean {
-	const $el: JQuery = jQuery(el);
-	const tagName = $el[0].tagName.toLowerCase();
-	if (tagName === "input") {
-		const type = $el.attr("type");
+export function isTextInput(el: InputElement): boolean {
+	const tagName = el.prop("tagName");
+	if (tagName === "INPUT") {
+		const type = el.attr("type");
 		return !type || lifeInputTags.indexOf(type.toLowerCase()) !== -1;
 	}
-	return tagName === "textarea";
+	return tagName === "TEXTAREA";
+}
+
+export interface InputElement {
+
+	prop(prop: "tagName"): string;
+
+	attr(attr: "type"): string;
 }
 
 /**
