@@ -26,6 +26,7 @@ import {assert, expect} from "chai";
 import {destroy, TWOWAY, WATCH} from "jwidget";
 import Bindable from "jwidget/Bindable";
 import bindVal, {ValueUpdaterElement, ValueWatcherElement} from "jwidget/bindVal";
+import defer from "jwidget/defer";
 import Destroyable from "jwidget/Destroyable";
 import Property from "jwidget/Property";
 
@@ -117,6 +118,32 @@ describe("bindVal(WATCH, advanced)", () => {
 		}
 	});
 
+	it("should reassign property on text typing by timer", async () => {
+		let binding: Destroyable;
+		try {
+			// given
+			const updates: string[] = [];
+			const el = new DummyInputElement();
+			const property = spyProperty(new Property<string>(), updates);
+			binding = bindVal(el, property, WATCH);
+			updates.splice(0);
+
+			// when
+			el.enter("Hello");
+
+			// then
+			expect(updates).eql([]);
+
+			// when
+			await defer(200);
+
+			// then
+			expect(updates).eql(["Hello"]);
+		} finally {
+			destroy(binding);
+		}
+	});
+
 	it("should unbind on destruction", () => {
 		let binding: Destroyable;
 		try {
@@ -198,7 +225,7 @@ describe("bindVal(WATCH, simple)", () => {
 	});
 });
 
-describe("bindVal(WATCH, auto-target)", () => {
+describe("bindVal(WATCH, simple, auto-target)", () => {
 	it("should assign property on initialization", () => {
 		// given
 		const el = new DummyInputElement();

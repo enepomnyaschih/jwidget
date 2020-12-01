@@ -29,7 +29,7 @@ import Destroyable from './Destroyable';
  * Interval instance. Usually, it can be done by aggregating the instance in another object.
  */
 export default class Interval implements Destroyable {
-	private interval: number;
+	private interval: any;
 
 	/**
 	 * Creates an Interval instance.
@@ -51,7 +51,7 @@ export default class Interval implements Destroyable {
 		} else if (typeof scope === "number") {
 			ms = scope;
 		}
-		this.interval = window.setInterval(callback, ms);
+		this.interval = setInterval(callback, ms);
 	}
 
 	destroy() {

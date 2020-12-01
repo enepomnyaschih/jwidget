@@ -33,10 +33,10 @@ import CancelToken, {runAsync} from "./CancelToken";
  * @returns Promise object representing the timeout.
  */
 export default function (ms?: number, cancelToken?: CancelToken): Promise<void> {
-	let timeout: number;
+	let timeout: any;
 	return runAsync<void>(
 		(resolve: (value?: (Promise<void> | void)) => void) => {
-			timeout = window.setTimeout(resolve, ms);
+			timeout = setTimeout(resolve, ms);
 		},
 		() => {
 			clearTimeout(timeout);
