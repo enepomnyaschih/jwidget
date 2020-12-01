@@ -24,9 +24,9 @@ SOFTWARE.
 
 import {assert, expect} from "chai";
 import {TWOWAY, WATCH} from "jwidget";
-import bindRadio, {RadioField} from "jwidget/bindRadio";
+import Bindable from "jwidget/Bindable";
+import bindRadio, {RadioField, RadioUpdaterButton, RadioWatcherButton} from "jwidget/bindRadio";
 import Property from "jwidget/Property";
-import {RadioUpdaterButton, RadioWatcherButton} from "../../main/src/bindRadio";
 
 describe("bindRadio(UPDATE)", () => {
 	it("should select radio on initialization if set", () => {
@@ -170,7 +170,7 @@ describe("bindRadio(WATCH)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField("a");
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 
 		// when
 		bindRadio(el, "field", property, WATCH);
@@ -183,7 +183,7 @@ describe("bindRadio(WATCH)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField();
-		const property = spyProperty("a", updates);
+		const property = spyProperty(new Property("a"), updates);
 
 		// when
 		bindRadio(el, "field", property, WATCH);
@@ -196,7 +196,7 @@ describe("bindRadio(WATCH)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 		bindRadio(el, "field", property, WATCH);
 		updates.splice(0);
 
@@ -211,7 +211,7 @@ describe("bindRadio(WATCH)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField("a");
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 		bindRadio(el, "field", property, WATCH);
 		updates.splice(0);
 
@@ -228,7 +228,7 @@ describe("bindRadio(WATCH)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 		const binding = bindRadio(el, "field", property, WATCH);
 		updates.splice(0);
 
@@ -247,12 +247,84 @@ describe("bindRadio(WATCH)", () => {
 	});
 });
 
+describe("bindRadio(WATCH, auto-target)", () => {
+	it("should assign property on initialization if selected", () => {
+		// given
+		const el = new DummyRadioField("a");
+
+		// when
+		const property = bindRadio(el, "field");
+
+		// then
+		expect(property.get()).eql("a");
+	});
+
+	it("should reset property on initialization if unselected", () => {
+		// given
+		const el = new DummyRadioField();
+
+		// when
+		const property = bindRadio(el, "field");
+
+		// then
+		expect(property.get()).eql(null);
+	});
+
+	it("should assign property on radio selection", () => {
+		// given
+		const updates: string[] = [];
+		const el = new DummyRadioField();
+		spyProperty(bindRadio(el, "field"), updates);
+
+		// when
+		el.select("a");
+
+		// then
+		expect(updates).eql(["a"]);
+	});
+
+	it("should reassign property on another radio selection", () => {
+		// given
+		const updates: string[] = [];
+		const el = new DummyRadioField("a");
+		spyProperty(bindRadio(el, "field"), updates);
+
+		// when
+		el.select("b");
+
+		// then
+		expect(updates).eql(["b"]);
+	});
+
+	// We don't test reaction to "unselection", because there's no user action which can naturally lead to this.
+
+	it("should unbind on destruction", () => {
+		// given
+		const updates: string[] = [];
+		const el = new DummyRadioField();
+		const property = spyProperty(bindRadio(el, "field"), updates);
+
+		// when
+		assert.isTrue(el.hasListeners());
+		property.destroy();
+
+		// then
+		assert.isFalse(el.hasListeners());
+
+		// when
+		el.select("a");
+
+		// then
+		expect(updates).eql([]);
+	});
+});
+
 describe("bindRadio(TWOWAY)", () => {
 	it("should select radio on initialization if set", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField();
-		const property = spyProperty("a", updates);
+		const property = spyProperty(new Property("a"), updates);
 
 		// when
 		bindRadio(el, "field", property, TWOWAY);
@@ -278,7 +350,7 @@ describe("bindRadio(TWOWAY)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField("a");
-		const property = spyProperty("x", updates);
+		const property = spyProperty(new Property("x"), updates);
 
 		// when
 		bindRadio(el, "field", property, TWOWAY);
@@ -316,7 +388,7 @@ describe("bindRadio(TWOWAY)", () => {
 		// given
 		const updates: string[] = []
 		const el = new DummyRadioField();
-		const property = spyProperty("x", updates);
+		const property = spyProperty(new Property("x"), updates);
 
 		// when
 		bindRadio(el, "field", property, TWOWAY);
@@ -374,7 +446,7 @@ describe("bindRadio(TWOWAY)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 		bindRadio(el, "field", property, TWOWAY);
 		updates.splice(0);
 
@@ -389,7 +461,7 @@ describe("bindRadio(TWOWAY)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField("a");
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 		bindRadio(el, "field", property, TWOWAY);
 		updates.splice(0);
 
@@ -406,7 +478,7 @@ describe("bindRadio(TWOWAY)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyRadioField();
-		const property = spyProperty("a", updates);
+		const property = spyProperty(new Property("a"), updates);
 		const binding = bindRadio(el, "field", property, TWOWAY);
 		el.calls.splice(0);
 		updates.splice(0);
@@ -432,8 +504,7 @@ describe("bindRadio(TWOWAY)", () => {
 	});
 });
 
-function spyProperty<T>(value: T, updates: T[]): Property<T> {
-	const property = new Property<T>(value);
+function spyProperty<T, U extends Bindable<T>>(property: U, updates: T[]): U {
 	property.onChange.listen(({value}) => {
 		updates.push(value);
 	});

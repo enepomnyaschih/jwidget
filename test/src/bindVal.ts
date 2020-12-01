@@ -24,6 +24,7 @@ SOFTWARE.
 
 import {assert, expect} from "chai";
 import {destroy, TWOWAY, WATCH} from "jwidget";
+import Bindable from "jwidget/Bindable";
 import bindVal, {ValueUpdaterElement, ValueWatcherElement} from "jwidget/bindVal";
 import Destroyable from "jwidget/Destroyable";
 import Property from "jwidget/Property";
@@ -84,7 +85,7 @@ describe("bindVal(WATCH, advanced)", () => {
 			// given
 			const updates: string[] = [];
 			const el = new DummyInputElement();
-			const property = spyProperty(null, updates);
+			const property = spyProperty(new Property<string>(), updates);
 
 			// when
 			binding = bindVal(el, property, WATCH);
@@ -102,7 +103,7 @@ describe("bindVal(WATCH, advanced)", () => {
 			// given
 			const updates: string[] = [];
 			const el = new DummyInputElement();
-			const property = spyProperty(null, updates);
+			const property = spyProperty(new Property<string>(), updates);
 			binding = bindVal(el, property, WATCH);
 			updates.splice(0);
 
@@ -122,7 +123,7 @@ describe("bindVal(WATCH, advanced)", () => {
 			// given
 			const updates: string[] = [];
 			const el = new DummyInputElement();
-			const property = spyProperty(null, updates);
+			const property = spyProperty(new Property<string>(), updates);
 			binding = bindVal(el, property, WATCH);
 			updates.splice(0);
 
@@ -150,7 +151,7 @@ describe("bindVal(WATCH, simple)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyInputElement();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 
 		// when
 		bindVal(el, property, WATCH, true);
@@ -163,7 +164,7 @@ describe("bindVal(WATCH, simple)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyInputElement();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 		bindVal(el, property, WATCH, true);
 		updates.splice(0);
 
@@ -178,13 +179,59 @@ describe("bindVal(WATCH, simple)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyInputElement();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<string>(), updates);
 		const binding = bindVal(el, property, WATCH, true);
 		updates.splice(0);
 
 		// when
 		assert.isTrue(el.hasListeners());
 		binding.destroy();
+
+		// then
+		assert.isFalse(el.hasListeners());
+
+		// when
+		el.enter("Hello", true);
+
+		// then
+		expect(updates).eql([]);
+	});
+});
+
+describe("bindVal(WATCH, auto-target)", () => {
+	it("should assign property on initialization", () => {
+		// given
+		const el = new DummyInputElement();
+
+		// when
+		const property = bindVal<string>(el, true);
+
+		// then
+		expect(property.get()).eql("");
+	});
+
+	it("should reassign property on value change", () => {
+		// given
+		const updates: string[] = [];
+		const el = new DummyInputElement();
+		spyProperty(bindVal<string>(el, true), updates);
+
+		// when
+		el.enter("Hello", true);
+
+		// then
+		expect(updates).eql(["Hello"]);
+	});
+
+	it("should unbind on destruction", () => {
+		// given
+		const updates: string[] = [];
+		const el = new DummyInputElement();
+		const property = spyProperty(bindVal<string>(el, true), updates);
+
+		// when
+		assert.isTrue(el.hasListeners());
+		property.destroy();
 
 		// then
 		assert.isFalse(el.hasListeners());
@@ -204,7 +251,7 @@ describe("bindVal(TWOWAY, advanced)", () => {
 			// given
 			const updates: string[] = [];
 			const el = new DummyInputElement();
-			const property = spyProperty("Hello", updates);
+			const property = spyProperty(new Property("Hello"), updates);
 
 			// when
 			binding = bindVal(el, property, TWOWAY);
@@ -223,7 +270,7 @@ describe("bindVal(TWOWAY, advanced)", () => {
 			// given
 			const updates: string[] = [];
 			const el = new DummyInputElement();
-			const property = spyProperty("Hello", updates);
+			const property = spyProperty(new Property("Hello"), updates);
 			binding = bindVal(el, property, TWOWAY);
 			el.calls.splice(0);
 			updates.splice(0);
@@ -245,7 +292,7 @@ describe("bindVal(TWOWAY, advanced)", () => {
 			// given
 			const updates: string[] = [];
 			const el = new DummyInputElement();
-			const property = spyProperty("Hello", updates);
+			const property = spyProperty(new Property("Hello"), updates);
 			binding = bindVal(el, property, TWOWAY);
 			el.calls.splice(0);
 			updates.splice(0);
@@ -267,7 +314,7 @@ describe("bindVal(TWOWAY, advanced)", () => {
 			// given
 			const updates: string[] = [];
 			const el = new DummyInputElement();
-			const property = spyProperty("Hello", updates);
+			const property = spyProperty(new Property("Hello"), updates);
 			binding = bindVal(el, property, TWOWAY);
 			el.calls.splice(0);
 			updates.splice(0);
@@ -302,7 +349,7 @@ describe("bindVal(TWOWAY, simple)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyInputElement();
-		const property = spyProperty("Hello", updates);
+		const property = spyProperty(new Property("Hello"), updates);
 
 		// when
 		bindVal(el, property, TWOWAY, true);
@@ -316,7 +363,7 @@ describe("bindVal(TWOWAY, simple)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyInputElement();
-		const property = spyProperty("Hello", updates);
+		const property = spyProperty(new Property("Hello"), updates);
 		bindVal(el, property, TWOWAY, true);
 		el.calls.splice(0);
 		updates.splice(0);
@@ -333,7 +380,7 @@ describe("bindVal(TWOWAY, simple)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyInputElement();
-		const property = spyProperty("Hello", updates);
+		const property = spyProperty(new Property("Hello"), updates);
 		bindVal(el, property, TWOWAY, true);
 		el.calls.splice(0);
 		updates.splice(0);
@@ -350,7 +397,7 @@ describe("bindVal(TWOWAY, simple)", () => {
 		// given
 		const updates: string[] = [];
 		const el = new DummyInputElement();
-		const property = spyProperty("Hello", updates);
+		const property = spyProperty(new Property("Hello"), updates);
 		const binding = bindVal(el, property, TWOWAY, true);
 		el.calls.splice(0);
 		updates.splice(0);
@@ -376,8 +423,7 @@ describe("bindVal(TWOWAY, simple)", () => {
 	});
 });
 
-function spyProperty<T>(value: T, updates: T[]): Property<T> {
-	const property = new Property<T>(value);
+function spyProperty<T, U extends Bindable<T>>(property: U, updates: T[]): U {
 	property.onChange.listen(({value}) => {
 		updates.push(value);
 	});

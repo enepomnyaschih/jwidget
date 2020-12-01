@@ -24,6 +24,7 @@ SOFTWARE.
 
 import {assert, expect} from "chai";
 import {TWOWAY, WATCH} from "jwidget";
+import Bindable from "jwidget/Bindable";
 import bindProp, {CheckedWatcherElement, PropUpdaterElement} from "jwidget/bindProp";
 import Property from "jwidget/Property";
 
@@ -95,7 +96,7 @@ describe("bindProp(WATCH)", () => {
 		// given
 		const updates: boolean[] = [];
 		const el = new CheckboxElement();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<boolean>(), updates);
 
 		// when
 		bindProp(el, "checked", property, WATCH);
@@ -108,7 +109,7 @@ describe("bindProp(WATCH)", () => {
 		// given
 		const updates: boolean[] = [];
 		const el = new CheckboxElement();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<boolean>(), updates);
 		bindProp(el, "checked", property, WATCH);
 		updates.splice(0);
 
@@ -123,7 +124,7 @@ describe("bindProp(WATCH)", () => {
 		// given
 		const updates: boolean[] = [];
 		const el = new CheckboxElement();
-		const property = spyProperty(null, updates);
+		const property = spyProperty(new Property<boolean>(), updates);
 		const binding = bindProp(el, "checked", property, WATCH);
 		updates.splice(0);
 
@@ -142,12 +143,58 @@ describe("bindProp(WATCH)", () => {
 	});
 });
 
+describe("bindProp(WATCH, auto-target)", () => {
+	it("should assign property on initialization", () => {
+		// given
+		const el = new CheckboxElement();
+
+		// when
+		const property = bindProp(el, "checked");
+
+		// then
+		expect(property.get()).eql(false);
+	});
+
+	it("should reassign property on prop change", () => {
+		// given
+		const updates: boolean[] = [];
+		const el = new CheckboxElement();
+		spyProperty(bindProp(el, "checked"), updates);
+
+		// when
+		el.toggle();
+
+		// then
+		expect(updates).eql([true]);
+	});
+
+	it("should unbind on destruction", () => {
+		// given
+		const updates: boolean[] = [];
+		const el = new CheckboxElement();
+		const property = spyProperty(bindProp(el, "checked"), updates);
+
+		// when
+		assert.isTrue(el.hasListeners());
+		property.destroy();
+
+		// then
+		assert.isFalse(el.hasListeners());
+
+		// when
+		el.toggle();
+
+		// then
+		expect(updates).eql([]);
+	});
+});
+
 describe("bindProp(TWOWAY)", () => {
 	it("should assign prop on initialization", () => {
 		// given
 		const updates: boolean[] = [];
 		const el = new CheckboxElement();
-		const property = spyProperty(true, updates);
+		const property = spyProperty(new Property(true), updates);
 
 		// when
 		bindProp(el, "checked", property, TWOWAY);
@@ -161,7 +208,7 @@ describe("bindProp(TWOWAY)", () => {
 		// given
 		const updates: boolean[] = [];
 		const el = new CheckboxElement();
-		const property = spyProperty(true, updates);
+		const property = spyProperty(new Property(true), updates);
 		bindProp(el, "checked", property, TWOWAY);
 		el.calls.splice(0);
 		updates.splice(0);
@@ -178,7 +225,7 @@ describe("bindProp(TWOWAY)", () => {
 		// given
 		const updates: boolean[] = [];
 		const el = new CheckboxElement();
-		const property = spyProperty(true, updates);
+		const property = spyProperty(new Property(true), updates);
 		bindProp(el, "checked", property, TWOWAY);
 		el.calls.splice(0);
 		updates.splice(0);
@@ -195,7 +242,7 @@ describe("bindProp(TWOWAY)", () => {
 		// given
 		const updates: boolean[] = [];
 		const el = new CheckboxElement();
-		const property = spyProperty(true, updates);
+		const property = spyProperty(new Property(true), updates);
 		const binding = bindProp(el, "checked", property, TWOWAY);
 		el.calls.splice(0);
 		updates.splice(0);
@@ -221,8 +268,7 @@ describe("bindProp(TWOWAY)", () => {
 	});
 });
 
-function spyProperty<T>(value: T, updates: T[]): Property<T> {
-	const property = new Property<T>(value);
+function spyProperty<T, U extends Bindable<T>>(property: U, updates: T[]): U {
 	property.onChange.listen(({value}) => {
 		updates.push(value);
 	});
