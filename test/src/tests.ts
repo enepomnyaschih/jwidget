@@ -39,6 +39,7 @@ import "./bindProp";
 import "./bindRadio";
 import "./bindText";
 import "./bindVal";
+import "./CancelToken";
 import "./Class";
 import "./Copier";
 import "./Dispatcher";
