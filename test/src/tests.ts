@@ -41,8 +41,6 @@ import "./bindText";
 import "./bindVal";
 import "./CancelToken";
 import "./Class";
-// There's not test for Component due to its complexity and incompatibility with Node.JS environments.
-// Component is covered by UI demos/examples.
 import "./Copier";
 import "./defer";
 import "./Destructor";
@@ -69,3 +67,6 @@ import "./collection/SetMapper";
 import "./collection/SetMatchingValueCounter";
 import "./collection/SetSorter";
 import "./collection/SetValueCollector";
+
+// There's not test for Component, DomInserter, DomTemplate, DomUtils due to their incompatibility with Node.JS environments.
+// They are covered by UI demos/examples.

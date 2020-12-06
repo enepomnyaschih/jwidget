@@ -24,13 +24,13 @@ SOFTWARE.
 
 import Destroyable from "./Destroyable";
 
-class DummyDestroyable implements Destroyable {
-	destroy() {}
-}
-
 /**
  * Dummy implementation of `Destroyable` interface.
  * Exposes `destroy` method which does nothing.
  */
-const dummyDestroyable = <Destroyable>(new DummyDestroyable()); // An extra variable helps IntelliSense to find this import
+const dummyDestroyable: Destroyable = { // An extra variable helps IntelliSense to find this import
+	destroy() {
+	}
+};
+
 export default dummyDestroyable;
