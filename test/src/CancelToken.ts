@@ -24,8 +24,8 @@ SOFTWARE.
 
 import {assert, expect} from "chai";
 import CancelToken, {runAsync} from "jwidget/CancelToken";
+import defer from "jwidget/defer";
 import dummyDestroyable from "jwidget/dummyDestroyable";
-import defer from "../../main/src/defer";
 
 describe("CancelToken", () => {
 	it("should not be cancelled before destroyed", () => {

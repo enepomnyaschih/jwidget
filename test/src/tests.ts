@@ -41,7 +41,10 @@ import "./bindText";
 import "./bindVal";
 import "./CancelToken";
 import "./Class";
+// There's not test for Component due to its complexity and incompatibility with Node.JS environments.
+// Component is covered by UI demos/examples.
 import "./Copier";
+import "./defer";
 import "./Dispatcher";
 import "./dummyDispatcher";
 import "./Mapper";
