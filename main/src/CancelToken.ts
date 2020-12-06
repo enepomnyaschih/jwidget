@@ -78,7 +78,7 @@ export default class CancelToken implements Destroyable {
  * @param cancelToken Optional cancelation token.
  * @returns Promise representing the operation with cancelation token support.
  */
-export function runAsync<T>(run: (resolve: (value?: T | Promise<T>) => void, reject: (error?: any) => void) => void,
+export function runAsync<T>(run: (resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => void,
                             cancel: () => void,
                             cancelToken?: CancelToken): Promise<T> {
 
@@ -90,12 +90,12 @@ export function runAsync<T>(run: (resolve: (value?: T | Promise<T>) => void, rej
 	}
 	const attachment = cancelToken.addHandler(cancel);
 	return new Promise<T>((resolve, reject) => {
-		run((value?: T | Promise<T>) => {
+		run((value?: T | PromiseLike<T>) => {
 			attachment.destroy();
 			resolve(value);
-		}, (error?: any) => {
+		}, (reason?: any) => {
 			attachment.destroy();
-			reject(error);
+			reject(reason);
 		})
 	});
 }

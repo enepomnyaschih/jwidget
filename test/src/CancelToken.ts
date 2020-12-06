@@ -23,8 +23,9 @@ SOFTWARE.
 */
 
 import {assert, expect} from "chai";
-import CancelToken from "jwidget/CancelToken";
+import CancelToken, {runAsync} from "jwidget/CancelToken";
 import dummyDestroyable from "jwidget/dummyDestroyable";
+import defer from "../../main/src/defer";
 
 describe("CancelToken", () => {
 	it("should not be cancelled before destroyed", () => {
@@ -102,9 +103,164 @@ describe("CancelToken", () => {
 		cancelToken.destroy();
 
 		// when
-		const handler = cancelToken.addHandler(() => {});
+		const handler = cancelToken.addHandler(() => {
+		});
 
 		// then
 		expect(handler).equal(dummyDestroyable);
+	});
+});
+
+describe("runAsync", () => {
+	it("should start the specified succeeding operation if the token is omitted", async () => {
+		// given
+		const startTimestamp = Date.now();
+
+		// when
+		const result = await runAsync(resolve => {
+			setTimeout(() => {
+				resolve(1)
+			}, 100);
+		}, () => {
+			assert.fail();
+		});
+
+		// then
+		expect(result).equal(1);
+		expect(Date.now() - startTimestamp).greaterThan(50).lessThan(150);
+	});
+
+	it("should start the specified explicitly failing operation if the token is omitted", async () => {
+		// given
+		const startTimestamp = Date.now();
+
+		// when
+		try {
+			await runAsync((_resolve, reject) => {
+				setTimeout(() => {
+					reject(1)
+				}, 100);
+			}, () => {
+				assert.fail();
+			});
+			assert.fail();
+		} catch(e) {
+			// then
+			expect(e).equal(1);
+		}
+
+		expect(Date.now() - startTimestamp).greaterThan(50).lessThan(150);
+	});
+
+	it("should start the specified implicitly failing operation if the token is omitted", async () => {
+		// when
+		try {
+			await runAsync(() => {
+				throw 1;
+			}, () => {
+				assert.fail();
+			});
+			assert.fail();
+		} catch(e) {
+			// then
+			expect(e).equal(1);
+		}
+	});
+
+	it("should support chaining", async () => {
+		// given
+		const startTimestamp = Date.now();
+
+		// when
+		const result = await runAsync(resolve => {
+			setTimeout(() => {
+				resolve(new Promise(subResolve => {
+					setTimeout(() => {
+						subResolve(1);
+					}, 100);
+				}));
+			}, 100);
+		}, () => {
+			assert.fail();
+		});
+
+		// then
+		expect(result).equal(1);
+		expect(Date.now() - startTimestamp).greaterThan(150).lessThan(250);
+	});
+
+	it("should never resolve/reject the promise if the token is already cancelled", async () => {
+		// given
+		const cancelToken = new CancelToken();
+		cancelToken.destroy();
+
+		// when
+		runAsync(() => {
+			assert.fail();
+		}, () => {
+			assert.fail();
+		}, cancelToken).then(() => {
+			assert.fail();
+		}, () => {
+			assert.fail();
+		});
+		await defer(50);
+
+		// then no failures
+	});
+
+	it("should cancel the operation on the token destruction", async () => {
+		// given
+		const cancelToken = new CancelToken();
+		let timeout: any;
+		const promise = runAsync(resolve => {
+			timeout = setTimeout(resolve, 100)
+		}, () => {
+			clearTimeout(timeout);
+		}, cancelToken);
+		promise.then(() => {
+			assert.fail();
+		}, () => {
+			assert.fail();
+		})
+		cancelToken.destroy();
+
+		// when
+		await defer(150);
+
+		// then no failures
+	});
+
+	it("should not cancel the operation on the token destruction if the operation has already succeeded", async () => {
+		// given
+		const cancelToken = new CancelToken();
+		await runAsync(resolve => {
+			setTimeout(resolve, 100)
+		}, () => {
+			assert.fail();
+		}, cancelToken);
+
+		// when
+		cancelToken.destroy();
+
+		// then no failures
+	});
+
+	it("should not cancel the operation on the token destruction if the operation has already failed", async () => {
+		// given
+		const cancelToken = new CancelToken();
+		try {
+			await runAsync((_, reject) => {
+				setTimeout(reject, 100)
+			}, () => {
+				assert.fail();
+			}, cancelToken);
+		} catch(e) {
+		}
+
+		// when
+		cancelToken.destroy();
+
+		// then no failures
 	});
 });
