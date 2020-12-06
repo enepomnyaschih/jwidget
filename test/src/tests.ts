@@ -46,6 +46,7 @@ import "./defer";
 import "./Destructor";
 import "./Dispatcher";
 import "./dummyDispatcher";
+import "./Endpoint";
 import "./Mapper";
 import "./Property";
 import "./Switcher";
