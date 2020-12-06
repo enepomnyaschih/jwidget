@@ -22,22 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import Destroyable from './Destroyable';
+import {expect} from "chai";
+import Destructor from "jwidget/Destructor";
 
-/**
- * Destroyable object that calls the specified callback on destruction.
- */
-export default class Destructor implements Destroyable {
-	/**
-	 * Creates a destructor instance.
-	 * @param callback Callback to call on destruction.
-	 * @param scope `callback` call scope.
-	 */
-	constructor(private callback?: () => void, private scope?: any) {}
+describe("Destructor", () => {
+	it("should call the callback on destruction", () => {
+		// given
+		let step = 0;
+		const destructor = new Destructor(() => {
+			expect(step++).equal(0);
+		});
 
-	destroy() {
-		if (this.callback) {
-			this.callback.call(this.scope || this);
-		}
-	}
-}
+		// when
+		destructor.destroy();
+
+		// then
+		expect(step).equal(1);
+	});
+
+	it("should support no callback", () => {
+		// given
+		const destructor = new Destructor();
+
+		// when
+		destructor.destroy();
+
+		// then no failures
+	});
+});

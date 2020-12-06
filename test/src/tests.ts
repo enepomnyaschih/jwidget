@@ -45,6 +45,7 @@ import "./Class";
 // Component is covered by UI demos/examples.
 import "./Copier";
 import "./defer";
+import "./Destructor";
 import "./Dispatcher";
 import "./dummyDispatcher";
 import "./Mapper";
