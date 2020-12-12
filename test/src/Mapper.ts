@@ -25,7 +25,12 @@ SOFTWARE.
 import {assert, expect} from "chai";
 import Mapper, {mapProperties} from "jwidget/Mapper";
 import Property from "jwidget/Property";
-import {sum} from "jwidget/Reducer";
+import Reducer from "jwidget/Reducer";
+
+const sum: Reducer<number, number> = {
+	initial: 0,
+	callback: (x, y) => x + y
+};
 
 describe("Mapper", () => {
 	it("should create a new target by default", () => {
@@ -191,7 +196,8 @@ describe("Mapper", () => {
 			target = new Property(0),
 			mapper = new Mapper([source1, source2], (a, b) => a + b, {
 				target,
-				destroy: () => {}
+				destroy: () => {
+				}
 			});
 		source2.set(6);
 		mapper.destroy();

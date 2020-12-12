@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as ArrayUtils from './ArrayUtils';
 import Bindable from './Bindable';
 import Class from './Class';
 import DestroyableBindable from './DestroyableBindable';
@@ -211,8 +210,9 @@ namespace Mapper {
 		}
 
 		private _update() {
-			const values = this.sources.map(source => source.get());
-			this._target.set(ArrayUtils.reduce(values, this.reducer));
+			const values = this.sources.map(source => source.get()),
+				{initial, callback} = this.reducer;
+			this._target.set(values.reduce(callback, initial));
 		}
 
 		private _bind(property: Bindable<any>): this {
@@ -253,7 +253,8 @@ export function mapProperties<T>(sources: Bindable<any>[],
 	}
 	const sourceValues = sources.map((source) => source.get());
 	if (typeof reducer !== "function") {
-		return new Property<T>(ArrayUtils.reduce(sourceValues, reducer), true);
+		const {initial, callback} = reducer;
+		return new Property<T>(sourceValues.reduce(callback, initial), true);
 	}
 	const targetValue = reducer.apply(config.scope, sourceValues);
 	const target = new Property<T>(targetValue, true);

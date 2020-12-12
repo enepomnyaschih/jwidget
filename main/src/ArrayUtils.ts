@@ -24,8 +24,6 @@ SOFTWARE.
 
 import ArraySpliceResult from './ArraySpliceResult';
 import IBindableArray from './IBindableArray';
-import {initReduceState} from './internal';
-import Reducer from './Reducer';
 
 /**
  * Determines index of the first item the `isHigher` callback returns true for. The input array must be ordered in such
@@ -49,35 +47,6 @@ export function binarySearch<T>(arr: readonly T[], isHigher: (value: T) => boole
 		step >>= 1;
 	}
 	return index;
-}
-
-/**
- * Applies a function against an accumulator and each item in the array (from left to right)
- * to reduce it to a single value.
- *
- * @param arr Array.
- * @param reducer Standard reducer. See `jwidget/Reducer` for examples.
- * @returns Final accumulator value.
- */
-export function reduce<T, U>(arr: readonly T[], reducer: Reducer<T, U>): U;
-
-/**
- * Applies a function against an accumulator and each item in the array (from left to right)
- * to reduce it to a single value.
- *
- * @param arr Array.
- * @param callback Function to execute on each item in the array.
- * @param initial Value to use as the first argument to the first call of the callback.
- * @returns Final accumulator value.
- */
-export function reduce<T, U>(arr: readonly T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U;
-export function reduce<T, U>(arr: readonly T[],
-							 reducer: Reducer<T, U> | ((accumulator: U, item: T, index: number) => U), initial?: U): U {
-	let {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
-		value: initial,
-		callback: reducer
-	};
-	return arr.reduce(callback, value);
 }
 
 /**

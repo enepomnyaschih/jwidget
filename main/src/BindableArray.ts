@@ -31,11 +31,9 @@ import Dispatcher from './Dispatcher';
 import IBindableArray from './IBindableArray';
 import IDispatcher from './IDispatcher';
 import {cmp, destroy, identity} from './index';
-import {initReduceState} from "./internal";
 import IProperty from './IProperty';
 import Listenable from './Listenable';
 import Property from './Property';
-import Reducer from "./Reducer";
 
 /**
  * Implementation of a bindable wrapper over a native array.
@@ -169,24 +167,12 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return this._native.findIndex(callback);
 	}
 
-	reduce<U>(reducer: Reducer<T, U>): U;
-	reduce<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U;
-	reduce<U>(reducer: Reducer<T, U> | ((accumulator: U, value: T, index: number) => U), initial?: U): U {
-		const {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
-			value: initial,
-			callback: reducer
-		};
-		return this._native.reduce<U>(callback, value);
+	reduce<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U {
+		return this._native.reduce<U>(callback, initial);
 	}
 
-	reduceRight<U>(reducer: Reducer<T, U>): U;
-	reduceRight<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U;
-	reduceRight<U>(reducer: Reducer<T, U> | ((accumulator: U, value: T, index: number) => U), initial?: U): U {
-		const {value, callback} = (typeof reducer !== "function") ? initReduceState(reducer) : {
-			value: initial,
-			callback: reducer
-		};
-		return this._native.reduceRight<U>(callback, value);
+	reduceRight<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U {
+		return this._native.reduceRight<U>(callback, initial);
 	}
 
 	add(value: T, index?: number) {

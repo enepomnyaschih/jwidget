@@ -31,12 +31,10 @@ import {
 	isIdentity,
 	merge,
 	move,
-	reduce,
 	tryReorder,
 	trySplice
 } from "jwidget/ArrayUtils";
 import IBindableArray from "jwidget/IBindableArray";
-import Reducer from "jwidget/Reducer";
 
 describe("ArrayUtils.binarySearch", () => {
 	it("should immediately return 0 for an empty array", () => {
@@ -85,55 +83,6 @@ describe("ArrayUtils.binarySearch", () => {
 
 	it("should find an item in the end (7 items)", () => {
 		expect(binarySearch([-6, -5, -4, -3, -2, -1, 0], value => value > 0)).equal(7);
-	});
-});
-
-describe("ArrayUtils.reduce(Reducer)", () => {
-	it("should call the native method if the initial value is a constant", () => {
-		// given
-		const array = [5, 2, 8, 7, 8];
-		const calls = spyMethod(array, "reduce");
-		const reducer: Reducer<number, number> = {
-			initial: 0,
-			callback: (acc, item) => acc + item
-		};
-
-		// when
-		reduce(array, reducer);
-
-		// then
-		assertCalls([[array, reducer.callback, 0]], calls);
-	});
-
-	it("should call the native method if the initial value is a function", () => {
-		// given
-		const array = [5, 2, 8, 7, 8];
-		const calls = spyMethod(array, "reduce");
-		const reducer: Reducer<number, number> = {
-			initial: () => 0,
-			callback: (acc, item) => acc + item
-		};
-
-		// when
-		reduce(array, reducer);
-
-		// then
-		assertCalls([[array, reducer.callback, 0]], calls);
-	});
-});
-
-describe("ArrayUtils.reduce(callback)", () => {
-	it("should call the native method", () => {
-		// given
-		const array = [5, 2, 8, 7, 8];
-		const calls = spyMethod(array, "reduce");
-		const cb = () => 0;
-
-		// when
-		reduce(array, cb, 0);
-
-		// then
-		assertCalls([[array, cb, 0]], calls);
 	});
 });
 
@@ -370,12 +319,6 @@ function spy(captureThis: boolean = false) {
 	};
 	fn.calls = calls;
 	return {calls, fn};
-}
-
-function spyMethod(obj: any, method: string) {
-	const {calls, fn} = spy(true);
-	obj[method] = fn;
-	return calls;
 }
 
 function assertCalls(expected: any[][], calls: any[][]) {

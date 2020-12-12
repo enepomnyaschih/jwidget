@@ -25,7 +25,6 @@ SOFTWARE.
 import Bindable from "./Bindable";
 import IBindableArray from './IBindableArray';
 import Listenable from './Listenable';
-import Reducer from "./Reducer";
 
 /**
  * Bindable readonly wrapper over a native array.
@@ -152,27 +151,11 @@ interface ReadonlyBindableArray<T> {
 	/**
 	 * Applies a function against an accumulator and each item in the collection (left to right) to reduce it to a
 	 * single value.
-	 * @param reducer Standard reducer.
-	 * @returns Final accumulator value.
-	 */
-	reduce<U>(reducer: Reducer<T, U>): U;
-
-	/**
-	 * Applies a function against an accumulator and each item in the collection (left to right) to reduce it to a
-	 * single value.
 	 * @param callback Function to execute on each item in the collection.
 	 * @param initial Value to use as the first argument to the first call of the callback.
 	 * @returns Final accumulator value.
 	 */
 	reduce<U>(callback: (accumulator: U, value: T, index: number) => U, initial: U): U;
-
-	/**
-	 * Applies a function against an accumulator and each item in the collection (right to left) to reduce it to a
-	 * single value.
-	 * @param reducer Standard reducer.
-	 * @returns Final accumulator value.
-	 */
-	reduceRight<U>(reducer: Reducer<T, U>): U;
 
 	/**
 	 * Applies a function against an accumulator and each item in the collection (right to left) to reduce it to a
