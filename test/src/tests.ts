@@ -49,6 +49,7 @@ import "./Dispatcher";
 import "./dummyDispatcher";
 import "./Endpoint";
 import "./Interval";
+import "./IterableUtils";
 import "./Mapper";
 import "./Property";
 import "./Switcher";
