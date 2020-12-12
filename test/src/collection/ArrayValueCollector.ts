@@ -27,7 +27,6 @@ import BindableArray from "jwidget/BindableArray";
 import BindableSet from "jwidget/BindableSet";
 import ArrayValueCollector, {startCollectingArrayValues} from "jwidget/collection/ArrayValueCollector";
 import IBindableSet from "jwidget/IBindableSet";
-import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 import ReadonlyBindableSet from "jwidget/ReadonlyBindableSet";
@@ -51,7 +50,7 @@ describe("startCollectingArrayValues", () => {
 		const messages = listen(target);
 		source.splice(
 			[[0, 2], [4, 1]], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 2])]); // 8, 3, 4, 7, 1, 2
+			[[1, [3, 4]], [4, [1, 2]]]); // 8, 3, 4, 7, 1, 2
 		expect(normalizeValues(target)).eql([1, 2, 3, 4, 7, 8]);
 		expect(messages).eql([
 			["size", 5, 6],

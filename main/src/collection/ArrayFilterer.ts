@@ -27,7 +27,6 @@ import BindableArray from '../BindableArray';
 import Class from "../Class";
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
-import IndexItems from '../IndexItems';
 import {filter} from "../IterableUtils";
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
@@ -55,7 +54,7 @@ class ArrayFilterer<T> extends Class {
 		super();
 		this._targetCreated = config.target == null;
 		this.target = this._targetCreated ? new BindableArray<T>(this.source.silent) : config.target;
-		this._splice([], [new IndexItems(0, this.source.native)]);
+		this._splice([], [[0, this.source.native]]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onMove.listen(this._onMove, this));
@@ -131,7 +130,7 @@ class ArrayFilterer<T> extends Class {
 		flushRemove();
 
 		const segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
-		let addParams: IBindableArray.IndexItems<T> = null;
+		let addParams: [number, T[]] = null;
 
 		function flushAdd() {
 			if (addParams !== null) {
@@ -149,9 +148,9 @@ class ArrayFilterer<T> extends Class {
 			}
 			if (newFiltered[index] === 1) {
 				if (addParams === null) {
-					addParams = new IndexItems<T>(targetIndex, []);
+					addParams = [targetIndex, []];
 				}
-				(<T[]>addParams.items).push(item);
+				addParams[1].push(item);
 				this._filtered[index] = 1;
 				++targetIndex;
 			} else {
@@ -188,30 +187,30 @@ class ArrayFilterer<T> extends Class {
 		let sourceIndex = 0;
 		let targetIndex = 0;
 		const segmentsToRemove = removedSegments.map(indexItems => {
-			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
-			const count = this._countFiltered(indexItems.index, indexItems.items.length);
+			targetIndex += this._countFiltered(sourceIndex, indexItems[0] - sourceIndex);
+			const count = this._countFiltered(indexItems[0], indexItems[1].length);
 			const params: IBindableArray.IndexCount = [targetIndex, count];
-			sourceIndex = indexItems.index + indexItems.items.length;
+			sourceIndex = indexItems[0] + indexItems[1].length;
 			targetIndex += count;
 			return params;
 		});
-		ArrayUtils.trySplice(this._filtered, removedSegments.map(x => x.toIndexCount()), []);
+		ArrayUtils.trySplice(this._filtered, removedSegments.map(x => <IBindableArray.IndexCount>[x[0], x[1].length]), []);
 
 		sourceIndex = 0;
 		targetIndex = 0;
 		const segmentsToAdd = addedSegments.map(indexItems => {
-			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
+			targetIndex += this._countFiltered(sourceIndex, indexItems[0] - sourceIndex);
 			const items: T[] = [];
-			const filtered = indexItems.items.map(item => {
+			const filtered = indexItems[1].map(item => {
 				if (!this.test(item)) {
 					return 0;
 				}
 				items.push(item);
 				return 1;
 			});
-			const params = new IndexItems(targetIndex, items);
-			ArrayUtils.addAll(this._filtered, filtered, indexItems.index);
-			sourceIndex = indexItems.index + filtered.length;
+			const params = <IBindableArray.IndexItems<T>>[targetIndex, items];
+			ArrayUtils.addAll(this._filtered, filtered, indexItems[0]);
+			sourceIndex = indexItems[0] + filtered.length;
 			targetIndex += items.length;
 			return params;
 		});

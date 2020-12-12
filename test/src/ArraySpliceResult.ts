@@ -24,33 +24,32 @@ SOFTWARE.
 
 import {assert, expect} from "chai";
 import ArraySpliceResult from "jwidget/ArraySpliceResult";
-import IndexItems from "jwidget/IndexItems";
 
 describe("ArraySpliceResult", () => {
 	it("should identify removed items", () => {
 		const spliceResult = new ArraySpliceResult([5, 2, 8, 7, 8],
-			[new IndexItems(0, [5, 2]), new IndexItems(4, [8])], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
+			[[0, [5, 2]], [4, [8]]], // 8, 7
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1
 		expect(spliceResult.removedItems).eql([5, 2, 8]);
 	});
 
 	it("should identify added items", () => {
 		const spliceResult = new ArraySpliceResult([5, 2, 8, 7, 8],
-			[new IndexItems(0, [5, 2]), new IndexItems(4, [8])], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
+			[[0, [5, 2]], [4, [8]]], // 8, 7
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1
 		expect(spliceResult.addedItems).eql([3, 4, 1, 1]);
 	});
 
 	it("should identify remove params", () => {
 		const spliceResult = new ArraySpliceResult([5, 2, 8, 7, 8],
-			[new IndexItems(0, [5, 2]), new IndexItems(4, [8])], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
+			[[0, [5, 2]], [4, [8]]], // 8, 7
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1
 		expect(spliceResult.removeParams).eql([[0, 2], [4, 1]]);
 	});
 
 	it("should identify if it is empty", () => {
 		assert.isTrue(new ArraySpliceResult([5, 2, 8, 7, 8], [], []).empty);
-		assert.isFalse(new ArraySpliceResult([5, 2, 8, 7, 8], [new IndexItems(0, [5, 2])], []).empty);
-		assert.isFalse(new ArraySpliceResult([5, 2, 8, 7, 8], [], [new IndexItems(1, [3, 4])]).empty);
+		assert.isFalse(new ArraySpliceResult([5, 2, 8, 7, 8], [[0, [5, 2]]], []).empty);
+		assert.isFalse(new ArraySpliceResult([5, 2, 8, 7, 8], [], [[1, [3, 4]]]).empty);
 	});
 });

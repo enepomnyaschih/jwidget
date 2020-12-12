@@ -31,7 +31,6 @@ import Dispatcher from './Dispatcher';
 import IBindableArray from './IBindableArray';
 import IDispatcher from './IDispatcher';
 import {cmp, destroy, identity} from './index';
-import IndexItems from './IndexItems';
 import {initReduceState} from "./internal";
 import IProperty from './IProperty';
 import Listenable from './Listenable';
@@ -198,7 +197,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		if (index === undefined) {
 			index = this._native.length;
 		}
-		this.trySplice([], [new IndexItems<T>(index, values)]);
+		this.trySplice([], [[index, values]]);
 	}
 
 	set(index: number, newValue: T): T {
@@ -230,7 +229,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 
 	tryRemoveAll(index: number, count: number): readonly T[] {
 		const result = this.trySplice([[index, count]], []);
-		return (result !== undefined) ? result.removedSegments[0].items : undefined;
+		return (result !== undefined) ? result.removedSegments[0][1] : undefined;
 	}
 
 	removeValues(values: Iterable<T>) {
@@ -325,7 +324,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 			if (newItemBuffer.length === 0) {
 				return;
 			}
-			segmentsToAdd.push(new IndexItems<T>(offset + nextOldIndex, newItemBuffer));
+			segmentsToAdd.push([offset + nextOldIndex, newItemBuffer]);
 			offset += newItemBuffer.length;
 			newItemBuffer = [];
 		}

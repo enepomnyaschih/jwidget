@@ -26,7 +26,6 @@ import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import ArrayMerger, {startMergingArrays} from "jwidget/collection/ArrayMerger";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 
@@ -62,15 +61,15 @@ describe("startMergingArrays", () => {
 		source.splice(
 			[[0, 2], [3, 1]], // [3, 4, 5]
 			[
-				new IndexItems(0, [
+				[0, [
 					new BindableArray([7, 8]),
 					new BindableArray<number>([9])
-				]),
-				new IndexItems(3, [
+				]],
+				[3, [
 					new BindableArray([10]),
 					new BindableArray([]),
 					new BindableArray([11, 12, 13])
-				])
+				]]
 			]); // [7, 8], [9], [3, 4, 5], [10], [], [11, 12, 13]
 		expect(target.native).eql([7, 8, 9, 3, 4, 5, 10, 11, 12, 13]);
 		expect(messages).eql([
@@ -91,7 +90,7 @@ describe("startMergingArrays", () => {
 		const messages = listen(target);
 		source.get(2).splice(
 			[[1, 1]], // [1, 2], [], [3, 5], [6]
-			[new IndexItems(0, [7, 8]), new IndexItems(3, [9])]); // [1, 2], [], [7, 8, 3, 9, 5], [6]
+			[[0, [7, 8]], [3, [9]]]); // [1, 2], [], [7, 8, 3, 9, 5], [6]
 		expect(target.native).eql([1, 2, 7, 8, 3, 9, 5, 6]);
 		expect(messages).eql([
 			["length", 6, 8],
@@ -430,8 +429,8 @@ function listen(array: ReadonlyBindableArray<any>) {
 function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 	return [
 		spliceResult.oldContents,
-		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
-		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+		spliceResult.removedSegments,
+		spliceResult.addedSegments
 	];
 }
 

@@ -25,7 +25,6 @@ SOFTWARE.
 import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexItems from "jwidget/IndexItems";
 
 describe("new BindableArray", () => {
 	it("should assign silent flag properly", () => {
@@ -687,8 +686,8 @@ describe("BindableArray.splice", () => {
 			[2, 2],
 			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
-			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
-			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+			[1, [10, 11]], // [1, 10, 11, 2, 5, 6, 8, 9]
+			[5, [12, 13]]  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
 		]);
 		expect(array.native).eql([1, 10, 11, 2, 5, 12, 13, 6, 8, 9]);
 	});
@@ -699,8 +698,8 @@ describe("BindableArray.splice", () => {
 			[0, 2],
 			[7, 2]
 		], [ // [3, 4, 5, 6, 7]
-			new IndexItems(0, [10, 11]), // [10, 11, 3, 4, 5, 6, 7]
-			new IndexItems(7, [12, 13])  // [10, 11, 3, 4, 5, 6, 7, 12, 13]
+			[0, [10, 11]], // [10, 11, 3, 4, 5, 6, 7]
+			[7, [12, 13]]  // [10, 11, 3, 4, 5, 6, 7, 12, 13]
 		]);
 		expect(array.native).eql([10, 11, 3, 4, 5, 6, 7, 12, 13]);
 	});
@@ -712,8 +711,8 @@ describe("BindableArray.splice", () => {
 			[2, 2],
 			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
-			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
-			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+			[1, [10, 11]], // [1, 10, 11, 2, 5, 6, 8, 9]
+			[5, [12, 13]]  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
 		]);
 		expect(messages).eql([
 			["length", 9, 10],
@@ -733,8 +732,8 @@ describe("BindableArray.splice", () => {
 			[2, 2],
 			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
-			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
-			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+			[1, [10, 11]], // [1, 10, 11, 2, 5, 6, 8, 9]
+			[5, [12, 13]]  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
 		]))).eql([
 			[1, 2, 3, 4, 5, 6, 7, 8, 9],
 			[[2, [3, 4]], [6, [7]]],
@@ -763,7 +762,7 @@ describe("BindableArray.splice", () => {
 	it("should ignore empty segments", () => {
 		const array = new BindableArray([1, 2, 3, 4, 5]);
 		const messages = listen(array);
-		const result = array.splice([[1, 0]], [new IndexItems(1, [])]);
+		const result = array.splice([[1, 0]], [[1, []]]);
 		expect(array.native).eql([1, 2, 3, 4, 5]);
 		expect(messages).eql([]);
 		assert.isTrue(result.empty);
@@ -774,7 +773,7 @@ describe("BindableArray.splice", () => {
 		const messages = listen(array);
 		const result = array.splice(
 			[[1, 1], [2, 1]],
-			[new IndexItems(1, [6]), new IndexItems(2, [7])]);
+			[[1, [6]], [2, [7]]]);
 		expect(array.native).eql([1, 6, 7, 4, 5]);
 		expect(parseSpliceResult(result)).eql([[1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]]);
 		expect(messages).eql([
@@ -791,7 +790,7 @@ describe("BindableArray.splice", () => {
 			newDestroyFailObject(),
 			newDestroyFailObject()
 		]);
-		array.splice([[1, 2], [4, 1]], [new IndexItems(1, [newDestroyFailObject()])]);
+		array.splice([[1, 2], [4, 1]], [[1, [newDestroyFailObject()]]]);
 	});
 
 	it("should destroy the values in reverse order if owned", () => {
@@ -804,7 +803,7 @@ describe("BindableArray.splice", () => {
 			newDestroyStepObject(() => ++step, 1)
 		]).ownValues();
 		expect(step).equal(0);
-		array.splice([[1, 2], [4, 1]], [new IndexItems(1, [newDestroyFailObject()])]);
+		array.splice([[1, 2], [4, 1]], [[1, [newDestroyFailObject()]]]);
 		expect(step).equal(3);
 	});
 });
@@ -816,8 +815,8 @@ describe("BindableArray.trySplice", () => {
 			[2, 2],
 			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
-			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
-			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+			[1, [10, 11]], // [1, 10, 11, 2, 5, 6, 8, 9]
+			[5, [12, 13]]  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
 		]))).eql([
 			[1, 2, 3, 4, 5, 6, 7, 8, 9],
 			[[2, [3, 4]], [6, [7]]],
@@ -832,7 +831,7 @@ describe("BindableArray.trySplice", () => {
 
 	it("should return undefined if only empty segments are provided", () => {
 		const array = new BindableArray([1, 2, 3, 4, 5]);
-		assert.isUndefined(array.trySplice([[1, 0]], [new IndexItems(1, [])]));
+		assert.isUndefined(array.trySplice([[1, 0]], [[1, []]]));
 	});
 });
 
@@ -1469,15 +1468,15 @@ function listen(array: BindableArray<any>) {
 function parseSpliceParams(spliceParams: IBindableArray.SpliceParams<any>) {
 	return [
 		spliceParams.segmentsToRemove,
-		spliceParams.segmentsToAdd.map(segment => [segment.index, segment.items])
+		spliceParams.segmentsToAdd
 	];
 }
 
 function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 	return [
 		spliceResult.oldContents,
-		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
-		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+		spliceResult.removedSegments,
+		spliceResult.addedSegments
 	];
 }
 

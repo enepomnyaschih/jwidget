@@ -26,7 +26,6 @@ import BindableArray from '../BindableArray';
 import Class from '../Class';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
-import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
 /**
@@ -78,8 +77,8 @@ class ArrayReverser<T> extends Class {
 		let newLength = oldLength;
 
 		const segmentsToRemove = spliceResult.removedSegments.map(indexItems => {
-			const length = indexItems.items.length;
-			const index = oldLength - indexItems.index - length;
+			const length = indexItems[1].length;
+			const index = oldLength - indexItems[0] - length;
 			newLength -= length;
 			return <IBindableArray.IndexCount>[index, length];
 		});
@@ -89,14 +88,14 @@ class ArrayReverser<T> extends Class {
 		addedSegments.reverse();
 
 		addedSegments.forEach(indexItems => {
-			newLength += indexItems.items.length;
+			newLength += indexItems[1].length;
 		});
 
 		const segmentsToAdd = addedSegments.map(indexItems => {
-			const items = indexItems.items;
+			const items = indexItems[1];
 			const length = items.length;
-			const index = newLength - indexItems.index - length;
-			return new IndexItems<T>(index, this._reverse(items));
+			const index = newLength - indexItems[0] - length;
+			return <IBindableArray.IndexItems<T>>[index, this._reverse(items)];
 		});
 
 		this._target.trySplice(segmentsToRemove, segmentsToAdd);

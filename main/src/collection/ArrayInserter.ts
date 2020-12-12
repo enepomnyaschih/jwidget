@@ -103,11 +103,11 @@ class ArrayInserter<T> extends Class {
 		const {removedSegments, addedSegments} = spliceResult;
 		for (let i = removedSegments.length - 1; i >= 0; --i) {
 			const removeRarams = removedSegments[i];
-			this._removeItems(removeRarams.items, removeRarams.index);
+			this._removeItems(removeRarams[1], removeRarams[0]);
 		}
 		for (let i = 0, l = addedSegments.length; i < l; ++i) {
 			const addParams = addedSegments[i];
-			this._addItems(addParams.items, addParams.index);
+			this._addItems(addParams[1], addParams[0]);
 		}
 	}
 

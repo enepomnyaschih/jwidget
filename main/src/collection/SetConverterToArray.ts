@@ -27,7 +27,6 @@ import Class from "../Class";
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from "../IBindableArray";
 import IBindableSet from '../IBindableSet';
-import IndexItems from "../IndexItems";
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
@@ -81,7 +80,7 @@ export default class SetConverterToArray<T> extends Class {
 		const addedValues = [...addedValueSet].filter(value => !removedValueSet.has(value));
 		this._target.trySplice(
 			this.target.detectFilter(filteredValues) || [],
-			[new IndexItems(filteredValues.length, addedValues)]);
+			[<IBindableArray.IndexItems<T>>[filteredValues.length, addedValues]]);
 	}
 }
 

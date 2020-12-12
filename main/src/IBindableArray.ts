@@ -318,25 +318,5 @@ namespace IBindableArray {
 	 * Index and items pair. Used in array splice method arguments to specify item segments to add, and in
 	 * ArraySpliceResult class to specify removed and added item segments.
 	 */
-	export interface IndexItems<T> {
-		/**
-		 * Index.
-		 */
-		readonly index: number;
-
-		/**
-		 * Items.
-		 */
-		readonly items: readonly T[];
-
-		/**
-		 * Converts to index and count pair.
-		 */
-		toIndexCount(): IndexCount;
-
-		/**
-		 * Clones pair.
-		 */
-		clone(): IndexItems<T>;
-	}
+	export type IndexItems<T> = readonly [number, readonly T[]];
 }

@@ -48,7 +48,7 @@ export default class ArraySpliceResult<T> implements IBindableArray.SpliceResult
 	 */
 	get removedItems(): T[]{
 		if (!this._removedItems) {
-			this._removedItems = ArrayUtils.merge(this.removedSegments.map(indexItems => indexItems.items));
+			this._removedItems = ArrayUtils.merge(this.removedSegments.map(indexItems => indexItems[1]));
 		}
 		return this._removedItems;
 	}
@@ -58,7 +58,7 @@ export default class ArraySpliceResult<T> implements IBindableArray.SpliceResult
 	 */
 	get addedItems(): T[]{
 		if (!this._addedItems) {
-			this._addedItems = ArrayUtils.merge(this.addedSegments.map(indexItems => indexItems.items));
+			this._addedItems = ArrayUtils.merge(this.addedSegments.map(indexItems => indexItems[1]));
 		}
 		return this._addedItems;
 	}
@@ -68,7 +68,7 @@ export default class ArraySpliceResult<T> implements IBindableArray.SpliceResult
 	 */
 	get removeParams(): IBindableArray.IndexCount[]{
 		if (!this._removeParams) {
-			this._removeParams = this.removedSegments.map(x => x.toIndexCount());
+			this._removeParams = this.removedSegments.map(x => [x[0], x[1].length]);
 		}
 		return this._removeParams;
 	}

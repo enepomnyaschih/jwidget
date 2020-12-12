@@ -26,7 +26,6 @@ import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import ArrayMapper, {startMappingArray} from "jwidget/collection/ArrayMapper";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 
@@ -64,7 +63,7 @@ describe("startMappingArray", () => {
 		const messages = listen(target);
 		source.splice(
 			[[0, 2], [4, 1]], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1
 		expect(target.native).eql([16, 6, 8, 14, 2, 2]);
 		expect(messages).eql([
 			["length", 5, 6],
@@ -80,7 +79,7 @@ describe("startMappingArray", () => {
 		calls.splice(0);
 		source.splice(
 			[[0, 2], [4, 1]], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1
 		expect(calls).eql([
 			["create", 3],
 			["create", 4],
@@ -355,8 +354,8 @@ function listen(array: ReadonlyBindableArray<any>) {
 function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 	return [
 		spliceResult.oldContents,
-		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
-		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+		spliceResult.removedSegments,
+		spliceResult.addedSegments
 	];
 }
 

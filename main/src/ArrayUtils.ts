@@ -24,7 +24,6 @@ SOFTWARE.
 
 import ArraySpliceResult from './ArraySpliceResult';
 import IBindableArray from './IBindableArray';
-import IndexItems from './IndexItems';
 import {initReduceState} from './internal';
 import Reducer from './Reducer';
 
@@ -193,12 +192,12 @@ export function trySplice<T>(arr: T[],
 	}
 
 	const optimizedSegmentsToAdd: IBindableArray.IndexItems<T>[] = [];
-	let alast: IBindableArray.IndexItems<T> = null;
+	let alast: [number, T[]] = null;
 	for (let aparams of segmentsToAdd) {
-		if (alast && (aparams.index === alast.index + alast.items.length)) {
-			addAll(<T[]>alast.items, aparams.items);
+		if (alast && (aparams[0] === alast[0] + alast[1].length)) {
+			addAll(alast[1], aparams[1]);
 		} else {
-			alast = aparams.clone();
+			alast = [aparams[0], aparams[1].concat()];
 			optimizedSegmentsToAdd.push(alast);
 		}
 	}
@@ -212,14 +211,14 @@ export function trySplice<T>(arr: T[],
 		}
 		const index = rparams[0];
 		const items = arr.splice(index, rparams[1]);
-		removedSegments.push(new IndexItems<T>(index, items));
+		removedSegments.push([index, items]);
 	}
 	const addedSegments: IBindableArray.IndexItems<T>[] = [];
 	for (let aparams of optimizedSegmentsToAdd) {
-		if (!aparams.items.length) {
+		if (!aparams[1].length) {
 			continue;
 		}
-		addAll(arr, aparams.items, aparams.index);
+		addAll(arr, aparams[1], aparams[0]);
 		addedSegments.push(aparams);
 	}
 	if ((removedSegments.length === 0) && (addedSegments.length === 0)) {

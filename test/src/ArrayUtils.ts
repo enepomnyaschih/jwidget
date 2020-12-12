@@ -36,7 +36,6 @@ import {
 	trySplice
 } from "jwidget/ArrayUtils";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexItems from "jwidget/IndexItems";
 import Reducer from "jwidget/Reducer";
 
 describe("ArrayUtils.binarySearch", () => {
@@ -269,8 +268,8 @@ describe("ArrayUtils.trySplice", () => {
 			[2, 2],
 			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
-			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
-			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+			[1, [10, 11]], // [1, 10, 11, 2, 5, 6, 8, 9]
+			[5, [12, 13]]  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
 		]);
 		expect(array).eql([1, 10, 11, 2, 5, 12, 13, 6, 8, 9]);
 	});
@@ -281,8 +280,8 @@ describe("ArrayUtils.trySplice", () => {
 			[0, 2],
 			[7, 2]
 		], [ // [3, 4, 5, 6, 7]
-			new IndexItems(0, [10, 11]), // [10, 11, 3, 4, 5, 6, 7]
-			new IndexItems(7, [12, 13])  // [10, 11, 3, 4, 5, 6, 7, 12, 13]
+			[0, [10, 11]], // [10, 11, 3, 4, 5, 6, 7]
+			[7, [12, 13]]  // [10, 11, 3, 4, 5, 6, 7, 12, 13]
 		]);
 		expect(array).eql([10, 11, 3, 4, 5, 6, 7, 12, 13]);
 	});
@@ -293,8 +292,8 @@ describe("ArrayUtils.trySplice", () => {
 			[2, 2],
 			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
-			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
-			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
+			[1, [10, 11]], // [1, 10, 11, 2, 5, 6, 8, 9]
+			[5, [12, 13]]  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
 		]))).eql([
 			[1, 2, 3, 4, 5, 6, 7, 8, 9],
 			[[2, [3, 4]], [6, [7]]],
@@ -315,7 +314,7 @@ describe("ArrayUtils.trySplice", () => {
 
 	it("should ignore empty segments", () => {
 		const array = [1, 2, 3, 4, 5];
-		assert.isUndefined(trySplice(array, [[1, 0]], [new IndexItems(1, [])]));
+		assert.isUndefined(trySplice(array, [[1, 0]], [[1, []]]));
 		expect(array).eql([1, 2, 3, 4, 5]);
 	});
 
@@ -323,7 +322,7 @@ describe("ArrayUtils.trySplice", () => {
 		const array = [1, 2, 3, 4, 5];
 		const result = trySplice(array,
 			[[1, 1], [2, 1]],
-			[new IndexItems(1, [6]), new IndexItems(2, [7])]);
+			[[1, [6]], [2, [7]]]);
 		expect(array).eql([1, 6, 7, 4, 5]);
 		expect(parseSpliceResult(result)).eql([[1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]]);
 	});
@@ -392,7 +391,7 @@ function assertCalls(expected: any[][], calls: any[][]) {
 function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 	return [
 		spliceResult.oldContents,
-		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
-		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+		spliceResult.removedSegments,
+		spliceResult.addedSegments
 	];
 }

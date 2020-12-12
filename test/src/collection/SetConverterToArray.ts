@@ -199,7 +199,7 @@ function listen(array: ReadonlyBindableArray<any>) {
 function parseSpliceResult<T>(spliceResult: IBindableArray.SpliceResult<T>) {
 	return [
 		normalizeValues(spliceResult.removedItems),
-		spliceResult.addedSegments.map(segment => [segment.index, normalizeValues(segment.items)])
+		spliceResult.addedSegments.map(segment => [segment[0], normalizeValues(segment[1])])
 	];
 }
 

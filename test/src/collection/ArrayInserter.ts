@@ -25,7 +25,6 @@ SOFTWARE.
 import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import ArrayInserter from "jwidget/collection/ArrayInserter";
-import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 
@@ -72,7 +71,7 @@ describe("ArrayInserter", () => {
 		const {messages} = observe(source, true);
 		source.splice(
 			[[0, 2], [4, 1]], // 8, 7
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1
 		expect(messages).eql([
 			["remove", 8, 4],
 			["remove", 2, 1],

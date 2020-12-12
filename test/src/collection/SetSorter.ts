@@ -233,8 +233,8 @@ function listen(array: ReadonlyBindableArray<any>) {
 function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 	return [
 		spliceResult.oldContents,
-		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
-		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+		spliceResult.removedSegments,
+		spliceResult.addedSegments
 	];
 }
 

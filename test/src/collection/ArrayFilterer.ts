@@ -26,7 +26,6 @@ import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import ArrayFilterer, {startFilteringArray} from "jwidget/collection/ArrayFilterer";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 
@@ -58,7 +57,7 @@ describe("startFilteringArray", () => {
 		const messages = listen(target);
 		source.splice(
 			[[0, 2], [4, 1]], // 8, 7 => 8
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1 => 8, 4
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1 => 8, 4
 		expect(target.native).eql([8, 4]);
 		expect(messages).eql([
 			["length", 3, 2],
@@ -74,7 +73,7 @@ describe("startFilteringArray", () => {
 		calls.splice(0);
 		source.splice(
 			[[0, 2], [4, 1]], // 8, 7 => 8
-			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1 => 8, 4
+			[[1, [3, 4]], [4, [1, 1]]]); // 8, 3, 4, 7, 1, 1 => 8, 4
 		expect(calls).eql([3, 4, 1, 1]);
 	});
 
@@ -465,8 +464,8 @@ function listen(array: ReadonlyBindableArray<any>) {
 function parseSpliceResult(spliceResult: IBindableArray.SpliceResult<any>) {
 	return [
 		spliceResult.oldContents,
-		spliceResult.removedSegments.map(segment => [segment.index, segment.items]),
-		spliceResult.addedSegments.map(segment => [segment.index, segment.items])
+		spliceResult.removedSegments,
+		spliceResult.addedSegments
 	];
 }
 

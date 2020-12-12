@@ -27,7 +27,6 @@ import BindableArray from '../BindableArray';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import Destructor from '../Destructor';
 import IBindableArray from '../IBindableArray';
-import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractMapper from './AbstractMapper';
 
@@ -85,12 +84,12 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 	private _onSplice(sourceResult: IBindableArray.SpliceResult<T>) {
 		const {addedSegments} = sourceResult;
 		const segmentsToAdd = addedSegments.map(
-			addParams => new IndexItems(addParams.index, this._createItems(addParams.items)));
+			addParams => <IBindableArray.IndexItems<U>>[addParams[0], this._createItems(addParams[1])]);
 		const targetResult = this.target.trySplice(sourceResult.removeParams, segmentsToAdd);
 		const sourceRemovedSegments = sourceResult.removedSegments;
 		const targetRemovedSegments = targetResult.removedSegments;
 		for (let i = targetRemovedSegments.length - 1; i >= 0; --i) {
-			this._destroyItems(targetRemovedSegments[i].items, sourceRemovedSegments[i].items);
+			this._destroyItems(targetRemovedSegments[i][1], sourceRemovedSegments[i][1]);
 		}
 	}
 

@@ -28,7 +28,6 @@ import Class from '../Class';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
 import {destroy} from '../index';
-import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import {startMappingArray} from "./ArrayMapper";
 
@@ -121,21 +120,21 @@ class ArrayMerger<T> extends Class {
 	private _onSplice(spliceResult: IBindableArray.SpliceResult<ReadonlyBindableArray<T>>) {
 		const indexes = this._getIndexes(spliceResult.oldContents);
 		const segmentsToRemove = spliceResult.removedSegments.map(
-			indexItems => <IBindableArray.IndexCount>[indexes[indexItems.index], this._count(indexItems.items)]);
+			indexItems => <IBindableArray.IndexCount>[indexes[indexItems[0]], this._count(indexItems[1])]);
 		ArrayUtils.backForEach(spliceResult.removedSegments, indexItems => {
-			indexes.splice(indexItems.index, indexItems.items.length);
-			const count = this._count(indexItems.items);
-			for (let i = indexItems.index; i < indexes.length; ++i) {
+			indexes.splice(indexItems[0], indexItems[1].length);
+			const count = this._count(indexItems[1]);
+			for (let i = indexItems[0]; i < indexes.length; ++i) {
 				indexes[i] -= count;
 			}
 		});
 		const segmentsToAdd = spliceResult.addedSegments.map(indexItems => {
-			let startIndex = indexes[indexItems.index];
-			const segment = new IndexItems<T>(startIndex, this._merge(indexItems.items));
-			for (let i = 0; i < indexItems.items.length; ++i) {
-				const length = indexItems.items[i].length.get();
-				indexes.splice(indexItems.index + i, 0, startIndex);
-				for (let j = indexItems.index + i + 1; j < indexes.length; ++j) {
+			let startIndex = indexes[indexItems[0]];
+			const segment = <IBindableArray.IndexItems<T>>[startIndex, this._merge(indexItems[1])];
+			for (let i = 0; i < indexItems[1].length; ++i) {
+				const length = indexItems[1][i].length.get();
+				indexes.splice(indexItems[0] + i, 0, startIndex);
+				for (let j = indexItems[0] + i + 1; j < indexes.length; ++j) {
 					indexes[j] += length;
 				}
 				startIndex += length;
@@ -149,7 +148,7 @@ class ArrayMerger<T> extends Class {
 		const index = this._count(this.source.native, 0, message.index);
 		this._target.trySplice(
 			[[index, message.oldValue.length.get()]],
-			[new IndexItems<T>(index, message.newValue.native)]);
+			[<IBindableArray.IndexItems<T>>[index, message.newValue.native]]);
 	}
 
 	private _onMove(message: IBindableArray.MoveMessage<ReadonlyBindableArray<T>>) {
@@ -271,9 +270,9 @@ class Bunch<T> extends Class {
 	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
 		const index = this._getIndex();
 		const segmentsToRemove = spliceResult.removedSegments.map(
-			indexItems => <IBindableArray.IndexCount>[indexItems.index + index, indexItems.items.length]);
+			indexItems => <IBindableArray.IndexCount>[indexItems[0] + index, indexItems[1].length]);
 		const segmentsToAdd = spliceResult.addedSegments.map(
-			indexItems => new IndexItems<T>(indexItems.index + index, indexItems.items.concat()));
+			indexItems => <IBindableArray.IndexItems<T>>[indexItems[0] + index, indexItems[1].concat()]);
 		this.target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
 

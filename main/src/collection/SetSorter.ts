@@ -29,7 +29,6 @@ import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArra
 import IBindableArray from "../IBindableArray";
 import IBindableSet from '../IBindableSet';
 import {cmp} from "../index";
-import IndexItems from "../IndexItems";
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
@@ -136,18 +135,18 @@ export default class SetSorter<T> extends Class {
 				--addShift;
 			} else {
 				removeParams = null;
-				var addParams = new IndexItems<T>(iTarget + addShift, []);
+				const addParams = <[number, T[]]>[iTarget + addShift, []];
 				while ((iAdds < valuesToAdd.length) && (this._order * this._compare(valuesToAdd[iAdds], value) < 0)) {
-					(<any>addParams.items).push(valuesToAdd[iAdds++]);
+					addParams[1].push(valuesToAdd[iAdds++]);
 					++addShift;
 				}
-				if (addParams.items.length !== 0) {
+				if (addParams[1].length !== 0) {
 					segmentsToAdd.push(addParams);
 				}
 			}
 		}
 		if (iAdds < valuesToAdd.length) {
-			segmentsToAdd.push(new IndexItems<T>(lTarget + addShift, valuesToAdd.slice(iAdds)));
+			segmentsToAdd.push(<IBindableArray.IndexItems<T>>[lTarget + addShift, valuesToAdd.slice(iAdds)]);
 		}
 		this._target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
