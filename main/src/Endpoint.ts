@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import {isNil} from ".";
-
 /**
  * Signature of an endpoint resolution function. The function returns a specific URL by parameters. The endpoints
  * can define routes to use with Router or backend API methods to access with request.
@@ -46,7 +44,7 @@ function join(base: string, suffix: string[]): string {
     if (base == null) {
         return null;
     }
-    if (suffix.some(isNil)) {
+    if (suffix.some(x => x == null)) {
         console.warn("Endpoint with base ", base, " and suffix ", suffix,
             " contains blank parts - it may cause improper URL to be generated. Returned null URL.");
         return null;

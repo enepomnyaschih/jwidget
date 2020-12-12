@@ -30,7 +30,6 @@ import Copier from './Copier';
 import defer from "./defer";
 import Destroyable from './Destroyable';
 import hash from './hash';
-import {isNotNil} from './index';
 import IProperty from './IProperty';
 import {map} from "./IterableUtils";
 import Property from './Property';
@@ -347,7 +346,7 @@ namespace Router {
 		}
 		return function (path: string) {
 			const result = separator.exec(path || "");
-			return result ? [result[1], result.slice(2).find(isNotNil) ?? null] : null;
+			return result ? [result[1], result.slice(2).find(x => x != null) ?? null] : null;
 		};
 	}
 

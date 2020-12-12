@@ -25,6 +25,7 @@ SOFTWARE.
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
+import ".";
 import "./ArraySpliceResult";
 import "./ArrayUtils";
 import "./BindableArray";
@@ -69,5 +70,5 @@ import "./collection/SetMatchingValueCounter";
 import "./collection/SetSorter";
 import "./collection/SetValueCollector";
 
-// There's not test for Component, DomInserter, DomTemplate, DomUtils due to their incompatibility with Node.JS environments.
-// They are covered by UI demos/examples.
+// There's not test for Component, DomInserter, DomTemplate, DomUtils, hash, HtmlTemplate due to their incompatibility
+// with Node.JS environments. They are covered by UI demos/examples.
