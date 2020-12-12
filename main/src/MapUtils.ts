@@ -4,7 +4,7 @@
  * @param callback Mapping function.
  * @returns Mapped map.
  */
-export function map<K, T, U>(map: ReadonlyMap<K, T>, callback: (value: T, key: K) => U): Map<K, U> {
+export function map<K, T, U>(map: Iterable<readonly [K, T]>, callback: (value: T, key: K) => U): Map<K, U> {
 	const result = new Map<K, U>();
 	for (let [key, value] of map) {
 		result.set(key, callback(value, key));
@@ -18,7 +18,7 @@ export function map<K, T, U>(map: ReadonlyMap<K, T>, callback: (value: T, key: K
  * @param callback Criteria callback.
  * @returns Filtered array.
  */
-export function filter<K, V>(map: ReadonlyMap<K, V>, callback: (value: V, key: K) => boolean): Map<K, V> {
+export function filter<K, V>(map: Iterable<readonly [K, V]>, callback: (value: V, key: K) => boolean): Map<K, V> {
 	const result = new Map<K, V>();
 	for (let [key, value] of map) {
 		if (callback(value, key)) {

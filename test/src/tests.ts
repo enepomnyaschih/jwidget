@@ -51,6 +51,7 @@ import "./Endpoint";
 import "./Interval";
 import "./IterableUtils";
 import "./Mapper";
+import "./MapUtils";
 import "./Property";
 import "./Switcher";
 import "./collection/ArrayFilterer";
@@ -74,3 +75,5 @@ import "./collection/SetValueCollector";
 
 // There's not test for Component, DomInserter, DomTemplate, DomUtils, hash, HtmlTemplate due to their incompatibility
 // with Node.JS environments. They are covered by UI demos/examples.
+
+// There's no test for listen, because it is just a simplistic adapter.
