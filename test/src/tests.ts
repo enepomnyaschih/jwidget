@@ -48,6 +48,7 @@ import "./Destructor";
 import "./Dispatcher";
 import "./dummyDispatcher";
 import "./Endpoint";
+import "./Interval";
 import "./Mapper";
 import "./Property";
 import "./Switcher";
