@@ -45,7 +45,7 @@ describe("ArraySpliceResult", () => {
 		const spliceResult = new ArraySpliceResult([5, 2, 8, 7, 8],
 			[new IndexItems(0, [5, 2]), new IndexItems(4, [8])], // 8, 7
 			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
-		expect(spliceResult.removeParams.map(segment => [segment.index, segment.count])).eql([[0, 2], [4, 1]]);
+		expect(spliceResult.removeParams).eql([[0, 2], [4, 1]]);
 	});
 
 	it("should identify if it is empty", () => {

@@ -36,7 +36,6 @@ import {
 	trySplice
 } from "jwidget/ArrayUtils";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexCount from "jwidget/IndexCount";
 import IndexItems from "jwidget/IndexItems";
 import Reducer from "jwidget/Reducer";
 
@@ -267,8 +266,8 @@ describe("ArrayUtils.trySplice", () => {
 	it("should remove and add items in middle as documented", () => {
 		const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 		trySplice(array, [
-			new IndexCount(2, 2),
-			new IndexCount(6, 1)
+			[2, 2],
+			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
 			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
 			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
@@ -279,8 +278,8 @@ describe("ArrayUtils.trySplice", () => {
 	it("should remove and add items in front and rear as documented", () => {
 		const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 		trySplice(array, [
-			new IndexCount(0, 2),
-			new IndexCount(7, 2)
+			[0, 2],
+			[7, 2]
 		], [ // [3, 4, 5, 6, 7]
 			new IndexItems(0, [10, 11]), // [10, 11, 3, 4, 5, 6, 7]
 			new IndexItems(7, [12, 13])  // [10, 11, 3, 4, 5, 6, 7, 12, 13]
@@ -291,8 +290,8 @@ describe("ArrayUtils.trySplice", () => {
 	it("should return the splice result", () => {
 		const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 		expect(parseSpliceResult(trySplice(array, [
-			new IndexCount(2, 2),
-			new IndexCount(6, 1)
+			[2, 2],
+			[6, 1]
 		], [ // [1, 2, 5, 6, 8, 9]
 			new IndexItems(1, [10, 11]), // [1, 10, 11, 2, 5, 6, 8, 9]
 			new IndexItems(5, [12, 13])  // [1, 10, 11, 2, 5, 12, 13, 6, 8, 9]
@@ -316,14 +315,14 @@ describe("ArrayUtils.trySplice", () => {
 
 	it("should ignore empty segments", () => {
 		const array = [1, 2, 3, 4, 5];
-		assert.isUndefined(trySplice(array, [new IndexCount(1, 0)], [new IndexItems(1, [])]));
+		assert.isUndefined(trySplice(array, [[1, 0]], [new IndexItems(1, [])]));
 		expect(array).eql([1, 2, 3, 4, 5]);
 	});
 
 	it("should merge consequent segments", () => {
 		const array = [1, 2, 3, 4, 5];
 		const result = trySplice(array,
-			[new IndexCount(1, 1), new IndexCount(2, 1)],
+			[[1, 1], [2, 1]],
 			[new IndexItems(1, [6]), new IndexItems(2, [7])]);
 		expect(array).eql([1, 6, 7, 4, 5]);
 		expect(parseSpliceResult(result)).eql([[1, 2, 3, 4, 5], [[1, [2, 3]]], [[1, [6, 7]]]]);

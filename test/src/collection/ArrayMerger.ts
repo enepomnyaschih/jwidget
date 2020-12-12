@@ -26,7 +26,6 @@ import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import ArrayMerger, {startMergingArrays} from "jwidget/collection/ArrayMerger";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexCount from "jwidget/IndexCount";
 import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
@@ -61,7 +60,7 @@ describe("startMergingArrays", () => {
 		const target = startMergingArrays(source);
 		const messages = listen(target);
 		source.splice(
-			[new IndexCount(0, 2), new IndexCount(3, 1)], // [3, 4, 5]
+			[[0, 2], [3, 1]], // [3, 4, 5]
 			[
 				new IndexItems(0, [
 					new BindableArray([7, 8]),
@@ -91,7 +90,7 @@ describe("startMergingArrays", () => {
 		const target = startMergingArrays(source);
 		const messages = listen(target);
 		source.get(2).splice(
-			[new IndexCount(1, 1)], // [1, 2], [], [3, 5], [6]
+			[[1, 1]], // [1, 2], [], [3, 5], [6]
 			[new IndexItems(0, [7, 8]), new IndexItems(3, [9])]); // [1, 2], [], [7, 8, 3, 9, 5], [6]
 		expect(target.native).eql([1, 2, 7, 8, 3, 9, 5, 6]);
 		expect(messages).eql([

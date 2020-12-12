@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import IBindableArray from './IBindableArray';
-import IndexCount from './IndexCount';
 
 /**
  * Index and items pair. Used in IBindableArray.splice method arguments to specify item segments to insert, and in
@@ -41,7 +40,7 @@ export default class IndexItems<T> implements IBindableArray.IndexItems<T> {
 	 * Converts to index and count pair.
 	 */
 	toIndexCount(): IBindableArray.IndexCount {
-		return new IndexCount(this.index, this.items.length);
+		return [this.index, this.items.length];
 	}
 
 	/**

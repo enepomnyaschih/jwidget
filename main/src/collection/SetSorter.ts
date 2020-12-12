@@ -29,7 +29,6 @@ import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArra
 import IBindableArray from "../IBindableArray";
 import IBindableSet from '../IBindableSet';
 import {cmp} from "../index";
-import IndexCount from "../IndexCount";
 import IndexItems from "../IndexItems";
 import ReadonlyBindableArray from "../ReadonlyBindableArray";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
@@ -123,17 +122,17 @@ export default class SetSorter<T> extends Class {
 		let addShift = 0;
 		const segmentsToRemove: IBindableArray.IndexCount[] = [];
 		const segmentsToAdd: IBindableArray.IndexItems<T>[] = [];
-		let removeParams: IndexCount = null;
+		let removeParams: [number, number] = null;
 		const lTarget = this.target.length.get();
 		for (let iTarget = 0; iTarget < lTarget; ++iTarget) {
 			const value = this.target.get(iTarget);
 			const index = ArrayUtils.binarySearch(valuesToRemove, x => this._order * this._compare(x, value) > 0) - 1;
 			if (valuesToRemove[index] === value) {
 				if (!removeParams) {
-					removeParams = new IndexCount(iTarget, 0);
+					removeParams = [iTarget, 0];
 					segmentsToRemove.push(removeParams);
 				}
-				++removeParams.count;
+				++removeParams[1];
 				--addShift;
 			} else {
 				removeParams = null;

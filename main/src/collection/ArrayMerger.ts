@@ -28,7 +28,6 @@ import Class from '../Class';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
 import {destroy} from '../index';
-import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import {startMappingArray} from "./ArrayMapper";
@@ -122,7 +121,7 @@ class ArrayMerger<T> extends Class {
 	private _onSplice(spliceResult: IBindableArray.SpliceResult<ReadonlyBindableArray<T>>) {
 		const indexes = this._getIndexes(spliceResult.oldContents);
 		const segmentsToRemove = spliceResult.removedSegments.map(
-			indexItems => new IndexCount(indexes[indexItems.index], this._count(indexItems.items)));
+			indexItems => <IBindableArray.IndexCount>[indexes[indexItems.index], this._count(indexItems.items)]);
 		ArrayUtils.backForEach(spliceResult.removedSegments, indexItems => {
 			indexes.splice(indexItems.index, indexItems.items.length);
 			const count = this._count(indexItems.items);
@@ -149,7 +148,7 @@ class ArrayMerger<T> extends Class {
 	private _onReplace(message: IBindableArray.ReplaceMessage<ReadonlyBindableArray<T>>) {
 		const index = this._count(this.source.native, 0, message.index);
 		this._target.trySplice(
-			[new IndexCount(index, message.oldValue.length.get())],
+			[[index, message.oldValue.length.get()]],
 			[new IndexItems<T>(index, message.newValue.native)]);
 	}
 
@@ -272,7 +271,7 @@ class Bunch<T> extends Class {
 	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
 		const index = this._getIndex();
 		const segmentsToRemove = spliceResult.removedSegments.map(
-			indexItems => new IndexCount(indexItems.index + index, indexItems.items.length));
+			indexItems => <IBindableArray.IndexCount>[indexItems.index + index, indexItems.items.length]);
 		const segmentsToAdd = spliceResult.addedSegments.map(
 			indexItems => new IndexItems<T>(indexItems.index + index, indexItems.items.concat()));
 		this.target.trySplice(segmentsToRemove, segmentsToAdd);

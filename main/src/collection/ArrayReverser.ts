@@ -26,7 +26,6 @@ import BindableArray from '../BindableArray';
 import Class from '../Class';
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
-import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
@@ -82,7 +81,7 @@ class ArrayReverser<T> extends Class {
 			const length = indexItems.items.length;
 			const index = oldLength - indexItems.index - length;
 			newLength -= length;
-			return new IndexCount(index, length);
+			return <IBindableArray.IndexCount>[index, length];
 		});
 		segmentsToRemove.reverse();
 

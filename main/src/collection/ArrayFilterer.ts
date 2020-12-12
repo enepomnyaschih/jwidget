@@ -27,7 +27,6 @@ import BindableArray from '../BindableArray';
 import Class from "../Class";
 import DestroyableReadonlyBindableArray from '../DestroyableReadonlyBindableArray';
 import IBindableArray from '../IBindableArray';
-import IndexCount from '../IndexCount';
 import IndexItems from '../IndexItems';
 import {filter} from "../IterableUtils";
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
@@ -102,7 +101,7 @@ class ArrayFilterer<T> extends Class {
 		const newFiltered = this.source.native.map(item => this.test(item) ? 1 : 0);
 
 		const segmentsToRemove: IBindableArray.IndexCount[] = [];
-		let removeParams: IndexCount = null;
+		let removeParams: [number, number] = null;
 
 		function flushRemove() {
 			if (removeParams !== null) {
@@ -118,9 +117,9 @@ class ArrayFilterer<T> extends Class {
 			}
 			if (newFiltered[index] === 0) {
 				if (removeParams === null) {
-					removeParams = new IndexCount(targetIndex, 0);
+					removeParams = [targetIndex, 0];
 				}
-				++removeParams.count;
+				++removeParams[1];
 				this._filtered[index] = 0;
 			} else {
 				flushRemove();
@@ -191,7 +190,7 @@ class ArrayFilterer<T> extends Class {
 		const segmentsToRemove = removedSegments.map(indexItems => {
 			targetIndex += this._countFiltered(sourceIndex, indexItems.index - sourceIndex);
 			const count = this._countFiltered(indexItems.index, indexItems.items.length);
-			const params = new IndexCount(targetIndex, count);
+			const params: IBindableArray.IndexCount = [targetIndex, count];
 			sourceIndex = indexItems.index + indexItems.items.length;
 			targetIndex += count;
 			return params;

@@ -24,7 +24,6 @@ SOFTWARE.
 
 import ArraySpliceResult from './ArraySpliceResult';
 import IBindableArray from './IBindableArray';
-import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import {initReduceState} from './internal';
 import Reducer from './Reducer';
@@ -183,12 +182,12 @@ export function trySplice<T>(arr: T[],
 							 segmentsToRemove: Iterable<IBindableArray.IndexCount>,
 							 segmentsToAdd: Iterable<IBindableArray.IndexItems<T>>): IBindableArray.SpliceResult<T> {
 	const optimizedSegmentsToRemove: IBindableArray.IndexCount[] = [];
-	let rlast: IndexCount = null;
+	let rlast: [number, number] = null;
 	for (let rparams of segmentsToRemove) {
-		if (rlast && (rparams.index === rlast.index + rlast.count)) {
-			rlast.count += rparams.count;
+		if (rlast && (rparams[0] === rlast[0] + rlast[1])) {
+			rlast[1] += rparams[1];
 		} else {
-			rlast = rparams.clone();
+			rlast = [rparams[0], rparams[1]];
 			optimizedSegmentsToRemove.push(rlast);
 		}
 	}
@@ -208,11 +207,11 @@ export function trySplice<T>(arr: T[],
 	const removedSegments: IBindableArray.IndexItems<T>[] = [];
 	for (let i = optimizedSegmentsToRemove.length - 1; i >= 0; --i) {
 		const rparams = optimizedSegmentsToRemove[i];
-		if (rparams.count === 0) {
+		if (rparams[1] === 0) {
 			continue;
 		}
-		const index = rparams.index;
-		const items = arr.splice(index, rparams.count);
+		const index = rparams[0];
+		const items = arr.splice(index, rparams[1]);
 		removedSegments.push(new IndexItems<T>(index, items));
 	}
 	const addedSegments: IBindableArray.IndexItems<T>[] = [];

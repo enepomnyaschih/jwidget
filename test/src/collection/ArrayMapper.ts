@@ -26,7 +26,6 @@ import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import ArrayMapper, {startMappingArray} from "jwidget/collection/ArrayMapper";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexCount from "jwidget/IndexCount";
 import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
@@ -64,7 +63,7 @@ describe("startMappingArray", () => {
 		const target = startMappingArray(source, x => 2 * x);
 		const messages = listen(target);
 		source.splice(
-			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7
+			[[0, 2], [4, 1]], // 8, 7
 			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
 		expect(target.native).eql([16, 6, 8, 14, 2, 2]);
 		expect(messages).eql([
@@ -80,7 +79,7 @@ describe("startMappingArray", () => {
 		startMappingArray(source, makeCreator(x => 2 * x, calls), {destroy: makeDestroyer(calls)});
 		calls.splice(0);
 		source.splice(
-			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7
+			[[0, 2], [4, 1]], // 8, 7
 			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1
 		expect(calls).eql([
 			["create", 3],

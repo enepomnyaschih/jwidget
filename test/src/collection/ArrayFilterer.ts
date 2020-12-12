@@ -26,7 +26,6 @@ import {assert, expect} from "chai";
 import BindableArray from "jwidget/BindableArray";
 import ArrayFilterer, {startFilteringArray} from "jwidget/collection/ArrayFilterer";
 import IBindableArray from "jwidget/IBindableArray";
-import IndexCount from "jwidget/IndexCount";
 import IndexItems from "jwidget/IndexItems";
 import Listenable from "jwidget/Listenable";
 import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
@@ -58,7 +57,7 @@ describe("startFilteringArray", () => {
 		const target = startFilteringArray(source, x => x % 2 === 0); // 2, 8, 8
 		const messages = listen(target);
 		source.splice(
-			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7 => 8
+			[[0, 2], [4, 1]], // 8, 7 => 8
 			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1 => 8, 4
 		expect(target.native).eql([8, 4]);
 		expect(messages).eql([
@@ -74,7 +73,7 @@ describe("startFilteringArray", () => {
 		startFilteringArray(source, makeTester(x => x % 2 === 0, calls)); // 2, 8, 8
 		calls.splice(0);
 		source.splice(
-			[new IndexCount(0, 2), new IndexCount(4, 1)], // 8, 7 => 8
+			[[0, 2], [4, 1]], // 8, 7 => 8
 			[new IndexItems(1, [3, 4]), new IndexItems(4, [1, 1])]); // 8, 3, 4, 7, 1, 1 => 8, 4
 		expect(calls).eql([3, 4, 1, 1]);
 	});

@@ -31,7 +31,6 @@ import Dispatcher from './Dispatcher';
 import IBindableArray from './IBindableArray';
 import IDispatcher from './IDispatcher';
 import {cmp, destroy, identity} from './index';
-import IndexCount from './IndexCount';
 import IndexItems from './IndexItems';
 import {initReduceState} from "./internal";
 import IProperty from './IProperty';
@@ -230,7 +229,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 	}
 
 	tryRemoveAll(index: number, count: number): readonly T[] {
-		const result = this.trySplice([new IndexCount(index, count)], []);
+		const result = this.trySplice([[index, count]], []);
 		return (result !== undefined) ? result.removedSegments[0].items : undefined;
 	}
 
@@ -334,7 +333,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		function testRemove(oldIndex: number) {
 			if (oldIndex > nextOldIndex) {
 				const count = oldIndex - nextOldIndex;
-				segmentsToRemove.push(new IndexCount(nextOldIndex, count));
+				segmentsToRemove.push([nextOldIndex, count]);
 				offset -= count;
 			}
 		}
@@ -370,7 +369,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 				++count;
 			}
 			if (count !== 0) {
-				segmentsToRemove.push(new IndexCount(oldIndex, count));
+				segmentsToRemove.push([oldIndex, count]);
 			}
 			oldIndex += count + 1;
 		}

@@ -312,22 +312,7 @@ namespace IBindableArray {
 	/**
 	 * Index and count pair. Used in array splice method arguments to specify item segments to remove.
 	 */
-	export interface IndexCount {
-		/**
-		 * Index.
-		 */
-		readonly index: number;
-
-		/**
-		 * Count.
-		 */
-		readonly count: number;
-
-		/**
-		 * Clones pair.
-		 */
-		clone(): IndexCount;
-	}
+	export type IndexCount = readonly [number, number];
 
 	/**
 	 * Index and items pair. Used in array splice method arguments to specify item segments to add, and in
