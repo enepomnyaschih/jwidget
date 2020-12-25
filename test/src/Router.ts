@@ -32,9 +32,6 @@ import IProperty from "jwidget/IProperty";
 import Property from "jwidget/Property";
 import Router from "jwidget/Router";
 
-export default class TestRouter extends Router<Destroyable> {
-}
-
 describe("Router", () => {
 	it("should initialize the target properly", () => {
 		// given
@@ -53,10 +50,23 @@ describe("Router", () => {
 
 	it("should perform initial redirection if needed", async () => {
 		// given
+		let step = 0;
 		const path = new Property("");
 
 		// when
 		const application = new Application(path);
+		application.router.target.onChange.listen(({value}) => {
+			switch (step++) {
+				case 0:
+					assert.isNull(value);
+					break;
+				case 1:
+					assert.isTrue(value instanceof Inbox);
+					break;
+				default:
+					assert.fail();
+			}
+		});
 
 		// then
 		expect(path.get()).equal("");
@@ -75,8 +85,75 @@ describe("Router", () => {
 
 		const emailList = (inbox as Inbox).router.target.get();
 		assert.isTrue(emailList instanceof EmailList);
+
+		expect(step).equal(2);
+	});
+
+	it("should listen path change on top level", () => {
+		// given
+		let step = 0;
+		const path = new Property("inbox");
+		const application = new Application(path);
+		application.router.target.onChange.listen(({value}) => {
+			switch (step++) {
+				case 0:
+					assert.isNull(value);
+					break;
+				case 1:
+					assert.isTrue(value instanceof Compose);
+					break;
+				default:
+					assert.fail();
+			}
+		});
+
+		// when
+		path.set("compose");
+
+		// then
+		const compose = application.router.target.get();
+		assert.isTrue(compose instanceof Compose);
+
+		expect(step).equal(2);
+	});
+
+	it("should listen path change on nested level", () => {
+		// given
+		let step = 0;
+		const path = new Property("inbox");
+		const application = new Application(path);
+		const inbox = application.router.target.get() as Inbox;
+		application.router.target.onChange.listen(() => {
+			assert.fail();
+		});
+		inbox.router.target.onChange.listen(({value}) => {
+			switch (step++) {
+				case 0:
+					assert.isNull(value);
+					break;
+				case 1:
+					assert.isTrue(value instanceof EmailView);
+					break;
+				default:
+					assert.fail();
+			}
+		});
+
+		// when
+		path.set("inbox/1");
+
+		// then
+		const emailView = inbox.router.target.get();
+		assert.isTrue(emailView instanceof EmailView);
+
+		expect(step).equal(2);
 	});
 });
+
+// These classes represent examples/src/router.
+
+export default class TestRouter extends Router<Destroyable> {
+}
 
 class Application extends Class {
 
