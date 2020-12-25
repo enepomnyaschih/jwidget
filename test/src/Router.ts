@@ -155,6 +155,34 @@ describe("Router", () => {
 		}).throw(Error, "Can't update router because its update cycle is already active. " +
 			"Consider using RouteRedirector or moving URL redirection to an asyncronous callback.");
 	});
+
+	it("should destroy the target on router destruction", () => {
+		// given
+		const path = new Property("compose");
+		const application = new Application(path);
+		const compose = application.router.target.get() as Compose;
+		assert.isFalse(compose.destroyed);
+
+		// when
+		application.destroy();
+
+		// then
+		assert.isTrue(compose.destroyed);
+	});
+
+	it("should destroy the target on redirection", () => {
+		// given
+		const path = new Property("compose");
+		const application = new Application(path);
+		const compose = application.router.target.get() as Compose;
+		assert.isFalse(compose.destroyed);
+
+		// when
+		path.set("inbox");
+
+		// then
+		assert.isTrue(compose.destroyed);
+	});
 });
 
 // These classes represent examples/src/router.
@@ -168,7 +196,7 @@ class Application extends Class {
 
 	constructor(path: IProperty<string>, useBrokenRedirector: boolean = false) {
 		super();
-		this.router = new TestRouter({
+		this.router = this.own(new TestRouter({
 			path,
 			handler: {
 				routes: {
@@ -185,7 +213,7 @@ class Application extends Class {
 				},
 				notFound: route => new NotFound(route)
 			}
-		});
+		}));
 		this.router.update();
 	}
 }
@@ -232,6 +260,14 @@ class EmailView extends Class {
 }
 
 class Compose extends Class {
+
+	destroyed = false;
+
+	destroyObject() {
+		assert.isFalse(this.destroyed);
+		this.destroyed = true;
+		super.destroyObject();
+	}
 }
 
 class Settings extends Class {
