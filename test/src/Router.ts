@@ -148,6 +148,13 @@ describe("Router", () => {
 
 		expect(step).equal(2);
 	});
+
+	it("should detect update cycle interference", async () => {
+		expect(() => {
+			new Application(new Property(""), true);
+		}).throw(Error, "Can't update router because its update cycle is already active. " +
+			"Consider using RouteRedirector or moving URL redirection to an asyncronous callback.");
+	});
 });
 
 // These classes represent examples/src/router.
@@ -159,7 +166,7 @@ class Application extends Class {
 
 	readonly router: TestRouter;
 
-	constructor(path: IProperty<string>) {
+	constructor(path: IProperty<string>, useBrokenRedirector: boolean = false) {
 		super();
 		this.router = new TestRouter({
 			path,
@@ -168,7 +175,13 @@ class Application extends Class {
 					"inbox": arg => new Inbox(arg, this.router),
 					"compose": () => new Compose(),
 					"settings": () => new Settings(),
-					"": () => new Redirector(path, "inbox", this.router)
+					"": () => {
+						if (useBrokenRedirector) {
+							path.set("inbox");
+							return null;
+						}
+						return new Redirector(path, "inbox", this.router);
+					}
 				},
 				notFound: route => new NotFound(route)
 			}

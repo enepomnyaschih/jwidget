@@ -139,7 +139,7 @@ class Router<T extends Destroyable> extends Class {
 	update(force = false) {
 		if (this._updating) {
 			throw new Error("Can't update router because its update cycle is already active. " +
-				"Consider using Router.Redirector or moving URL redirection to an asyncronous callback.");
+				"Consider using RouteRedirector or moving URL redirection to an asyncronous callback.");
 		}
 		this._updating = true;
 		const path = this.path.get();
