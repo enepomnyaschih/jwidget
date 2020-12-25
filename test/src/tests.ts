@@ -55,6 +55,7 @@ import "./MapUtils";
 import "./Property";
 import "./Router";
 import "./SetUtils";
+import "./StringUtils";
 import "./Switcher";
 import "./collection/ArrayFilterer";
 import "./collection/ArrayInserter";
