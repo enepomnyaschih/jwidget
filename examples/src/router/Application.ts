@@ -2,7 +2,7 @@ import $ from "jquery";
 import bindVal from "jwidget/bindVal";
 import Component from "jwidget/Component";
 import hash from "jwidget/hash";
-import Router from "jwidget/Router";
+import RouteRedirector from "jwidget/RouteRedirector";
 import Switcher from "jwidget/Switcher";
 import template from "jwidget/template";
 import UIRouter from "jwidget/UIRouter";
@@ -25,7 +25,7 @@ export default class Application extends Component {
 					"inbox": arg => new Inbox(arg, this.router),
 					"compose": () => new Compose(),
 					"settings": () => new Settings(),
-					"": () => new Router.Redirector("inbox", this.router)
+					"": () => new RouteRedirector("inbox", this.router)
 				},
 				notFound: route => new NotFound(route)
 			}

@@ -8,7 +8,7 @@ export default class Application extends Component {
 
 	protected renderRect(el: JQuery) {
 		// Watch input value
-		const title = bindVal(this.getElement("input"));
+		const title = bindVal<string>(this.getElement("input"));
 
 		// Bind rectangle "title" attribute to title property value
 		bindAttr(el, "title", title);

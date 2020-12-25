@@ -1,5 +1,6 @@
 import Component from "jwidget/Component";
 import Router from "jwidget/Router";
+import {redirectRoute} from "jwidget/RouteRedirector";
 import template from "jwidget/template";
 import Email from "./Email";
 
@@ -24,7 +25,7 @@ export default class EmailView extends Component {
 
 			// If you don't know exactly how many routers can be above or below this component,
 			// using parent router on redirection is a smart choice
-			this.parentRouter.redirect("");
+			redirectRoute("", this.parentRouter);
 		});
 	}
 }

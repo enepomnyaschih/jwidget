@@ -1,17 +1,18 @@
+import {destroy} from "jwidget";
+import {startMappingArray} from "jwidget/collection/ArrayMapper";
 import Component from "jwidget/Component";
-import {mapList} from "jwidget/mapper/list";
-import ReadonlyList from "jwidget/ReadonlyList";
+import ReadonlyBindableArray from "jwidget/ReadonlyBindableArray";
 import Email from "./Email";
 import EmailListItem from "./EmailListItem";
 
 export default class EmailList extends Component {
 
-	constructor(private emails: ReadonlyList<Email>) {
+	constructor(private emails: ReadonlyBindableArray<Email>) {
 		super();
 	}
 
 	protected renderRoot(el: JQuery) {
 		el.addClass("email-list");
-		return this.own(mapList(this.emails, email => new EmailListItem(email)));
+		return this.own(startMappingArray(this.emails, email => new EmailListItem(email), {destroy}));
 	}
 }

@@ -31,7 +31,7 @@ import Router from "./Router";
 /**
  * Recommended way to perform an asyncronous redirection in Router `handler` function.
  */
-export class RouteRedirector extends Component {
+export default class RouteRedirector extends Component {
 	/**
 	 * Creates a new redirector.
 	 * @param path Path relative to router.

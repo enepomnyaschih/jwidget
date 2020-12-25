@@ -7,7 +7,7 @@ import AjaxGreeter from "./AjaxGreeter";
 @template(require<string>("./Application.jw.html"))
 export default class Application extends Component {
 
-	private count = this.own(new Property(0));
+	private count = new Property(0);
 	private greeter = this.own(new Property<Component>()).ownValue();
 
 	protected renderButton(el: JQuery) {
@@ -18,7 +18,7 @@ export default class Application extends Component {
 	}
 
 	protected renderCount(el: JQuery) {
-		bindText(el, this.count);
+		bindText(el, this.count.map(count => String(count)));
 	}
 
 	protected renderGreeter() {

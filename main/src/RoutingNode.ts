@@ -30,7 +30,7 @@ import IProperty from './IProperty';
 import {map} from "./IterableUtils";
 import Property from './Property';
 import Router from "./Router";
-import {redirectRoute, RouteRedirector} from './RouteRedirector';
+import RouteRedirector, {redirectRoute} from './RouteRedirector';
 
 /**
  * Creates a router that manages two mapping of properties:
@@ -40,7 +40,7 @@ import {redirectRoute, RouteRedirector} from './RouteRedirector';
  *
  * This allows you to render your content as a fixed array of panels representing the concurrent routes.
  */
-export class RoutingNode extends Class {
+export default class RoutingNode extends Class {
 	private _initialized = false; // used to auto-activate the first route on initialization
 	private _updating = false; // used to prevent redirection error
 

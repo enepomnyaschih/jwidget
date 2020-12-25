@@ -1,7 +1,6 @@
-import {SILENT} from "jwidget";
 import Bindable from "jwidget/Bindable";
+import BindableArray from "jwidget/BindableArray";
 import Component from "jwidget/Component";
-import List from "jwidget/List";
 import Router from "jwidget/Router";
 import template from "jwidget/template";
 import UIRouter from "jwidget/UIRouter";
@@ -14,7 +13,7 @@ import EmailView from "./EmailView";
 export default class Inbox extends Component {
 
 	private router: UIRouter;
-	private emails = new List(EMAILS, email => email.id, SILENT);
+	private emails = new BindableArray(EMAILS, true);
 
 	constructor(private path: Bindable<string>, private parentRouter: Router<any>) {
 		super();

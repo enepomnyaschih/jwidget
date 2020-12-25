@@ -11,7 +11,7 @@ export default class Application extends Component {
 		input.html('<b>Hello!</b>');
 
 		// Watch input value
-		const html = bindVal(input);
+		const html = bindVal<string>(input);
 
 		// Bind inner HTML to html property value
 		bindHtml(el, html);

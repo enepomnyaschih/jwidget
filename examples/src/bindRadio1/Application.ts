@@ -8,7 +8,7 @@ export default class Application extends Component {
 
 	protected renderLetters(el: JQuery) {
 		// Watch input value
-		const value = bindVal(this.getElement("input"));
+		const value = bindVal<string>(this.getElement("input"));
 
 		// Bind radio button selection to property value
 		bindRadio(el, "letter", value);

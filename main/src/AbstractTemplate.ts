@@ -159,6 +159,9 @@ abstract class AbstractTemplate {
 
 		// traverse into children
 		const childIds = this.childIds.get(id);
+		if (childIds === undefined) {
+			return;
+		}
 		for (let childId of childIds) {
 			this._backtrace(childId);
 		}

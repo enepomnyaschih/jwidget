@@ -8,7 +8,7 @@ export default class Application extends Component {
 
 	protected renderRect(el: JQuery) {
 		// Watch input value
-		const color = bindVal(this.getElement("input"));
+		const color = bindVal<string>(this.getElement("input"));
 
 		// Bind background color style to color property value
 		bindCss(el, "background-color", color);
