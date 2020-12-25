@@ -23,15 +23,9 @@ SOFTWARE.
 */
 
 import Bindable from './Bindable';
-import CancelToken from "./CancelToken";
 import Class from './Class';
-import Component from './Component';
-import Copier from './Copier';
-import defer from "./defer";
 import Destroyable from './Destroyable';
-import hash from './hash';
 import IProperty from './IProperty';
-import {map} from "./IterableUtils";
 import Property from './Property';
 
 /**
@@ -185,15 +179,6 @@ class Router<T extends Destroyable> extends Class {
 	 */
 	getFullPath(path: string): string {
 		return this.parent ? this.parent.getFullPath(this.parent.join(this.name, path)) : path;
-	}
-
-	/**
-	 * Immediately performs the redirection, i.e. sets `hash` to `getFullPath(path)`.
-	 * @param path Path relative to this router.
-	 * @param replaceState Replace the current browser historical state rather than pushing a new state to the stack.
-	 */
-	redirect(path: string, replaceState?: boolean) {
-		Router.redirect(path, this, replaceState);
 	}
 }
 
@@ -393,175 +378,5 @@ namespace Router {
 	 */
 	export function getFullPath(path: string, router?: Router<any>) {
 		return router ? router.getFullPath(path) : path;
-	}
-
-	/**
-	 * Immediately performs the redirection, i.e. sets `hash` to `getFullPath(path, router)`.
-	 * @param path Path relative to `router`.
-	 * @param router Redirect relative to this router.
-	 * @param replaceState Replace the current browser historical state rather than pushing a new state to the stack.
-	 */
-	export function redirect(path: string, router?: Router<any>, replaceState?: boolean) {
-		try {
-			path = getFullPath(path, router);
-			if (hash.updating) {
-				throw new Error("Update cycle is already active. " +
-					"Suggest using Router.Redirector or moving URL redirection to an asyncronous callback.");
-			}
-		} catch (e) {
-			throw new Error("Can not perform URL redirection to " + path + ": " + e.message);
-		}
-		hash.set(path, replaceState);
-	}
-
-	/**
-	 * Recommended way to perform an asyncronous redirection in Router `handler` function.
-	 */
-	export class Redirector extends Component {
-		/**
-		 * Creates a new redirector.
-		 * @param path Path relative to router.
-		 * @param router Redirect relative to this router.
-		 * @param replaceState Replace the current browser historical state rather than pushing a new state to the
-		 * stack. Defaults to true.
-		 */
-		constructor(private path: string, private router?: Router<any>, private replaceState = true) {
-			super();
-			defer(0, this.own(new CancelToken())).then(() => {
-				redirect(this.path, this.router, this.replaceState);
-			});
-		}
-	}
-
-	/**
-	 * Creates a router that manages two mapping of properties:
-	 *
-	 * * `paths` which exposes string path properties for child routers if neccessary;
-	 * * `expanded` which exposes boolean "expanded" properties for child UI panels.
-	 *
-	 * This allows you to render your content as a fixed array of panels representing the concurrent routes.
-	 */
-	export class Node extends Class {
-		private _initialized = false; // used to auto-activate the first route on initialization
-		private _updating = false; // used to prevent redirection error
-
-		/**
-		 * Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
-		 * always exist regardless of their activity.
-		 */
-		readonly paths: ReadonlyMap<string, IProperty<string>>;
-
-		/**
-		 * Provides "expanded" flags to bind child panels to, by name. Support two-way binding.
-		 */
-		readonly expanded: ReadonlyMap<string, IProperty<boolean>>;
-
-		/**
-		 * Default route this node was initialized with.
-		 */
-		readonly defaultRoute: string;
-
-		/**
-		 * Router that manages this node. Node creates this router automatically. You should pass this router to
-		 * child components as their parent router for further routing.
-		 */
-		readonly router: Router<Destroyable>;
-
-		/**
-		 * Creates router node, assigns its properties to initial values and starts synchronization.
-		 * @param config Node configuration.
-		 */
-		constructor(config: Node.Config) {
-			super();
-			this.defaultRoute = config.defaultRoute;
-
-			this.paths = new Map(map(config.routes, route => [route, new Property<string>()]));
-			this.expanded = new Map(map(config.routes, route => [route, new Property(config.expanded === true)]));
-
-			if (config.expanded && (typeof config.expanded !== "boolean")) {
-				for (const route of config.expanded) {
-					this.expanded.get(route).set(true);
-				}
-			}
-
-			for (const [route, expanded] of this.expanded) {
-				this.own(expanded.onChange.listen(message => {
-					if (message.value && !this._updating) {
-						this.router.redirect(route);
-					}
-				}));
-			}
-
-			this.router = this.own(new Router<Destroyable>({
-				name: config.name,
-				parent: config.parent,
-				path: config.path,
-				handler: (route, arg) => {
-					const path = this.paths.get(route);
-					if (!path) {
-						return (!this._initialized && this.defaultRoute) ?
-							new Redirector(this.defaultRoute, this.router) : null;
-					}
-					this._updating = true;
-					const expander = new NodeExpander(this.router, arg, path, this.expanded.get(route));
-					this._updating = false;
-					return expander;
-				}
-			}));
-			this.router.update();
-			this._initialized = true;
-		}
-	}
-
-	export namespace Node {
-		/**
-		 * Router.Node configuration.
-		 */
-		export interface Config {
-			/**
-			 * Router name.
-			 */
-			readonly name?: string;
-
-			/**
-			 * Parent router.
-			 */
-			readonly parent?: Router<any>;
-
-			/**
-			 * Path to bind the router to.
-			 */
-			readonly path?: Bindable<string>;
-
-			/**
-			 * Fixed array of routes to manage by this node. For every name in this list, corresponding properties will be
-			 * created in `paths` and `expanded` dictionaries of the node.
-			 */
-			readonly routes: Iterable<string>;
-
-			/**
-			 * Initial "expanded" status of routes or initial routes to expand. Defaults to false (all routes are
-			 * collapsed).
-			 */
-			readonly expanded?: boolean | Iterable<string>;
-
-			/**
-			 * Default route. If the initial path is blank (""), the router performs a redirection to this route, i.e.
-			 * expands one of the panels. Doesn't work after initialization.
-			 */
-			readonly defaultRoute?: string;
-		}
-	}
-
-	class NodeExpander extends Class {
-		constructor(private router: Router<any>, sourcePath: Bindable<string>,
-					targetPath: IProperty<string>, expanded: IProperty<boolean>) {
-			super();
-			this.own(new Copier(sourcePath, targetPath));
-			expanded.set(true);
-			this.own(expanded.onChange.listen(() => {
-				this.router.redirect("")
-			}));
-		}
 	}
 }
