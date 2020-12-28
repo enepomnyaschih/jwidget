@@ -28,7 +28,7 @@ export function filter<K, V>(map: Iterable<readonly [K, V]>, callback: (value: V
 	return result;
 }
 
-// Some functions mitigating stupidity of modern JS API. Native methods return Iterator instead of Iterable.
+// Some functions mitigating a serious design flaw of modern JS API. Native methods return Iterator instead of Iterable.
 
 export function getIterableKeys<K, V>(map: Iterable<readonly [K, V]>): Iterable<K> {
 	return {

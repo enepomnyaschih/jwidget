@@ -204,7 +204,7 @@ export function trySplice<T>(arr: T[],
  * Must contain all indexes from 0 to (length - 1).
  * @returns Old array contents. If the array is not modified, returns undefined.
  */
-export function tryReorder<T>(arr: T[], indexArray: readonly number[]): readonly T[] {
+export function tryReorder<T>(arr: T[], indexArray: readonly number[]): T[] {
 	const length = arr.length;
 	if (isIdentity(indexArray)) {
 		return undefined;

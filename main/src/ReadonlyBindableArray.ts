@@ -182,7 +182,7 @@ interface ReadonlyBindableArray<T> {
 	 * @param newContents New array contents.
 	 * @returns Segments to remove. If no method call required, returns undefined.
 	 */
-	detectFilter(newContents: readonly T[]): readonly IBindableArray.IndexCount[];
+	detectFilter(newContents: readonly T[]): IBindableArray.IndexCount[];
 
 	/**
 	 * Detects `reorder` method arguments to adjust the array contents to `newContents`.
@@ -191,7 +191,7 @@ interface ReadonlyBindableArray<T> {
 	 * @param newContents New array contents.
 	 * @returns `indexMapping` argument of `reorder` method. If no method call required, returns undefined.
 	 */
-	detectReorder(newContents: readonly T[]): readonly number[];
+	detectReorder(newContents: readonly T[]): number[];
 
 	/**
 	 * Detects `reorder` method arguments to sort array contents by result of `callback` call for each item.
@@ -200,7 +200,7 @@ interface ReadonlyBindableArray<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns `indexMapping` argument of `reorder` method. If no method call required, returns undefined.
 	 */
-	detectSort(callback?: (item: T, index: number) => any, order?: number): readonly number[];
+	detectSort(callback?: (item: T, index: number) => any, order?: number): number[];
 
 	/**
 	 * Detects `reorder` method arguments to sort array contents by comparer.
@@ -209,7 +209,7 @@ interface ReadonlyBindableArray<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns `indexMapping` argument of `reorder` method. If no method call required, returns undefined.
 	 */
-	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, order?: number): readonly number[];
+	detectSortComparing(compare?: (t1: T, t2: T, i1: number, i2: number) => number, order?: number): number[];
 }
 
 export default ReadonlyBindableArray;

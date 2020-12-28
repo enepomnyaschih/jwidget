@@ -67,6 +67,11 @@ interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 	/**
 	 * Removes all set values and dispatches a cleanup message.
 	 */
+	clear(): ReadonlySet<T>
+
+	/**
+	 * Removes all set values and dispatches a cleanup message.
+	 */
 	tryClear(): ReadonlySet<T>;
 
 	/**

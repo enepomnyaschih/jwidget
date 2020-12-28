@@ -76,6 +76,11 @@ interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V
 	/**
 	 * Removes all map entries and dispatches a cleanup message.
 	 */
+	clear(): Map<K, V>;
+
+	/**
+	 * Removes all map entries and dispatches a cleanup message.
+	 */
 	tryClear(): Map<K, V>;
 
 	/**

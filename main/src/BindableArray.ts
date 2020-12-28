@@ -209,13 +209,13 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return this.tryRemoveAll(index, 1)[0];
 	}
 
-	removeAll(index: number, count: number): readonly T[] {
+	removeAll(index: number, count: number): T[] {
 		return this.tryRemoveAll(index, count) || [];
 	}
 
-	tryRemoveAll(index: number, count: number): readonly T[] {
+	tryRemoveAll(index: number, count: number): T[] {
 		const result = this.trySplice([[index, count]], []);
-		return (result !== undefined) ? result.removedSegments[0][1] : undefined;
+		return (result !== undefined) ? result.removedSegments[0][1].concat() : undefined;
 	}
 
 	removeValues(values: Iterable<T>) {
@@ -241,7 +241,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return value;
 	}
 
-	clear(): readonly T[] {
+	clear(): T[] {
 		if (this._native.length === 0) {
 			return [];
 		}
@@ -285,7 +285,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		this.tryReorder(indexMapping);
 	}
 
-	tryReorder(indexMapping: readonly number[]): readonly T[] {
+	tryReorder(indexMapping: readonly number[]): T[] {
 		const oldContents = ArrayUtils.tryReorder(this._native, indexMapping);
 		if (oldContents === undefined) {
 			return undefined;
@@ -342,7 +342,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return undefined;
 	}
 
-	detectFilter(newContents: readonly T[]): readonly IBindableArray.IndexCount[] {
+	detectFilter(newContents: readonly T[]): IBindableArray.IndexCount[] {
 		const segmentsToRemove: IBindableArray.IndexCount[] = [];
 		let oldIndex = 0;
 		const oldLength = this._native.length;
@@ -361,7 +361,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return (segmentsToRemove.length !== 0) ? segmentsToRemove : undefined;
 	}
 
-	detectReorder(newContents: readonly T[]): readonly number[] {
+	detectReorder(newContents: readonly T[]): number[] {
 		const indexArray: number[] = [];
 		const newIndexMap = new Map<T, number>();
 		for (let i = 0, l = newContents.length; i < l; ++i) {
@@ -373,14 +373,14 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return isIdentity(indexArray) ? undefined : indexArray;
 	}
 
-	detectSort(callback: (item: T, index: number) => any = identity, order: number = 1): readonly number[] {
+	detectSort(callback: (item: T, index: number) => any = identity, order: number = 1): number[] {
 		const pairs = this._native.map((item, index): [number, T] => [index, callback(item, index)]);
 		pairs.sort((x, y) => order * cmp(x[1], y[1]));
 		const indexes = pairs.map(pair => pair[0]);
 		return isIdentity(indexes) ? undefined : invert(indexes);
 	}
 
-	detectSortComparing(compare: (t1: T, t2: T, i1: number, i2: number) => number = cmp, order: number = 1): readonly number[] {
+	detectSortComparing(compare: (t1: T, t2: T, i1: number, i2: number) => number = cmp, order: number = 1): number[] {
 		const pairs = this._native.map((item, index): [number, T] => [index, item]);
 		pairs.sort((x, y) => order * compare(x[1], y[1], x[0], y[0]));
 		const indexes = pairs.map(pair => pair[0]);
@@ -401,7 +401,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		}
 	}
 
-	performReorder(newContents: T[]) {
+	performReorder(newContents: readonly T[]) {
 		const indexMapping = this.detectReorder(newContents);
 		if (indexMapping !== undefined) {
 			this.tryReorder(indexMapping);

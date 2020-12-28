@@ -72,7 +72,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * @param count Count of items to remove.
 	 * @returns The removed items.
 	 */
-	removeAll(index: number, count: number): readonly T[];
+	removeAll(index: number, count: number): T[];
 
 	/**
 	 * Removes all occurrences of the values in the array and dispatches a splice message.
@@ -91,7 +91,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	/**
 	 * Removes all array items and dispatches a cleanup message.
 	 */
-	clear(): readonly T[];
+	clear(): T[];
 
 	/**
 	 * Removes and inserts item ranges granularly and dispatches a splice message.
@@ -123,7 +123,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * @param count Count of items to remove.
 	 * @returns The removed items. If the array is not modified, returns undefined.
 	 */
-	tryRemoveAll(index: number, count: number): readonly T[];
+	tryRemoveAll(index: number, count: number): T[];
 
 	/**
 	 * Moves an item inside the array and dispatches an item replacement message.
@@ -148,7 +148,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns Old array contents. If the array is not modified, returns undefined.
 	 */
-	tryReorder(indexArray: readonly number[]): readonly T[];
+	tryReorder(indexArray: readonly number[]): T[];
 
 	/**
 	 * Adjusts array contents to `newContents` using `detectSplice` and `splice` methods.
@@ -172,7 +172,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * All values in the array must be unique.
 	 * @param newContents New array contents.
 	 */
-	performReorder(newContents: T[]): void;
+	performReorder(newContents: readonly T[]): void;
 
 	/**
 	 * Sorts the array by result of `callback` function call for each item. Modifies the array itself.
