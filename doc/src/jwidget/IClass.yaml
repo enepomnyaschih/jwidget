@@ -4,7 +4,6 @@ symbols:
     showInheritanceLevels: 1
     extends:
       - file: jwidget/Destroyable
-      - file: jwidget/Identifiable
     description: |
       Interface of %Class - see it for details.
 

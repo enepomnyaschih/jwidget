@@ -14,8 +14,8 @@ description: |
   <li>View classes (components) render data to the screen. All components should be inherited from %Component.</li>
   <li>View has direct references to the corresponding models. On user action, component calls the corresponding
   method of the model in order to modify it.</li>
-  <li>Model doesn't have direct references to any views, but it triggers events about its modification.</li>
-  <li>View listens model events to make neccessary updates.</li>
+  <li>Model doesn't have direct references to any views, but it dispatches messages about its modification.</li>
+  <li>View listens model modification messages to do necessary updates.</li>
   <li>View should initialize and aggregate data bindings provided by the framework.</li>
   </ol>
 
@@ -49,8 +49,8 @@ description: |
   <ol>
   <li>Data and components are structured based on three collection types: %List, %Map and %Set. Read the common theory
   of algorithms and data structures to learn pros and cons of each collection type.</li>
-  <li>Each collection triggers events about its modification.</li>
-  <li>You don't need to listen all collection events manually. Instead, you should use standard collection bindings.
+  <li>Each collection dispatches messages about its modification.</li>
+  <li>You don't have to listen all collection messages manually. Instead, you should use standard collection bindings.
   The bindings provide a simple way to connect collections to each other.</li>
   <li>Collections are enclosed inside binding methods. In other words, any modification of a collection triggers
   at most one modification of another collection, which is connected to the first one using a standard binding.</li>

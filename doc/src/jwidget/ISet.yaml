@@ -53,7 +53,7 @@ symbols:
           (): %T[]
         returns: Old collection contents.
         description: |
-          <p>Clears the collection and triggers %clearEvent.</p>
+          <p>Clears the collection and dispatches %onClear.</p>
 
       splice:
         signature: |
@@ -101,57 +101,6 @@ symbols:
         description: |
           <p>Adjusts set contents to %newItems using %detectSplice and %splice methods.</p>
 
-  ISet.EventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/ICollection
-        symbol: ICollection.EventParams
-        typevars: [T]
-    description: |
-      <p>%ISet event parameters.</p>
-    properties:
-      sender:
-        modifiers: readonly
-        type: '%ISet<%T>'
-        description: Event sender.
-
-  ISet.SpliceEventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/ISet
-        symbol: ISet.EventParams
-        typevars: [T]
-    description: |
-      <p>Parameters of %spliceEvent.</p>
-    properties:
-      spliceResult:
-        modifiers: readonly
-        type: '%ISet.%SpliceResult<%T>'
-        description: 'Parameters of %spliceEvent.'
-
-  ISet.ItemsEventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/ISet
-        symbol: ISet.EventParams
-        typevars: [T]
-    description: |
-      <p>Parameters of %clearEvent.</p>
-    properties:
-      items:
-        modifiers: readonly
-        type: '%T[]'
-        description: Old set contents.
-
   ISet.SpliceParams:
     kind: interface
     simple: true
@@ -197,13 +146,13 @@ references:
     symbol: default
     member: detectSplice
 
-  spliceEvent:
+  onSplice:
     symbol: default
-    member: spliceEvent
+    member: onSplice
 
-  clearEvent:
+  onClear:
     symbol: default
-    member: clearEvent
+    member: onClear
 
   SpliceResult:
     symbol: ISet.SpliceResult

@@ -38,7 +38,7 @@ description: |
       }
   }
   </pre>
-  <p>It is easier than handling all %List events.</p>
+  <p>It is easier than handling all %List messages.</p>
 
   <h3>Inserter - modules</h3>
 

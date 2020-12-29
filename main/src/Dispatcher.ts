@@ -92,7 +92,7 @@ export default class Dispatcher<M> implements IDispatcher<M> {
 	 * If `dummy` argument is false, returns a new instance of `Dispatcher`. Else returns `dummyDispatcher`.
 	 * @param dummy Determines if dummy dispatcher should be used.
 	 */
-	static make<P>(dummy: boolean): IDispatcher<P> {
-		return dummy ? dummyDispatcher : new Dispatcher<P>();
+	static make<M>(dummy: boolean): IDispatcher<M> {
+		return dummy ? dummyDispatcher : new Dispatcher<M>();
 	}
 }

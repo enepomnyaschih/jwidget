@@ -15,6 +15,6 @@ symbols:
         new Set<T>(items: %T[], silent?: boolean)
         new Set<T>(items: %T[], getKey: (item: %T) => any, silent?: boolean)
       params:
-        silent: Create a silent collection which means that it never triggers modification events.
+        silent: Create a silent collection which means that it never dispatches modification messages.
         getKey: Function that identifies an item in this collection for optimization of some algorithms.
         items: Initial list contents.

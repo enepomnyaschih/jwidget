@@ -22,25 +22,25 @@ symbols:
         type: string
         description: Returns key of %first item. If collection is empty, returns undefined.
 
-      spliceEvent:
+      onSplice:
         modifiers: readonly
-        type: '%Listenable<%IMap.%SpliceEventParams<%T>>'
+        type: '%Listenable<%IMap.%SpliceMessage<%T>>'
         description: Items are removed from the map and items are updated in the map.
 
-      reindexEvent:
+      onReindex:
         modifiers: readonly
-        type: '%Listenable<%IMap.%ReindexEventParams<%T>>'
+        type: '%Listenable<%IMap.%ReindexMessage<%T>>'
         description: Keys of items are changed in the map.
 
-      clearEvent:
+      onClear:
         modifiers: readonly
-        type: '%Listenable<%IMap.%ItemsEventParams<%T>>'
+        type: '%Listenable<%IMap.%ItemsMessage<%T>>'
         description: The map is cleared.
 
-      changeEvent:
+      onChange:
         modifiers: readonly
-        type: '%Listenable<%IMap.%EventParams<%T>>'
-        description: The map is changed. Triggered right after any another event.
+        type: '%Listenable<%IMap.%Message<%T>>'
+        description: The map is changed. Dispatched right after any another message.
 
     methods:
       clone:
@@ -386,22 +386,17 @@ symbols:
         symbol: IMap.SpliceParams
         label: SpliceParams
 
-      EventParams:
+      SpliceMessage:
         file: jwidget/IMap
-        symbol: IMap.EventParams
-        label: EventParams
+        symbol: IMap.SpliceMessage
+        label: SpliceMessage
 
-      SpliceEventParams:
+      ReindexMessage:
         file: jwidget/IMap
-        symbol: IMap.SpliceEventParams
-        label: SpliceEventParams
+        symbol: IMap.ReindexMessage
+        label: ReindexMessage
 
-      ReindexEventParams:
+      ItemsMessage:
         file: jwidget/IMap
-        symbol: IMap.ReindexEventParams
-        label: ReindexEventParams
-
-      ItemsEventParams:
-        file: jwidget/IMap
-        symbol: IMap.ItemsEventParams
-        label: ItemsEventParams
+        symbol: IMap.ItemsMessage
+        label: ItemsMessage

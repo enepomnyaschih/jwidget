@@ -19,7 +19,7 @@ symbols:
         params:
           value: New value to set.
         description: |
-          <p>Changes property value and triggers %changeEvent if the value has been changed.</p>
+          <p>Changes property value and dispatches %onChange if the value has been changed.</p>
 
       ownValue:
         signature: '(): this'

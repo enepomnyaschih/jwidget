@@ -22,9 +22,9 @@ symbols:
         description: |
           <p>Puts or replaces an item with the specified key.</p>
 
-      putAll:
+      setAll:
         signature: |
-          (items: %Dictionary<%T>)
+          (entries: %ReadonlyMap<%K, %V>)
         params:
           items: Items to put.
         description: |
@@ -81,7 +81,7 @@ symbols:
           (): %Dictionary<%T>
         returns: Old collection contents.
         description: |
-          <p>Clears the collection and triggers %clearEvent.</p>
+          <p>Clears the collection and dispatches %onClear.</p>
 
       splice:
         signature: |
@@ -194,80 +194,6 @@ symbols:
           <p>Adjusts map contents to %newItems using %detectReindex and %reindex methods.
           All items must have unique %getKey function result.</p>
 
-    references:
-      EventParams:
-        file: jwidget/IMap
-        symbol: IMap.EventParams
-        label: EventParams
-
-  IMap.EventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/ICollection
-        symbol: ICollection.EventParams
-        typevars: [T]
-    description: |
-      <p>%IMap event parameters.</p>
-    properties:
-      sender:
-        modifiers: readonly
-        type: '%IMap<%T>'
-        description: Event sender.
-
-  IMap.SpliceEventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/IMap
-        symbol: IMap.EventParams
-        typevars: [T]
-    description: |
-      <p>Parameters of %spliceEvent.</p>
-    properties:
-      spliceResult:
-        modifiers: readonly
-        type: '%IMap.%SpliceResult<%T>'
-        description: 'Parameters of %spliceEvent.'
-
-  IMap.ReindexEventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/IMap
-        symbol: IMap.EventParams
-        typevars: [T]
-    description: |
-      <p>Parameters of %reindexEvent.</p>
-    properties:
-      keyMap:
-        modifiers: readonly
-        type: '%Dictionary<string>'
-        description: Map of changed keys.
-
-  IMap.ItemsEventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/IMap
-        symbol: IMap.EventParams
-        typevars: [T]
-    description: |
-      <p>Parameters of %clearEvent.</p>
-    properties:
-      items:
-        modifiers: readonly
-        type: '%Dictionary<%T>'
-        description: Old map contents.
-
   IMap.SpliceParams:
     kind: interface
     simple: true
@@ -316,14 +242,14 @@ references:
     symbol: default
     member: detectSplice
 
-  spliceEvent:
+  onSplice:
     symbol: default
-    member: spliceEvent
+    member: onSplice
 
-  reindexEvent:
+  onReindex:
     symbol: default
-    member: reindexEvent
+    member: onReindex
 
-  clearEvent:
+  onClear:
     symbol: default
-    member: clearEvent
+    member: onClear

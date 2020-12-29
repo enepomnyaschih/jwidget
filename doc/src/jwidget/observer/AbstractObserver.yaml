@@ -1,5 +1,5 @@
 description: |
-  <p><b>Observer</b> is one of collection synchronizers. <b>Observer</b> listens all collection events and reduces them
+  <p><b>Observer</b> is one of collection synchronizers. <b>Observer</b> listens all collection messages and reduces them
   to 2 granular functions: item is added and item is removed. In optimization purposes, you can define a third function:
   collection is cleared (in case if there is more effective clearing algorithm than iterative items removal).</p>
   <p>This synchronizer can be used to notify the items if they are added to collection:</p>

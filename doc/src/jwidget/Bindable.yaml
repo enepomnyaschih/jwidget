@@ -34,18 +34,18 @@ symbols:
           <p>All bindings are independent - you can implement your own bindings if you want.</p>
 
     properties:
-      changeEvent:
-        type: '%Listenable<%Bindable.%ChangeEventParams<%V>>'
+      onChange:
+        type: '%Listenable<%Bindable.%ChangeMessage<%V>>'
         modifiers: readonly
         description: |
-          <p>Property value has just been changed. %Triggered in result of %set method call if the value has been
+          <p>Property value has just been changed. %Dispatched in result of %set method call if the value has been
           changed.</p>
 
       silent:
         type: boolean
         modifiers: readonly
         description: |
-          <p>Checks if this property never %triggers events. This knowledge may help you do certain code
+          <p>Checks if this property never %dispatches messages. This knowledge may help you do certain code
           optimizations.</p>
 
     methods:
@@ -117,23 +117,23 @@ symbols:
       binding:
         file: jwidget/Bindable
         symbol: bindings
-      ChangeEventParams:
+      ChangeMessage:
         file: jwidget/Bindable
-        symbol: Bindable.ChangeEventParams
-      Triggered:
-        file: jwidget/IEvent
-        member: trigger
+        symbol: Bindable.ChangeMessage
+      Dispatched:
+        file: jwidget/IDispatcher
+        member: dispatch
       set:
         file: jwidget/IProperty
         member: set
 
-  Bindable.ChangeEventParams:
+  Bindable.ChangeMessage:
     kind: interface
     simple: true
     typevars:
       V: Value type.
     description: |
-      <p>Parameters of %changeEvent.</p>
+      <p>Message for %onChange.</p>
     properties:
       sender:
         type: '%Bindable<%V>'
@@ -149,6 +149,6 @@ symbols:
         description: <p>New property value.</p>
 
     references:
-      changeEvent:
+      onChange:
         symbol: default
-        member: changeEvent
+        member: onChange

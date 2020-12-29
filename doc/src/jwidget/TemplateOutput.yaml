@@ -11,7 +11,7 @@ symbols:
         description: The rendered element. In a component, it is claimed as component root element.
       groups:
         modifiers: readonly
-        type: '%Dictionary<HTMLElement[]>'
+        type: 'ReadonlyMap<string, HTMLElement[]>'
         description: Map from jwid to the respective elements.
     references:
       createElement:

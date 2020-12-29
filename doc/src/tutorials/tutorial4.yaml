@@ -1,8 +1,8 @@
-title: Part 4. Events - jWidget 2 tutorials
+title: Part 4. Messages - jWidget 2 tutorials
 
 description: |
   <div class="container">
-  <h2>Tutorial. Part 4. Events</h2>
+  <h2>Tutorial. Part 4. Messages</h2>
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial4/"></iframe>
 
@@ -18,12 +18,12 @@ description: |
   <ol>
   <li>The view intercepts "click" event with jQuery.</li>
   <li>The view accesses the model with <tt>tweet.like = !tweet.like</tt> setter.</li>
-  <li>The model triggers "likeChangeEvent".</li>
-  <li>The view intercepts "likeChangeEvent" and updates itself.</li>
+  <li>The model dispatches "onLikeChange" message.</li>
+  <li>The view receives "onLikeChange" message and updates itself.</li>
   </ol>
 
   <p>Notice that the view can update itself directly on its own before step 2. But it is unneccessary in model-view
-  architecture, because the view listens "likeChangeEvent" anyway. Who knows what may trigger model
+  architecture, because the view listens "onLikeChange" anyway. Who knows what may dispatch model
   modification? Any other views or services may access the model directly, but they hardly can access the corresponding
   views. That's why the view should get updated indirectly. It should listen to model modifications and handle them
   appropriately. This way, it can keep itself updated.</p>
@@ -32,14 +32,14 @@ description: |
   handling. jWidget doesn't provide any features for controller implementation. Controller part is identified by
   the author of the framework as unnecessary and complicating things with no benefit. jWidget goes without controller.</p>
 
-  <p>Event management API is optimized for performance in jWidget and implemented according to OOD principles. That's the reason
-  why event management API is very different in jWidget and jQuery. jWidget event is implemented with %Event class and
-  defined with its interfaces %Listenable and %IEvent. One event instance represents one kind of action. In contrast,
+  <p>Message management API is optimized for performance in jWidget and implemented according to OOD principles. That's the reason
+  why jWidget message API is very different from jQuery event API. jWidget messages get dispatched from %Dispatcher class and
+  defined by its interfaces %Listenable and %IDispatcher. One dispatcher instance represents one kind of action. In contrast,
   jQuery element is an object that manages events in jQuery and it represents all kinds of events that may happen to
-  this element, and the event kind is identified by its name. jQuery implementation begets redundancy, because all
+  this element, and the event kind is identified by its name. jQuery implementation generates redundancy, because all
   events have a common set of %parameters regardless of event kind difference. For example, it makes no sense to read
   mouse coordinates from key press event, but jQuery type definitions provide you with them anyway. In jWidget, you can
-  specify different parameter types for different kinds of events, and that is easier to manage.</p>
+  specify different message types for different kinds of dispatchers, and that is easier to manage.</p>
 
   <p>So, let's start listening Like and Retweet button clicks. Let's follow the steps described above. First, bind
   handlers to click events using jQuery in TweetView class:</p>
@@ -65,14 +65,14 @@ description: |
   </pre>
 
   <p>At the next step, we should replace Tweet interface with a class. Readonly fields "like" and "retweet" should be
-  replaced with getters and setters. To implement them, we need to define likeChangeEvent and retweetChangeEvent. Below
+  replaced with getters and setters. To implement them, we need to define onLikeChange and onRetweetChange. Below
   you can see a lot of boilerplate code to make it work, but don't worry about it - we'll deal with this problem
   later.</p>
 
   <h5>src/model/Tweet.ts</h5>
 
   <pre>
-  import %Event from "jwidget/Event";
+  import %Dispatcher from "jwidget/Dispatcher";
   import %Listenable from "jwidget/Listenable";
 
   export default class Tweet {
@@ -85,8 +85,8 @@ description: |
 
       private _like: boolean;
       private _retweet: boolean;
-      private _likeChangeEvent = new %Event<boolean>();
-      private _retweetChangeEvent = new %Event<boolean>();
+      private _onLikeChange = new %Dispatcher<boolean>();
+      private _onRetweetChange = new %Dispatcher<boolean>();
 
       constructor(config: TweetConfig) {
           this.fullName = config.fullName;
@@ -105,12 +105,12 @@ description: |
       set like(value) {
           if (this._like !== value) {
               this._like = value;
-              this._likeChangeEvent.%trigger(value);
+              this._onLikeChange.%dispatch(value);
           }
       }
 
-      get likeChangeEvent(): %Listenable<boolean> {
-          return this._likeChangeEvent;
+      get onLikeChange(): %Listenable<boolean> {
+          return this._onLikeChange;
       }
 
       get retweet() {
@@ -120,12 +120,12 @@ description: |
       set retweet(value) {
           if (this._retweet !== value) {
               this._retweet = value;
-              this._retweetChangeEvent.%trigger(value);
+              this._onRetweetChange.%dispatch(value);
           }
       }
 
-      get retweetChangeEvent(): %Listenable<boolean> {
-          return this._retweetChangeEvent;
+      get onRetweetChange(): %Listenable<boolean> {
+          return this._onRetweetChange;
       }
 
       static createByJson(json: any) {
@@ -148,11 +148,11 @@ description: |
   }
   </pre>
 
-  <p>Event is triggered with %trigger method, which takes an argument to pass to event listeners. In this case it is
-  boolean - the new value of the property. jWidget event is very simple: all listeners get iterated and called one by one
-  immediately right in %trigger method. There are no special features like bubbling, "preventDefault" or
+  <p>A message is dispatched with %dispatch method. The message is passed to all listeners. In this case the message is
+  boolean - the new value of the property. jWidget %Dispatcher is very simple: all listeners get iterated and called one by one
+  synchronously right in %dispatch method. There are no special features like enqueueing, bubbling, "preventDefault" or
   "stopPropagation", as well as there is no pretection against dead loops or circular dependencies. If you want to
-  introduce something like this, implement it on your own using %IEvent interface. jWidget is modest in this regard,
+  introduce something like this, implement it on your own using %IDispatcher interface. jWidget is modest in this regard,
   but fast.</p>
 
   <p>Since we replaced "createTweetByJson" function with "createByJson" static method, let's immediately change
@@ -167,7 +167,7 @@ description: |
       }
   </pre>
 
-  <p>Next, we must bind handlers to the events and update the view in them. In contrast to React or Backbone, you
+  <p>Next, we must bind handlers to the messages and update the view in them. In contrast to React or Backbone, you
   don't need to update the entire view in jWidget - you just update what you need. To prevent code duplication, let's
   extract element updating code of TweetView into separate methods "updateLike" and "updateRetweet".</p>
 
@@ -176,7 +176,7 @@ description: |
   <pre>
       protected renderLike(el: JQuery) {
           this._updateLike();
-          this.tweet.likeChangeEvent.%listen(() => this._updateLike());
+          this.tweet.onLikeChange.%listen(() => this._updateLike());
           el.on("click", event => {
               event.preventDefault();
               this.tweet.like = !this.tweet.like;
@@ -185,7 +185,7 @@ description: |
 
       protected renderRetweet(el: JQuery) {
           this._updateRetweet();
-          this.tweet.retweetChangeEvent.%listen(() => this._updateRetweet());
+          this.tweet.onRetweetChange.%listen(() => this._updateRetweet());
           el.on("click", event => {
               event.preventDefault();
               this.tweet.retweet = !this.tweet.retweet;

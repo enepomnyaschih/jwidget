@@ -56,7 +56,7 @@ symbols:
       <dl class="row">
         <dt class="col-lg-2 col-sm-3">SILENT = 1</dt>
         <dd class="col-lg-10 col-sm-9">
-          <p>Creates a silent collection, which means that it never %triggers modification events. Silent collections
+          <p>Creates a silent collection, which means that it never %dispatches modification messages. Silent collections
           work a little bit faster and consume less memory. Useful for collections that never get modified or
           observed.</p>
           <pre>
@@ -238,31 +238,6 @@ symbols:
     description: |
       As opposed to %def, throws null as unsuitable value.
 
-  apply:
-    signature: |
-      <T>(target: %Dictionary<T>, ...sources: %Dictionary<T>[]): %Dictionary<T>
-    params:
-      target: Target dictionary to copy the values to.
-      sources: Source dictionaries.
-    returns: '%target'
-    description: |
-      <p>Iterates through objects passed after first argument and copies all their fields into %target object.
-      Returns %target. Undefined source values are ignored. Null and undefined source dictionaries are ignored.</p>
-      <p>Function modifies %target object!</p>
-      <pre>
-      var x: %Dictionary<number> = { |  var y: %Dictionary<number> = {  // Result = {
-          a: 10,                    |                                 //     a: 10,
-          b: 20,                    |      b: 30,                     //     b: 30,
-          c: null,                  |      c: 40,                     //     c: 40,
-          d: undefined,             |      d: 50,                     //     d: 50,
-          e: null                   |                                 //     e: null,
-                                    |      f: 60,                     //     f: 60
-                                    |      g: undefined               //
-      };                            |  };                             // };
-
-      %apply<number>(x, y);
-      </pre>
-
   cmp:
     signature: |
       (x: any, y: any): number
@@ -304,13 +279,13 @@ symbols:
       </ul>
       <p>In reality, it supports the next features:</p>
       <ul>
-        <li>Comparing of boolean, number, string, %Identifiable (by %iid) values, subarrays, null, undefined</li>
+        <li>Comparing of boolean, number, string, subarrays, null, undefined</li>
         <li>Determined linear order, even for mixed arrays</li>
         <li>Case insensitive comparing for strings</li>
         <li>Comparing of digit sequences in strings as numbers</li>
       </ul>
       <p>Values of different types are compared as follows: undefined &lt; null &lt; array &lt; boolean &lt;
-        %Identifiable &lt; number &lt; string.</p>
+        number &lt; string.</p>
       <h5>Example</h5>
       <p>Sort by color descending first, and by status ascending last. Both parameters are optional.</p>
       <pre>
@@ -371,24 +346,6 @@ symbols:
 
       expect(%get(obj, ["abc", 0, "qwe"])).toBe("xyz");
       expect(%get(obj, "abc")).toBe(obj.abc);</pre>
-
-  newIid:
-    signature: '(): number'
-    returns: New unique auto-incremented integer identified.
-    description: |
-      <p>Returns a new auto-incremented instance identifier for %Identifiable interface.
-      %Class constructor calls it automatically.</p>
-
-  iidStr:
-    signature: |
-      (obj: %Identifiable): string
-    params:
-      obj: Object to inspect.
-    returns: '%iid field of %obj converted to a string.'
-    description: |
-      <p>Can be used as efficient <b>getKey</b> implementation for collections consisting of %Identifiable objects
-      only. Since default <b>getKey</b> implementation analyzes input value nature very deeply, it has performance
-      penalty. Specifying %iidStr for collections of %Identifiable objects may improve performance significantly.</p>
 
   destroy:
     signature: |

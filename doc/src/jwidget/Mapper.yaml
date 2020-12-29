@@ -143,12 +143,12 @@ symbols:
 
     methods:
       listen:
-        signature: '(event: %Listenable<any>): this'
+        signature: '(dispatcher: %Listenable<unknown>): this'
         params:
-          event: Event to listen.
+          dispatcher: Dispatcher to listen.
         returns: this
         description: |
-          <p>Listens specified event and issues target value recalculation on event triggering.</p>
+          <p>Listens the specified message and issues target value recalculation on its dispatching.</p>
 
       bind:
         signature: '(property: %Bindable<any>): this'

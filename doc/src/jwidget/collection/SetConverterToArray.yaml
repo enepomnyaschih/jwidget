@@ -1,0 +1,100 @@
+symbols:
+  default:
+    defaultName: SetConverterToArray
+    typevars:
+      T: Collection value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p><b>Set converter to array</b> is one of collection synchronizers. <b>Set converter to array</b> builds a new %BindableArray
+      containing the values of the source set. Initially, values get added to the array in natural order. This order may differ
+      in different browsers. After initialization, all newly added values get appended to the end of the array.</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const converter = new %SetConverterToArray(source);
+      const target = converter.%target;
+
+      expect(target.%has(1)).toBe(true);
+      expect(target.%has(4)).toBe(false);
+
+      // The target array is automatically synchronized with the source set.
+      source.%add(4);
+      expect(target.%get(3)).equal(4);
+
+      // Destroy the converter to stop synchronization.
+      converter.%destroy();
+      </pre>
+      <p>If you want to build an array with a special item order, use %SetSorter instead.</p>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target array in config option:</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const target = new %BindableArray<number>();
+      const converter = new %SetConverterToArray(source, {%targetOfConfig});
+      </pre>
+      <p>If you want to create a new array, use shorthand function %startConvertingSetToArray instead:</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const target = %startConvertingSetToArray(source);
+
+      // Destroy the target array to stop synchronization.
+      target.%destroy();
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>All values of the source set get added to %target immediately on synchronizer initialization.</li>
+        <li>The values get removed from %target on synchronizer destruction.</li>
+        <li>You can pass a target array in %targetOfConfig config option. In this case, you are responsible for its
+        destruction (though values get removed automatically on synchronizer destruction anyway).</li>
+        <li>If %targetOfConfig is not passed, it gets created automatically. In this
+        case, %target gets destroyed automatically on synchronizer destruction.</li>
+        <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications. All values must
+        be different.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableSet<%T>, config?: %SetConverterToArray.%Config<%T>)
+      params:
+        source: Source set.
+        config: Converter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%T>'
+        description: Source set.
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: Target array.
+
+  SetConverterToArray.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Collection value type.
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableArray<%T>'
+        description: |
+          <p>Target array. By default, created automatically.</p>
+
+  startConvertingSetToArray:
+    signature: |
+      <T>(source: %ReadonlyBindableSet<T>): %DestroyableReadonlyBindableArray<T>
+    params:
+      source: Source set.
+    returns: Target array.
+    description: Converts a set to an array and starts synchronization.
+
+references:
+  Config:
+    symbol: SetConverterToArray.Config

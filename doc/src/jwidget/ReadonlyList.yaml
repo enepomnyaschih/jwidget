@@ -23,30 +23,30 @@ symbols:
         description: |
           <p>Item array - internal collection representation.</p>
           <p><b>Caution: doesn't make a copy - please don't modify.</b></p>
-      spliceEvent:
+      onSplice:
         modifiers: readonly
-        type: '%Listenable<%IList.%SpliceEventParams<%T>>'
+        type: '%Listenable<%IList.%SpliceMessage<%T>>'
         description: Items are removed from the list and items are added to the list.
-      replaceEvent:
+      onReplace:
         modifiers: readonly
-        type: '%Listenable<%IList.%ReplaceEventParams<%T>>'
+        type: '%Listenable<%IList.%ReplaceMessage<%T>>'
         description: An item is replaced in the list.
-      moveEvent:
+      onMove:
         modifiers: readonly
-        type: '%Listenable<%IList.%MoveEventParams<%T>>'
+        type: '%Listenable<%IList.%MoveMessage<%T>>'
         description: An item is moved in the list.
-      clearEvent:
+      onClear:
         modifiers: readonly
-        type: '%Listenable<%IList.%ItemsEventParams<%T>>'
+        type: '%Listenable<%IList.%ItemsMessage<%T>>'
         description: The list is cleared.
-      reorderEvent:
+      onReorder:
         modifiers: readonly
-        type: '%Listenable<%IList.%ReorderEventParams<%T>>'
+        type: '%Listenable<%IList.%ReorderMessage<%T>>'
         description: Items are reordered in the list.
-      changeEvent:
+      onChange:
         modifiers: readonly
-        type: '%Listenable<%IList.%EventParams<T>>'
-        description: The list is changed. Triggered right after any another event.
+        type: '%Listenable<%IList.%Message<T>>'
+        description: The list is changed. Dispatched right after any another message.
 
     methods:
       clone:
@@ -455,32 +455,27 @@ symbols:
         symbol: IList.SpliceResult
         label: SpliceResult
 
-      EventParams:
+      SpliceMessage:
         file: jwidget/IList
-        symbol: IList.EventParams
-        label: EventParams
+        symbol: IList.SpliceMessage
+        label: SpliceMessage
 
-      SpliceEventParams:
+      ReorderMessage:
         file: jwidget/IList
-        symbol: IList.SpliceEventParams
-        label: SpliceEventParams
+        symbol: IList.ReorderMessage
+        label: ReorderMessage
 
-      ReorderEventParams:
+      MoveMessage:
         file: jwidget/IList
-        symbol: IList.ReorderEventParams
-        label: ReorderEventParams
+        symbol: IList.MoveMessage
+        label: MoveMessage
 
-      MoveEventParams:
+      ItemsMessage:
         file: jwidget/IList
-        symbol: IList.MoveEventParams
-        label: MoveEventParams
+        symbol: IList.ItemsMessage
+        label: ItemsMessage
 
-      ItemsEventParams:
+      ReplaceMessage:
         file: jwidget/IList
-        symbol: IList.ItemsEventParams
-        label: ItemsEventParams
-
-      ReplaceEventParams:
-        file: jwidget/IList
-        symbol: IList.ReplaceEventParams
-        label: ReplaceEventParams
+        symbol: IList.ReplaceMessage
+        label: ReplaceMessage

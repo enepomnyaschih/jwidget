@@ -10,8 +10,8 @@ description: |
 
   <p>Now it's the time to learn a new layer of jWidget: %Property and its interfaces %Bindable and %IProperty.
   <b>Property</b> is a value that can notify the clients about its modification. So, %Property is a class with two
-  methods: %get, %set - and an event %changeEvent. Whenever you change the value of the property with %set method call,
-  %changeEvent is triggered. The event is not triggered if the value is not changed in the result of the %set method
+  methods: %get, %set - and a dispatcher %onChange. Whenever you change the value of the property with %set method call,
+  %onChange is dispatched. The message is not dispatched if the value has not been changed in the result of the %set method
   call.</p>
 
   <p>So, in our Mini-Twitter example, we can simplify Like/Unlike and Retweet/Unretweet behaviour implementation by
@@ -43,9 +43,9 @@ description: |
       }
   </pre>
 
-  <p>Please remove the corresponding events, getters and setters - it is quite a big chunk of code.</p>
+  <p>Please remove the corresponding dispatchers, getters and setters - it is quite a big chunk of code.</p>
 
-  <p>Let's modify the view now. Instead of listening property change event manually, we can utilize property
+  <p>Let's modify the view now. Instead of listening property change message manually, we can utilize property
   bindings.</p>
 
   <p>First, we're going to build string properties with "Like/Unlike" and "Retweet/Unretweet" values from
@@ -104,9 +104,9 @@ references:
     file: jwidget/IProperty
     member: set
 
-  changeEvent:
+  onChange:
     file: jwidget/Bindable
-    member: changeEvent
+    member: onChange
 
   bindings:
     file: jwidget/Bindable

@@ -1,0 +1,16 @@
+symbols:
+  default:
+    type: '%IDispatcher<any>'
+    description: |
+      <p>Dummy implementation of %IDispatcher&lt;any&gt; interface.</p>
+      <p>As opposed to %Dispatcher, doesn't really bind any handlers, just pretends it does that. Can be used as a
+      lightweight implementation of %IDispatcher interface if you certainly know that a message should never be dispatched.
+      Since the application usually involves many messages, this can save quite a bit of resources.</p>
+      <p>Based on a boolean <b>dummy</b> argument, you can selectively create a new %Dispatcher instance or get %dummyDispatcher
+      via %Dispatcher.%make static method.</p>
+
+references:
+  make:
+    file: jwidget/Dispatcher
+    member: make
+    static: true

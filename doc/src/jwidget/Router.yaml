@@ -499,7 +499,7 @@ symbols:
       routes:
         modifiers: readonly
         optional: true
-        type: '%Dictionary<%Router.%Route<%T>>'
+        type: '{ readonly [key: string]: %Router.%Route<%T>; }'
         description: |
           <p>Map of specific route handlers. If current route is present in this dictionary, the router calls its
           corresponding handler and passes argument to it. Route and argument themselves are computed with %separatorOfConfig
@@ -700,14 +700,14 @@ symbols:
 
       paths:
         modifiers: readonly
-        type: '%Dictionary<%Bindable<string>>'
+        type: 'ReadonlyMap<string, %IProperty<string>>'
         description: |
           <p>Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
           always exist regardless of their activity.</p>
 
       expanded:
         modifiers: readonly
-        type: '%Dictionary<%IProperty<boolean>>'
+        type: 'ReadonlyMap<string, %IProperty<boolean>>'
         description: |
           <p>Provides "expanded" flags to bind child panels to, by name. Support two-way binding:</p>
           <ol>

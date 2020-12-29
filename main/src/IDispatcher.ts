@@ -29,7 +29,7 @@ import Listenable from "./Listenable";
  */
 interface IDispatcher<M> extends Listenable<M> {
 	/**
-	 * Dispatches a message, i.e. calls handler functions of all listeners.
+	 * Synchronously dispatches a message, i.e. calls all bound handlers with the specified argument.
 	 *
 	 * @param message Message to dispatch.
 	 */

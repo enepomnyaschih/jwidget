@@ -2,33 +2,33 @@ symbols:
   default:
     kind: interface
     typevars:
-      P: Event parameters.
-    showInheritanceLevel: 2
+      M: Message.
+    showInheritanceLevels: 2
     description: |
-      <p>Container for callback functions. Provides basic event listening functionality. Has a sub-interface %IEvent,
-      which exposes %trigger method to trigger the event.</p>
-      %%EventExample
+      <p>Container for callback functions. Provides basic message listening functionality. Has a sub-interface
+      %IDispatcher, which exposes %dispatch method to dispatch messages.</p>
+      %%DispatcherExample
 
     properties:
       dummy:
         modifiers: [readonly]
         type: boolean
         description: |
-          <p>Checks if this event is %dummy. This knowledge may help you do certain code optimizations.</p>
+          <p>Checks if this dispatcher is %dummy. This knowledge may help you do certain code optimizations.</p>
         references:
           dummy:
-            file: jwidget/dummyEvent
+            file: jwidget/dummyDispatcher
 
     methods:
       listen:
         signature: |
-          (handler: (params: %P) => void, scope?: any): %Destroyable
+          (handler: (message: %M) => void, scope?: any): %Destroyable
         params:
-          handler: 'Event handler function.'
+          handler: 'Message handler function.'
           scope: '%handler call scope.'
-        returns: 'Event attachment.'
+        returns: 'Listener reference.'
         description: |
-          <p>Starts listening to the event.</p>
-          <p>Whenever the event is %triggered, %handler function is called. Handlers are called in the same order
+          <p>Starts listening messages.</p>
+          <p>Whenever a message is %dispatched, %handler function is called. Handlers are called in the same order
           as they were bound.</p>
-          <p>You can stop listening the event by %destroying the returned object.</p>
+          <p>You can stop listening messages by %destroying the returned listener reference.</p>

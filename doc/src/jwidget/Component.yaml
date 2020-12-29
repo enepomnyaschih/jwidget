@@ -316,7 +316,7 @@ symbols:
           <p>Each component has several stages of life.</p>
           <ol>
           <li>Like in all other classes, <b>constructor</b> is called first. Usually all fields are assigned to their
-          initial values here, events are created etc. Only component model should be touched here, view is completely
+          initial values here, messages are created etc. Only component model should be touched here, view is completely
           ignored. Notice that component is not rendered after construction yet, so it doesn't have fields %el and
           %children assigned, and methods %addList, %addCollection, %addBindable won't work. The main reason behind that is
           our wish to give you a possibility to do something else between component construction and rendering, for example,

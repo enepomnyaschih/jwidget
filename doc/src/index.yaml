@@ -16,15 +16,15 @@ description: |
     <p>jWidget features:</p>
     <ul>
       <li>Base class %Class for object aggregation.</li>
-      <li>%Event class for event listening and triggering.</li>
+      <li>%Dispatcher class for message listening and dispatching.</li>
       <li>%Property class for value binding.</li>
       <li>%collections, algorithms, synchronizers.</li>
       <li>%Component for UI component creation and inheritance with HTML templates and DOM bindings.</li>
       <li>and many other...</li>
     </ul>
     <p>jWidget is a pure object-oriented solution which doesn't rely on mystic custom HTML templates and unclear
-    update cycles. Each object simply listens events and handles them in very straightforward way. Look at the next
-    example:</p>
+    update cycles. Each object simply listens messages and handles them synchronously in a very straightforward way.
+    Look at the next example:</p>
     <pre>
     import $ from "jquery";
     import {%TWOWAY} from "jwidget";

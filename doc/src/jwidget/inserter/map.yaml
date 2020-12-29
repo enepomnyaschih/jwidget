@@ -46,7 +46,7 @@ symbols:
       clear:
         modifiers: readonly
         optional: true
-        type: '(items: %Dictionary<%T>) => void'
+        type: '(entries: ReadonlyMap<%K, %V>) => voidd'
         description: |
           <p>Callback to call when the map is cleared. By default, calls %remove for all map items.</p>
 

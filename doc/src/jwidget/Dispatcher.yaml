@@ -1,0 +1,73 @@
+symbols:
+  default:
+    typevars:
+      M: Message.
+    extends:
+      - file: jwidget/IDispatcher
+    description: |
+      <p>Real implementation of %IDispatcher interface that calls handler functions on %dispatch method call (as opposed to
+      %dummyDispatcher which doesn't). Used to dispatch messages (e.g. field value changes) to listeners.
+      Remember to destroy listener references to unbind the listeners. It is a smart approach to expose dispatchers
+      in getters as %Listenable to deny direct control over the dispatcher by the listeners.</p>
+      <p>Full example of a class that dispatches messages:</p>
+      <pre>
+      class Container<T> {
+          private _items: T[] = [];
+          private _onAdd = new %Dispatcher<Container.Message<T>>();
+          private _onRemove = new %Dispatcher<Container.Message<T>>();
+
+          get onAdd(): %Listenable<Container.Message<T>> {
+              return this._onAdd;
+          }
+
+          get onRemove(): %Listenable<Container.Message<T>> {
+              return this._onRemove;
+          }
+
+          addItem(item: T, index: number) {
+              this._items.splice(index, 0, item);
+              this._onAdd.%dispatch({item, index});
+          }
+
+          removeItem(index: number) {
+              const item = this._items.splice(index, 1)[0];
+              this._onRemove.%dispatch({item, index});
+          }
+      }
+
+      namespace Container {
+          interface Message<T> {
+              readonly item: T;
+              readonly index: number;
+          }
+      }
+      </pre>
+      <p>Full example of a message listener:</p>
+      <pre>
+      class Listener<T> extends %Class {
+          constructor(container: Container<T>) {
+              super();
+              this.own(container.onAdd.%listenMethod(({item, index) => {
+                  console.log(`${item} item has been added at ${index}.`);
+              });
+              this.own(container.onRemove.%listenMethod(({item, index) => {
+                  console.log(`${item} item has been removed at ${index}.`);
+              });
+          }
+      }
+      </pre>
+
+    constructor:
+      signature: '()'
+      description: |
+        Constructs a message dispatcher.
+
+    staticMethods:
+      make:
+        signature: |
+          <M>(dummy: boolean): %IDispatcher<M>
+        params:
+          dummy: 'Determines if dummy dispatcher should be returned.'
+        returns: 'Message dispatcher.'
+        description: |
+          If %dummy argument is false, returns a new instance of %Dispatcher. Else returns %dummyDispatcher.

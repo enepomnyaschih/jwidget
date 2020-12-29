@@ -36,8 +36,8 @@ symbols:
         </tbody>
       </table>
       <p>Every collection has its advantages and disadvantages. You can convert collections to each other using their
-      methods. In comparison to native JavaScript arrays and objects, jWidget collections are observable, i.e. they
-      trigger the events about their modification.</p>
+      methods. In comparison to native JavaScript arrays and objects, jWidget collections are bindable, i.e. they
+      dispatch messages about their modification.</p>
       <p>The next synchronizers exist to connect the collections to each other:</p>
       <table class="table table-sm">
         <tbody>
@@ -114,7 +114,7 @@ symbols:
       silent:
         modifiers: readonly
         type: boolean
-        description: Checks if this collection never triggers events. This knowledge may help you do certain code optimizations.
+        description: Checks if this collection never dispatches messages. This knowledge may help you do certain code optimizations.
 
       getKey:
         modifiers: readonly
@@ -136,15 +136,15 @@ symbols:
         type: '%T'
         description: Returns the first item in collection. If collection is empty, returns undefined.
 
-      clearEvent:
+      onClear:
         modifiers: readonly
         type: '%Listenable<%ICollection.%EventParams<%T>>'
-        description: Collection is cleared. Triggered in result of calling %clear method.
+        description: Collection is cleared. Dispatched in result of calling %clear method.
 
       changeEvent:
         modifiers: readonly
         type: '%Listenable<%ICollection.%EventParams<%T>>'
-        description: Collection is changed. Triggered right after any another event.
+        description: Collection is changed. Dispatched right after any another message.
 
     methods:
       clone:
@@ -306,13 +306,10 @@ symbols:
 
       map:
         signature: |
-          <U>(callback: (item: %T) => U, scope?: any, getKey?: (item: U) => any): %ICollection<U>
+          <U>(callback: (item: %T) => U, scope?: any): %ICollection<U>
         params:
           callback: Mapping function.
           scope: '%callback call scope. Defaults to the collection.'
-          getKey: |
-            Function which returns unique key of an item in the resulting collection.
-            By default, efficiently identifies primitive values and %Identifiable objects.
         returns: Mapped collection.
         description: |
           <p>Maps collection items. Builds a new collection of the same type, containing results of %callback call for

@@ -259,13 +259,10 @@ symbols:
 
   removeItems:
     signature: |
-      <T>(arr: T[], items: T[], getKey?: (item: T) => any)
+      <T>(arr: T[], items: T[])
     params:
       arr: 'Array to modify.'
       items: 'Items to remove.'
-      getKey: |
-        Identifies an item in this array for optimization. Default implementation identifies only primitive values and
-        %Identifiable objects.
     description: |
       Removes all occurrences of items in array.
 
@@ -422,18 +419,6 @@ symbols:
       Defaults to %cmp.</p>
       <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
 
-  index:
-    signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): %Dictionary<T>
-    params:
-      arr: 'Array to index.'
-      callback: 'Item indexer function.'
-      scope: '%callback call scope.'
-    returns: 'Array index.'
-    description: |
-      Builds and returns a new %Dictionary by rule: key is the result of %callback function call on an item,
-      value is the item itself.
-
   reduce:
     signature: |
       <T, U>(arr: T[], reducer: %Reducer<T, U>): U
@@ -576,14 +561,10 @@ symbols:
 
   detectSplice:
     signature: |
-      <T>(oldItems: T[], newItems: T[],
-        getKey?: (item: T) => any): %IList.%SpliceParams<T>
+      <T>(oldItems: T[], newItems: T[]): %IList.%SpliceParams<T>
     params:
       oldItems: 'Original array to splice.'
       newItems: 'Expected spliced array.'
-      getKey: |
-        Identifies an item in this array for optimization. Default implementation identifies only primitive values and
-        %Identifiable objects.
     returns: '%splice function arguments. If no method call required, returns <code>undefined</code>.'
     description: |
       <p>Detects %splice function arguments to adjust %oldItems array contents to %newItems.</p>
@@ -609,13 +590,10 @@ symbols:
 
   detectReorder:
     signature: |
-      <T>(oldItems: T[], newItems: T[], getKey?: (item: T) => any): number[]
+      <T>(oldItems: T[], newItems: T[]): number[]
     params:
       oldItems: 'Original array to reorder.'
       newItems: 'Expected reordered array.'
-      getKey: |
-        Identifies an item in this array for optimization. Default implementation identifies only primitive values and
-        %Identifiable objects.
     returns: '%reorder function argument. If no method call required, returns <code>undefined</code>.'
     description: |
       <p>Detects %reorder function to arguments to adjust %oldItems array contents to %newItems.</p>

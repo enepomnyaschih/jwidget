@@ -66,12 +66,12 @@ references:
   destroys:
     file: jwidget/Destroyable
     member: destroy
-  triggered:
-    file: jwidget/IEvent
-    member: trigger
-  triggers:
-    file: jwidget/IEvent
-    member: trigger
+  dispatched:
+    file: jwidget/IDispatcher
+    member: dispatch
+  dispatches:
+    file: jwidget/IDispatcher
+    member: dispatch
 
   # Core
   CoreUtils:
@@ -110,18 +110,10 @@ references:
     member: destroy
     label: destroy
 
-  # Identifiable
-  iid:
-    file: jwidget/Identifiable
-    member: iid
-
   # IClass
   own:
     file: jwidget/IClass
     member: own
-  trigger:
-    file: jwidget/IEvent
-    member: trigger
 
   # Class
   destroyObject:
@@ -133,6 +125,11 @@ references:
     file: jwidget/Listenable
     member: listen
     label: listen
+
+  # Dispatcher
+  dispatch:
+    file: jwidget/IDispatcher
+    member: dispatch
 
   # Bindable
   getOfBindable:
@@ -510,7 +507,7 @@ references:
 
   tutorial4:
     file: tutorials/tutorial4
-    label: Tutorial. Part 4. Events
+    label: Tutorial. Part 4. Messages
 
   tutorial5:
     file: tutorials/tutorial5
@@ -534,14 +531,15 @@ includes:
           <ul class="list-unstyled">
             <li>%CoreUtils</li>
             <li>%ArrayUtils</li>
-            <li>%DictionaryUtils</li>
             <li>%DomUtils</li>
+            <li>%IterableUtils</li>
+            <li>%MapUtils</li>
+            <li>%SetUtils</li>
             <li>%StringUtils</li>
           </ul>
           <h5>Core interfaces</h5>
           <ul class="list-unstyled">
             <li>%Destroyable</li>
-            <li>%Identifiable</li>
             <li>%Listenable</li>
             <li>%Bindable</li>
             <li>%DestroyableBindable</li>
@@ -550,18 +548,18 @@ includes:
         <div class="col-4">
           <h5>Auxiliary interfaces</h5>
           <ul class="list-unstyled">
-            <li>%Dictionary</li>
             <li>%Some</li>
           </ul>
           <h5>Core classes and their interfaces</h5>
           <ul class="list-unstyled">
             <li>%Class, %IClass</li>
-            <li>%Event, %IEvent</li>
+            <li>%Dispatcher, %IDispatcher</li>
             <li>%Property, %IProperty</li>
           </ul>
           <h5>UI core</h5>
           <ul class="list-unstyled">
             <li>%Component</li>
+            <li>%Renderable</li>
             <li>%template</li>
             <li>%listen</li>
           </ul>
@@ -594,28 +592,24 @@ includes:
           <table class="table table-sm">
             <tbody>
               <tr>
-                <td>%ReadonlyCollection</td>
-                <td>%ReadonlyList</td>
-                <td>%ReadonlyMap</td>
-                <td>%ReadonlySet</td>
+                <td>%ReadonlyBindableArray</td>
+                <td>%ReadonlyBindableMap</td>
+                <td>%ReadonlyBindableSet</td>
               </tr>
               <tr>
-                <td>%DestroyableReadonlyCollection</td>
-                <td>%DestroyableReadonlyList</td>
-                <td>%DestroyableReadonlyMap</td>
-                <td>%DestroyableReadonlySet</td>
+                <td>%DestroyableReadonlyBindableArray</td>
+                <td>%DestroyableReadonlyBindableMap</td>
+                <td>%DestroyableReadonlyBindableSet</td>
               </tr>
               <tr>
-                <td>%ICollection</td>
-                <td>%IList</td>
-                <td>%IMap</td>
-                <td>%ISet</td>
+                <td>%IBindableArray</td>
+                <td>%IBindableMap</td>
+                <td>%IBindableSet</td>
               </tr>
               <tr>
-                <td></td>
-                <td>%List</td>
-                <td>%Map</td>
-                <td>%Set</td>
+                <td>%BindableArray</td>
+                <td>%BindableMap</td>
+                <td>%BindableSet</td>
               </tr>
             </tbody>
           </table>
@@ -623,17 +617,24 @@ includes:
         <div class="col-4">
           <h5>Collection bindings</h5>
           <ul class="list-unstyled" style="column-count: 2">
-            <li>%mappers</li>
-            <li>%filterers</li>
-            <li>%counters</li>
-            <li>%indexers</li>
-            <li>%convertersToSet</li>
-            <li>%convertersToList</li>
-            <li>%sortersComparing</li>
-            <li>%observers</li>
-            <li>%inserters</li>
-            <li>%mergers</li>
-            <li>%reversers</li>
+            <li>%ArrayFilterer</li>
+            <li>%ArrayInserter</li>
+            <li>%ArrayMapper</li>
+            <li>%ArrayMerger</li>
+            <li>%ArrayReverser</li>
+            <li>%ArrayValueCollector</li>
+            <li>%MapFilterer</li>
+            <li>%MapInserter</li>
+            <li>%MapKeyCollector</li>
+            <li>%MapMapper</li>
+            <li>%MapValueCollector</li>
+            <li>%SetConverterToArray</li>
+            <li>%SetFilterer</li>
+            <li>%SetIndexer</li>
+            <li>%SetMapper</li>
+            <li>%SetMatchingValueCounter</li>
+            <li>%SetSorter</li>
+            <li>%SetValueCollector</li>
           </ul>
         </div>
       </div>
@@ -644,6 +645,8 @@ includes:
           <ul class="list-unstyled">
             <li>%hash</li>
             <li>%Router</li>
+            <li>%RouteRedirector</li>
+            <li>%RoutingNode</li>
             <li>%UIRouter</li>
             <li>%Endpoint</li>
           </ul>
@@ -665,7 +668,6 @@ includes:
             <li>%DomInserter</li>
             <li>%DomTemplate</li>
             <li>%HtmlTemplate</li>
-            <li>%Reducer</li>
           </ul>
         </div>
         <div class="col-4">
@@ -673,10 +675,8 @@ includes:
           <ul class="list-unstyled">
             <li>%AbstractTemplate</li>
             <li>%dummyDestroyable</li>
-            <li>%dummyEvent</li>
-            <li>%IndexCount</li>
-            <li>%IndexItems</li>
-            <li>%ListSpliceResult</li>
+            <li>%dummyDispatcher</li>
+            <li>%ArraySpliceResult</li>
             <li>%TemplateOutput</li>
           </ul>
         </div>
@@ -700,21 +700,21 @@ includes:
       </ul>
     </div>
 
-  EventExample: |
-    <p>It is smart to store the event as %IEvent internally, and expose it as %Listenable externally to deny direct
-    control over the event by the clients.</p>
+  DispatcherExample: |
+    <p>It is smart to store a dispatcher as %IDispatcher internally, and expose it as %Listenable externally to deny direct
+    control over the dispatcher by its listeners.</p>
     <pre>
     class Example {
-        private _changeEvent = new %Event<number>();
+        private _onChange = new %Dispatcher<number>();
 
-        get changeEvent(): %Listenable<number> {
-            return this._changeEvent;
+        get onChange(): %Listenable<number> {
+            return this._onChange;
         }
 
         // ...
 
-            // We can't trigger public changeEvent, but we can trigger private _changeEvent
-            this._changeEvent.%trigger(value);
+            // We can't dispatch public onChange, but we can dispatch private _onChange
+            this._onChange.%dispatch(value);
 
         // ...
     }

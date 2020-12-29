@@ -40,17 +40,4 @@ symbols:
           (): any
         returns: Old collection contents (depending on collection type).
         description: |
-          <p>Clears the collection and triggers %clearEvent.</p>
-
-  ICollection.EventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    description: |
-      <p>%ICollection event parameters.</p>
-    properties:
-      sender:
-        modifiers: readonly
-        type: '%ICollection<%T>'
-        description: A collection that triggered the event.
+          <p>Clears the collection and dispatches %onClear message.</p>

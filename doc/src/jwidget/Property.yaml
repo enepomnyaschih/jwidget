@@ -18,7 +18,7 @@ symbols:
           const prop = new %Property('foo');
           console.log(prop.%get());  // output: foo
 
-          prop.%changeEvent.%listenMethod(({value}) => console.log(value));
+          prop.%onChange.%listenMethod(({value}) => console.log(value));
           prop.%set('bar');          // output: bar
           prop.%set('bar');          // no change - no output
           prop.%set('10');           // output: 10
@@ -110,7 +110,7 @@ symbols:
       params:
         value: Initial value.
         silent: |
-          If true, uses %dummyEvent implementation for %changeEvent. Use it if you know for sure that the
+          If true, uses %dummyDispatcher implementation for %onChange. Use it if you know for sure that the
           property never gets modified or there are no listeners interested in its modification. Since every jWidget
           application relies on many properties, this may help you improve application performance.
       description: |

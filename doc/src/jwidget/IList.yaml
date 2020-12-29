@@ -74,7 +74,7 @@ symbols:
           (): %T[]
         returns: Old collection contents.
         description: |
-          <p>Clears the collection and triggers %clearEvent.</p>
+          <p>Clears the collection and dispatches %onClear.</p>
 
       splice:
         signature: |
@@ -220,57 +220,26 @@ symbols:
         description: |
           <p>Removes last item from the list. Does nothing if the list is empty.</p>
 
-    references:
-      EventParams:
-        file: jwidget/IList
-        symbol: IMap.EventParams
-        label: EventParams
-
-  IList.EventParams:
+  IList.SpliceMessage:
     kind: interface
     simple: true
     typevars:
       T: Item type.
-    extends:
-      - file: jwidget/ICollection
-        symbol: ICollection.EventParams
-        typevars: [T]
     description: |
-      <p>%IList event parameters.</p>
-    properties:
-      sender:
-        modifiers: readonly
-        type: '%IList<%T>'
-        description: Event sender.
-
-  IList.SpliceEventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/IList
-        symbol: IList.EventParams
-        typevars: [T]
-    description: |
-      <p>Parameters of %spliceEvent.</p>
+      <p>Message of %onSplice.</p>
     properties:
       spliceResult:
         modifiers: readonly
         type: '%IList.%SpliceResult<%T>'
-        description: 'Parameters of %spliceEvent.'
+        description: 'Parameters of %onSplice.'
 
-  IList.MoveEventParams:
+  IList.MoveMessage:
     kind: interface
     simple: true
     typevars:
       T: Item type.
-    extends:
-      - file: jwidget/IList
-        symbol: IList.EventParams
-        typevars: [T]
     description: |
-      <p>Parameters of %moveEvent.</p>
+      <p>Message of %onMove.</p>
     properties:
       fromIndex:
         modifiers: readonly
@@ -287,17 +256,13 @@ symbols:
         type: '%T'
         description: The moved item.
 
-  IList.ReplaceEventParams:
+  IList.ReplaceMessage:
     kind: interface
     simple: true
     typevars:
       T: Item type.
-    extends:
-      - file: jwidget/IList
-        symbol: IList.EventParams
-        typevars: [T]
     description: |
-      <p>Parameters of %replaceEvent.</p>
+      <p>Message of %onReplace.</p>
     properties:
       index:
         modifiers: readonly
@@ -314,34 +279,13 @@ symbols:
         type: '%T'
         description: New item.
 
-  IList.ItemsEventParams:
+  IList.ReorderMessage:
     kind: interface
     simple: true
     typevars:
       T: Item type.
-    extends:
-      - file: jwidget/IList
-        symbol: IList.EventParams
-        typevars: [T]
     description: |
-      <p>Parameters of %clearEvent.</p>
-    properties:
-      items:
-        modifiers: readonly
-        type: '%T[]'
-        description: Old list contents.
-
-  IList.ReorderEventParams:
-    kind: interface
-    simple: true
-    typevars:
-      T: Item type.
-    extends:
-      - file: jwidget/IList
-        symbol: IList.ItemsEventParams
-        typevars: [T]
-    description: |
-      <p>Parameters of %reorderEvent.</p>
+      <p>Message of %onReorder.</p>
     properties:
       indexArray:
         modifiers: readonly
@@ -460,25 +404,25 @@ references:
     symbol: default
     member: detectSplice
 
-  spliceEvent:
+  onSplice:
     symbol: default
-    member: spliceEvent
+    member: onSplice
 
-  moveEvent:
+  onMove:
     symbol: default
-    member: moveEvent
+    member: onMove
 
-  replaceEvent:
+  onReplace:
     symbol: default
-    member: replaceEvent
+    member: onReplace
 
-  reorderEvent:
+  onReorder:
     symbol: default
-    member: reorderEvent
+    member: onReorder
 
-  clearEvent:
+  onClear:
     symbol: default
-    member: clearEvent
+    member: onClear
 
   SpliceResult:
     symbol: IList.SpliceResult
