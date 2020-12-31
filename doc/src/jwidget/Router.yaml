@@ -76,7 +76,7 @@ symbols:
                           "inbox"   : arg => new Inbox(arg, this.router),
                           "compose" : () => new Compose(),
                           "settings": () => new Settings(),
-                          ""        : () => new %Router.%Redirector("inbox", this.router)
+                          ""        : () => new %RouteRedirector("inbox", this.router)
                       },
                       %notFoundOfConfig: route => new NotFound(route)
                   }
@@ -132,7 +132,7 @@ symbols:
           route to get initialized. In our case, this is obviously "inbox". It is not certainly a constant: if we want
           "inbox/:id" route to have subroutes, then a specific email ID would be a name of the email router.</li>
           <li>Child router requires proper %parent to be specified. Pass parent router here. Every router should have
-          a reference to its parent. It provides %getFullPath and %redirect with a clue about all parts of the path. If
+          a reference to its parent. It provides %getFullPath and %redirectRoute with a clue about all parts of the path. If
           your router provides you with wrong paths, check %name and %parent of all routers in your hierarchy - they
           are likely assigned to wrong values.</li>
           </ul>
@@ -181,17 +181,16 @@ symbols:
         text: |
           <p>2nd and 3rd steps above result in creation of many new objects that may cause unexpected redirections.
           This would make things fall apart. That's why jWidget router recommends to do such redirections
-          asyncronously. If your component happen to do the redirection immediately and syncronously, the router will
+          asynchronously. If your component happen to do the redirection immediately and synchronously, the router will
           discard to handle it and throw an error.</p>
-          <p>However, outside routing cycle, you are free to do the redirections syncronously at any moment. The easiest way to
-          do this is to use %redirect instance method or corresponding static method. The instance method performs
-          redirection inside this router. The static method takes a router as an optional argument. If you dismiss it,
+          <p>However, outside routing cycle, you are free to do the redirections synchronously at any moment. The easiest way to
+          do this is to use %redirectRoute function. It takes a router as an optional argument. If you dismiss it,
           it will result in global redirection.</p>
           <pre>
-          this.router.%redirect("inbox"); // redirection in this router
-          %Router.%staticRedirect("inbox"); // global redirection
+          %redirectRoute("inbox", router); // redirection in this router
+          %redirectRoute("inbox"); // global redirection
           </pre>
-          <p>To do the asyncronous redirection in a router %handlerOfConfig function, render %Router.%Redirector as a target
+          <p>To do the asynchronous redirection in a router %handlerOfConfig function, render %RouteRedirector as a target
           component.</p>
           <pre>
           this.router = this.%own(new %UIRouter({
@@ -200,7 +199,7 @@ symbols:
                   %routesOfConfig: {
                       "inbox": arg => new Inbox(arg)
                   },
-                  %notFoundOfConfig: () => new %Router.%Redirector("inbox", this.router)
+                  %notFoundOfConfig: () => new %RouteRedirector("inbox", this.router)
               }
           }));
           </pre>
@@ -299,7 +298,11 @@ symbols:
     methods:
       update:
         signature: |
-          ()
+          (force: boolean = false)
+        params:
+          force: |
+            If true, issues route processing even if the route hasn't changed, i.e. recreates the %target value by
+            %handler (step 2 in %routingFlow).
         description: |
           <p>Issues route processing. See %routingFlow for details.</p>
 
@@ -323,15 +326,6 @@ symbols:
           <p>Returns full path as the result of %joinerOfConfig function call in %parentOfConfig router with %nameOfConfig passed as
           <b>route</b> and %path passed as <b>arg</b>.</p>
           <p>Returns %path if this is the root router.</p>
-
-      redirect:
-        signature: |
-          (path: string, replaceState: boolean = false)
-        params:
-          path: Path relative to this router.
-          replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
-        description: |
-          <p>Immediately performs the redirection, i.e. sets %hash to %getFullPath(%path).</p>
 
     staticProperties:
       DEFAULT_SEPARATOR:
@@ -424,7 +418,7 @@ symbols:
               %handlerOfConfig: { // this object is auto-converted to a function via %makeHandler
                   %routesOfConfig: {
                       "inbox" : arg => new Inbox(arg),
-                      ""      : () => new %Router.%Redirector("inbox", this.router)
+                      ""      : () => new %RouteRedirector("inbox", this.router)
                   },
                   %notFoundOfConfig: () => new NotFound()
               }
@@ -441,16 +435,6 @@ symbols:
           <p>Returns full path as the result of %joinerOfConfig function call in %parentOfConfig of %router with %nameOfConfig passed as
           <b>route</b> and %path passed as <b>arg</b>.</p>
           <p>Returns %path if this is the root router.</p>
-
-      redirect:
-        signature: |
-          (path: string, router: Router<any>, replaceState?: boolean)
-        params:
-          path: Path relative to %router.
-          router: Redirect relative to this router.
-          replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
-        description: |
-          <p>Immediately performs the redirection, i.e. sets %hash to %staticGetFullPath(%path, %router).</p>
 
   Router.Separator:
     kind: interface
@@ -535,7 +519,7 @@ symbols:
         optional: true
         type: string
         description: |
-          <p>Parent router. It provides %getFullPath and %redirect with a clue about all parts of the path. If
+          <p>Parent router. It provides %getFullPath and %redirectRoute with a clue about all parts of the path. If
           your router provides you with wrong paths, check %name and %parent of all routers in your hierarchy - they
           are likely assigned to wrong values. Root router doesn't have a parent. See %routeHierarchy for details.</p>
 
@@ -617,212 +601,7 @@ symbols:
         description: |
           <p>%separator, %joiner and %handler call scope.</p>
 
-  Router.Redirector:
-    extends:
-      - file: jwidget/Component
-    hideInheritedMembers: true
-    description: |
-      <p>Recommended way to perform an asyncronous redirection in %Router %handlerOfConfig function. See %redirection for
-      details.</p>
-    constructor:
-      signature: |
-        (path: string, router: %Router<any>, replaceState: boolean = true)
-      params:
-        path: Path relative to %router.
-        router: Redirect relative to this router.
-        replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
-      description: |
-        <p>Creates a new redirector.</p>
-
-  Router.Node:
-    extends:
-      - file: jwidget/Class
-    description: |
-      <p>Creates a router that manages mapping of two sets of properties:</p>
-      <ul>
-      <li>%paths which exposes string path properties for child routers if neccessary;</li>
-      <li>%expanded which exposes boolean "expanded" properties for child UI panels.</li>
-      </ul>
-      <p>This allows you to render your content as a fixed list of panels representing the concurrent routes.</p>
-      <pre>
-      @%template(
-          '<div jwclass="user-settings">' +
-          '  <div jwid="simple"></div>' +
-          '  <div jwid="advanced"></div>' +
-          '</div>'
-      )
-      export default class UserSettings extends %Component {
-
-          private node: %Router.%Node;
-
-          %beforeRender() {
-              super.%beforeRender();
-              this.node = this.%own(new %Router.%Node({
-                  %pathOfNode: %hash,
-                  %routesOfNode: ["simple", "advanced"],
-                  %expandedOfNode: true
-              }));
-          }
-
-          renderSimple() {
-              return this.%own(new FieldSet({
-                  label: "Simple settings",
-                  content: new SimpleUserSettings(this.node.%router, this.node.%paths["simple"]),
-                  expanded: this.node.%expanded["simple"]
-              })).ownContent();
-          }
-
-          renderAdvanced() {
-              return this.%own(new FieldSet({
-                  label: "Advanced settings",
-                  content: new AdvancedUserSettings(this.node.%router, this.node.%paths["advanced"]),
-                  expanded: this.node.%expanded["advanced"]
-              })).ownContent();
-          }
-      }
-      </pre>
-
-    constructor:
-      signature: |
-        (config: %Router.%Node.%Config)
-      params:
-        config: Node configuration.
-      description: |
-        <p>Creates router node, assigns its properties to initial values and starts synchronization.</p>
-
-    properties:
-      router:
-        modifiers: readonly
-        type: '%Router<any>'
-        description: |
-          <p>Router that manages this node. Node creates this router automatically. You should pass this router to
-          child components as their parent router for further routing.</p>
-
-      paths:
-        modifiers: readonly
-        type: 'ReadonlyMap<string, %IProperty<string>>'
-        description: |
-          <p>Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
-          always exist regardless of their activity.</p>
-
-      expanded:
-        modifiers: readonly
-        type: 'ReadonlyMap<string, %IProperty<boolean>>'
-        description: |
-          <p>Provides "expanded" flags to bind child panels to, by name. Support two-way binding:</p>
-          <ol>
-          <li>Once the root path starts referring this node and this name in the node, "expanded" gets assigned to
-          true automatically. But not the opposite: once it stops, "expanded" stays unchanged.</li>
-          <li>Once "expanded" property becomes true, root path gets redirected to this name in this node. But not the
-          opposite: false value assignment doesn't lead to any visible changes in root path.</li>
-          </ol>
-
-      defaultRoute:
-        modifiers: readonly
-        type: string
-        description: |
-          <p>Default route this node was initialized with.</p>
-
-    references:
-      nameOfNode:
-        symbol: Router.Node.Config
-        member: name
-        label: name
-
-      parentOfNode:
-        symbol: Router.Node.Config
-        member: parent
-        label: parent
-
-      pathOfNode:
-        symbol: Router.Node.Config
-        member: path
-        label: path
-
-      routesOfNode:
-        symbol: Router.Node.Config
-        member: routes
-        label: routes
-
-      expandedOfNode:
-        symbol: Router.Node.Config
-        member: expanded
-        label: expanded
-
-      defaultRouteOfNode:
-        symbol: Router.Node.Config
-        member: defaultRoute
-        label: defaultRoute
-
-  Router.Node.Config:
-    kind: interface
-    simple: true
-    description: |
-      <p>%Router.%Node configuration.</p>
-
-    properties:
-      name:
-        modifiers: readonly
-        optional: true
-        type: string
-        description: |
-          <p>Router name. See %nameOfConfig in Router configuration for details.</p>
-
-      parent:
-        modifiers: readonly
-        optional: true
-        type: string
-        description: |
-          <p>Parent router. See %parentOfConfig in Router configuration for details.</p>
-
-      path:
-        modifiers: readonly
-        optional: true
-        type: '%Bindable<string>'
-        description: |
-          <p>Path to bind the router to. See %pathOfConfig in Router configuration for details.</p>
-
-      routes:
-        modifiers: readonly
-        type: string[]
-        description: |
-          <p>Fixed list of routes to manage by this node. For every name in this list, corresponding properties will be
-          created in %paths and %expanded dictionaries of the node.</p>
-
-        references:
-          paths:
-            symbol: Router.Node
-            member: paths
-
-          expanded:
-            symbol: Router.Node
-            member: expanded
-
-      expanded:
-        modifiers: readonly
-        optional: true
-        type: boolean | string[]
-        description: |
-          <p>Initial "expanded" status of routes or initial routes to expand. Defaults to false (all routes are
-          collapsed).</p>
-
-      defaultRoute:
-        modifiers: readonly
-        optional: true
-        type: string
-        description: |
-          <p>Default route. If the initial path is blank (""), the router performs a redirection to this route, i.e.
-          expands one of the panels. Doesn't work after initialization.</p>
-
 references:
-  terminology:
-    href: "#terminology"
-    label: Terminology
-
-  howItWorks:
-    href: "#howItWorks"
-    label: How it works
-
   routeHierarchy:
     href: "#routeHierarchy"
     label: Route hierarchy
@@ -830,10 +609,6 @@ references:
   routingFlow:
     href: "#routingFlow"
     label: Routing flow
-
-  redirection:
-    href: "#redirection"
-    label: Redirection
 
   menuStatus:
     href: "#menuStatus"
@@ -856,12 +631,6 @@ references:
 
   Config:
     symbol: Router.Config
-
-  Redirector:
-    symbol: Router.Redirector
-
-  Node:
-    symbol: Router.Node
 
   nameOfConfig:
     symbol: Router.Config
@@ -907,22 +676,6 @@ references:
     symbol: default
     member: getFullPath
 
-  redirect:
-    symbol: default
-    member: redirect
-
-  staticGetFullPath:
-    symbol: default
-    member: getFullPath
-    static: true
-    label: getFullPath
-
-  staticRedirect:
-    symbol: default
-    member: redirect
-    static: true
-    label: redirect
-
   makeSeparator:
     symbol: default
     member: makeSeparator
@@ -947,3 +700,7 @@ references:
     symbol: default
     member: DEFAULT_JOINER
     static: true
+
+  redirectRoute:
+    file: jwidget/RouteRedirector
+    symbol: redirectRoute

@@ -1,0 +1,41 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/Component
+    hideInheritedMembers: true
+    description: |
+      <p>Recommended way to perform an asynchronous redirection in %Router %handlerOfConfig function. See %redirection for
+      details.</p>
+    constructor:
+      signature: |
+        (path: string, router: %Router<any>, replaceState: boolean = true)
+      params:
+        path: Path relative to %router.
+        router: Redirect relative to this router.
+        replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
+      description: |
+        <p>Creates a new redirector.</p>
+
+  redirectRoute:
+    signature: |
+      (path: string, router: %Router<any>, replaceState?: boolean)
+    params:
+      path: Path relative to %router.
+      router: Redirect relative to this router.
+      replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
+    description: |
+      <p>Immediately performs the redirection, i.e. sets %hash to %staticGetFullPath(%path, %router).</p>
+
+references:
+  handlerOfConfig:
+    file: Router
+    symbol: Router.Config
+    member: handler
+    label: handler
+
+  staticGetFullPath:
+    file: Router
+    symbol: default
+    member: getFullPath
+    static: true
+    label: getFullPath

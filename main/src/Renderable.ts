@@ -3,6 +3,6 @@ import Component from "./Component";
 import ReadonlyBindableArray from "./ReadonlyBindableArray";
 import ReadonlyBindableSet from "./ReadonlyBindableSet";
 
-type Renderable = Component | Bindable<Component> | ReadonlyBindableArray<Component> | ReadonlyBindableSet<Component>;
+type Renderable = Component | Bindable<Component> | ReadonlyBindableArray<Component> | ReadonlyBindableSet<Component> | boolean;
 
 export default Renderable;

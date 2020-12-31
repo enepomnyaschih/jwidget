@@ -151,7 +151,7 @@ symbols:
           <p>Listens the specified message and issues target value recalculation on its dispatching.</p>
 
       bind:
-        signature: '(property: %Bindable<any>): this'
+        signature: '(property: %Bindable<unknown>): this'
         params:
           property: Bindable to watch.
         returns: this
@@ -204,7 +204,8 @@ symbols:
       </pre>
 
     constructor:
-      signature: '(sources: %Bindable<%T>[], callback: (accumulator: %U, item: %T) => %U, initial: %U, target?: %IProperty<%U>)'
+      signature: |
+        (sources: %Bindable<%T>[], callback: (accumulator: %U, item: %T) => %U, initial: %U, target?: %IProperty<%U>)
       params:
         sources: Source bindables.
         callback: A function to execute on each element in the array.

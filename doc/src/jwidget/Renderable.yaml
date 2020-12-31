@@ -1,0 +1,14 @@
+symbols:
+  default:
+    kind: type
+    simple: true
+    description: |
+      <pre>
+      type Renderable = %Component | %Bindable<%Component> | %ReadonlyBindableArray<%Component> | %ReadonlyBindableSet<%Component> | boolean
+      </pre>
+      <p>Type describing allowed values that %Component.<b>render&lt;ChildId&gt;</b> methods can return.</p>
+      <p>See %moreAboutRender for details.</p>
+
+references:
+  moreAboutRender:
+    href: Component.html#moreAboutRender

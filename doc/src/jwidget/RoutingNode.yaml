@@ -1,0 +1,184 @@
+symbols:
+  default:
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Creates a router that manages mapping of two sets of properties:</p>
+      <ul>
+      <li>%paths which exposes string path properties for child routers if neccessary;</li>
+      <li>%expanded which exposes boolean "expanded" properties for child UI panels.</li>
+      </ul>
+      <p>This allows you to render your content as a fixed list of panels representing the concurrent routes.</p>
+      <pre>
+      @%template(
+          '<div jwclass="user-settings">' +
+          '  <div jwid="simple"></div>' +
+          '  <div jwid="advanced"></div>' +
+          '</div>'
+      )
+      export default class UserSettings extends %Component {
+
+          private node: %RoutingNode;
+
+          %beforeRender() {
+              super.%beforeRender();
+              this.node = this.%own(new %RoutingNode({
+                  %pathOfNode: %hash,
+                  %routesOfNode: ["simple", "advanced"],
+                  %expandedOfNode: true
+              }));
+          }
+
+          renderSimple() {
+              return this.%own(new FieldSet({
+                  label: "Simple settings",
+                  content: new SimpleUserSettings(this.node.%router, this.node.%paths["simple"]),
+                  expanded: this.node.%expanded["simple"]
+              })).ownContent();
+          }
+
+          renderAdvanced() {
+              return this.%own(new FieldSet({
+                  label: "Advanced settings",
+                  content: new AdvancedUserSettings(this.node.%router, this.node.%paths["advanced"]),
+                  expanded: this.node.%expanded["advanced"]
+              })).ownContent();
+          }
+      }
+      </pre>
+
+    constructor:
+      signature: |
+        (config: %RoutingNode.%Config)
+      params:
+        config: Node configuration.
+      description: |
+        <p>Creates router node, assigns its properties to initial values and starts synchronization.</p>
+
+    properties:
+      router:
+        modifiers: readonly
+        type: '%Router<any>'
+        description: |
+          <p>Router that manages this node. Node creates this router automatically. You should pass this router to
+          child components as their parent router for further routing.</p>
+
+      paths:
+        modifiers: readonly
+        type: 'ReadonlyMap<string, %IProperty<string>>'
+        description: |
+          <p>Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
+          always exist regardless of their activity.</p>
+
+      expanded:
+        modifiers: readonly
+        type: 'ReadonlyMap<string, %IProperty<boolean>>'
+        description: |
+          <p>Provides "expanded" flags to bind child panels to, by name. Support two-way binding:</p>
+          <ol>
+          <li>Once the root path starts referring this node and this name in the node, "expanded" gets assigned to
+          true automatically. But not the opposite: once it stops, "expanded" stays unchanged.</li>
+          <li>Once "expanded" property becomes true, root path gets redirected to this name in this node. But not the
+          opposite: false value assignment doesn't lead to any visible changes in root path.</li>
+          </ol>
+
+      defaultRoute:
+        modifiers: readonly
+        type: string
+        description: |
+          <p>Default route this node was initialized with.</p>
+
+    references:
+      pathOfNode:
+        symbol: RoutingNode.Config
+        member: path
+        label: path
+
+      routesOfNode:
+        symbol: RoutingNode.Config
+        member: routes
+        label: routes
+
+      expandedOfNode:
+        symbol: RoutingNode.Config
+        member: expanded
+        label: expanded
+
+  RoutingNode.Config:
+    kind: interface
+    simple: true
+    description: |
+      <p>%RoutingNode configuration.</p>
+
+    properties:
+      name:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Router name. See %nameOfConfig in Router configuration for details.</p>
+
+      parent:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Parent router. See %parentOfConfig in Router configuration for details.</p>
+
+      path:
+        modifiers: readonly
+        optional: true
+        type: '%Bindable<string>'
+        description: |
+          <p>Path to bind the router to. See %pathOfConfig in Router configuration for details.</p>
+
+      routes:
+        modifiers: readonly
+        type: string[]
+        description: |
+          <p>Fixed list of routes to manage by this node. For every name in this list, corresponding properties will be
+          created in %paths and %expanded dictionaries of the node.</p>
+
+        references:
+          paths:
+            symbol: Router.Node
+            member: paths
+
+          expanded:
+            symbol: Router.Node
+            member: expanded
+
+      expanded:
+        modifiers: readonly
+        optional: true
+        type: boolean | string[]
+        description: |
+          <p>Initial "expanded" status of routes or initial routes to expand. Defaults to false (all routes are
+          collapsed).</p>
+
+      defaultRoute:
+        modifiers: readonly
+        optional: true
+        type: string
+        description: |
+          <p>Default route. If the initial path is blank (""), the router performs a redirection to this route, i.e.
+          expands one of the panels. Doesn't work after initialization.</p>
+
+references:
+  nameOfConfig:
+    file: jwidget/Router
+    symbol: Router.Config
+    member: name
+    label: name
+
+  parentOfConfig:
+    file: jwidget/Router
+    symbol: Router.Config
+    member: parent
+    label: parent
+
+  pathOfConfig:
+    file: jwidget/Router
+    symbol: Router.Config
+    member: path
+    label: path

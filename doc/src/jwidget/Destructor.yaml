@@ -14,7 +14,7 @@ symbols:
       </pre>
     constructor:
       signature: |
-        (callback: () => any, scope?: any)
+        (callback: () => void, scope?: any)
       params:
         callback: Callback to call on destruction.
         scope: '%callback call scope.'

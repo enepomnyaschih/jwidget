@@ -97,14 +97,14 @@ symbols:
           </pre>
           </li>
           <li>
-          <p>Add an ordered list of child components into some element using %addList method. Pass an instance of
+          <p>Add an ordered list of child components into some element using %addArray method. Pass an instance of
           %ReadonlyList&lt;%Component&gt; as an argument and the framework will provide the synchronization with this list
           during application running.</p>
           <pre>
           %afterRender() {
               super.%afterRender();
               this.labelViews = new %List([new LabelView("one"), new LabelView("two")]);
-              this.%addList(this.labelViews, "labels");
+              this.%addArray(this.labelViews, "labels");
           }
 
           addLabel(value: string) {
@@ -113,14 +113,14 @@ symbols:
           </pre>
           </li>
           <li>
-          <p>Add a collection of child components into some element using %addCollection method. As opposed to %addList
-          method, %addCollection doesn't retain the order of child components. A newly added component is always appended
+          <p>Add a collection of child components into some element using %addSet method. As opposed to %addArray
+          method, %addSet doesn't retain the order of child components. A newly added component is always appended
           to the end. Framework will provide the synchronization with this collection during application running.</p>
           <pre>
           %afterRender() {
               super.%afterRender();
               this.labelViews = new %Set([new LabelView("one"), new LabelView("two")]);
-              this.%addCollection(this.labelViews, "labels");
+              this.%addSet(this.labelViews, "labels");
           }
 
           addLabel(value: string) {
@@ -162,7 +162,7 @@ symbols:
           <b>&lt;ChildId&gt;</b> equals to this jwid, written in CamelCase with capitalized first letter.
           Method signature:</p>
           <pre>
-          protected renderChildId(el: %JQuery): any
+          protected renderChildId(el: %JQuery): %Renderable
           </pre>
           <dl class="row">
           <dt class="col-lg-2 col-sm-3">el</dt><dd class="col-lg-10 col-sm-9">Element with corresponding jwid.</dd>
@@ -173,10 +173,10 @@ symbols:
           component. This option doesn't work for the root element.</li>
           <li>If the method returns an instance of %Bindable&lt;Component&gt;, then it gets added as a bindable child
           component via %addBindable method. This option doesn't work for the root element.</li>
-          <li>If the method returns an instance of %ReadonlyList&lt;%Component&gt;, then it gets added as a child list via
-          method %addList.</li>
-          <li>If the method returns an instance of %ReadonlyMap&lt;%Component&gt; or %ReadonlySet&lt;%Component&gt;, then
-          it gets added as a child collection via method %addCollection.</li>
+          <li>If the method returns an instance of %ReadonlyBindableArray&lt;%Component&gt;, then it gets added as a child list via
+          method %addArray.</li>
+          <li>If the method returns an instance of %ReadonlyBindableSet&lt;%Component&gt;, then
+          it gets added as a child collection via method %addSet.</li>
           <li>If the method returns <b>false</b>, then the element gets removed from the HTML document. This option doesn't
           work for the root element.</li>
           <li>In any other case, the framework doesn't perform any additional actions with the element. You can use
@@ -193,7 +193,7 @@ symbols:
           adding operation.</p>
           <ul>
           <li>If you have added a component to %children object, you must remove it via %mapRemove method.</li>
-          <li>Methods %addBindable, %addList and %addCollection return bindings. Their destruction removes the
+          <li>Methods %addBindable, %addArray and %addSet return bindings. Their destruction removes the
           children.</li>
           </ul>
           <p>As soon as child component is removed, you can destroy it:</p>
@@ -209,7 +209,7 @@ symbols:
               this._labelViews = %mapList(this.labels, label => new LabelView(label), {%destroy});
 
               // Add labels into element with jwid="labels"
-              this._labelArray = this.%addList(this._labelViews, "labels");
+              this._labelArray = this.%addArray(this._labelViews, "labels");
           }
 
           clearLabels() {
@@ -318,7 +318,7 @@ symbols:
           <li>Like in all other classes, <b>constructor</b> is called first. Usually all fields are assigned to their
           initial values here, messages are created etc. Only component model should be touched here, view is completely
           ignored. Notice that component is not rendered after construction yet, so it doesn't have fields %el and
-          %children assigned, and methods %addList, %addCollection, %addBindable won't work. The main reason behind that is
+          %children assigned, and methods %addArray, %addSet, %addBindable won't work. The main reason behind that is
           our wish to give you a possibility to do something else between component construction and rendering, for example,
           change some field values and call some methods. Second reason: it is not recommended to call virtual methods in
           constructor in any object-oriented language. It may result in undesired side effects. You can render the
@@ -430,7 +430,7 @@ symbols:
             protected renderLabels: function() {
                 return this.%own(this.labels.%mapProperty(labels => {
                     const component = new Component().%render();
-                    component.%addList(labels);
+                    component.%addArray(labels);
                     return component;
                 }, {destroy}));
             }
@@ -479,7 +479,7 @@ symbols:
         returns: 'this'
         description: |
           <p>Renders the component into an element. Use it to render root component only: children must be rendered
-          using %children, %addList, %addCollection, %addBindable members.</p>
+          using %children, %addArray, %addSet, %addBindable members.</p>
       renderAs:
         signature: '(el: string | HTMLElement | %JQuery): this'
         params:
@@ -487,7 +487,7 @@ symbols:
         returns: 'this'
         description: |
           <p>Renders the component in place of an element. Use it to render root component only: children must be
-          rendered using %children, %addList, %addCollection, %addBindable members.</p>
+          rendered using %children, %addArray, %addSet, %addBindable members.</p>
       remove:
         signature: '(): this'
         returns: 'this'
@@ -532,8 +532,8 @@ symbols:
           component destruction right before %unrender method call. But notice that child component inside this
           property does not get destroyed automatically. Usually it can be done by corresponding %Mapper or %Property
           destruction in %unrender method or via %own.
-      addList:
-        signature: '(source: %ReadonlyList<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
+      addArray:
+        signature: '(source: %ReadonlyBindableArray<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
         params:
           source: 'Child component list.'
           el: 'jwid of element to add child components into. Defaults to root element (%el) of component.'
@@ -541,22 +541,22 @@ symbols:
         description: |
           <p>Adds list of child components and synchronizes the component with it. On every list change, adds or
           removes corresponding children. Equivalent to returning a %ReadonlyList&lt;%Component&gt; instance in rendering
-          method. As opposed to %addCollection method, retains component order. However, it works slower and accepts
+          method. As opposed to %addSet method, retains component order. However, it works slower and accepts
           list only. It is convenient to create "source" list from data list using %mapList utility:</p>
           <pre>
           protected %afterRender() {
               super.%afterRender();
               const list = this.%own(%mapList(this.users, user => new UserView(user), {%destroy}));
-              this.%addList(list, "users");
+              this.%addArray(list, "users");
           }
           </pre>
-          <p>%addList method returns a binding. If you %baseDestroy it, the children get removed from parent component
+          <p>%addArray method returns a binding. If you %baseDestroy it, the children get removed from parent component
           and the synchronization gets stopped. Also, the list is removed from parent component on parent component
           destruction right before %unrender method call. But notice that child components inside this list are not
           destroyed automatically. Usually it can be done by corresponding %ListMapper or list destruction in
           %unrender method or via %own.</p>
-      addCollection:
-        signature: '(source: %ReadonlyCollection<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
+      addSet:
+        signature: '(source: %ReadonlyBindableSet<%Component>, el?: string | HTMLElement | %JQuery): %Destroyable'
         params:
           source: 'Child component collection.'
           el: 'jwid of element to add child components into. Defaults to root element (%el) of component.'
@@ -564,17 +564,17 @@ symbols:
         description: |
           <p>Adds collection of child components and synchronizes the component with it. On every collection change,
           adds or removes corresponding children. Equivalent to returning a %ReadonlyCollection&lt;%Component&gt;
-          instance in rendering method. As opposed to %addList method, ignores component order. However, it works
+          instance in rendering method. As opposed to %addArray method, ignores component order. However, it works
           faster and accepts any kind of collection, not list only. It is convenient to create "source" collection
           from data collection using %mapCollection utility:</p>
           <pre>
           protected %afterRender() {
               super.%afterRender();
               const collection = this.%own(%mapCollection(this.users, user => new UserView(user), {%destroy}));
-              this.%addCollection(collection, "users");
+              this.%addSet(collection, "users");
           }
           </pre>
-          <p>%addCollection method returns a binding. If you %baseDestroy it, the children get removed from parent
+          <p>%addSet method returns a binding. If you %baseDestroy it, the children get removed from parent
           component and the synchronization gets stopped. Also, the collection is removed from parent component on
           parent component destruction right before %unrender method call. But notice that child components inside
           this collection are not destroyed automatically. Usually it can be done by corresponding mapper or
