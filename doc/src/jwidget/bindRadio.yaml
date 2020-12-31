@@ -1,9 +1,10 @@
 symbols:
   default:
     signature: |
-      (el: JQuery, name: string): %DestroyableBindable<string>
-      (el: JQuery, name: string, property: %Bindable<any>): %Destroyable
-      (el: JQuery, name: string, property: %IProperty<string>, binding?: %Binding): %Destroyable
+      (el: %RadioWatcherField, name: string): %DestroyableBindable<string>
+      (el: %RadioUpdaterField, name: string, property: %Bindable<string>, binding?: %UPDATE): %Destroyable
+      (el: %RadioWatcherField, name: string, property: %IProperty<string>, binding?: %WATCH): %Destroyable
+      (el: %RadioField, name: string, property: %IProperty<string>, binding?: %TWOWAY): %Destroyable
     params:
       el: DOM element.
       name: Value of "name" attribute in radio button elements.
@@ -41,3 +42,134 @@ symbols:
       <pre>
       this.%own(%bindRadio(el, "letter", value));
       </pre>
+
+  RadioUpdaterField:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for some of %bindRadio binding variation implementations.</p>
+    methods:
+      find:
+        signature: |
+          (selector: string): %RadioUpdaterButton
+        description: |
+          <p>See %JQuery.%find.</p>
+        references:
+          find:
+            href: https://api.jquery.com/find/
+
+  RadioUpdaterButton:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for some of %bindRadio binding variation implementations.</p>
+    properties:
+      length:
+        type: number
+        modifiers: readonly
+        description: |
+          <p>See %JQuery.%length.</p>
+
+    methods:
+      is:
+        signature: |
+          (selector: ":checked"): boolean
+        description: |
+          <p>See %JQuery.%is.</p>
+        references:
+          is:
+            href: https://api.jquery.com/is/
+
+      prop:
+        signature: |
+          (prop: "checked", value: boolean)
+        description: |
+          <p>See %JQuery.%prop.</p>
+        references:
+          prop:
+            href: https://api.jquery.com/prop/
+
+      change:
+        signature: |
+          ()
+        description: |
+          <p>See %JQuery.%change.</p>
+        references:
+          change:
+            href: https://api.jquery.com/change/
+
+  RadioWatcherField:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for some of %bindRadio binding variation implementations.</p>
+    methods:
+      find:
+        signature: |
+          (selector: string): RadioWatcherButton
+        description: |
+          <p>See %JQuery.%find.</p>
+        references:
+          find:
+            href: https://api.jquery.com/find/
+
+      on:
+        signature: |
+          (event: "change", selector: string, callback: () => void)
+        description: |
+          <p>See %JQuery.%on.</p>
+        references:
+          on:
+            href: https://api.jquery.com/on/
+
+      off:
+        signature: |
+          (event: "change", selector: string, callback: () => void)
+        description: |
+          <p>See %JQuery.%off.</p>
+        references:
+          off:
+            href: https://api.jquery.com/off/
+
+  RadioWatcherButton:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for some of %bindRadio binding variation implementations.</p>
+    properties:
+      length:
+        type: number
+        modifiers: readonly
+        description: |
+          <p>See %JQuery.%length.</p>
+
+    methods:
+      attr:
+        signature: |
+          (attr: "value"): string
+        description: |
+          <p>See %JQuery.%attr.</p>
+        references:
+          attr:
+            href: https://api.jquery.com/attr/
+
+  RadioField:
+    kind: interface
+    simple: true
+    extends:
+      - file: jwidget/bindRadio
+        symbol: RadioUpdaterField
+      - file: jwidget/bindRadio
+        symbol: RadioWatcherField
+    description: |
+      <p>Subset of %JQuery element methods necessary for some of %bindRadio binding variation implementations.
+      Union of %RadioUpdaterField and %RadioWatcherField.</p>
+    methods:
+      find:
+        signature: |
+          (selector: string): %RadioUpdaterButton & %RadioWatcherButton
+        description: |
+          <p>See %JQuery.%find.</p>
+        references:
+          find:
+            href: https://api.jquery.com/find/

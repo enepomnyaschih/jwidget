@@ -194,8 +194,8 @@ namespace Mapper {
 		 * @param reducer Mapping reducer.
 		 * @param target Target property.
 		 */
-		constructor(readonly sources: Bindable<T>[], readonly callback: (accumulator: U, item: T) => U,
-					readonly initial: U, target?: IProperty<U>) {
+		constructor(readonly sources: Bindable<T>[], private callback: (accumulator: U, item: T) => U,
+					private initial: U, target?: IProperty<U>) {
 			super();
 			this._target = target ?? new Property<U>(null, this.sources.every(source => source.silent));
 			this._update();

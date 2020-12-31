@@ -255,10 +255,8 @@ symbols:
 
       reduce:
         signature: |
-          <U>(reducer: %Reducer<%T, U>): U
           <U>(callback: (accumulator: U, item: %T, index: number) => U, initial: U): U
         params:
-          reducer: 'Standard %Reducer.'
           callback: Function to execute on each item in the collection.
           initial: Value to use as the first argument to the first call of the callback.
         returns: Final accumulator value.

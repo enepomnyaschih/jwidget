@@ -419,20 +419,6 @@ symbols:
       Defaults to %cmp.</p>
       <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
 
-  reduce:
-    signature: |
-      <T, U>(arr: T[], reducer: %Reducer<T, U>): U
-      <T, U>(arr: T[], callback: (accumulator: U, item: T, index: number) => U, initial: U): U
-    params:
-      arr: 'Array to reduce.'
-      reducer: '%Reducer instance to apply.'
-      callback: 'Reducer callback.'
-      initial: 'Initial accumulator value.'
-    returns: 'Final accumulator value.'
-    description: |
-      Applies a function against an accumulator and each item in the array (from left to right) to reduce it to a
-      single value. Compared to standard <code>%arr.reduce(%callback, %initial)</code>, also supports %Reducer as an argument.
-
   equal:
     signature: |
       <T>(x: T[], y: T[]): boolean

@@ -35,7 +35,7 @@ import CancelToken, {runAsync} from "./CancelToken";
 export default function (ms?: number, cancelToken?: CancelToken): Promise<void> {
 	let timeout: any;
 	return runAsync<void>(
-		(resolve: (value?: (Promise<void> | void)) => void) => {
+		resolve => {
 			timeout = setTimeout(resolve, ms);
 		},
 		() => {

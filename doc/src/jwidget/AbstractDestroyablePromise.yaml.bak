@@ -1,9 +1,0 @@
-symbols:
-  default:
-    kind: abstract class
-    typevars:
-      T: Promise result type.
-    extends:
-      - file: jwidget/DestroyablePromise
-        typevars: [T]
-    description: See %DestroyablePromise for details.

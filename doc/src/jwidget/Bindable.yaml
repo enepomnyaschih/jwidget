@@ -6,7 +6,7 @@ symbols:
       V: Value type.
     description: |
       <p>Read-only container for a value. Provides basic data binding functionality.</p>
-      <p>Has a sub-interface %IProperty, which exposes %set method to modify the property.<p>
+      <p>Has a sub-interface %IProperty, which exposes %set method to modify the property.</p>
       %%PropertyExample
 
     topics:

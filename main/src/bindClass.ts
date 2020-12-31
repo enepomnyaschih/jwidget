@@ -26,17 +26,6 @@ import Bindable from './Bindable';
 import Class from './Class';
 import Destroyable from './Destroyable';
 
-class ClassNameUpdater extends Class {
-	constructor(private el: ClassNameUpdaterElement, property: Bindable<string>) {
-		super();
-		this.el.addClass(property.get());
-		this.own(property.onChange.listen(({value, oldValue}) => {
-			this.el.removeClass(oldValue);
-			this.el.addClass(value);
-		}));
-	}
-}
-
 class ClassUpdater extends Class {
 	constructor(private el: ClassUpdaterElement, private cls: string, private property: Bindable<any>) {
 		super();
@@ -49,6 +38,17 @@ class ClassUpdater extends Class {
 	}
 }
 
+class ClassNameUpdater extends Class {
+	constructor(private el: ClassNameUpdaterElement, property: Bindable<string>) {
+		super();
+		this.el.addClass(property.get());
+		this.own(property.onChange.listen(({value, oldValue}) => {
+			this.el.removeClass(oldValue);
+			this.el.addClass(value);
+		}));
+	}
+}
+
 /**
  * Watches boolean property modification and updates the specified CSS class presence in the DOM element.
  * @param el DOM element.
@@ -56,7 +56,7 @@ class ClassUpdater extends Class {
  * @param property Boolean property to bind CSS class to.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindClass(el: ClassUpdaterElement, cls: string, property: Bindable<any>): Destroyable;
+export default function bindClass(el: ClassUpdaterElement, cls: string, property: Bindable<string>): Destroyable;
 
 /**
  * Watches string property modification and updates CSS class name in the DOM element.
@@ -69,13 +69,13 @@ export default function bindClass(el: any, a: any, b?: any): Destroyable {
 	return (b != null) ? new ClassUpdater(el, a, b) : new ClassNameUpdater(el, a);
 }
 
+export interface ClassUpdaterElement {
+	toggleClass(cls: string, value: boolean): void;
+}
+
 export interface ClassNameUpdaterElement {
 
 	addClass(cls: string): void;
 
 	removeClass(cls: string): void;
-}
-
-export interface ClassUpdaterElement {
-	toggleClass(cls: string, value: boolean): void;
 }

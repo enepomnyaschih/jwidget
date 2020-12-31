@@ -1,7 +1,7 @@
 symbols:
   default:
     signature: |
-      (el: JQuery, property: %Bindable<any>): %Destroyable
+      (el: %DisplayUpdaterElement, property: %Bindable<boolean>): %Destroyable
     params:
       el: DOM element.
       property: Element visibility.
@@ -23,3 +23,18 @@ symbols:
       <pre>
       this.%own(%bindDisplay(el, checked));
       </pre>
+
+  DisplayUpdaterElement:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for %bindDisplay binding implementation.</p>
+    methods:
+      css:
+        signature: |
+          (style: "display", value: "" | "none")
+        description: |
+          <p>See %JQuery.%css.</p>
+        references:
+          css:
+            href: https://api.jquery.com/css/

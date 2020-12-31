@@ -187,7 +187,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>Mapper by %Reducer. Kind of mapper optimized for working with collections of similar properties.</p>
+      <p>Mapper by reducer. Kind of mapper optimized for working with collections of similar properties.</p>
       <pre>
       const sources: %Bindable<number>[] = [
           new %Property(3),
@@ -196,7 +196,7 @@ symbols:
       ];
       const target = new %Property<number>();
 
-      const mapper = new %Mapper.%ByReducer(sources, sum, target);
+      const mapper = new %Mapper.%ByReducer(sources, (x, y) => x + y, 0, target);
       expect(target.%getOfBindable()).toBe(7);
 
       sources[0].%setOfProperty(5);
@@ -204,10 +204,11 @@ symbols:
       </pre>
 
     constructor:
-      signature: '(sources: %Bindable<T>[], reducer: %Reducer<T, U>, target?: %IProperty<U>)'
+      signature: '(sources: %Bindable<%T>[], callback: (accumulator: %U, item: %T) => %U, initial: %U, target?: %IProperty<%U>)'
       params:
         sources: Source bindables.
-        reducer: Mapping reducer.
+        callback: A function to execute on each element in the array.
+        initial: A value to use as the first argument to the first call of the callback.
         target: Target property.
       description: |
         <p>Constructs %Mapper.%ByReducer instance. Computes %target property value as result of reducer and
@@ -222,17 +223,11 @@ symbols:
         type: '%Bindable<%U>'
         description: Target property.
 
-      reducer:
-        type: '%Reducer<%T, %U>'
-        description: Mapping reducer.
-
   mapProperties:
     signature: |
-      mapProperties<T>(sources: %Bindable<any>[], reducer: %Reducer<any, T>): %DestroyableBindable<T>
       mapProperties<T>(sources: %Bindable<any>[], create: %Mapper.%CreateCallback<T>, config?: %Mapper.%Config<T>): %DestroyableBindable<T>
     params:
       sources: Source bindables.
-      reducer: Mapping reducer.
       create: 'Mapping function. Signature: <code>(...sourceValues: any[]) => T</code>'
       config: Configuration.
     description: |
@@ -241,6 +236,17 @@ symbols:
     references:
       Config:
         symbol: Mapper.Config
+
+  mapPropertiesByReducer:
+    signature: |
+      mapPropertiesByReducer<T, U>(sources: %Bindable<%T>[], callback: (accumulator: %U, item: %T) => %U, initial: %U): %DestroyableBindable<%U>
+    params:
+      sources: Source bindables.
+      callback: A function to execute on each element in the array.
+      initial: A value to use as the first argument to the first call of the callback.
+    description: |
+      <p>Optimized way to create a mapper by reducer with new target value. Returns target property. Destroy it to stop
+      synchronization.</p>
 
   Mapper.Config:
     kind: interface

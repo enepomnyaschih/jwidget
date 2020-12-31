@@ -1,8 +1,8 @@
 symbols:
   default:
     signature: |
-      (el: JQuery, cls: string, property: %Bindable<any>): %Destroyable
-      (el: JQuery, cls: %Bindable<string>): %Destroyable
+      (el: %ClassUpdaterElement, cls: string, property: %Bindable<string>): %Destroyable
+      (el: %ClassNameUpdaterElement, cls: %Bindable<string>): %Destroyable
     params:
       el: DOM element.
       cls: Class name.
@@ -31,3 +31,42 @@ symbols:
       <pre>
       this.%own(%bindClass(el, color));
       </pre>
+
+  ClassUpdaterElement:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for one of %bindClass binding variation implementations.</p>
+    methods:
+      toggleClass:
+        signature: |
+          (cls: string, value: boolean)
+        description: |
+          <p>See %JQuery.%toggleClass.</p>
+        references:
+          toggleClass:
+            href: https://api.jquery.com/toggleClass/
+
+  ClassNameUpdaterElement:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for one of %bindClass binding variation implementations.</p>
+    methods:
+      addClass:
+        signature: |
+          (cls: string)
+        description: |
+          <p>See %JQuery.%addClass.</p>
+        references:
+          addClass:
+            href: https://api.jquery.com/addClass/
+
+      removeClass:
+        signature: |
+          (cls: string)
+        description: |
+          <p>See %JQuery.%removeClass.</p>
+        references:
+          removeClass:
+            href: https://api.jquery.com/removeClass/

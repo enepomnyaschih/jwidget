@@ -1,9 +1,10 @@
 symbols:
   default:
     signature: |
-      (el: JQuery, prop: string): %DestroyableBindable<boolean>
-      (el: JQuery, prop: string, property: %Bindable<any>): %Destroyable
-      (el: JQuery, prop: string, property: %IProperty<boolean>, binding: %Binding): %Destroyable
+      (el: %CheckedWatcherElement, prop: "checked"): %DestroyableBindable<boolean>
+      (el: %PropUpdaterElement, prop: string, property: %Bindable<boolean>, binding?: %UPDATE): %Destroyable
+      (el: %CheckedWatcherElement, prop: "checked", property: %IProperty<boolean>, binding: %WATCH): %Destroyable
+      (el: %PropUpdaterElement & %CheckedWatcherElement, prop: "checked", property: %IProperty<boolean>, binding: %TWOWAY): %Destroyable
     params:
       el: DOM element.
       prop: Name of DOM element property.
@@ -39,3 +40,60 @@ symbols:
       <pre>
       this.%own(%bindProp(el, "disabled", property));
       </pre>
+
+  CheckedWatcherElement:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for some of %bindProp binding variation implementations.</p>
+    methods:
+      prop:
+        signature: |
+          (prop: "checked"): boolean
+        description: |
+          <p>See %JQuery.%prop.</p>
+        references:
+          prop:
+            href: https://api.jquery.com/prop/
+
+      on:
+        signature: |
+          (event: "change", callback: () => void)
+        description: |
+          <p>See %JQuery.%on.</p>
+        references:
+          on:
+            href: https://api.jquery.com/on/
+
+      off:
+        signature: |
+          (event: "change", callback: () => void)
+        description: |
+          <p>See %JQuery.%off.</p>
+        references:
+          off:
+            href: https://api.jquery.com/off/
+
+  PropUpdaterElement:
+    kind: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery element methods necessary for some of %bindProp binding variation implementations.</p>
+    methods:
+      prop:
+        signature: |
+          (prop: string, value: boolean)
+        description: |
+          <p>See %JQuery.%prop.</p>
+        references:
+          prop:
+            href: https://api.jquery.com/prop/
+
+      change:
+        signature: |
+          ()
+        description: |
+          <p>See %JQuery.%change.</p>
+        references:
+          change:
+            href: https://api.jquery.com/change/

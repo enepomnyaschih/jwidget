@@ -9,12 +9,12 @@ references:
     href: https://lodash.com
   underscore:
     label: Underscore.js
-    href: http://underscorejs.org
+    href: https://underscorejs.org
   jquery:
     label: jQuery
-    href: http://api.jquery.com
+    href: https://api.jquery.com
   JQuery:
-    href: http://api.jquery.com
+    href: https://api.jquery.com
   Promise:
     href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
   PromiseAll:
@@ -30,7 +30,7 @@ references:
     href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch
     label: Promise.catch
   jqXHR:
-    href: http://api.jquery.com/jquery.ajax/
+    href: https://api.jquery.com/jquery.ajax/
   Thenable:
     href: https://www.npmjs.com/package/@types/es6-promise
   setTimeout:

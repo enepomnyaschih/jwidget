@@ -4,9 +4,9 @@ symbols:
     extends:
       - file: jwidget/Destroyable
     description: |
-      <p>Cancelation token is an object that provides a signal on destruction for the bound asyncronous operations to
-      stop working. Examples of asyncronous operations that support cancelation are %defer and %request. In comparison
-      to "destroyable promise" approach, cancelation tokens are %compatible.</p>
+      <p>Cancellation token is an object that provides a signal on destruction for the bound asynchronous operations to
+      stop working. Examples of asynchronous operations that support cancellation are %defer and %request. In comparison
+      to "destroyable promise" approach, cancellation tokens are %compatible.</p>
       <pre>
       class Profile extends %Component {
 
@@ -23,13 +23,13 @@ symbols:
       }
       </pre>
       <p>In the example above, should the component get %destroyed before the %request is finished, it will result in
-      request cancelation and the asyncronous code chain interruption.</p>
+      request cancellation and the asynchronous code chain interruption.</p>
 
     constructor:
       signature: |
         ()
       description: |
-        Creates cancelation token instance.
+        Creates cancellation token instance.
 
     properties:
       canceled:
@@ -44,11 +44,11 @@ symbols:
         signature: |
           (handler: () => any, scope?: any): %Destroyable
         params:
-          handler: Token cancelation callback.
+          handler: Token cancellation callback.
           scope: '%handler call scope.'
         returns: Handler attachment.
         description: |
-          <p>Adds a handler function to call on taken cancelation. If the token is already %canceled, calls the
+          <p>Adds a handler function to call on taken cancellation. If the token is already %canceled, calls the
           function immediately and returns %dummyDestroyable. Else registers the callback for a one-time call on
           token destruction and returns the attachment. Destroying the returned attachment results in handler
           function removal.</p>
@@ -67,33 +67,33 @@ symbols:
 
   runAsync:
     signature: |
-      <T>(run: (resolve: (value?: T | Thenable<T>) => void, reject: (error?: any) => void) => void, cancel: () => void, cancelToken?: %CancelToken): %Promise<T>
+      <T>(run: (resolve: (value?: T | PromiseLike<T>) => void, reject: (error?: any) => void) => void, cancel: () => void, cancelToken?: %CancelToken): %Promise<T>
     params:
-      run: Asyncronous operation initiation callback.
-      cancel: Asyncronous operation cancelation callback.
-      cancelToken: Optional cancelation token.
-    returns: Promise representing the operation with cancelation token support.
+      run: Asynchronous operation initiation callback.
+      cancel: Asynchronous operation cancellation callback.
+      cancelToken: Optional cancellation token.
+    returns: Promise representing the operation with cancellation token support.
     description: |
-      <p>Helper function that wraps an abstract asyncronous operation with a promise supporting cancelation tokens.
+      <p>Helper function that wraps an abstract asynchronous operation with a promise supporting cancellation tokens.
       It follows the next generic algorithm:</p>
       <ol>
       <li>If %cancelToken is not specified, returns a promise that just makes %run call.</li>
       <li>Else if the token is %canceled, returns a promise that does nothing.</li>
-      <li>Else returns a promise that makes %run call and also listens for token cancelation. The cancelation is
+      <li>Else returns a promise that makes %run call and also listens for token cancellation. The cancellation is
       handled by %cancel method.</li>
       </ol>
       <p>Therefore, %cancel method is never called before %run.</p>
-      <p>Please notice that the promise doesn't get resolved or rejected on cancelation. It helps to prevent
-      side effects such as error popup displaying. There is no signal on promise cancelation. Since your code is the
-      only origin that can trigger token cancelation, you can always implement such a signal for yourself if
+      <p>Please notice that the promise doesn't get resolved or rejected on cancellation. It helps to prevent
+      side effects such as error popup displaying. There is no signal on promise cancellation. Since your code is the
+      only origin that can trigger token cancellation, you can always implement such a signal for yourself if
       necessary.</p>
       <p>The following code demonstrates how to convert %setTimeout function to a cancelable promise using this
       utility.</p>
       <pre>
       export default function (ms?: number, cancelToken?: %CancelToken) {
-          let timeout: number;
+          let timeout: any;
           return %runAsync<void>(
-              (resolve: (value?: (Thenable<void> | void)) => void) => {
+              resolve => {
                   timeout = %setTimeout(resolve, ms);
               },
               () => {
