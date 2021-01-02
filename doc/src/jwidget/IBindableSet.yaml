@@ -1,0 +1,173 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/DestroyableReadonlyBindableSet
+        typevars: [T]
+      - file: jwidget/IClass
+    description: |
+      <p>Extension of %DestroyableReadonlyBindableSet with modification methods.</p>
+
+    methods:
+      ownValues:
+        signature: |
+          (): this
+        description: |
+          <p>Makes this set an owner of its values, which means that its values are alive as long as they are present in
+          this set. A value is destroyed when it leaves the set, and all values are destroyed on the set destruction.</p>
+
+      add:
+        signature: |
+          (value: %T): boolean
+        params:
+          Value: Value to add.
+        returns: Value is added successfully. Returns false if the value is already present.
+        description: |
+          <p>Adds a value to the set if one is absent and dispatches %onSplice message.</p>
+
+      addAll:
+        signature: |
+          (values: Iterable<%T>): ReadonlySet<%T>
+        params:
+          values: Values to add.
+        returns: The truly added values. Never returns null or undefined.
+        description: |
+          <p>Adds multiple values to the set, ones that are absent, and dispatches %onSplice message.</p>
+
+      delete:
+        signature: |
+          (value: %T): boolean
+        params:
+          value: Value to delete.
+        returns: Value is deleted successfully. Returns false if the value is already absent.
+        description: |
+          <p>Deletes a value from the set if one is present and dispatches %onSplice message.</p>
+
+      deleteAll:
+        signature: |
+          (values: Iterable<%T>): ReadonlySet<%T>
+        params:
+          values: Values to delete.
+        returns: The truly deleted values. Never returns null or undefined.
+        description: |
+          <p>Removes multiple values from the set, ones that are present, and dispatches %onSplice message.</p>
+
+      clear:
+        signature: |
+          (): ReadonlySet<%T>
+        returns: Old collection contents. If the set is already empty, returns an empty set.
+        description: |
+          <p>Clears the set and dispatches %onClear message.</p>
+
+      splice:
+        signature: |
+          (valuesToRemove: Iterable<%T>, valuesToAdd: Iterable<%T>): %IBindableSet.%SpliceResult<%T>
+        params:
+          valuesToRemove: Values to remove.
+          valuesToAdd: Values to add.
+        returns: Splice result. Never returns null or undefined.
+        description: |
+          <p>Removes and adds multiple values in the set and dispatches %onSplice message.
+          Universal optimized granular operation of removal/insertion.</p>
+
+      tryAddAll:
+        signature: |
+          (values: Iterable<%T>): ReadonlySet<%T>
+        params:
+          values: Values to add.
+        returns: The truly added values. If the set hasn't changed, returns undefined.
+        description: |
+          <p>Adds multiple values to the set, ones that are absent, and dispatches %onSplice message.</p>
+
+      tryDeleteAll:
+        signature: |
+          (values: Iterable<T>): ReadonlySet<T>
+        params:
+          values: Values to delete.
+        returns: The truly deleted values. If the set hasn't changed, returns undefined.
+        description: |
+          <p>Removes multiple values from the set, ones that are present, and dispatches %onSplice message.</p>
+
+      tryClear:
+        signature: |
+          (): ReadonlySet<%T>
+        returns: Old collection contents. If the set is already empty, returns undefined.
+        description: |
+          <p>Clears the set and dispatches %onClear message.</p>
+
+      trySplice:
+        signature: |
+          (valuesToRemove: Iterable<%T>, valuesToAdd: Iterable<%T>): %IBindableSet.%SpliceResult<%T>
+        params:
+          valuesToRemove: Values to remove.
+          valuesToAdd: Values to add.
+        returns: Splice result. If the set hasn't changed, returns undefined.
+        description: |
+          <p>Removes and adds multiple values in the set and dispatches %onSplice message.
+          Universal optimized granular operation of removal/insertion.</p>
+
+      performSplice:
+        signature: |
+          (newContents: Iterable<%T>)
+        params:
+          newContents: New set contents.
+        description: |
+          <p>Adjusts set contents to %newContents using %detectSplice and %splice methods.</p>
+
+  IBindableSet.SpliceParams:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+    description: |
+      <p>%IBindableSet.%splice method arguments. Result of %detectSplice method.</p>
+    properties:
+      valuesToRemove:
+        modifiers: readonly
+        type: 'Iterable<%T>'
+        description: Values to remove.
+
+      valuesToAdd:
+        modifiers: readonly
+        type: 'Iterable<%T>'
+        description: Values to add.
+
+  IBindableSet.SpliceResult:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+    description: |
+      <p>%IBindableSet.%splice method result.</p>
+    properties:
+      removedValues:
+        modifiers: readonly
+        type: 'ReadonlySet<%T>'
+        description: Removed values.
+
+      addedValues:
+        modifiers: readonly
+        type: 'ReadonlySet<%T>'
+        description: Added values.
+
+references:
+  splice:
+    symbol: default
+    member: splice
+
+  detectSplice:
+    symbol: default
+    member: detectSplice
+
+  onSplice:
+    symbol: default
+    member: onSplice
+
+  onClear:
+    symbol: default
+    member: onClear
+
+  SpliceResult:
+    symbol: IBindableSet.SpliceResult

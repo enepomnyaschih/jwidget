@@ -373,7 +373,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		return isIdentity(indexArray) ? undefined : indexArray;
 	}
 
-	detectSort(callback: (item: T, index: number) => any = identity, order: number = 1): number[] {
+	detectSort(callback: (value: T, index: number) => any = identity, order: number = 1): number[] {
 		const pairs = this._native.map((item, index): [number, T] => [index, callback(item, index)]);
 		pairs.sort((x, y) => order * cmp(x[1], y[1]));
 		const indexes = pairs.map(pair => pair[0]);
@@ -408,7 +408,7 @@ export default class BindableArray<T> extends Class implements IBindableArray<T>
 		}
 	}
 
-	sort(callback?: (item: T, index: number) => any, order?: number) {
+	sort(callback?: (value: T, index: number) => any, order?: number) {
 		const indexMapping = this.detectSort(callback, order);
 		if (indexMapping !== undefined) {
 			this.tryReorder(indexMapping);

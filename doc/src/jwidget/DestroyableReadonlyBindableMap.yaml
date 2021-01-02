@@ -1,0 +1,13 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      K: Key type.
+      V: Value type.
+    extends:
+      - file: jwidget/Destroyable
+      - file: jwidget/ReadonlyBindableMap
+        typevars: [K, V]
+    description: |
+      <p>Extension of %ReadonlyBindableMap abstraction with %destroy method. If a function returns a destroyable
+      collection, it usually indicates that you are now responsible for its life time control.</p>

@@ -42,7 +42,8 @@ Specifically:
     * Renamed redirect to redirectRoute and moved it to RouteRedirector module.
     * Renamed Router.Node to RoutingNode and extracted it to a separate module.
 * Collections. Their interfaces have been made as close to their native analogues as possible:
-    * Deleted ReadonlyCollection, ICollection (to emphasize the fact that collections are not interchangeable).
+    * Deleted ReadonlyCollection, DestroyableReadonlyCollection, ICollection (to emphasize the fact that collections
+    are not interchangeable).
     * Deleted getKey getter from all collections (it is not needed anymore).
     * Deleted getKey and scope arguments from all constructors and methods.
     * Deleted index, filter, count, map (to prevent their misuse as synchronizers).

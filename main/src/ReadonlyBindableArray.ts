@@ -29,7 +29,7 @@ import Listenable from './Listenable';
 /**
  * Bindable readonly wrapper over a native array.
  */
-interface ReadonlyBindableArray<T> {
+interface ReadonlyBindableArray<T> extends Iterable<T> {
 	/**
 	 * Iterates over items in the array.
 	 */
@@ -200,7 +200,7 @@ interface ReadonlyBindableArray<T> {
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 * @returns `indexMapping` argument of `reorder` method. If no method call required, returns undefined.
 	 */
-	detectSort(callback?: (item: T, index: number) => any, order?: number): number[];
+	detectSort(callback?: (value: T, index: number) => any, order?: number): number[];
 
 	/**
 	 * Detects `reorder` method arguments to sort array contents by comparer.

@@ -56,7 +56,7 @@ interface ReadonlyBindableMap<K, V> extends Iterable<readonly [K, V]> {
 	readonly onSplice: Listenable<IBindableMap.SpliceResult<K, V>>;
 
 	/**
-	 * Keys are changed in the map. Passes mapping of changed keys (old to new) as a message.
+	 * Keys of entries are changed in the map. Passes mapping of changed keys (old to new) as a message.
 	 */
 	readonly onReindex: Listenable<ReadonlyMap<K, K>>;
 

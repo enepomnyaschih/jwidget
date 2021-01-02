@@ -157,14 +157,6 @@ symbols:
         description: |
           <p>Call scope of mapper's <b>create</b> and %destroy callbacks. Defaults to the synchronizer itself.</p>
 
-      getKey:
-        modifiers: readonly
-        optional: true
-        type: '(item: %U) => any'
-        description: |
-          <p>Function which identifies an item in the auto-created target collection for optimization of some
-          algorithms.</p>
-
     references:
       DestroyCallback: {}
 

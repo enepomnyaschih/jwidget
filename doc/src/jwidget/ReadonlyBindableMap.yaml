@@ -1,0 +1,121 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      K: Key type.
+      V: Value type.
+    description: |
+      <p>Unordered key-value collection. Consists of key-value pairs (entries).</p>
+
+    properties:
+      silent:
+        modifiers: readonly
+        type: boolean
+        description: Checks if this collection never dispatches messages. This knowledge may help you do certain code optimizations.
+      size:
+        modifiers: readonly
+        type: '%Bindable<number>'
+        description: Property containing number of entries in the map.
+      native:
+        modifiers: readonly
+        type: 'ReadonlyMap<%K, %V>'
+        description: Native map - internal collection representation.
+      onSplice:
+        modifiers: readonly
+        type: '%Listenable<%IBindableMap.%SpliceResult<%K, %V>>'
+        description: Entries are removed from the map and/or entries are added/updated in the map.
+      onReindex:
+        modifiers: readonly
+        type: '%Listenable<ReadonlyMap<%K, %K>>'
+        description: Keys of entries are changed in the map. Passes mapping of changed keys (old to new) as a message.
+      onClear:
+        modifiers: readonly
+        type: '%Listenable<ReadonlyMap<%K, %V>>'
+        description: The map is cleared. Passes old map contents as a message.
+      onChange:
+        modifiers: readonly
+        type: '%Listenable<void>'
+        description: The map is changed. Dispatched right after any another message.
+
+    methods:
+      '[Symbol.iterator]':
+        signature: |
+          (): IterableIterator<[%K, %V]>
+        returns: Map iterator.
+
+      has:
+        signature: |
+          (key: %K): boolean
+        params:
+          key: Key.
+        returns: An entry with the specified key exists in the map.
+
+      get:
+        signature: |
+          (key: %K): %V
+        params:
+          key: Key.
+        returns: Value with the specified key. If an entry with such key doesn't exist, returns undefined.
+
+      keys:
+        signature: |
+          (): IterableIterator<%K>
+        returns: Iterator over all map keys.
+
+      values:
+        signature: |
+          (): IterableIterator<%V>
+        returns: Iterator over all map values.
+
+      entries:
+        signature: |
+          (): IterableIterator<readonly [%K, %V]>
+        returns: Iterator over all map entries.
+
+      forEach:
+        signature: |
+          (callback: (value: %V, key: %K) => void): void
+        params:
+          callback: Callback function.
+          scope: '%callback call scope. Defaults to the collection.'
+        description: |
+          <p>Iterates through the map entries. Calls the specified function for all entries.<p>
+
+      detectSplice:
+        signature: |
+          (newContents: ReadonlyMap<%K, %V>): %IBindableMap.%SpliceParams<%K, %V>
+        params:
+          newContents: New map contents.
+        returns: '%splice method arguments. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %splice method arguments to adjust the map contents to %newContents.
+          Determines keys to be removed and entries added/updated.</p>
+
+      detectReindex:
+        signature: |
+          (newContents: ReadonlyMap<%K, %V>): ReadonlyMap<%K, %K>
+        params:
+          newContents: New map contents.
+        returns: '<b>keyMapping</b> argument of %reindex method. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %reindex method arguments to adjust the map contents to %newContents. Determines new keys to be
+          assigned to all entries. All values in %newContents must be %unique, and they must match values of this map.</p>
+
+    references:
+      splice:
+        file: jwidget/IBindableMap
+        member: splice
+
+      reindex:
+        file: jwidget/IBindableMap
+        member: reindex
+
+      SpliceResult:
+        file: jwidget/IBindableMap
+        symbol: IBindableMap.SpliceResult
+        label: SpliceResult
+
+      SpliceParams:
+        file: jwidget/IBindableMap
+        symbol: IBindableMap.SpliceParams
+        label: SpliceParams

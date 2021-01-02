@@ -1,0 +1,76 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      T: Value type.
+    description: |
+      <p>Unordered collection optimized for value addition, removal and presence check.</p>
+
+    properties:
+      silent:
+        modifiers: readonly
+        type: boolean
+        description: Checks if this collection never dispatches messages. This knowledge may help you do certain code optimizations.
+      size:
+        modifiers: readonly
+        type: '%Bindable<number>'
+        description: Property containing number of values in the set.
+      native:
+        modifiers: readonly
+        type: 'ReadonlySet<%T>'
+        description: Native set - internal collection representation.
+      onSplice:
+        modifiers: readonly
+        type: '%Listenable<%IBindableSet.%SpliceResult<%T>>'
+        description: Value are removed from the set and/or values are added to the set.
+      onClear:
+        modifiers: readonly
+        type: '%Listenable<ReadonlySet<%T>>'
+        description: The set is cleared.
+      onChange:
+        modifiers: readonly
+        type: '%Listenable<void>'
+        description: The set is changed. Dispatched right after any another message.
+
+    methods:
+      '[Symbol.iterator]':
+        signature: |
+          (): IterableIterator<%T>
+        returns: Set iterator.
+
+      has:
+        signature: |
+          (value: %T): boolean
+
+      forEach:
+        signature: |
+          (callback: (value: %T) => void): void
+        params:
+          callback: Callback function.
+        description: |
+          <p>Iterates through the collection items. Calls the specified function for all values.<p>
+
+      detectSplice:
+        signature: |
+          (newContents: Iterable<%T>): %IBindableSet.%SpliceParams<%T>
+        params:
+          newContents: New set contents.
+        returns: '%splice method arguments. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %splice method arguments to adjust the set contents to %newContents.
+          Determines values to be removed and added.</p>
+
+    references:
+      splice:
+        file: jwidget/IBindableSet
+        member: splice
+
+      SpliceResult:
+        file: jwidget/IBindableSet
+        symbol: IBindableSet.SpliceResult
+        label: SpliceResult
+
+      SpliceParams:
+        file: jwidget/IBindableSet
+        symbol: IBindableSet.SpliceParams
+        label: SpliceParams

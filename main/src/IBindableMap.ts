@@ -41,13 +41,13 @@ interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V
 	 * Puts or replaces a value with the specified key and dispatches a splice message.
 	 * @param key Entry key.
 	 * @param value Entry value.
-	 * @returns The replaced value.
+	 * @returns Old value of the entry.
 	 */
 	set(key: K, value: V): V;
 
 	/**
 	 * Puts or replaces multiple entries and dispatches a splice message.
-	 * @param entries Entries to put.
+	 * @param entries Entries to add or update.
 	 */
 	setAll(entries: ReadonlyMap<K, V>): void;
 
@@ -77,11 +77,6 @@ interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V
 	 * Removes all map entries and dispatches a cleanup message.
 	 */
 	clear(): Map<K, V>;
-
-	/**
-	 * Removes all map entries and dispatches a cleanup message.
-	 */
-	tryClear(): Map<K, V>;
 
 	/**
 	 * Removes and/or adds multiple entries in the map granularly and dispatches a splice message.
@@ -122,6 +117,11 @@ interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V
 	 * @returns The entry value. If the map is not modified, returns undefined.
 	 */
 	trySetKey(oldKey: K, newKey: K): V;
+
+	/**
+	 * Removes all map entries and dispatches a cleanup message.
+	 */
+	tryClear(): Map<K, V>;
 
 	/**
 	 * Removes multiple entries from the map and dispatches a splice message.

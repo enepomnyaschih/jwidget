@@ -1,0 +1,18 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/IBindableArray
+        typevars: [T]
+      - file: jwidget/Class
+    description: |
+      <p>Ordered collection of items. Each item of the array has an index. Index of first item is 0,
+      index of each next one is higher by 1.</p>
+    constructor:
+      signature: |
+        (silent?: boolean)
+        new BindableArray<T>(contents: Iterable<%T>, silent?: boolean)
+      params:
+        contents: Initial array contents.
+        silent: Create a silent array which means that it never dispatches modification messages.

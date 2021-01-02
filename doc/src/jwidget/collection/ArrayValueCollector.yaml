@@ -1,0 +1,34 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/collection/AbstractValueCollector
+    description: |
+      <p>Value collector for %ReadonlyBindableArray. See %AbstractValueCollector for details.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableArray<%T>, config?: %AbstractValueCollector.%Config<%T>)
+      params:
+        source: Source list.
+        config: Collector configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: Source array.
+
+  startCollectingArrayValues:
+    signature: |
+      <T>(source: %ReadonlyBindableArray<T>): %DestroyableReadonlyBindableSet<T>
+    params:
+      source: Source array.
+    returns: Target set.
+    description: |
+      <p>Creates a set containing all array values and starts synchronization. See %AbstractValueCollector for details.</p>
+
+references:
+  Config:
+    file: jwidget/collection/AbstractValueCollector
+    symbol: AbstractValueCollector.Config

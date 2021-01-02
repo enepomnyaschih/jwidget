@@ -115,29 +115,20 @@ symbols:
         description: |
           <p>Target list. By default, created automatically.</p>
 
-      getKey:
-        modifiers: readonly
-        optional: true
-        type: '(item: %T) => any'
-        description: |
-          <p>Function which identifies an item in the auto-created target list for optimization of some algorithms.</p>
-
   mergeLists:
     signature: |
-      <T>(source: %ReadonlyList<%ReadonlyList<T>>, getKey?: (item: T) => any): %DestroyableReadonlyList<T>
+      <T>(source: %ReadonlyList<%ReadonlyList<T>>): %DestroyableReadonlyList<T>
     params:
       source: Source list.
-      getKey: Function which identifies an item in the target list for optimization of some algorithms.
     returns: Merged list.
     description: |
       <p>Merges lists and starts synchronization. See %mergers for details.</p>
 
   mergeNoSync:
     signature: |
-      <T>(source: %ReadonlyList<%ReadonlyList<T>>, getKey?: (item: T) => any): %IList<T>
+      <T>(source: %ReadonlyList<%ReadonlyList<T>>): %IList<T>
     params:
       source: Source list.
-      getKey: Function which identifies an item in the target list for optimization of some algorithms.
     returns: Merged list.
     description: |
       <p>Merges lists without synchronization. See %mergers for details.</p>

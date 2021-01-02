@@ -2,7 +2,7 @@ symbols:
   default:
     defaultName: SetConverterToArray
     typevars:
-      T: Collection value type.
+      T: Value type.
     extends:
       - file: jwidget/Class
     description: |

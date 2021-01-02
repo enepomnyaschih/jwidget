@@ -1,0 +1,17 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/IBindableSet
+        typevars: [T]
+      - file: jwidget/Class
+    description: |
+      <p>Unordered collection optimized for items adding, removal and search.</p>
+    constructor:
+      signature: |
+        (silent?: boolean)
+        new BindableSet<T>(contents: Iterable<%T>, silent?: boolean)
+      params:
+        contents: Initial set contents.
+        silent: Create a silent collection which means that it never dispatches modification messages.

@@ -1,0 +1,37 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/collection/AbstractValueCollector
+    description: |
+      <p>Value collector for %ReadonlyBindableSet. See %AbstractValueCollector for details.</p>
+      <p>Can be used to maintain a copy of an existing %ReadonlyBindableSet and also to combine contents of several
+      collections in a single %BindableSet.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableSet<%T>, config?: %AbstractValueCollector.%Config<%T>)
+      params:
+        source: Source set.
+        config: Collector configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%T>'
+        description: Source set.
+
+  startCollectingSetValues:
+    signature: |
+      <T>(source: %ReadonlyBindableSet<T>): %DestroyableReadonlyBindableSet<T>
+    params:
+      source: Source set.
+    returns: Target set.
+    description: |
+      <p>Creates a new set containing all set values (i.e. creates a copy) and starts synchronization.
+      See %AbstractValueCollector for details.</p>
+
+references:
+  Config:
+    file: jwidget/collection/AbstractValueCollector
+    symbol: AbstractValueCollector.Config

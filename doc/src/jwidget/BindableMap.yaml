@@ -1,0 +1,18 @@
+symbols:
+  default:
+    typevars:
+      K: Key type.
+      V: Value type.
+    extends:
+      - file: jwidget/IBindableMap
+        typevars: [K, V]
+      - file: jwidget/Class
+    description: |
+      <p>Unordered key-value collection. Consists of key-value pairs (entries).</p>
+    constructor:
+      signature: |
+        (silent?: boolean)
+        new BindableMap<K, V>(contents: Iterable<readonly [%K, %V]>, silent?: boolean)
+      params:
+        contents: Initial map contents.
+        silent: Create a silent map which means that it never dispatches modification messages.

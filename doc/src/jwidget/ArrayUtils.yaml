@@ -555,8 +555,8 @@ symbols:
     description: |
       <p>Detects %splice function arguments to adjust %oldItems array contents to %newItems.</p>
       <p>Determines item ranges neccessary to be removed and inserted.</p>
-      <p>Each item must have unique %getKey function result.</p>
-      <p>If items don't have unique key, probably %detectFilter method may help, because it doesn't require items
+      <p>Each item must be unique.</p>
+      <p>If items are not unique, probably %detectFilter method may help, because it doesn't require items
       to be unique.</p>
 
   detectFilter:
@@ -584,7 +584,7 @@ symbols:
     description: |
       <p>Detects %reorder function to arguments to adjust %oldItems array contents to %newItems.</p>
       <p>Determines indices to move the items to.</p>
-      <p>Each item must have unique %getKey function result.</p>
+      <p>Each item must be unique.</p>
 
   detectSort:
     signature: |

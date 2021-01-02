@@ -144,11 +144,11 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 
 	/**
 	 * Reorders array items and dispatches a reordering message.
-	 * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
+	 * @param indexMapping Index array. Item with index `i` will be moved to index `indexArray[i]`.
 	 * Must contain all indexes from 0 to (length - 1).
 	 * @returns Old array contents. If the array is not modified, returns undefined.
 	 */
-	tryReorder(indexArray: readonly number[]): T[];
+	tryReorder(indexMapping: readonly number[]): T[];
 
 	/**
 	 * Adjusts array contents to `newContents` using `detectSplice` and `splice` methods.
@@ -180,7 +180,7 @@ interface IBindableArray<T> extends IClass, DestroyableReadonlyBindableArray<T> 
 	 * `cmp`. Returns item itself by default.
 	 * @param order Sorting order. Positive number for ascending sorting, negative for descending sorting.
 	 */
-	sort(callback?: (item: T, index: number) => any, order?: number): void;
+	sort(callback?: (value: T, index: number) => any, order?: number): void;
 
 	/**
 	 * Sorts the array by comparer. Modifies the array itself.

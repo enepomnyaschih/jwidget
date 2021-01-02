@@ -1,0 +1,95 @@
+description: |
+  <p><b>Value collector</b> is one of collection synchronizers.</p>
+  <pre>
+  const source = new %BindableArray([1, 2, 3]);
+  const collector = new %ArrayValueCollector(source);
+  const target = collector.%target;
+
+  expect(target.%has(1)).toBe(true);
+  expect(target.%has(4)).toBe(false);
+
+  // Target collection is automatically synchronized with the original collection.
+  source.%add(4);
+  expect(target.%has(4)).toBe(true);
+
+  // Destroy the collector to stop synchronization.
+  collector.%destroy();
+  </pre>
+
+  <h3>Features and examples</h3>
+
+  <p>You can pass target set in config option:</p>
+  <pre>
+  const source = new %BindableArray([1, 2, 3]);
+  const target = new %BindableSet<number>();
+  const converter = new %ArrayValueCollector(source, {%targetOfConfig});
+  </pre>
+  <p>If you want to create a new set, use shorthand functions %startCollectingArrayValues, %startCollectingMapValues,
+  %startCollectingArrayKeys, %startCollectingSetValues instead:</p>
+  <pre>
+  const source = new %BindableArray([1, 2, 3]);
+  const target = %startCollectingArrayValues(source);
+
+  // Destroy the target set to stop synchronization.
+  target.%destroy();
+  </pre>
+
+  <h3>Synchronizer rules</h3>
+
+  <ul>
+    <li>All values get added to %target immediately on the collector initialization.</li>
+    <li>The values get removed from %target on the collector destruction.</li>
+    <li>You can pass target set in %targetOfConfig config option. In this case, you are responsible for its
+    destruction (though values get removed automatically on collector destruction anyway).</li>
+    <li>If %targetOfConfig is not passed, it gets created automatically. In this
+    case, it gets destroyed automatically on collector destruction.</li>
+    <li>All values must be different.</li>
+    <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications.</li>
+  </ul>
+
+symbols:
+  default:
+    kind: abstract class
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>Abstract value collector.</p>
+
+    properties:
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%T>'
+        description: Target set.
+
+  AbstractValueCollector.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableSet<%T>'
+        description: |
+          <p>Target set. By default, created automatically.</p>
+
+references:
+  target:
+    symbol: default
+    member: target
+
+  has:
+    file: jwidget/ReadonlyBindableSet
+    member: has
+
+  add:
+    file: jwidget/IBindableArray
+    member: add
+
+  targetOfConfig:
+    symbol: AbstractValueCollector.Config
+    member: target
+    label: target

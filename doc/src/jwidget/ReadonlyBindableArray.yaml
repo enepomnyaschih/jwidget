@@ -1,0 +1,248 @@
+symbols:
+  default:
+    kind: interface
+    typevars:
+      T: Value type.
+    description: |
+      <p>Ordered collection of items. Each item of the list has an index. Index of first item is 0,
+      index of each next one is higher by 1.</p>
+    properties:
+      silent:
+        modifiers: readonly
+        type: boolean
+        description: Checks if this collection never dispatches messages. This knowledge may help you do certain code optimizations.
+      length:
+        modifiers: readonly
+        type: '%Bindable<number>'
+        description: Property containing number of items in the array.
+      native:
+        modifiers: readonly
+        type: 'readonly %T[]'
+        description: Native array of items - internal collection representation.
+      onSplice:
+        modifiers: readonly
+        type: '%Listenable<%IBindableArray.%SpliceResult<%T>>'
+        description: Items are removed from the array and/or items are added to the array.
+      onReplace:
+        modifiers: readonly
+        type: '%Listenable<%IBindableArray.%ReplaceMessage<%T>>'
+        description: An item is replaced in the array.
+      onMove:
+        modifiers: readonly
+        type: '%Listenable<%IBindableArray.%MoveMessage<%T>>'
+        description: An item is moved in the array.
+      onClear:
+        modifiers: readonly
+        type: '%Listenable<readonly %T[]>'
+        description: The array is cleared. Passes old contents as a message.
+      onReorder:
+        modifiers: readonly
+        type: '%Listenable<%IBindableArray.%ReorderMessage<%T>>'
+        description: Items are reordered in the array. Passes mapping of indices (old to new) as a message.
+      onChange:
+        modifiers: readonly
+        type: '%Listenable<void>'
+        description: The array is changed. Dispatched right after any another message.
+
+    methods:
+      '[Symbol.iterator]':
+        signature: |
+          (): IterableIterator<%T>
+        returns: Array iterator.
+
+      get:
+        signature: |
+          (index: number): %T
+        params:
+          index: Index in the list.
+        returns: Item at the index. If an item with such index doesn't exist, returns undefined.
+
+      includes:
+        signature: |
+          (value: %T): boolean
+        params:
+          value: Value.
+        returns: If the value is %included in the array.
+        references:
+          included:
+            href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
+
+      indexOf:
+        signature: |
+          (value: %T): number
+        params:
+          value: Value.
+        returns: Index of the first item in the array with this value. If the item doesn't exist, returns -1.
+
+      lastIndexOf:
+        signature: |
+          (value: %T): number
+        params:
+          value: Value.
+        returns: Index of the last item in the array with this value. If the item doesn't exist, returns -1.
+
+      every:
+        signature: |
+          (callback: (value: %T, index: number) => boolean): boolean
+        params:
+          callback: Criteria callback.
+        returns: All items match the criteria.
+        description: |
+          <p>Matches all items against criteria. Returns true if %callback returns truthy value for all collection
+          items. Algorithms iterates through the items consequently, and stops it after the first item violating
+          the criteria.<p>
+
+      some:
+        signature: |
+          (callback: (value: %T, index: number) => boolean): boolean
+        params:
+          callback: Criteria callback.
+        returns: Some item matches the criteria.
+        description: |
+          <p>Matches each item against criteria. Returns true if %callback returns %truthy value for at least one item
+          in the collection. Algorithms iterates through the items sequentially, and stops it after the first item matching
+          the criteria.<p>
+
+      forEach:
+        signature: |
+          (callback: (value: %T, index: number) => void)
+        params:
+          callback: Callback function.
+        description: |
+          <p>Iterates through the collection items. Calls the specified function for all items.<p>
+
+      find:
+        signature: |
+          (callback: (value: %T, index: number) => boolean): %T
+        params:
+          callback: Criteria callback.
+        returns: First item matching the criteria.
+        description: |
+          <p>Finds an item matching the criteria. Returns the first item %callback returns %truthy value for.
+          Algorithms iterates through the items sequentially, and stops it after the first item matching the criteria.</p>
+
+      findIndex:
+        signature: |
+          (callback: (value: %T, index: number) => boolean): number
+        params:
+          callback: Criteria callback.
+        returns: Index of the first item matching the criteria.
+        description: |
+          <p>Finds an item matching the criteria. Returns the index of the first item %callback returns %truthy value for.
+          Algorithms iterates through the items sequentially, and stops it after the first item matching the criteria.</p>
+
+      reduce:
+        signature: |
+          <U>(callback: (accumulator: U, item: %T, index: number) => U, initial: U): U
+        params:
+          callback: Function to execute on each item in the collection.
+          initial: Value to use as the first argument to the first call of the callback.
+        returns: Final accumulator value.
+        description: |
+          <p>Applies a function against an accumulator and each item in the array (from start to end) to reduce it
+          to a single value.</p>
+
+      reduceRight:
+        signature: |
+          <U>(callback: (accumulator: U, item: %T, index: number) => U, initial: U): U
+        params:
+          callback: Function to execute on each item in the collection.
+          initial: Value to use as the first argument to the first call of the callback.
+        returns: Final accumulator value.
+        description: |
+          <p>Applies a function against an accumulator and each item in the array (from end to start) to reduce it
+          to a single value.</p>
+
+      detectSplice:
+        signature: |
+          (newContents: readonly %T[]): %IBindableArray.%SpliceParams<%T>
+        params:
+          newContents: New array contents.
+        returns: '%splice method arguments. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %splice method arguments to adjust array contents to %newContents. Determines item ranges to be
+          removed and added. All values in the array must be %unique. If the values are not unique, probably
+          %detectFilter method may help, because it doesn't require item uniqueness.</p>
+
+      detectFilter:
+        signature: |
+          (newContents: readonly %T[]): %IBindableArray.%IndexCount[]
+        params:
+          newContents: New array contents.
+        returns: '<b>segmentsToRemove</b> argument of %splice method. If no method call required, returns undefined.'
+        description: |
+          <p>Detects <b>segmentsToRemove</b> argument of %splice method to adjust array contents to %newContents.
+          Determines item segments to be removed. Doesn't consider item insertion - try %detectSplice if that's the
+          case. As opposed to %detectSplice, doesn't require item uniqueness.</p>
+
+      detectReorder:
+        signature: |
+          (newContents: readonly %T[]): number[]
+        params:
+          newContents: New array contents.
+        returns: '<b>indexMapping</b> argument of %reorder method. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %reorder method arguments to adjust the array contents to %newContents. Determines target indices
+          for all items. All values in %newContents must be %unique, and they must match values of this array.</p>
+
+      detectSort:
+        signature: |
+          (callback?: (value: %T, index: number) => any, order?: number): number[]
+        params:
+          callback: |
+            Indexer function. Must return a comparable value, compatible with %cmp. Returns the value itself by default.
+          order: Sorting order. Positive number for ascending sorting, negative for descending sorting.
+        returns: '<b>indexMapping</b> argument of %reorder method. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %reorder method arguments to sort the array contents by result of %callback call for each item.</p>
+
+      detectSortComparing:
+        signature: |
+          (compare?: (t1: T, t2: T, i1: number, i2: number) => number, order?: number): number[]
+        params:
+          compare: |
+            Comparer function. Should return positive value if t1 > t2;
+            negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
+          order: Sorting order. Positive number for ascending sorting, negative for descending sorting.
+        returns: '<b>indexMapping</b> argument of %reorder method. If no method call required, returns undefined.'
+        description: |
+          <p>Detects %reorder method arguments to sort list contents by comparer.</p>
+
+    references:
+      splice:
+        file: jwidget/IBindableArray
+        member: splice
+
+      reorder:
+        file: jwidget/IBindableArray
+        member: reorder
+
+      SpliceParams:
+        file: jwidget/IBindableArray
+        symbol: IBindableArray.SpliceParams
+        label: SpliceParams
+
+      SpliceResult:
+        file: jwidget/IBindableArray
+        symbol: IBindableArray.SpliceResult
+        label: SpliceResult
+
+      SpliceMessage:
+        file: jwidget/IBindableArray
+        symbol: IBindableArray.SpliceMessage
+        label: SpliceMessage
+
+      ReorderMessage:
+        file: jwidget/IBindableArray
+        symbol: IBindableArray.ReorderMessage
+        label: ReorderMessage
+
+      MoveMessage:
+        file: jwidget/IBindableArray
+        symbol: IBindableArray.MoveMessage
+        label: MoveMessage
+
+      ReplaceMessage:
+        file: jwidget/IBindableArray
+        symbol: IBindableArray.ReplaceMessage
+        label: ReplaceMessage
