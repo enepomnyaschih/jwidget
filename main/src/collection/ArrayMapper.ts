@@ -35,12 +35,8 @@ import AbstractMapper from './AbstractMapper';
  */
 class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 
+	private _target: IBindableArray<U>;
 	private _targetCreated: boolean;
-
-	/**
-	 * Target array.
-	 */
-	readonly target: IBindableArray<U>;
 
 	/**
 	 * @param source Source array.
@@ -51,8 +47,8 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 				config: ArrayMapper.FullConfig<T, U> = {}) {
 		super(create, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableArray<U>(this.source.silent) : config.target;
-		this.target.addAll(this._createItems(this.source.native));
+		this._target = this._targetCreated ? new BindableArray<U>(this.source.silent) : config.target;
+		this._target.addAll(this._createItems(this.source.native));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onMove.listen(this._onMove, this));
@@ -60,10 +56,17 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 		this.own(source.onReorder.listen(this._onReorder, this));
 	}
 
+	/**
+	 * Target array.
+	 */
+	get target(): ReadonlyBindableArray<U> {
+		return this._target;
+	}
+
 	protected destroyObject() {
-		this._destroyItems(this.target.clear(), this.source.native);
+		this._destroyItems(this._target.clear(), this.source.native);
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		super.destroyObject();
 	}
@@ -85,7 +88,7 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 		const {addedSegments} = sourceResult;
 		const segmentsToAdd = addedSegments.map(
 			addParams => <IBindableArray.IndexItems<U>>[addParams[0], this._createItems(addParams[1])]);
-		const targetResult = this.target.trySplice(sourceResult.removeParams, segmentsToAdd);
+		const targetResult = this._target.trySplice(sourceResult.removeParams, segmentsToAdd);
 		const sourceRemovedSegments = sourceResult.removedSegments;
 		const targetRemovedSegments = targetResult.removedSegments;
 		for (let i = targetRemovedSegments.length - 1; i >= 0; --i) {
@@ -95,22 +98,22 @@ class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 
 	private _onReplace(message: IBindableArray.ReplaceMessage<T>) {
 		const newItem = this._create(message.newValue);
-		const oldItem = this.target.trySet(message.index, newItem);
+		const oldItem = this._target.trySet(message.index, newItem);
 		if (this._destroy != null) {
 			this._destroy(oldItem, message.oldValue);
 		}
 	}
 
 	private _onMove(message: IBindableArray.MoveMessage<T>) {
-		this.target.tryMove(message.fromIndex, message.toIndex);
+		this._target.tryMove(message.fromIndex, message.toIndex);
 	}
 
 	private _onClear(oldContents: readonly T[]) {
-		this._destroyItems(this.target.clear(), oldContents);
+		this._destroyItems(this._target.clear(), oldContents);
 	}
 
 	private _onReorder(message: IBindableArray.ReorderMessage<T>) {
-		this.target.tryReorder(message.indexMapping);
+		this._target.tryReorder(message.indexMapping);
 	}
 }
 

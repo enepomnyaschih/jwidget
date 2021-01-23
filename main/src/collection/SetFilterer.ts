@@ -35,12 +35,8 @@ import ReadonlyBindableSet from '../ReadonlyBindableSet';
  */
 class SetFilterer<T> extends Class {
 
+	private _target: IBindableSet<T>;
 	private _targetCreated: boolean;
-
-	/**
-	 * Target set.
-	 */
-	readonly target: IBindableSet<T>;
 
 	/**
 	 * @param source Source set.
@@ -51,29 +47,36 @@ class SetFilterer<T> extends Class {
 				config: SetFilterer.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableSet<T>(this.source.silent) : config.target;
-		this.target.tryAddAll(filter(source, this.test));
+		this._target = this._targetCreated ? new BindableSet<T>(this.source.silent) : config.target;
+		this._target.tryAddAll(filter(source, this.test));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target set.
+	 */
+	get target(): ReadonlyBindableSet<T> {
+		return this._target;
+	}
+
 	protected destroyObject() {
-		this.target.tryDeleteAll(this.source);
+		this._target.tryDeleteAll(this.source);
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this.test = null;
 		super.destroyObject();
 	}
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
-		this.target.trySplice(
+		this._target.trySplice(
 			spliceResult.removedValues,
 			filter(spliceResult.addedValues, this.test));
 	}
 
 	private _onClear(oldContents: ReadonlySet<T>) {
-		this.target.tryDeleteAll(oldContents);
+		this._target.tryDeleteAll(oldContents);
 	}
 }
 

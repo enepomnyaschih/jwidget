@@ -1,0 +1,93 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%SetFilterer builds a new set of values the callback function returns a truthy value for.</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const filterer = new %SetFilterer(source, x => x % 2 === 1);
+      const target = filterer.%target;
+      expect(Array.from(target.native).sort()).eql([1, 3]);
+
+      // Target collection is automatically synchronized with the original collection.
+      source.%addAll([4, 5, 6]);
+      expect(Array.from(target.native).sort()).eql([1, 3, 5]);
+
+      // Destroy the filterer to stop synchronization.
+      filterer.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target set in a config option:</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const target = new %BindableSet<number>();
+      const filterer = new %SetFilterer(source, x => x % 2 === 1, {%targetOfConfig});
+      </pre>
+      <p>If you want to filter the values into a new set, use shorthand function %startFilteringSet instead:</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const target = %startFilteringSet(source, x => x % 2 === 1);
+
+      // Destroy the target array to stop synchronization.
+      target.%destroy();
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>Filtered values of the source collection get added to %target immediately on the synchronizer initialization.</li>
+        <li>Filtered values get removed from %target set on the synchronizer destruction.</li>
+        <li>Target set gets synchronized with source set continuously until the synchronizer is destroyed.</li>
+        <li>You can build the target set from multiple sources as long as all values are different.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableSet<%T>, test: (value: %T) => boolean, config: %SetFilterer.%Config<%T>)
+      params:
+        source: Source set.
+        test: Filtering criteria.
+        config: Filterer configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%T>'
+        description: Source set.
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%T>'
+        description: Target set.
+
+  SetFilterer.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+    description: |
+      <p>%SetFilterer configuration.</p>
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableSet<%T>'
+        description: Target set.
+
+  startFilteringSet:
+    signature: |
+      <T>(source: %ReadonlyBindableSet<T>, test: (value: T) => boolean): %DestroyableReadonlyBindableSet<T>
+    params:
+      source: Source set.
+      test: Filtering criteria.
+    returns: Target set.
+    description: 'Filters a set and starts synchronization. See %SetFilterer for details.'
+
+references:
+  Config:
+    symbol: SetFilterer.Config

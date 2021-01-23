@@ -68,6 +68,9 @@ class ArrayMerger<T> extends Class {
 		super.destroyObject();
 	}
 
+	/**
+	 * Target array.
+	 */
 	get target(): ReadonlyBindableArray<T> {
 		return this._target;
 	}

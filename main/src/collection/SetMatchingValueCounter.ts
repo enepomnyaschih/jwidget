@@ -43,7 +43,7 @@ export default class SetMatchingValueCounter<T> extends Class {
 
 	/**
 	 * @param source Source set.
-	 * @param test Filtering criteria.
+	 * @param test Criteria.
 	 * @param config Counter configuration.
 	 */
 	constructor(readonly source: ReadonlyBindableSet<T>, private test: (value: T) => boolean,
@@ -107,7 +107,7 @@ export default class SetMatchingValueCounter<T> extends Class {
 
 namespace SetMatchingValueCounter {
 	/**
-	 * AbstractCounter configuration.
+	 * SetMatchingValueCounter configuration.
 	 */
 	export interface Config {
 		/**
@@ -117,11 +117,11 @@ namespace SetMatchingValueCounter {
 	}
 
 	/**
-	 * AbstractCounter.reconfigure method configuration.
+	 * SetMatchingValueCounter.reconfigure method configuration.
 	 */
 	export interface Reconfig<T> {
 		/**
-		 * Filtering criteria.
+		 * Criteria.
 		 */
 		readonly test?: (value: T) => boolean;
 	}
@@ -130,7 +130,7 @@ namespace SetMatchingValueCounter {
 /**
  * Counts matching values in a set and starts synchronization.
  * @param source Source set.
- * @param test Filtering criteria.
+ * @param test Criteria.
  * @returns Target property.
  */
 export function startCountingMatchingSetValues<T>(source: ReadonlyBindableSet<T>,

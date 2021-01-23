@@ -48,10 +48,7 @@ symbols:
       <ul>
         <li>All values of the source set get added to %target immediately on synchronizer initialization.</li>
         <li>The values get removed from %target on synchronizer destruction.</li>
-        <li>You can pass a target array in %targetOfConfig config option. In this case, you are responsible for its
-        destruction (though values get removed automatically on synchronizer destruction anyway).</li>
-        <li>If %targetOfConfig is not passed, it gets created automatically. In this
-        case, %target gets destroyed automatically on synchronizer destruction.</li>
+        <li>Target array gets synchronized with source set continuously until the synchronizer is destroyed.</li>
         <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications. All values must
         be different.</li>
       </ul>

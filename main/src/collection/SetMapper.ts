@@ -37,14 +37,10 @@ import AbstractMapper from './AbstractMapper';
  */
 class SetMapper<T, U> extends AbstractMapper<T, U> {
 
+	private _target: IBindableSet<U>;
 	private _targetCreated: boolean;
 
-	protected readonly _items = new Map<T, U>();
-
-	/**
-	 * Target set.
-	 */
-	readonly target: IBindableSet<U>;
+	private readonly _items = new Map<T, U>();
 
 	/**
 	 * @param source Source set.
@@ -55,17 +51,24 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 				config: SetMapper.FullConfig<T, U> = {}) {
 		super(create, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableSet<U>(this.source.silent) : config.target;
-		this.target.tryAddAll(this._createItems(source));
+		this._target = this._targetCreated ? new BindableSet<U>(this.source.silent) : config.target;
+		this._target.tryAddAll(this._createItems(source));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target set.
+	 */
+	get target(): ReadonlyBindableSet<U> {
+		return this._target;
+	}
+
 	protected destroyObject() {
-		this.target.tryDeleteAll(this._getItems(this.source));
+		this._target.tryDeleteAll(this._getItems(this.source));
 		this._destroyItems(this.source);
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		super.destroyObject();
 	}
@@ -97,12 +100,12 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
 		const {removedValues, addedValues} = spliceResult;
-		this.target.trySplice(this._getItems(removedValues), this._createItems(addedValues));
+		this._target.trySplice(this._getItems(removedValues), this._createItems(addedValues));
 		this._destroyItems(removedValues);
 	}
 
 	private _onClear(oldContents: ReadonlySet<T>) {
-		this.target.tryDeleteAll(this._getItems(oldContents));
+		this._target.tryDeleteAll(this._getItems(oldContents));
 		this._destroyItems(oldContents);
 	}
 }

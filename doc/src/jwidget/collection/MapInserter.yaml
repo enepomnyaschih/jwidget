@@ -1,0 +1,92 @@
+symbols:
+  default:
+    typevars:
+      K: Key type.
+      V: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%MapInserter handles all %ReadonlyBindableMap messages by a combination of three callbacks:</p>
+      <dl>
+        <dt>%addOfConfig</dt>
+        <dd>An entry has been added.</dd>
+        <dt>%removeOfConfig</dt>
+        <dd>An entry has been removed.</dd>
+        <dt>%clearOfConfig</dt>
+        <dd>The map has been cleared.</dd>
+      </dl>
+      <p>For example, this synchronizer can be used to smoothly integrate an application with a third party API:</p>
+      <pre>
+      // Our wrapper around it
+      class ComponentWithStyles extends %Component {
+          constructor(private styles: %ReadonlyBindableMap<string, string>) {
+              super();
+          }
+
+          protected %afterRender() {
+              super.%afterRender();
+              this.%own(new %MapInserter(this.styles, {
+                  %addOfConfig    : (value, name) => this.el.css(name, value),
+                  %removeOfConfig : (value, name) => this.el.css(name, ""),
+                  %clearOfConfig  : () => this.el.removeAttr("style")
+              }));
+          }
+      }
+      </pre>
+      <p>It is easier than handling all messages of %ReadonlyBindableMap, but not always as efficient.</p>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>Function %addOfConfig is called for all entries of source map on synchronizer initialization.</li>
+        <li>Function %clearOfConfig (if present) or %removeOfConfig is called for all entries of source map on
+        synchronizer destruction.</li>
+        <li>Functions are called on any collection modification.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableMap<%K, %V>, config: %MapInserter.%Config<%K, %V>)
+      params:
+        source: Source map.
+        config: Inserter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableMap<%K, %V>'
+        description: |
+          <p>Source map.</p>
+
+  MapInserter.Config:
+    kind: interface
+    simple: true
+    typevars:
+      K: Key type.
+      V: Value type.
+
+    properties:
+      add:
+        modifiers: readonly
+        optional: true
+        type: '(value: %V, key: %K) => void'
+        description: |
+          <p>Callback to call when an entry is added or updated in the map.</p>
+
+      remove:
+        modifiers: readonly
+        optional: true
+        type: '(value: %V, key: %K) => void'
+        description: |
+          <p>Callback to call when an entry is removed or updated in the map.</p>
+
+      clear:
+        modifiers: readonly
+        optional: true
+        type: '(entries: ReadonlyMap<%K, %V>) => void'
+        description: |
+          <p>Callback to call when the map is cleared. By default, calls %remove for all map entries.</p>
+
+references:
+  Config:
+    symbol: MapInserter.Config

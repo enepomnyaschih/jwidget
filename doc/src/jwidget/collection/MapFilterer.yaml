@@ -1,0 +1,96 @@
+symbols:
+  default:
+    defaultName: MapFilterer
+    typevars:
+      K: Key type.
+      V: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%MapFilterer builds a new map consisting of entries the callback function returns a truthy value for.</p>
+      <pre>
+      const source = new %BindableMap([["a", 1], ["b", 2], ["c", 3]]);
+      const filterer = new %MapFilterer(source, x => x % 2 === 1);
+      const target = filterer.%target;
+      expect(Array.from(target).sort(%cmp)).eql([["a", 1], ["c", 3]]);
+
+      // Target map is automatically synchronized with the source map.
+      source.%setAll(new Map([["d", 4], ["e", 5], ["f", 6]));
+      expect(Array.from(target).sort(%cmp)).eql([["a", 1], ["c", 3], ["e", 5]]);
+
+      // Destroy the filterer to stop synchronization
+      filterer.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target map in a config option:</p>
+      <pre>
+      const source = new %BindableMap([["a", 1], ["b", 2], ["c", 3]]);
+      const target = new %BindableMap<string, number>();
+      const filterer = new %MapFilterer(source, x => x % 2 === 1, {%targetOfConfig});
+      </pre>
+      <p>If you want to filter the values into a new collection, use shorthand function %startFilteringMap instead:</p>
+      <pre>
+      const source = new %BindableMap([["a", 1], ["b", 2], ["c", 3]]);
+      const target = %startFilteringMap(source, x => x % 2 === 1);
+
+      // Destroy the target collection to stop synchronization
+      target.%destroy();
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>Filtered entries of source map get added to %target immediately on the synchronizer initialization.</li>
+        <li>Filtered entries get removed from %target map on the synchronizer destruction.</li>
+        <li>Target map gets synchronized with source map continuously until the synchronizer is destroyed.</li>
+        <li>You can build the target map from multiple sources as long as there is no concurrency for keys of the target
+        map.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableMap<%K, %V>, test: (value: %V) => boolean, config: %MapFilterer.%Config<%K, %V>)
+      params:
+        source: Source map.
+        test: Filtering criteria.
+        config: Filterer configuration.
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableMap<%K, %V>'
+        description: Source map.
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableMap<%K, %V>'
+        description: Target map.
+
+  MapFilterer.Config:
+    kind: interface
+    simple: true
+    typevars:
+      K: Key type.
+      V: Value type.
+    description: |
+      <p>%MapFilterer configuration.</p>
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableMap<%K, %V>'
+        description: Target map.
+
+  startFilteringMap:
+    signature: |
+      <K, V>(source: %ReadonlyBindableMap<K, V>, test: (value: V) => boolean): %DestroyableReadonlyBindableMap<K, V>
+    params:
+      source: Source map.
+      test: Filtering criteria.
+    returns: Target map.
+    description: 'Filters a map and starts synchronization. See %MapFilterer for details.'
+
+references:
+  Config:
+    symbol: MapFilterer.Config

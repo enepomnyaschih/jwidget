@@ -39,10 +39,7 @@ description: |
   <ul>
     <li>All values get added to %target immediately on the collector initialization.</li>
     <li>The values get removed from %target on the collector destruction.</li>
-    <li>You can pass target set in %targetOfConfig config option. In this case, you are responsible for its
-    destruction (though values get removed automatically on collector destruction anyway).</li>
-    <li>If %targetOfConfig is not passed, it gets created automatically. In this
-    case, it gets destroyed automatically on collector destruction.</li>
+    <li>Target set gets synchronized with source collection continuously until the synchronizer is destroyed.</li>
     <li>All values must be different.</li>
     <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications.</li>
   </ul>

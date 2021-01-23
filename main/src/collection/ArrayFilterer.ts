@@ -36,13 +36,9 @@ import ReadonlyBindableArray from '../ReadonlyBindableArray';
  */
 class ArrayFilterer<T> extends Class {
 
+	private _target: IBindableArray<T>;
 	private _targetCreated: boolean;
 	private _filtered: number[] = [];
-
-	/**
-	 * Target array.
-	 */
-	readonly target: IBindableArray<T>;
 
 	/**
 	 * @param source Source array.
@@ -53,13 +49,20 @@ class ArrayFilterer<T> extends Class {
 				config: ArrayFilterer.Config<T> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableArray<T>(this.source.silent) : config.target;
+		this._target = this._targetCreated ? new BindableArray<T>(this.source.silent) : config.target;
 		this._splice([], [[0, this.source.native]]);
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReplace.listen(this._onReplace, this));
 		this.own(source.onMove.listen(this._onMove, this));
 		this.own(source.onClear.listen(this._onClear, this));
 		this.own(source.onReorder.listen(this._onReorder, this));
+	}
+
+	/**
+	 * Target array.
+	 */
+	get target(): ReadonlyBindableArray<T> {
+		return this._target;
 	}
 
 	/**
@@ -82,12 +85,12 @@ class ArrayFilterer<T> extends Class {
 		if (this._filtered[sourceIndex] === 0) {
 			if (good) {
 				this._filtered[sourceIndex] = 1;
-				this.target.add(item, targetIndex);
+				this._target.add(item, targetIndex);
 			}
 		} else {
 			if (!good) {
 				this._filtered[sourceIndex] = 0;
-				this.target.remove(targetIndex);
+				this._target.remove(targetIndex);
 			}
 		}
 	}
@@ -162,13 +165,13 @@ class ArrayFilterer<T> extends Class {
 		flushAdd();
 
 		this._filtered = newFiltered;
-		this.target.trySplice(segmentsToRemove, segmentsToAdd);
+		this._target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
 
 	protected destroyObject() {
-		this.target.clear();
+		this._target.clear();
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this.test = null;
 		super.destroyObject();
@@ -215,7 +218,7 @@ class ArrayFilterer<T> extends Class {
 			return params;
 		});
 
-		this.target.trySplice(segmentsToRemove, segmentsToAdd);
+		this._target.trySplice(segmentsToRemove, segmentsToAdd);
 	}
 
 	private _onSplice(spliceResult: IBindableArray.SpliceResult<T>) {
@@ -231,11 +234,11 @@ class ArrayFilterer<T> extends Class {
 		const index = this._countFiltered(0, message.index);
 		this._filtered[message.index] = newFiltered ? 1 : 0;
 		if (!newFiltered) {
-			this.target.remove(index);
+			this._target.remove(index);
 		} else if (!oldFiltered) {
-			this.target.add(message.newValue, index);
+			this._target.add(message.newValue, index);
 		} else {
-			this.target.trySet(index, message.newValue);
+			this._target.trySet(index, message.newValue);
 		}
 	}
 
@@ -249,13 +252,13 @@ class ArrayFilterer<T> extends Class {
 				toIndex = this._countFiltered(0, message.toIndex);
 				fromIndex = toIndex + this._countFiltered(message.toIndex, message.fromIndex - message.toIndex);
 			}
-			this.target.tryMove(fromIndex, toIndex);
+			this._target.tryMove(fromIndex, toIndex);
 		}
 		ArrayUtils.move(this._filtered, message.fromIndex, message.toIndex);
 	}
 
 	private _onClear() {
-		this.target.clear();
+		this._target.clear();
 	}
 
 	private _onReorder(message: IBindableArray.ReorderMessage<T>) {
@@ -269,14 +272,14 @@ class ArrayFilterer<T> extends Class {
 		ArrayUtils.tryReorder(this._filtered, message.indexMapping);
 
 		targetIndex = 0;
-		const indexes = new Array<number>(this.target.length.get());
+		const indexes = new Array<number>(this._target.length.get());
 		for (let sourceIndex = 0, l = this._filtered.length; sourceIndex < l; ++sourceIndex) {
 			if (this._filtered[sourceIndex] !== 0) {
 				indexes[targetIndexWhichMovesToI.get(sourceIndex)] = targetIndex++;
 			}
 		}
 
-		this.target.tryReorder(indexes);
+		this._target.tryReorder(indexes);
 	}
 }
 
@@ -301,7 +304,7 @@ namespace ArrayFilterer {
 		/**
 		 * New filtering criteria.
 		 */
-		readonly test?: (item: T) => boolean;
+		readonly test?: (value: T) => boolean;
 	}
 }
 
@@ -312,7 +315,7 @@ namespace ArrayFilterer {
  * @returns Target array.
  */
 export function startFilteringArray<T>(source: ReadonlyBindableArray<T>,
-									   test: (item: T) => boolean): DestroyableReadonlyBindableArray<T> {
+									   test: (value: T) => boolean): DestroyableReadonlyBindableArray<T> {
 	if (source.silent) {
 		return new BindableArray(filter(source, test), true);
 	}

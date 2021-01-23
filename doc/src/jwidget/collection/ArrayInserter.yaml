@@ -1,0 +1,137 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%ArrayInserter handles all %ReadonlyBindableArray messages by a combination of three callbacks:</p>
+      <dl>
+        <dt>%addOfConfig</dt>
+        <dd>An item has been added.</dd>
+        <dt>%removeOfConfig</dt>
+        <dd>An item has been removed.</dd>
+        <dt>%clearOfConfig</dt>
+        <dd>The array has been cleared.</dd>
+      </dl>
+      <p>For example, this synchronizer can be used to smoothly integrate an application with a third party API:</p>
+      <pre>
+      // External library API
+      declare class Chart {
+          constructor(el: HTMLElement);
+          addPlot(plot: Plot, at: number): void;
+          removePlot(at: number): void;
+          clearPlots(): void;
+          terminate(): void;
+      }
+
+      // Our wrapper around it
+      class PlotChart extends %Component {
+          private chart: Chart;
+          private inserter: %ArrayInserter;
+
+          constructor(private plots: %ReadonlyBindableArray<Plot>) {
+              super();
+          }
+
+          protected %afterAppend() {
+              super.%afterAppend();
+              this.chart = new Chart(this.%el[0]);
+              this.inserter = new %ArrayInserter(this.plots, {
+                  %addOfConfig    : (plot, at) => this.chart.addPlot(plot, at),
+                  %removeOfConfig : (plot, at) => this.chart.removePlot(at),
+                  %clearOfConfig  : () => this.chart.clearPlots()
+              });
+          }
+
+          protected %releaseDom() {
+              // Destroy the inserter to stop synchronization
+              this.inserter.%destroy();
+              this.chart.terminate();
+              super.%releaseDom();
+          }
+      }
+      </pre>
+      <p>It is easier than handling all messages of %ReadonlyBindableArray, but not always as efficient.</p>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>Function %addOfConfig is called for all items of source array on synchronizer initialization.</li>
+        <li>Function %clearOfConfig (if present) or %removeOfConfig is called for all items of source array on
+        synchronizer destruction.</li>
+        <li>Functions are called on any collection modification.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableArray<%T>, config: %ArrayInserter.%Config<%T>)
+      params:
+        source: Source array.
+        config: Inserter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: |
+          <p>Source array.</p>
+
+  ArrayInserter.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+
+    properties:
+      add:
+        modifiers: readonly
+        optional: true
+        type: '(item: %T, index: number) => void'
+        description: |
+          <p>Callback to call when an item is added to the array or moved in the array.</p>
+
+      remove:
+        modifiers: readonly
+        optional: true
+        type: '(item: %T, index: number) => void'
+        description: |
+          <p>Callback to call when an item is removed from the array or moved in the array.</p>
+
+      clear:
+        modifiers: readonly
+        optional: true
+        type: '(items: readonly %T[]) => void'
+        description: |
+          <p>Callback to call when the array is cleared. By default, calls %remove for all array items.</p>
+
+references:
+  Config:
+    symbol: ArrayInserter.Config
+
+  addOfConfig:
+    symbol: ArrayInserter.Config
+    member: add
+    label: add
+
+  removeOfConfig:
+    symbol: ArrayInserter.Config
+    member: remove
+    label: remove
+
+  clearOfConfig:
+    symbol: ArrayInserter.Config
+    member: clear
+    label: clear
+
+  afterAppend:
+    file: jwidget/Component
+    member: afterAppend
+
+  releaseDom:
+    file: jwidget/Component
+    member: releaseDom
+
+  el:
+    file: jwidget/Component
+    member: el

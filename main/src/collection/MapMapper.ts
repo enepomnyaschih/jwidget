@@ -37,12 +37,8 @@ import AbstractMapper from './AbstractMapper';
  */
 class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 
+	private _target: IBindableMap<K, U>;
 	private _targetCreated: boolean;
-
-	/**
-	 * Target map.
-	 */
-	readonly target: IBindableMap<K, U>;
 
 	/**
 	 * @param source Source map.
@@ -53,17 +49,24 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 				config: MapMapper.FullConfig<K, T, U> = {}) {
 		super(create, config);
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableMap<K, U>(this.source.silent) : config.target;
-		this.target.trySetAll(map(source.native, this._create));
+		this._target = this._targetCreated ? new BindableMap<K, U>(this.source.silent) : config.target;
+		this._target.trySetAll(map(source.native, this._create));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target map.
+	 */
+	get target(): ReadonlyBindableMap<K, U> {
+		return this._target;
+	}
+
 	protected destroyObject() {
-		this._destroyItems(this.target.tryRemoveAll(getIterableKeys(this.source)) ?? new Map(), this.source.native);
+		this._destroyItems(this._target.tryRemoveAll(getIterableKeys(this.source)) ?? new Map(), this.source.native);
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		super.destroyObject();
 	}
@@ -79,7 +82,7 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 
 	private _onSplice(sourceResult: IBindableMap.SpliceResult<K, T>) {
 		const {removedEntries, addedEntries} = sourceResult;
-		const targetResult = this.target.trySplice(
+		const targetResult = this._target.trySplice(
 			getDifference(getIterableKeys(removedEntries), addedEntries),
 			map(addedEntries, this._create));
 		if (targetResult !== undefined) {
@@ -88,11 +91,11 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	}
 
 	private _onReindex(keyMapping: ReadonlyMap<K, K>) {
-		this.target.tryReindex(keyMapping);
+		this._target.tryReindex(keyMapping);
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, T>) {
-		this._destroyItems(this.target.tryRemoveAll(getIterableKeys(oldContents)), oldContents);
+		this._destroyItems(this._target.tryRemoveAll(getIterableKeys(oldContents)), oldContents);
 	}
 }
 

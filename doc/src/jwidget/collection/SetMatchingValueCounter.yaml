@@ -1,0 +1,165 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p><b>Matching value counter</b> builds a %Property containing number of set values the callback returns a truthy
+      value for and starts synchronization.</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const counter = new %SetMatchingValueCounter(source, x => x % 2 === 1);
+      const target = counter.%target;
+
+      expect(target.%get()).equal(2); // two odd numbers: 1, 3
+
+      // Target property is automatically synchronized with the source set.
+      source.%addAll([4, 5, 6]);
+      expect(target.%get()).equal(3); // three odd numbers: 1, 3, 5
+
+      // Destroy the counter to stop synchronization.
+      counter.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target property in a config option:</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const target = new %Property(0);
+      const counter = new %SetMatchingValueCounter(source, x => x % 2 === 1, {%targetOfConfig});
+      </pre>
+      <p>If you want to write the output into a new property, use shorthand function %startCountingMatchingSetValues
+      instead:</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const target = %startCountingMatchingSetValues(source, x => x % 2 === 1);
+
+      // Destroy the target property to stop synchronization.
+      target.%destroy();
+      </pre>
+      <p>You may use %SetFilterer instead of %SetMatchingValueCounter:</p>
+      <pre>
+      const source = new %BindableSet([1, 2, 3]);
+      const filterer = new %SetFilterer(source, x => x % 2 === 1);
+      const count = filterer.%targetOfFilterer.%size;
+      </pre>
+      <p>But counter works faster and doesn't reserve memory for a target set.</p>
+
+      <h3>Synchronizer rules</h3>
+
+      <p>The synchronizer requires exclusive access to the target property, i.e.:</p>
+      <ul>
+        <li>Matching value of the source set get counted immediately on the counter initialization.</li>
+        <li>Counter resets the target property to 0 on destruction.</li>
+        <li>Target property gets synchronized with source set continuously until the synchronizer is destroyed.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableSet<%T>, test: (value: %T) => boolean, config?: %SetMatchingValueCounter.%Config)
+      params:
+        source: Source set.
+        test: Criteria.
+        config: Counter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%T>'
+        description: Source set.
+
+      target:
+        modifiers: readonly
+        type: '%Bindable<number>'
+        description: Target property.
+
+    methods:
+      reconfigure:
+        signature: |
+          (config: %SetMatchingValueCounter.%Reconfig<%T>)
+        params:
+          config: Options to modify.
+        description: |
+          <p>Changes the counter configuration and recounts matching values.</p>
+
+      recount:
+        signature: |
+          ()
+        description: |
+          <p>Recounts matching values. Call this method when set value properties change in such a way that
+          they must be retested.</p>
+
+    references:
+      Config:
+        file: jwidget/collection/SetMatchingValueCounter
+        symbol: SetMatchingValueCounter.Config
+
+      Reconfig:
+        file: jwidget/collection/SetMatchingValueCounter
+        symbol: SetMatchingValueCounter.Reconfig
+
+  SetMatchingValueCounter.Config:
+    kind: interface
+    simple: true
+    description: |
+      <p>%SetMatchingValueCounter configuration.</p>
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IProperty<number>'
+        description: |
+          <p>Target property. By default, created automatically.</p>
+
+  SetMatchingValueCounter.Reconfig:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+    description: |
+      <p>%SetMatchingValueCounter.%reconfigure method configuration.</p>
+    properties:
+      test:
+        modifiers: readonly
+        optional: true
+        type: '(value: %T) => boolean'
+        description: |
+          <p>Criteria.</p>
+
+  startCountingMatchingSetValues:
+    signature: |
+      <T>(source: %ReadonlyBindableSet<T>, test: (value: T) => boolean): %DestroyableBindable<number>
+    params:
+      source: Source set.
+      test: Criteria.
+    returns: Target property.
+    description: 'Counts matching values in a set and starts synchronization. See %SetMatchingValueCounter for details.'
+
+references:
+  get:
+    file: jwidget/Bindable
+    member: get
+
+  addAll:
+    file: jwidget/IBindableSet
+    member: addAll
+
+  targetOfConfig:
+    symbol: SetMatchingValueCounter.Config
+    member: target
+    label: target
+
+  targetOfFilterer:
+    file: jwidget/collection/SetFilterer
+    member: target
+    label: target
+
+  size:
+    file: jwidget/ReadonlyBindableSet
+    member: length
+
+  reconfigure:
+    symbol: default
+    member: reconfigure

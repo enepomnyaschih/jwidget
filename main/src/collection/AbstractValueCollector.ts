@@ -32,9 +32,8 @@ import ReadonlyBindableSet from "../ReadonlyBindableSet";
  */
 abstract class AbstractValueCollector<T> extends Class {
 
-	private _targetCreated: boolean;
-
 	protected _target: IBindableSet<T>;
+	private _targetCreated: boolean;
 
 	protected constructor(config: AbstractValueCollector.Config<T> = {}, silent: boolean) {
 		super();

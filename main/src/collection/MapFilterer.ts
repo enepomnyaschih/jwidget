@@ -36,13 +36,9 @@ import ReadonlyBindableMap from '../ReadonlyBindableMap';
  */
 class MapFilterer<K, V> extends Class {
 
+	private _target: IBindableMap<K, V>;
 	private _targetCreated: boolean;
 	private controlledKeys = new Set<K>();
-
-	/**
-	 * Target map.
-	 */
-	readonly target: IBindableMap<K, V>;
 
 	/**
 	 * @param source Source map.
@@ -53,17 +49,24 @@ class MapFilterer<K, V> extends Class {
 				config: MapFilterer.Config<K, V> = {}) {
 		super();
 		this._targetCreated = config.target == null;
-		this.target = this._targetCreated ? new BindableMap<K, V>(this.source.silent) : config.target;
-		this.target.trySetAll(this._prepareToSet(source.native));
+		this._target = this._targetCreated ? new BindableMap<K, V>(this.source.silent) : config.target;
+		this._target.trySetAll(this._prepareToSet(source.native));
 		this.own(source.onSplice.listen(this._onSplice, this));
 		this.own(source.onReindex.listen(this._onReindex, this));
 		this.own(source.onClear.listen(this._onClear, this));
 	}
 
+	/**
+	 * Target map.
+	 */
+	get target(): ReadonlyBindableMap<K, V> {
+		return this._target;
+	}
+
 	protected destroyObject() {
-		this.target.tryRemoveAll(this._prepareToRemove(this.source.native));
+		this._target.tryRemoveAll(this._prepareToRemove(this.source.native));
 		if (this._targetCreated) {
-			this.target.destroy();
+			this._target.destroy();
 		}
 		this.test = null;
 		this.controlledKeys = null;
@@ -71,17 +74,17 @@ class MapFilterer<K, V> extends Class {
 	}
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, V>) {
-		this.target.trySplice(
+		this._target.trySplice(
 			this._prepareToRemove(spliceResult.removedEntries),
 			this._prepareToSet(spliceResult.addedEntries));
 	}
 
 	private _onReindex(keyMapping: ReadonlyMap<K, K>) {
-		this.target.tryReindex(keyMapping);
+		this._target.tryReindex(keyMapping);
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, V>) {
-		this.target.tryRemoveAll(this._prepareToRemove(oldContents));
+		this._target.tryRemoveAll(this._prepareToRemove(oldContents));
 	}
 
 	private _prepareToSet(entries: ReadonlyMap<K, V>) {

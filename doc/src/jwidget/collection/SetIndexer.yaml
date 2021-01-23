@@ -1,0 +1,97 @@
+symbols:
+  default:
+    typevars:
+      V: Value type.
+      K: Key type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%SetIndexer builds a new map by rule: key is the result of a callback function call, value is the
+      corresponding set value.</p>
+      <pre>
+      const source = new %BindableSet([1, 2]);
+      const indexer = new %SetIndexer(source, x => String.fromCharCode(x + 97));
+      const target = indexer.%target;
+
+      expect(Array.from(target).sort(%cmp)).equal([["a", 1], ["b", 2]]);
+
+      // Target map is automatically synchronized with the original set.
+      source.%add(3);
+      expect(Array.from(target).sort(%cmp)).equal([["a", 1], ["b", 2], ["c", 3]]);
+
+      // Destroy the indexer to stop synchronization
+      indexer.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target map in a config option:</p>
+      <pre>
+      const source = new %BindableSet([1, 2]);
+      const target = new %BindableMap<string, number>();
+      const indexer = new %SetIndexer(source, x => String.fromCharCode(x + 97), {%targetOfConfig});
+      </pre>
+      <p>If you want to put the entries into a new map, use shorthand function %startIndexingSet instead:</p>
+      <pre>
+      const source = new %BindableSet([1, 2]);
+      const target = %startIndexingSet(source, x => String.fromCharCode(x + 97));
+
+      // Destroy the target collection to stop synchronization
+      target.%destroy();
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>All values of the source set get indexed and added to %target immediately on the synchronizer
+        initialization.</li>
+        <li>Indexed entries get removed from %target on synchronizer destruction.</li>
+        <li>Target map gets synchronized with source set continuously until the synchronizer is destroyed.</li>
+        <li>All values must have different keys.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableSet<%V>, getKey: (value: %V) => %K, config: %SetIndexer.%Config<%V, %K>)
+      params:
+        source: Source set.
+        getKey: Indexer function.
+        config: Indexer configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%V>'
+        description: Source set.
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableMap<%K, %V>'
+        description: Target map.
+
+  SetIndexer.Config:
+    kind: interface
+    simple: true
+    typevars:
+      V: Value type.
+      K: Key type.
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableMap<%K, %V>'
+        description: |
+          <p>Target map. By default, created automatically.</p>
+
+  startIndexingSet:
+    signature: |
+      <V, K>(source: %ReadonlyBindableSet<V>, getKey: (value: V) => K): %DestroyableReadonlyBindableMap<K, V>
+    params:
+      source: Source set.
+      getKey: Indexer function.
+    returns: Index map.
+    description: 'Indexes a set and starts synchronization. See SetIndexer for details.'
+
+references:
+  Config:
+    symbol: AbstractIndexer.Config
