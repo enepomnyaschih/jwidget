@@ -52,7 +52,7 @@ symbols:
 
     constructor:
       signature: |
-        (source: %ReadonlyBindableSet<%V>, getKey: (value: %V) => %K, config: %SetIndexer.%Config<%V, %K>)
+        (source: %ReadonlyBindableSet<%V>, getKey: (value: %V) => %K, config?: %SetIndexer.%Config<%V, %K>)
       params:
         source: Source set.
         getKey: Indexer function.

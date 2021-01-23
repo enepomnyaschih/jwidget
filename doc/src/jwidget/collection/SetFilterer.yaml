@@ -48,7 +48,7 @@ symbols:
 
     constructor:
       signature: |
-        (source: %ReadonlyBindableSet<%T>, test: (value: %T) => boolean, config: %SetFilterer.%Config<%T>)
+        (source: %ReadonlyBindableSet<%T>, test: (value: %T) => boolean, config?: %SetFilterer.%Config<%T>)
       params:
         source: Source set.
         test: Filtering criteria.

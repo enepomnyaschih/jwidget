@@ -1,0 +1,118 @@
+symbols:
+  default:
+    kind: abstract class
+    typevars:
+      T: Source collection item type.
+      U: Target collection item type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p><b>Mapper</b> builds a new collection, consisting of results of callback function call for each collection item.</p>
+      <pre>
+      const source = new %BindableArray([1, 2]);
+      const mapper = new %ArrayMapper(source, x => 2 * x);
+      const target = mapper.%target;
+
+      expect(target.%native).eql([2, 4]);
+
+      // Target collection is automatically synchronized with the original collection.
+      source.%add(3);
+      expect(target.%native).eql([2, 4, 6]);
+
+      // Destroy the mapper to stop synchronization.
+      mapper.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target collection in a config option:</p>
+      <pre>
+      const source = new %BindableArray([1, 2]);
+      const target = new %BindableArray<number>();
+      const mapper = new %ArrayMapper(source, x => 2 * x, {%targetOfConfig});
+      </pre>
+      <p>If you want to map the values into a new collection, use shorthand functions %startMappingArray, %startMappingMap
+      and %startMappingSet instead:</p>
+      <pre>
+      const source = new %BindableArray([1, 2]);
+      const target = %startMappingArray(source, x => 2 * x);
+
+      // Destroy the target collection to stop synchronization
+      target.%destroy();
+      </pre>
+      <p>You can use %destroyOfConfig option to destroy the mapped values. Thus the mapper can be used to convert a data
+      collection to a view collection.</p>
+      <pre>
+      const viewArray = %startMappingArray(dataArray, data => new View(data), {%destroyOfConfig});
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>All items of source collection get mapped and added to %target immediately on synchronizer initialization.</li>
+        <li>Mapped items get removed from %target and destroyed via %destroyOfConfig callback on synchronizer destruction.</li>
+        <li>Target collection gets synchronized with source collection continuously until the synchronizer is destroyed.</li>
+        <li>The mapped values do not get recreated in target collection on source collection reordering/reindexing,
+        but they get reordered/reindexed according to source collection modification.</li>
+      </ul>
+
+      <h3>Additional rules for different collection types</h3>
+
+      <dl>
+        <dt>%ReadonlyBindableArray</dt>
+        <dd>Target array must be empty before initialization. The synchronizer requires exclusive access to the target
+        array, i.e. you can't change its contents manually or create other synchronizers with the same target array.</dd>
+        <dt>%ReadonlyBindableMap</dt>
+        <dd>You can build the target map from multiple sources as long as there is no concurrency for keys of the
+        target map.</dd>
+        <dt>%ReadonlyBindableSet</dt>
+        <dd>You can build the target set from multiple sources as long as all values are different.</dd>
+      </dl>
+
+  AbstractMapper.DestroyCallback:
+    kind: interface
+    simple: true
+    typevars:
+      T: Source value type.
+      U: Target value type.
+    description: |
+      <p><code>(targetValue: %U, sourceValue: %T): void</code></p>
+      <p>Signature of %AbstractMapper.%Config.%destroyOfConfig callback.</p>
+
+  AbstractMapper.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Source value type.
+      U: Target value type.
+    properties:
+      destroy:
+        modifiers: readonly
+        optional: true
+        type: '%AbstractMapper.%DestroyCallback<%T, %U>'
+        description: |
+          <p>Mapped value destructor. Destroys a values when it leaves the target collection.</p>
+          <p>It is usually convenient to pass %destroyFunction core function as this callback into a collection:</p>
+          <pre>
+          import {%destroyFunction} from "jwidget";
+
+          // ...
+          const viewArray = %startMappingArray(dataArray, data => new View(data), {%destroy});
+          </pre>
+
+references:
+  target:
+    symbol: default
+    member: target
+
+  add:
+    file: jwidget/IBindableArray
+    member: add
+
+  destroyOfConfig:
+    symbol: AbstractMapper.Config
+    member: destroy
+    label: destroy
+
+  targetOfConfig:
+    label: target

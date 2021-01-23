@@ -1,0 +1,135 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%ArrayMerger builds an array consisting of all items of source arrays in the same order.</p>
+      <pre>
+      const source = new %BindableArray([
+          new %BindableArray([1, 2, 3]),
+          new %BindableArray<number>(),
+          new %BindableArray([4])
+      ]);
+      const merger = new %ListMerger(source);
+      const target = merger.%target;
+      expect(target.%native).eql([1, 2, 3, 4]);
+
+      source.%add(new %BindableArray([5, 6]));
+      expect(target.%native).eql([1, 2, 3, 4, 5, 6]);
+
+      source.%get(1).%addAll([7, 8, 9]);
+      expect(target.%native).eql([1, 2, 3, 7, 8, 9, 4, 5, 6]);
+
+      // Destroy the merger to stop synchronization.
+      merger.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target array in a config option:</p>
+      <pre>
+      const source = new %BindableArray([
+          new %BindableArray([1, 2, 3]),
+          new %BindableArray<number>(),
+          new %BindableArray([4])
+      ]);
+      const target = new %BindableArray<number>();
+      const merger = new %ArrayMerger(source, {%targetOfConfig});
+      </pre>
+
+      <p>If you want to create a new array, use shorthand function %startMergingArrays instead:</p>
+      <pre>
+      const source = new %BindableArray([
+          new %BindableArray([1, 2, 3]),
+          new %BindableArray<number>(),
+          new %BindableArray([4])
+      ]);
+      const target = %startMergingArrays(source);
+
+      // Destroy the target array to stop synchronization.
+      target.%destroy();
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>Target array must be empty before initialization.</li>
+        <li>All items of source arrays are added to the %target immediately on the synchronizer initialization.</li>
+        <li>The %target array is cleared on the synchronizer destruction.</li>
+        <li>The synchronizer requires exclusive access to the target array, i.e. you can't change its contents manually
+        or create other synchronizers with the same target array.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableArray<%ReadonlyBindableArray<%T>>, config?: %ArrayMerger.%Config<%T>)
+      params:
+        source: Source arrays.
+        config: Merger configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<ReadonlyBindableArray<%T>>'
+        description: |
+          <p>Source arrays.</p>
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: |
+          <p>Target array.</p>
+
+  ArrayMerger.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableArray<%T>'
+        description: |
+          <p>Target array. By default, created automatically.</p>
+
+  startMergingArrays:
+    signature: |
+      <T>(source: %ReadonlyBindableArray<%ReadonlyBindableArray<T>>): %DestroyableReadonlyBindableArray<T>
+    params:
+      source: Source arrays.
+    returns: Merged array.
+    description: |
+      <p>Merges arrays and starts synchronization. See %ArrayMerger for details.</p>
+
+references:
+  Config:
+    symbol: ArrayMerger.Config
+
+  native:
+    file: jwidget/ReadonlyBindableArray
+    member: native
+
+  get:
+    file: jwidget/ReadonlyBindableArray
+    member: get
+
+  add:
+    file: jwidget/IBindableArray
+    member: add
+
+  addAll:
+    file: jwidget/IBindableArray
+    member: addAll
+
+  target:
+    symbol: default
+    member: target
+
+  targetOfConfig:
+    symbol: ArrayMerger.Config
+    member: target
+    label: target

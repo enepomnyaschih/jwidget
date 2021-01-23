@@ -44,11 +44,12 @@ symbols:
       <h3>Synchronizer rules</h3>
 
       <ul>
-        <li>Filtered items of the source collection get added to %target immediately on the synchronizer initialization.</li>
-        <li>The %target collection is cleared on the synchronizer destruction.</li>
+        <li>Target array must be empty before initialization.</li>
+        <li>Filtered items of the source array get added to %target immediately on the synchronizer initialization.</li>
+        <li>The %target array is cleared on the synchronizer destruction.</li>
         <li>Target array gets synchronized with source array continuously until the synchronizer is destroyed.</li>
         <li>The synchronizer requires exclusive access to the target array, i.e. you can't change its contents manually
-        and you can't create other synchronizers with the same target array.</li>
+        or create other synchronizers with the same target array.</li>
       </ul>
 
     constructor:

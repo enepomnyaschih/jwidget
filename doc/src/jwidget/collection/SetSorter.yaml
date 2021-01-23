@@ -1,0 +1,147 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%SetSorter builds a new %ReadonlyBindableArray containing value of source set sorted by comparer.</p>
+      <pre>
+      const source = new %BindableSet(["qw", "er", "ty"]);
+      const sorter = new %SetSorter(source, {%compareOfConfig: (x, y) => %cmp(x[1], y[1])});
+      const target = sorter.%target;
+
+      expect(target.%native).eql(["er", "qw", "ty"]); // r < w < y
+
+      // Target array is automatically synchronized with the original set.
+      source.%add("ui");
+      expect(target.%native).eql(["ui", "er", "qw", "ty"]); // i < r < w < y
+
+      // Destroy the sorter to stop synchronization.
+      sorter.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target array in a config option:</p>
+      <pre>
+      const source = new %BindableSet(["qw", "er", "ty"]);
+      const target = new %BindableArray<string>();
+      const converter = new %SetSorter(source, {%compareOfConfig: (x, y) => %cmp(x[1], y[1]), %targetOfConfig});
+      </pre>
+      <p>If you want to create a new array, use shorthand function %startSortingSet instead:</p>
+      <pre>
+      const source = new %BindableSet(["qw", "er", "ty"]);
+      const target = %startSortingSet(source, {%compareOfConfig: (x, y) => %cmp(x[1], y[1])});
+
+      // Destroy the target array to stop synchronization.
+      target.%destroy();
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>All value of source set get added to %target immediately on synchronizer initialization.</li>
+        <li>Sorted values get removed from %target on synchronizer destruction.</li>
+        <li>You can build the target array from multiple sources as long as all values are different and you keep the
+        target array sorted all the time.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableSet<%T>, config?: %SetSorter.%FullConfig<%T>)
+      params:
+        source: Source set.
+        config: Sorter configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableSet<%T>'
+        description: Source set.
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: Target array.
+
+    methods:
+      resort:
+        signature: |
+          ()
+        description: |
+          <p>Resorts target array forcibly. Call this method on modification of sorting factors.</p>
+
+  SetSorter.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+    properties:
+      compare:
+        modifiers: readonly
+        optional: true
+        type: '(x: %T, y: %T) => number'
+        description: |
+          <p>Value comparing callback. Defaults to %cmp.</p>
+
+      order:
+        modifiers: readonly
+        optional: true
+        type: number
+        description: |
+          <p>Sorting order. Positive number for ascending sorting, negative for descending sorting. Defaults to 1.</p>
+
+  SetSorter.FullConfig:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/collection/SetSorter
+        symbol: SetSorter.Config
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableArray<%T>'
+        description: |
+          <p>Target array. By default, created automatically.</p>
+
+  startSortingSet:
+    signature: |
+      <T>(source: %ReadonlyBindableSet<T>, config?: %SetSorter.%Config<T>): %DestroyableReadonlyBindableArray<T>
+    params:
+      source: Source set.
+      config: Sorter configuration.
+    returns: Sorted array.
+    description: 'Sorts a set and starts synchronization. See %SetSorters for details.'
+
+references:
+  Config:
+    symbol: SetSorter.Config
+
+  FullConfig:
+    symbol: SetSorter.FullConfig
+
+  target:
+    symbol: default
+    member: target
+
+  native:
+    file: jwidget/ReadonlyBindableArray
+    member: native
+
+  add:
+    file: jwidget/IBindableSet
+    member: add
+
+  compareOfConfig:
+    symbol: SetSorter.Config
+    member: compare
+    label: compare
+
+  targetOfConfig:
+    symbol: SetSorter.FullConfig
+    member: target
+    label: target

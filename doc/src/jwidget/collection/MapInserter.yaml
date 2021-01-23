@@ -46,7 +46,7 @@ symbols:
 
     constructor:
       signature: |
-        (source: %ReadonlyBindableMap<%K, %V>, config: %MapInserter.%Config<%K, %V>)
+        (source: %ReadonlyBindableMap<%K, %V>, config?: %MapInserter.%Config<%K, %V>)
       params:
         source: Source map.
         config: Inserter configuration.

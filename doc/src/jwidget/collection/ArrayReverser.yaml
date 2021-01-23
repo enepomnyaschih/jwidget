@@ -1,0 +1,119 @@
+symbols:
+  default:
+    typevars:
+      T: Value type.
+    extends:
+      - file: jwidget/Class
+    description: |
+      <p>%ArrayReverser builds an arrays containing all items of source array in reversed order.</p>
+      <pre>
+      const source = new %BindableArray([1, 2, 3]);
+      const reverser = new %ArrayReverser(source);
+      const target = reverser.%target;
+      expect(target.%native).eql([3, 2, 1]);
+
+      source.%add(4);
+      expect(target.%native).eql([4, 3, 2, 1]);
+
+      source.%remove(2);
+      expect(target.%native).eql([4, 2, 1]);
+
+      // Destroy the reverser to stop synchronization.
+      reverser.%destroy();
+      </pre>
+
+      <h3>Features and examples</h3>
+
+      <p>You can pass target array in a config option:</p>
+      <pre>
+      const source = new %BindableArray([1, 2, 3]);
+      const target = new %BindableArray<number>();
+      const reverser = new %ArrayReverser(source, {%targetOfConfig});
+      </pre>
+
+      <p>If you want to create a new array, use shorthand function %startReversingArray instead:</p>
+      <pre>
+      const source = new %BindableArray([1, 2, 3]);
+      const target = %startReversingArray(source);
+
+      // Destroy the target array to stop synchronization.
+      target.%destroy();
+      </pre>
+
+      <h3>Synchronizer rules</h3>
+
+      <ul>
+        <li>Target array must be empty before initialization.</li>
+        <li>All items of source array are added to %target immediately on synchronizer initialization.</li>
+        <li>The %target array is cleared on the synchronizer destruction.</li>
+        <li>The synchronizer requires exclusive access to the target array, i.e. you can't change its contents manually
+        or create other synchronizers with the same target array.</li>
+      </ul>
+
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableArray<%T>, config?: %ArrayReverser.%Config<%T>)
+      params:
+        source: Source array.
+        config: Reverser configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: |
+          <p>Source array.</p>
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: |
+          <p>Target array.</p>
+
+  ArrayReverser.Config:
+    kind: interface
+    simple: true
+    typevars:
+      T: Value type.
+
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableArray<%T>'
+        description: |
+          <p>Target array. By default, created automatically.</p>
+
+  startReversingArray:
+    signature: |
+      <T>(source: %ReadonlyBindableArray<T>): %DestroyableReadonlyBindableArray<T>
+    params:
+      source: Source array.
+    returns: Reversed array.
+    description: |
+      <p>Reverses an array and starts synchronization. See %ArrayReverser for details.</p>
+
+references:
+  Config:
+    symbol: ArrayReverser.Config
+
+  native:
+    file: jwidget/ReadonlyBindableArray
+    member: native
+
+  add:
+    file: jwidget/IBindableArray
+    member: add
+
+  remove:
+    file: jwidget/IBindableArray
+    member: remove
+
+  target:
+    symbol: default
+    member: target
+
+  targetOfConfig:
+    symbol: ArrayReverser.Config
+    member: target
+    label: target

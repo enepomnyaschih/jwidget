@@ -1,0 +1,65 @@
+symbols:
+  default:
+    typevars:
+      T: Source value type.
+      U: Target value type.
+    extends:
+      - file: jwidget/collection/AbstractMapper
+    description: |
+      <p>%AbstractMapper implementation for %ReadonlyBindableArray.</p>
+    constructor:
+      signature: |
+        (source: %ReadonlyBindableArray<%T>, create: (sourceValue: %T) => %U, config?: %ArrayMapper.%FullConfig<%T, %U>)
+      params:
+        source: Source array.
+        create: Mapping callback.
+        config: Mapper configuration.
+
+    properties:
+      source:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%T>'
+        description: Source array.
+
+      target:
+        modifiers: readonly
+        type: '%ReadonlyBindableArray<%U>'
+        description: Target array.
+
+  ArrayMapper.FullConfig:
+    kind: interface
+    simple: true
+    typevars:
+      T: Source value type.
+      U: Target value type.
+    extends:
+      - file: jwidget/collection/AbstractMapper
+        symbol: AbstractMapper.Config
+        typevars: [T, U]
+    description: |
+      <p>%ArrayMapper configuration.</p>
+    properties:
+      target:
+        modifiers: readonly
+        optional: true
+        type: '%IBindableArray<%U>'
+        description: Target array.
+
+  startMappingArray:
+    signature: |
+      <T, U>(source: %ReadonlyBindableArray<T>, create: (sourceValue: T) => U,
+             config?: %AbstractMapper.%Config<T, U>): %DestroyableReadonlyBindableArray<U>
+    params:
+      source: Source array.
+      create: Mapping callback.
+      config: Mapper configuration.
+    returns: Target array.
+    description: 'Maps an array and starts synchronization. See %AbstractMapper for details.'
+
+references:
+  Config:
+    file: jwidget/collection/AbstractMapper
+    symbol: AbstractMapper.Config
+
+  FullConfig:
+    symbol: ArrayMapper.FullConfig

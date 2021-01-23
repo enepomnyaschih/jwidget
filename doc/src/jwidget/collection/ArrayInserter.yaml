@@ -65,7 +65,7 @@ symbols:
 
     constructor:
       signature: |
-        (source: %ReadonlyBindableArray<%T>, config: %ArrayInserter.%Config<%T>)
+        (source: %ReadonlyBindableArray<%T>, config?: %ArrayInserter.%Config<%T>)
       params:
         source: Source array.
         config: Inserter configuration.

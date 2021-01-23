@@ -51,7 +51,7 @@ symbols:
 
     constructor:
       signature: |
-        (source: %ReadonlyBindableMap<%K, %V>, test: (value: %V) => boolean, config: %MapFilterer.%Config<%K, %V>)
+        (source: %ReadonlyBindableMap<%K, %V>, test: (value: %V) => boolean, config?: %MapFilterer.%Config<%K, %V>)
       params:
         source: Source map.
         test: Filtering criteria.
