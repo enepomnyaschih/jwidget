@@ -1,10 +1,7 @@
 description: |
-  <p>Core jWidget utilities. Some utilities duplicate the functions of %underscore and %lodash, but still may come in
-  handy if you want to keep dependency list short.</p>
+  <p>Core jWidget utilities.</p>
 
 symbols:
-  enumerations: 'Enumerations'
-
   Binding:
     type: 'enum'
     description: |
@@ -48,196 +45,6 @@ symbols:
       WATCH: {}
       TWOWAY: {}
 
-  CollectionFlags:
-    type: 'enum'
-    description: |
-      <p>jWidget collection flags. All options have shorthands, i.e. <code>CollectionFlags.SILENT</code> can be
-      imported separately as <code>{SILENT}</code>.</p>
-      <dl class="row">
-        <dt class="col-lg-2 col-sm-3">SILENT = 1</dt>
-        <dd class="col-lg-10 col-sm-9">
-          <p>Creates a silent collection, which means that it never %dispatches modification messages. Silent collections
-          work a little bit faster and consume less memory. Useful for collections that never get modified or
-          observed.</p>
-          <pre>
-          const silentList = new %List<number>([1, 2], %SILENT);
-          const mappedList = %mapList(silentList, (value) => 2 * value);
-          expect(mappedList.%items).toEqual([2, 4]);
-          silentList.%add(3);
-          expect(mappedList.%items).toEqual([2, 4]); // 6 is not added, because source list is silent
-          </pre>
-        </dd>
-        <dt class="col-lg-2 col-sm-3">ADAPTER = 2</dt>
-        <dd class="col-lg-10 col-sm-9">
-          <p>Creates an adapter for an existing array or dictionary, which means that it uses the same object as a
-          container for the collection contents instead of creating a new container. Note that you should not modify
-          the original array or dictionary in this case, because it may break the collection consistency.</p>
-          <pre>
-          const originalArray = [1, 2];
-          const adapterList = new %List<number>(originalArray, %ADAPTER);
-          adapterList.add(3);
-          expect(originalArray).toEqual([1, 2, 3]); // 3 is added to original array, because the list is adapter
-          </pre>
-        </dd>
-      </dl>
-      <p>Pass both flags via bitwise disjunction operator:</p>
-      <pre>
-      new %List<number>(originalArray, %SILENT | %ADAPTER);
-      </pre>
-    references:
-      SILENT: {}
-      ADAPTER: {}
-      items:
-        file: jwidget/ReadOnlyList
-        member: items
-      add:
-        file: jwidget/IList
-        member: add
-
-  testers:
-    header: 'Value test functions'
-    description: |
-      <p>These functions are useful for collection filtering:</p>
-      <pre>
-      const realValues = values.filter(%isNotNil);</pre>
-      <p>Which is a shorter equivalent for:</p>
-      <pre>
-      const readValues = values.filter((value) => value != null);</pre>
-
-  isUndefined:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is undefined.
-
-  isDefined:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is not undefined.
-
-  isNull:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is null.
-
-  isNotNull:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is not null.
-
-  isNil:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is undefined or null.
-
-  isNotNil:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is not undefined and null.
-
-  isFalsy:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is falsy (i.e. <code>Boolean(value)</code> is false).
-
-  isTruthy:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is truthy (i.e. <code>Boolean(value)</code> is true).
-
-  isInt:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is integer.
-
-  isNumber:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is number.
-
-  isString:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is string.
-
-  isBoolean:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is boolean.
-
-  isFunction:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is function.
-
-  isArray:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is native JavaScript Array.
-
-  isRegExp:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is regular expression.
-
-  isDate:
-    signature: |
-      (value: any): boolean
-    params:
-      value: Value to test.
-    returns: Value is date.
-
-  other: Other functions
-
-  def:
-    signature: |
-      <T>(value: T, defaultValue: T): T
-    params:
-      value: Value to test.
-      defaultValue: Default value to return.
-    returns: '%value if it is not undefined, else %defaultValue.'
-    description: |
-      As opposed to %defn, treats null as suitable value.
-
-  defn:
-    signature: |
-      <T>(value: T, defaultValue: T): T
-    params:
-      value: Value to test.
-      defaultValue: Default value to return.
-    returns: '%value if it is not undefined and null, else %defaultValue.'
-    description: |
-      As opposed to %def, throws null as unsuitable value.
-
   cmp:
     signature: |
       (x: any, y: any): number
@@ -246,20 +53,17 @@ symbols:
       y: Second value to compare.
     returns: One of {-1, 0, 1} as comparison result.
     description: |
-      <p>Universal and sophisticated comparer for array/list sorting. The same as %smartCmp, but without third argument.
+      <p>Universal and sophisticated comparer for array sorting. The same as %smartCmp, but without third argument.
       It comes in handy when a function takes a callback accepting 3 or more arguments - in this case, arguments of
       %smartCmp won't match the callback definition:</p>
       <pre>
-      const x = new %Class(),
-            y = new %Class(),
-            z = new %Class(),
-            list = new %List([x, y, z]);
-      list.%sortComparing(%cmp); // ok
-      list.%sortComparing(%smartCmp); // compilation error: callback arguments don't match
+      const array = new %BindableArray(["q", "w", "e"]);
+      array.%sortComparing(%cmp); // ok
+      array.%sortComparing(%smartCmp); // compilation error: callback arguments don't match
       </pre>
     references:
       sortComparing:
-        file: jwidget/IList
+        file: jwidget/IBindableArray
         member: sortComparing
 
   smartCmp:
@@ -271,7 +75,7 @@ symbols:
       config: Optional configuration.
     returns: One of {-1, 0, 1} as comparison result.
     description: |
-      <p>Universal and sophisticated comparer for array/list sorting. Broadly speaking, it:</p>
+      <p>Universal and sophisticated comparer for array sorting. Broadly speaking, it:</p>
       <ul>
         <li>Returns 1, if <code>%x > %y</code></li>
         <li>Returns -1, if <code>%x < %y</code></li>
@@ -279,10 +83,10 @@ symbols:
       </ul>
       <p>In reality, it supports the next features:</p>
       <ul>
-        <li>Comparing of boolean, number, string, subarrays, null, undefined</li>
-        <li>Determined linear order, even for mixed arrays</li>
-        <li>Case insensitive comparing for strings</li>
-        <li>Comparing of digit sequences in strings as numbers</li>
+        <li>Comparing of booleans, numbers, strings, subarrays, null, undefined.</li>
+        <li>Determined linear order, even for mixed arrays.</li>
+        <li>Optionally, case insensitive comparing for strings.</li>
+        <li>Optionally, comparison of digit sequences in strings as numbers.</li>
       </ul>
       <p>Values of different types are compared as follows: undefined &lt; null &lt; array &lt; boolean &lt;
         number &lt; string.</p>
@@ -301,10 +105,11 @@ symbols:
     simple: true
     kind: interface
     description: |
-      Optional configuration of %cmp function.
+      Optional configuration of %smartCmp function.
     properties:
       caseInsensitive:
-        type: boolean = false
+        type: boolean
+        optional: true
         modifiers: readonly
         description: |
           <p>Ignore case when comparing strings.</p>
@@ -313,8 +118,10 @@ symbols:
           expect(smartCmp("aB", "Ab")).toBe(1);
           expect(smartCmp("aB", "Ab", {%caseInsensitive: true})).toBe(0);
           </pre>
+
       compareNumbersInStrings:
-        type: boolean = false
+        type: boolean
+        optional: true
         modifiers: readonly
         description: |
           <p>Compare digit sequences as numbers when comparing strings.</p>
@@ -324,38 +131,14 @@ symbols:
           expect(%smartCmp("ab2", "ab10", {%compareNumbersInStrings: true})).toBe(-1);
           </pre>
 
-  get:
-    signature: |
-      <T>(obj: any, path?: any): T
-    params:
-      obj: Object to inspect.
-      path: Field name or path to it.
-    returns: Field value.
-    description: |
-      <p>Returns object field or subfield by %path. <b>Path</b> is a primitive value (object key), or an array of
-      subpaths. If %path is null, undefined or empty array, returns %obj. If item doesn't exist, returns undefined.</p>
-      <h5>Example</h5>
-      <pre>
-      const obj = {
-          abc: [
-              {
-                  qwe: "xyz"
-              }
-          ]
-      };
-
-      expect(%get(obj, ["abc", 0, "qwe"])).toBe("xyz");
-      expect(%get(obj, "abc")).toBe(obj.abc);</pre>
-
   destroy:
     signature: |
-      (obj: any): any
+      (obj: any): void
     params:
       obj: Object to destroy.
     returns: undefined.
     description: |
       <p>Calls %destroy method of %obj if available. Can be used in configuration of any mapper.</p>
       <pre>
-      const views = %mapList(models, (model) => new View(model), {%destroy});</pre>
-      <p>Doesn't return anything - any return type is specified for easier usage in methods like
-      %ArrayUtils.%backEvery.</p>
+      const views = %startMappingArray(models, model => new View(model), {%destroy});
+      </pre>

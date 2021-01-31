@@ -146,7 +146,7 @@ function cmpStrings(x: string, y: string, config?: CmpConfig): number {
 /**
  * Calls object method `destroy` if available. Can be used in mapper configuration.
  */
-export function destroy(obj: any): any {
+export function destroy(obj: any): void {
 	if (obj && typeof obj.destroy === "function") {
 		obj.destroy();
 	}

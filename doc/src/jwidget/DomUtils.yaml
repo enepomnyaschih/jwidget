@@ -15,8 +15,7 @@ symbols:
 
   isTextInput:
     signature: |
-      (el: %JQuery): boolean
-      (el: Element): boolean
+      (el: %InputElement): boolean
     params:
       el: Element to check.
     returns: Element is a text input.
@@ -32,6 +31,37 @@ symbols:
       <input type="url">
       <textarea></textarea>
       </pre>
+
+  InputElement:
+    type: interface
+    simple: true
+    description: |
+      <p>Subset of %JQuery methods necessary for implementation of %isTextInput function.</p>
+    methods:
+      prop:
+        signature: |
+          (prop: "tagName"): string
+        params:
+          prop: Must be "tagName".
+        returns: Tag name in upper case.
+        description: |
+          <p>See %JQuery.%jqProp.</p>
+        references:
+          jqProp:
+            href: https://api.jquery.com/prop/
+            label: prop
+      attr:
+        signature: |
+          (attr: "type"): string
+        params:
+          attr: Must be "type".
+        returns: Value of "type" attribute.
+        description: |
+          <p>See %JQuery.%jqAttr.</p>
+        references:
+          jqAttr:
+            href: https://api.jquery.com/attr/
+            label: attr
 
   inDom:
     signature: |

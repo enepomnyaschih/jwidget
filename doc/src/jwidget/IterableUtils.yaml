@@ -1,0 +1,45 @@
+description: |
+  <p>Various utilities for %Iterable.</p>
+
+symbols:
+  map:
+    signature: |
+      <T, U>(iterable: %Iterable<T>, callback: (item: T) => U): U[]
+    params:
+      iterable: Iterable.
+      callback: Mapping function.
+    returns: Mapped array.
+    description: |
+      <p>Builds a new array containing results of %callback function call over each %iterable item in the same
+      order.</p>
+
+  filter:
+    signature: |
+      <T>(iterable: %Iterable<T>, callback: (item: T) => boolean): T[]
+    params:
+      iterable: Iterable.
+      callback: Criteria callback.
+    returns: Filtered array.
+    description: |
+      <p>Builds a new array containing items of %iterable the %callback function returns a truthy value for in the same
+      order.</p>
+
+  count:
+    signature: |
+      <T>(iterable: %Iterable<T>, callback: (item: T) => boolean): number
+    params:
+      iterable: Iterable.
+      callback: Callback.
+    returns: Number of matching items.
+    description: |
+      <p>Returns a number of items of %iterable the %callback function returns a truthy value for.</p>
+
+  index:
+    signature: |
+      <V, K>(iterable: Iterable<V>, callback: (item: V) => K): Map<K, V>
+    params:
+      iterable: Iterable.
+      callback: Callback.
+    returns: Collection index.
+    description: |
+      <p>Returns a new map of results of %callback function call over each %iterable item into the item itself.</p>

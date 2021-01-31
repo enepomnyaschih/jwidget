@@ -1,5 +1,5 @@
 /**
- * Maps map values. Returns a new map containing results of a callback call for each map value with the same keys.
+ * Builds a new map of results of callback function call for each map entry with the same keys.
  * @param map Map.
  * @param callback Mapping function.
  * @returns Mapped map.
@@ -13,10 +13,10 @@ export function map<K, T, U>(map: Iterable<readonly [K, T]>, callback: (value: T
 }
 
 /**
- * Filters a map by criteria. Builds a new map consisting of entries a callback returns true for.
+ * Builds a new map of map entries the callback function returns a truthy value for.
  * @param map Iterable.
  * @param callback Criteria callback.
- * @returns Filtered array.
+ * @returns Filtered map.
  */
 export function filter<K, V>(map: Iterable<readonly [K, V]>, callback: (value: V, key: K) => boolean): Map<K, V> {
 	const result = new Map<K, V>();

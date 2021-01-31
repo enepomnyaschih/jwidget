@@ -1,270 +1,27 @@
 description: |
-  <p>jWidget utilities for native JavaScript arrays. Some utilities duplicate the functions of %underscore and %lodash,
-  but still may come in handy if you want to keep dependency list short.</p>
-  <p>Functions don't check the arguments. If you pass <code>null</code> or not an array, or if you pass the index out of
-  array bounds etc., it will have the unpredictable consequences. jWidget is designed for performance, and these
-  utilities were implemented mostly for internal usage, so please do all neccessary assertions before using them.</p>
+  <p>jWidget utilities for native JavaScript arrays.</p>
 
 symbols:
-  getters: 'Getter functions'
-
-  getLast:
-    signature: |
-      <T>(arr: T[]): T
-    params:
-      arr: 'Array.'
-    returns: 'Last item in array. If array is %empty, returns undefined.'
-
-  isEmpty:
-    signature: |
-      <T>(arr: T[]): boolean
-    params:
-      arr: 'Array.'
-    returns: 'Array has zero length.'
-
-  searchers: 'Item search functions'
-
-  contains:
-    signature: |
-      <T>(arr: T[], item: T): boolean
-    params:
-      arr: 'Array to inspect.'
-      item: 'Item to look for.'
-    returns: 'Item exists in array, i.e. if <code>%arr.indexOf(%item)</code> doesn''t return -1.'
-
-  find:
-    signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): T
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Search predicate.'
-      scope: '%callback call scope.'
-    returns: 'Array item.'
-    description: |
-      <p>Finds an item matching criteria.</p>
-      <p>Returns the first item for which %callback returns %truthy value.</p>
-      <p>Algorithms iterates items consequently, and stops after the first item matching the criteria.</p>
-
-  findIndex:
-    signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Search predicate.'
-      scope: '%callback call scope.'
-    returns: 'Item index in array.'
-    description: |
-      <p>Finds an item matching criteria.</p>
-      <p>Returns index of the first item for which %callback returns %truthy value.</p>
-      <p>Algorithms iterates items consequently, and stops after the first item matching the criteria.</p>
-
   binarySearch:
     signature: |
-      <T>(arr: T[], value: T, compare?: (t1: T, t2: T) => number, scope?: any, order: number = 1 = 1): number
+      <T>(arr: readonly T[], isHigher: (value: T) => boolean): number
     params:
-      arr: 'Array to inspect.'
-      value: 'Value to insert/remove.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Order the array is sorted by.'
-    returns: 'Index the new item can be inserted in array.'
+      arr: 'Sorted array.'
+      isHigher: 'Should return true if the argument is "higher" than the searched value.'
+    returns: 'Array index.'
     description: |
-      <p>Determines index of the first item which is more (or less if %order < 0) than the specified value by
-        %compare function, using binary search. Array must be sorted by %compare function. Can be used for
-        item insertion easily. If you want to use this function for item removal, you must look at previous item and
-        compare it to %value first.</p>
-      <p>Comparer function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to
-        %cmp.</p>
-      <p>%order should reflect sorting order. Positive number if array is sorted ascending, negative if descending.</p>
-
-  max:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): T
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Inversion argument.'
-    returns: 'Array item with highest (or lowest) value.'
-    description: |
-      <p>Returns the array item which %callback returns the highest (or lowest) value for.</p>
-      <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order to find the highest value, and negative to find the lowest one.</p>
-
-  maxIndex:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): number
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Inversion argument.'
-    returns: 'Index of item with highest (or lowest) value in array.'
-    description: |
-      <p>Returns index of the array item which %callback returns the highest (or lowest) value for.</p>
-      <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order to find the highest value, and negative to find the lowest one.</p>
-
-  maxComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): T
-    params:
-      arr: 'Array to inspect.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Inversion argument.'
-    returns: 'Highest (or lowest) array item.'
-    description: |
-      <p>Returns the highest (or lowest) array item in terms of %compare function.</p>
-      <p>%compare function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
-      Defaults to %cmp.</p>
-      <p>Pass positive %order to find the highest value, and negative to find the lowest one.</p>
-
-  maxIndexComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): number
-    params:
-      arr: 'Array to inspect.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Inversion argument.'
-    returns: 'Index of highest (or lowest) array item.'
-    description: |
-      <p>Returns index of the highest (or lowest) array item in terms of %compare function.</P
-      <p>%compare function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
-      Defaults to %cmp.</p>
-      <p>Pass positive %order to find the highest value, and negative to find the lowest one.</p>
-
-  min:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): T
-    params:
-      arr: Array to inspect.
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Inversion argument.'
-    returns: 'Array item with lowest (or highest) value.'
-    description: |
-      <p>Returns the array item which %callback returns the lowest (or highest) value for.</p>
-      <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order to find the lowest value, and negative to find the highest one.</p>
-
-  minIndex:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1 = 1): number
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Inversion argument.'
-    returns: 'Index of item with lowest (or highest) value in array.'
-    description: |
-      <p>Returns index of the array item which %callback returns the lowest (or highest) value for.</p>
-      <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order to find the lowest value, and negative to find the highest one.</p>
-
-  minComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): T
-    params:
-      arr: 'Array to inspect.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Inversion argument.'
-    returns: 'Lowest (or highest) array item.'
-    description: |
-      <p>Returns the lowest (or highest) array item in terms of %compare function.</p>
-      <p>%compare function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
-      Defaults to %cmp.</p>
-      <p>Pass positive %order to find the lowest value, and negative to find the highest one.</p>
-
-  minIndexComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1 = 1): number
-    params:
-      arr: 'Array to inspect.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Inversion argument.'
-    returns: 'Index of lowest (or highest) array item.'
-    description: |
-      <p>Returns index of the lowest (or highest) array item in terms of %compare function.</p>
-      <p>%compare function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
-      Defaults to %cmp.</p>
-      <p>Pass positive %order to find the lowest value, and negative to find the highest one.</p>
-
-  modifiers: 'Array modification functions'
-
-  add:
-    signature: |
-      <T>(arr: T[], item: T, index?: number)
-    params:
-      arr: 'Array to modify.'
-      item: 'Item to add.'
-      index: 'Index of an item to insert the new one before. By default, appends the item to the end of array.'
-    description: |
-      Adds a new item to the array.
+      <p>Determines index of the first item the %isHigher callback returns true for. The input array must be ordered
+      in such a way that all values such that <tt>!%isHigher(value)</tt> go before <tt>%isHigher(value)</tt>.</p>
 
   addAll:
     signature: |
-      <T>(arr: T[], items: T[], index?: number)
+      <T>(arr: T[], items: Iterable<T>, index?: number)
     params:
       arr: 'Array to modify.'
       items: 'Items to add.'
       index: 'Index of an item to insert the new ones before. By default, appends the items to the end of array.'
     description: |
-      Adds a range of new items to the array.
-
-  set:
-    signature: |
-      <T>(arr: T[], index: number, item: T): T
-    params:
-      arr: 'Array to modify.'
-      index: 'Index of an item to replace.'
-      item: 'Item to replace it with.'
-    returns: 'The replaced item.'
-    description: |
-      Replaces an item in the array.
-
-  remove:
-    signature: |
-      <T>(arr: T[], index: number): T
-    params:
-      arr: 'Array to modify.'
-      index: 'Index of an item to remove.'
-    returns: 'The removed item.'
-    description: |
-      Removes an item from the array.
-
-  removeAll:
-    signature: |
-      <T>(arr: T[], index: number, count: number): T[]
-    params:
-      arr: 'Array to modify.'
-      index: 'Index of the first item to remove.'
-      count: 'Count of items to remove.'
-    returns: 'The removed items.'
-    description: |
-      Removes an item range from the array.
-
-  removeItem:
-    signature: |
-      <T>(arr: T[], item: T): number
-    params:
-      arr: 'Array to modify.'
-      item: 'Item to remove.'
-    returns: 'Index of the removed item. If the item doesn''t exist in the array, returns -1.'
-    description: |
-      Removes the first occurrence of an item in array.
-
-  removeItems:
-    signature: |
-      <T>(arr: T[], items: T[])
-    params:
-      arr: 'Array to modify.'
-      items: 'Items to remove.'
-    description: |
-      Removes all occurrences of items in array.
+      <p>Adds a range of new items to an array.</p>
 
   move:
     signature: |
@@ -277,177 +34,25 @@ symbols:
     description: |
       Moves an item in the array.
 
-  clear:
+  backForEach:
     signature: |
-      <T>(arr: T[]): T[]
+      <T>(arr: readonly T[], callback: (item: T, index: number) => void)
     params:
-      arr: 'Array to modify.'
-    returns: 'Old array contents. Never returns null or undefined.'
+      arr: Array.
+      callback: Callback.
     description: |
-      Clears the array.
-
-  splice:
-    signature: |
-      <T>(arr: T[],
-        removeParamsList: %IList.%IndexCount[],
-        addParamsList: %IList.%IndexItems<T>[]): %IList.%SpliceResult<T>
-    params:
-      arr: 'Array to modify.'
-      removeParamsList: 'Array of segments to remove sorted by index ascending. Segments are removed in backward order.'
-      addParamsList: 'Array of segments to insert sorted by index ascending. Segments are inserted in forward order.'
-    returns: 'Full information about the added/removed items. Never returns null or undefined.'
-    description: |
-      Removes and inserts item ranges (in this order).
-
-  reorder:
-    signature: |
-      <T>(arr: T[], indexArray: number[])
-    params:
-      arr: 'Array to modify.'
-      indexArray: 'Indices to move the items to.'
-    description: |
-      <p>Reorders array items.</p>
-      <p>Item with index i is moved to index %indexArray[i].
-      %indexArray must contain all indices from 0 to (%arr.length - 1).</p>
-
-  sort:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1)
-    params:
-      arr: 'Array to modify.'
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Sort order.'
-    description: |
-      <p>Sorts array by the result of %callback function call for each item.</p>
-      <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
-
-  sortComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1)
-    params:
-      arr: 'Array to modify.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Sort order.'
-    description: |
-      <p>Sorts array by comparer.<p>
-      <p>%compare must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
-      Defaults to %cmp.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
-
-  other: Other functions
-
-  count:
-    signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): number
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Item predicate function.'
-      scope: '%callback call scope.'
-    returns: 'Count of items which %callback returns %truthy value for.'
-
-  toReversed:
-    signature: |
-      <T>(arr: T[]): T[]
-    params:
-      arr: 'Array to reverse.'
-    returns: 'New reversed array.'
-    description: |
-      <p>Builds a new array containing items of original array in reversed order.</p>
-      <p>As opposed to <code>%arr.reverse()</code>, does not modify the original array.</p>
-
-  toSorted:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): T[]
-    params:
-      arr: 'Array to sort.'
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Sort order.'
-    returns: 'New sorted array.'
-    description: |
-      <p>Builds and returns a new array consisting of original array items sorted by the result of %callback call for
-      each item.</p>
-      <p>%callback function must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
-      <p>As opposed to %sort, does not modify the original array.</p>
-
-  toSortedComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): T[]
-    params:
-      arr: 'Array to sort.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Sort order.'
-    returns: 'New sorted array.'
-    description: |
-      <p>Builds and returns a new array consisting of original array items sorted by %compare function.</p>
-      <p>%compare function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
-      Defaults to %cmp.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
-      <p>As opposed to %sortComparing, does not modify the original array.</p>
-
-  getSortingIndices:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number[]
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Sort order.'
-    returns: 'Indices of items to build the sorted array.'
-    description: |
-      <p>Builds array of item indices sorted by the result of %callback call for each item.</p>
-      <p>%callback function must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
-
-  getSortingIndicesComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => any, scope?: any, order: number = 1): number[]
-    params:
-      arr: 'Array to inspect.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Sort order.'
-    returns: 'Indices of items to build the sorted array.'
-    description: |
-      <p>Builds array of item indices sorted by %compare function.</p>
-      <p>%compare function must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2.
-      Defaults to %cmp.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
-
-  equal:
-    signature: |
-      <T>(x: T[], y: T[]): boolean
-    params:
-      x: 'First array.'
-      y: 'Second array.'
-    returns: 'Arrays are equal shallowly, item by item (===).'
-
-  backEvery:
-    signature: |
-      <T>(arr: T[], callback: (item: T, index: number) => any, scope?: any): boolean
-    params:
-      arr: 'Array to inspect.'
-      callback: 'Item predicate function.'
-      scope: '%callback call scope.'
-    returns: '%callback returns %truthy value for each array item.'
-    description: |
-      As opposed to <code>%arr.every(%callback, %scope)</code>, iterates the items in backward order.
+      <p>Iterates through array items in backward order.</p>
 
   isIdentity:
     signature: |
-      (arr: number[]): boolean
+      (arr: readonly number[]): boolean
     params:
       arr: 'Array to inspect.'
     returns: 'Every item in %arr is equal to its index: <code>%arr[i] === i</code>.'
 
   invert:
     signature: |
-      (arr: number[]): number[]
+      (arr: readonly number[]): number[]
     params:
       arr: 'Array to invert.'
     returns: 'New inverted array.'
@@ -456,176 +61,47 @@ symbols:
 
   merge:
     signature: |
-      <T>(arrays: T[][]): T[]
+      <T>(arrays: readonly (readonly T[])[]): T[]
     params:
-      arrays: 'Arrays to merge.'
-    returns: 'New merged array.'
+      arrays: Array of subarrays.
+    returns: Merged array.
     description: |
-      Builds a new array consisting of subarray items in the same order and returns it.
-
-  internalModifiers: Low-level array modification functions (primarily for internal usage)
-
-  tryAddAll:
-    signature: |
-      <T>(arr: T[], items: T[], index?: number): boolean
-    params:
-      arr: 'Array to modify.'
-      items: 'Items to add.'
-      index: 'Index of an item to insert the new ones before. By default, appends the items to the end of array.'
-    returns: '<code>true</code> if the array was modified, else <code>undefined</code>.'
-    description: |
-      Adds a range of new items to the array. As opposed to %addAll, returns different result.
-
-  trySet:
-    signature: |
-      <T>(arr: T[], index: number, item: T): %Some<T>
-    params:
-      arr: 'Array to modify.'
-      index: 'Index of an item to replace.'
-      item: 'Item to replace it with.'
-    returns: '%Some over the replaced item if the array was modified, else <code>undefined</code>.'
-    description: |
-      Replaces an item in the array. As opposed to %set, returns different result.
-
-  tryRemoveAll:
-    signature: |
-      <T>(arr: T[], index: number, count: number): T[]
-    params:
-      arr: 'Array to modify.'
-      index: 'Index of the first item to remove.'
-      count: 'Count of items to remove.'
-    returns: 'The removed items if the array was modified, else <code>undefined</code>.'
-    description: |
-      Removes an item range from the array. As opposed to %removeAll, returns different result.
-
-  tryMove:
-    signature: |
-      <T>(arr: T[], fromIndex: number, toIndex: number): T
-    params:
-      arr: 'Array to modify.'
-      fromIndex: 'Index to an item to move.'
-      toIndex: 'Index to move the item to.'
-    returns: 'The moved item if the array was modified, else <code>undefined</code>.'
-    description: |
-      Moves an item in the array. As opposed to %move, returns different result.
-
-  tryClear:
-    signature: |
-      <T>(arr: T[]): T[]
-    params:
-      arr: 'Array to modify.'
-    returns: 'Old array contents if the array was modified, else <code>undefined</code>.'
-    description: |
-      Clears the array. As opposed to %clear, returns different result.
+      <p>Builds a new array consisting of subarray items in the same order.</p>
 
   trySplice:
     signature: |
       <T>(arr: T[],
-        removeParamsList: %IList.%IndexCount[],
-        addParamsList: %IList.%IndexItems<T>[]): IList.%SpliceResult<T>
+          segmentsToRemove: Iterable<%IBindableArray.%IndexCount>,
+          segmentsToAdd: Iterable<%IBindableArray.%IndexItems<T>>): %IBindableArray.%SpliceResult<T>
     params:
       arr: 'Array to modify.'
-      removeParamsList: 'Array of segments to remove sorted by index ascending. Segments are removed in backward order.'
-      addParamsList: 'Array of segments to insert sorted by index ascending. Segments are inserted in forward order.'
-    returns: 'Full information about the added/removed items if the array was modified, else <code>undefined</code>.'
+      segmentsToRemove: 'Array of segments to remove sorted by index asc. Segments are removed in backward order.'
+      segmentsToAdd: 'Array of segments to insert sorted by index asc. Segments are inserted in forward order.'
+    returns: 'Splice result. If the array is not modified, returns undefined.'
     description: |
-      Removes and inserts item ranges (in this order). As opposed to %splice, returns different result.
+      <p>Removes and inserts item ranges.</p>
 
   tryReorder:
     signature: |
-      <T>(arr: T[], indexArray: number[]): T[]
+      <T>(arr: T[], indexArray: readonly number[]): T[]
     params:
-      arr: 'Array to modify.'
-      indexArray: 'Indices to move the items to.'
-    returns: 'Old item order if the array was modified, else <code>undefined</code>.'
+      arr: 'Array.'
+      indexArray: |
+        Index array. Item with index <tt>i</tt> will be moved to index <tt>indexArray[i]</tt>.
+        Must contain all indexes from 0 to (length - 1).
+    returns: 'Old array contents. If the array is not modified, returns undefined.'
     description: |
-      <p>Reorders array items. As opposed to %reorder, returns different result.</p>
-      <p>Item with index i is moved to index %indexArray[i].
-      %indexArray must contain all indices from 0 to (%arr.length - 1).</p>
-
-  internalAnalyzers: Low-level array analysing functions (primarily for internal usage)
-
-  detectSplice:
-    signature: |
-      <T>(oldItems: T[], newItems: T[]): %IList.%SpliceParams<T>
-    params:
-      oldItems: 'Original array to splice.'
-      newItems: 'Expected spliced array.'
-    returns: '%splice function arguments. If no method call required, returns <code>undefined</code>.'
-    description: |
-      <p>Detects %splice function arguments to adjust %oldItems array contents to %newItems.</p>
-      <p>Determines item ranges neccessary to be removed and inserted.</p>
-      <p>Each item must be unique.</p>
-      <p>If items are not unique, probably %detectFilter method may help, because it doesn't require items
-      to be unique.</p>
-
-  detectFilter:
-    signature: |
-      <T>(oldItems: T[], newItems: T[]): %IList.%IndexCount[]
-    params:
-      oldItems: 'Original array to filter.'
-      newItems: 'Expected filtered array.'
-    returns: '%removeParamsList argument of %splice function. If no method call required, returns <code>undefined</code>.'
-    description: |
-      <p>Detects %removeParamsList argument of %splice function to adjust %oldItems array contents to %newItems.</p>
-      <p>Determines item ranges neccessary to be removed.</p>
-      <p>Doesn't assume item insertion - try %detectSplice if that's the case.</p>
-      <p>At the other hand, %detectFilter doesn't require items to be unique.</p>
-    references:
-      removeParamsList: {}
-
-  detectReorder:
-    signature: |
-      <T>(oldItems: T[], newItems: T[]): number[]
-    params:
-      oldItems: 'Original array to reorder.'
-      newItems: 'Expected reordered array.'
-    returns: '%reorder function argument. If no method call required, returns <code>undefined</code>.'
-    description: |
-      <p>Detects %reorder function to arguments to adjust %oldItems array contents to %newItems.</p>
-      <p>Determines indices to move the items to.</p>
-      <p>Each item must be unique.</p>
-
-  detectSort:
-    signature: |
-      <T>(arr: T[], callback?: (item: T, index: number) => any, scope?: any, order: number = 1): number[]
-    params:
-      arr: 'Array to sort.'
-      callback: 'Item evaluation function.'
-      scope: '%callback call scope.'
-      order: 'Sort order.'
-    returns: '%reorder function argument. If no method call required, returns <code>undefined</code>.'
-    description: |
-      <p>Detects %reorder function to argument to sort array contents by the result of %callback call for each item.</p>
-      <p>%callback must return a comparable value, compatible with %cmp. Returns item itself by default.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
-
-  detectSortComparing:
-    signature: |
-      <T>(arr: T[], compare?: (t1: T, t2: T, i1: number, i2: number) => number, scope?: any, order: number = 1): number[]
-    params:
-      arr: 'Array to sort.'
-      compare: 'Item comparer.'
-      scope: '%compare call scope.'
-      order: 'Sort order.'
-    returns: '%reorder function argument. If no method call required, returns <code>undefined</code>.'
-    description: |
-      <p>Detects %reorder function to argument to sort array contents by comparer.</p>
-      <p>%compare must return positive value if t1 > t2; negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.</p>
-      <p>Pass positive %order for ascending sorting, negative for descending sorting.</p>
+      <p>Reorders array items.</p>
 
 references:
-  empty:
-    symbol: isEmpty
   IndexCount:
-    file: IList
-    symbol: IList.IndexCount
+    file: IBindableArray
+    symbol: IBindableArray.IndexCount
+
   IndexItems:
-    file: IList
-    symbol: IList.IndexItems
-  SpliceParams:
-    file: IList
-    symbol: IList.SpliceParams
+    file: IBindableArray
+    symbol: IBindableArray.IndexItems
+
   SpliceResult:
-    file: IList
-    symbol: IList.SpliceResult
+    file: IBindableArray
+    symbol: IBindableArray.SpliceResult

@@ -1,0 +1,37 @@
+description: |
+  <p>Various utilities for %Set.</p>
+
+symbols:
+  getDifference:
+    signature: |
+      <T>(subtractor: Iterable<T>, subtrahend: SetLike<T>): T[]
+    params:
+      subtractor: Iterable to subtract from.
+      subtrahend: %Set or %Map to subtract.
+    returns: Collection difference.
+    description: |
+      <p>Builds a new array containing all %subtractor items that are not present in %subtrahend.</p>
+
+  SetLike:
+    type: interface
+    simple: true
+    typevars:
+      T: Value type.
+    description: |
+      <p>Subset of %Set or %Map methods needed for %getDifference implementation.</p>
+    methods:
+      has:
+        signature: |
+          (value: T): boolean
+        params:
+          value: Value.
+        returns: If the collection has a value/key.
+        description: |
+          <p>See %setHas or %mapHas.</p>
+        references:
+          setHas:
+            href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/has
+            label: has
+          mapHas:
+            href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/has
+            label: has

@@ -1,0 +1,49 @@
+description: |
+  <p>Various utilities for %Map.</p>
+
+symbols:
+  map:
+    signature: |
+      <K, T, U>(map: %Iterable<readonly [K, T]>, callback: (value: T, key: K) => U): %Map<K, U>
+    params:
+      map: Map.
+      callback: Mapping function.
+    returns: Mapped map.
+    description: |
+      <p>Builds a new map of results of %callback function call for each %map entry with the same keys.</p>
+
+  filter:
+    signature: |
+      <K, V>(map: %Iterable<readonly [K, V]>, callback: (value: V, key: K) => boolean): %Map<K, V>
+    params:
+      map: Map.
+      callback: Criteria callback.
+    returns: Filtered map.
+    description: |
+      <p>Builds a new map of %map entries the %callback function returns a truthy value for.</p>
+
+  getIterableKeys:
+    signature: |
+      <K, V>(map: %Iterable<readonly [K, V]>): %Iterable<K>
+    params:
+      map: Map.
+    returns: Map keys.
+    description: |
+      <p>Returns an %Iterable of all %map keys. As opposed to native %Map.%keys, returns an %Iterable instead of
+      %Iterator, so it is stateless and can be reused multiple times to iterate over the map keys.</p>
+    references:
+      keys:
+        href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/keys
+
+  getIterableValues:
+    signature: |
+      <K, V>(map: %Iterable<readonly [K, V]>): %Iterable<V>
+    params:
+      map: Map.
+    returns: Map values.
+    description: |
+      <p>Returns an %Iterable of all %map values. As opposed to native %Map.%values, returns an %Iterable instead of
+      %Iterator, so it is stateless and can be reused multiple times to iterate over the map values.</p>
+    references:
+      values:
+        href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/values

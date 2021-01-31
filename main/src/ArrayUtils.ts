@@ -94,7 +94,7 @@ export function invert(arr: readonly number[]): number[] {
  * Builds a new array consisting of subarray items in the same order.
  *
  * @param arrays Array of subarrays.
- * @returns The merged array.
+ * @returns Merged array.
  */
 export function merge<T>(arrays: readonly (readonly T[])[]): T[] {
 	const result: T[] = [];
