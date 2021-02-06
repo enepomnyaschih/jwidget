@@ -68,7 +68,7 @@ symbols:
 
       removeValues:
         signature: |
-          (values: Iterable<%T>)
+          (values: %Iterable<%T>)
         params:
           values: Values to remove.
         description: |
@@ -93,13 +93,21 @@ symbols:
 
       splice:
         signature: |
-          (segmentsToRemove: Iterable<%IBindableArray.%IndexCount>, segmentsToAdd: Iterable<%IBindableArray.%IndexItems<%T>>): %IBindableArray.%SpliceResult<%T>
+          (segmentsToRemove: %Iterable<%IBindableArray.%IndexCount>, segmentsToAdd: %Iterable<%IBindableArray.%IndexItems<%T>>): %IBindableArray.%SpliceResult<%T>
         params:
           segmentsToRemove: Array of segments to remove sorted by index asc. Segments are removed in reverse order.
           segmentsToAdd: Array of segments to insert sorted by index asc. Segments are inserted in direct order.
         returns: Splice result. Never returns null or undefined.
         description: |
           <p>Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.</p>
+        references:
+          IndexCount:
+            file: jwidget/IBindableArray
+            symbol: IBindableArray.IndexCount
+
+          IndexItems:
+            file: jwidget/IBindableArray
+            symbol: IBindableArray.IndexItems
 
       reorder:
         signature: |
@@ -143,13 +151,21 @@ symbols:
 
       trySplice:
         signature: |
-          (segmentsToRemove: Iterable<%IBindableArray.%IndexCount>, segmentsToAdd: Iterable<%IBindableArray.%IndexItems<%T>>): %IBindableArray.%SpliceResult<%T>
+          (segmentsToRemove: %Iterable<%IBindableArray.%IndexCount>, segmentsToAdd: %Iterable<%IBindableArray.%IndexItems<%T>>): %IBindableArray.%SpliceResult<%T>
         params:
           segmentsToRemove: Array of segments to remove sorted by index asc. Segments are removed in reverse order.
           segmentsToAdd: Array of segments to insert sorted by index asc. Segments are inserted in direct order.
         returns: Splice result. If collection is not modified, returns undefined.
         description: |
           <p>Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.</p>
+        references:
+          IndexCount:
+            file: jwidget/IBindableArray
+            symbol: IBindableArray.IndexCount
+
+          IndexItems:
+            file: jwidget/IBindableArray
+            symbol: IBindableArray.IndexItems
 
       tryReorder:
         signature: |
@@ -395,3 +411,9 @@ references:
 
   SpliceResult:
     symbol: IBindableArray.SpliceResult
+
+  IndexCount:
+    symbol: IBindableArray.IndexCount
+
+  IndexItems:
+    symbol: IBindableArray.IndexItems

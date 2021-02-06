@@ -32,7 +32,7 @@ symbols:
       const converter = new %ArrayValueCollector(source, {%targetOfConfig});
       </pre>
       <p>If you want to create a new set, use shorthand functions %startCollectingArrayValues, %startCollectingMapValues,
-      %startCollectingArrayKeys, %startCollectingSetValues instead:</p>
+      %startCollectingMapKeys, %startCollectingSetValues instead:</p>
       <pre>
       const source = new %BindableArray([1, 2, 3]);
       const target = %startCollectingArrayValues(source);

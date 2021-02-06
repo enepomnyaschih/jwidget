@@ -67,6 +67,15 @@ symbols:
         type: '%ReadonlyBindableMap<%K, %V>'
         description: Target map.
 
+    references:
+      setAll:
+        file: jwidget/IBindableMap
+        member: setAll
+
+      targetOfConfig:
+        symbol: MapFilterer.Config
+        member: target
+
   MapFilterer.Config:
     kind: interface
     simple: true

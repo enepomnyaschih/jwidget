@@ -14,8 +14,8 @@ symbols:
       const converter = new %SetConverterToArray(source);
       const target = converter.%target;
 
-      expect(target.%has(1)).toBe(true);
-      expect(target.%has(4)).toBe(false);
+      expect(target.%includes(1)).toBe(true);
+      expect(target.%includes(4)).toBe(false);
 
       // The target array is automatically synchronized with the source set.
       source.%add(4);
@@ -70,6 +70,24 @@ symbols:
         modifiers: readonly
         type: '%ReadonlyBindableArray<%T>'
         description: Target array.
+
+    references:
+      includes:
+        file: jwidget/ReadonlyBindableArray
+        member: includes
+
+      add:
+        file: jwidget/IBindableSet
+        member: add
+
+      get:
+        file: jwidget/ReadonlyBindableArray
+        member: get
+
+      targetOfConfig:
+        symbol: SetConverterToArray.Config
+        member: target
+        label: target
 
   SetConverterToArray.Config:
     kind: interface

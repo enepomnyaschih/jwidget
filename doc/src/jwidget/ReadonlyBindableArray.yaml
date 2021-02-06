@@ -47,7 +47,7 @@ symbols:
     methods:
       '[Symbol.iterator]':
         signature: |
-          (): IterableIterator<%T>
+          (): %IterableIterator<%T>
         returns: Array iterator.
 
       get:
@@ -99,7 +99,7 @@ symbols:
           callback: Criteria callback.
         returns: Some item matches the criteria.
         description: |
-          <p>Matches each item against criteria. Returns true if %callback returns %truthy value for at least one item
+          <p>Matches each item against criteria. Returns true if %callback returns truthy value for at least one item
           in the collection. Algorithms iterates through the items sequentially, and stops it after the first item matching
           the criteria.<p>
 
@@ -118,7 +118,7 @@ symbols:
           callback: Criteria callback.
         returns: First item matching the criteria.
         description: |
-          <p>Finds an item matching the criteria. Returns the first item %callback returns %truthy value for.
+          <p>Finds an item matching the criteria. Returns the first item %callback returns truthy value for.
           Algorithms iterates through the items sequentially, and stops it after the first item matching the criteria.</p>
 
       findIndex:
@@ -128,7 +128,7 @@ symbols:
           callback: Criteria callback.
         returns: Index of the first item matching the criteria.
         description: |
-          <p>Finds an item matching the criteria. Returns the index of the first item %callback returns %truthy value for.
+          <p>Finds an item matching the criteria. Returns the index of the first item %callback returns truthy value for.
           Algorithms iterates through the items sequentially, and stops it after the first item matching the criteria.</p>
 
       reduce:
@@ -174,6 +174,10 @@ symbols:
           <p>Detects <b>segmentsToRemove</b> argument of %splice method to adjust array contents to %newContents.
           Determines item segments to be removed. Doesn't consider item insertion - try %detectSplice if that's the
           case. As opposed to %detectSplice, doesn't require item uniqueness.</p>
+        references:
+          IndexCount:
+            file: jwidget/IBindableArray
+            symbol: IBindableArray.IndexCount
 
       detectReorder:
         signature: |

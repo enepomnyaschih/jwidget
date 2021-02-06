@@ -65,14 +65,14 @@ symbols:
 
       paths:
         modifiers: readonly
-        type: 'ReadonlyMap<string, %IProperty<string>>'
+        type: '%ReadonlyMap<string, %IProperty<string>>'
         description: |
           <p>Provides paths to bind child routers to, by name. Only one route is active at a time, but their paths
           always exist regardless of their activity.</p>
 
       expanded:
         modifiers: readonly
-        type: 'ReadonlyMap<string, %IProperty<boolean>>'
+        type: '%ReadonlyMap<string, %IProperty<boolean>>'
         description: |
           <p>Provides "expanded" flags to bind child panels to, by name. Support two-way binding:</p>
           <ol>
@@ -89,6 +89,9 @@ symbols:
           <p>Default route this node was initialized with.</p>
 
     references:
+      Config:
+        symbol: RoutingNode.Config
+
       pathOfNode:
         symbol: RoutingNode.Config
         member: path

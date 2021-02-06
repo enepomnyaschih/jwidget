@@ -18,7 +18,7 @@ symbols:
         description: Property containing number of entries in the map.
       native:
         modifiers: readonly
-        type: 'ReadonlyMap<%K, %V>'
+        type: '%ReadonlyMap<%K, %V>'
         description: Native map - internal collection representation.
       onSplice:
         modifiers: readonly
@@ -26,11 +26,11 @@ symbols:
         description: Entries are removed from the map and/or entries are added/updated in the map.
       onReindex:
         modifiers: readonly
-        type: '%Listenable<ReadonlyMap<%K, %K>>'
+        type: '%Listenable<%ReadonlyMap<%K, %K>>'
         description: Keys of entries are changed in the map. Passes mapping of changed keys (old to new) as a message.
       onClear:
         modifiers: readonly
-        type: '%Listenable<ReadonlyMap<%K, %V>>'
+        type: '%Listenable<%ReadonlyMap<%K, %V>>'
         description: The map is cleared. Passes old map contents as a message.
       onChange:
         modifiers: readonly
@@ -40,7 +40,7 @@ symbols:
     methods:
       '[Symbol.iterator]':
         signature: |
-          (): IterableIterator<[%K, %V]>
+          (): %IterableIterator<[%K, %V]>
         returns: Map iterator.
 
       has:
@@ -59,17 +59,17 @@ symbols:
 
       keys:
         signature: |
-          (): IterableIterator<%K>
+          (): %IterableIterator<%K>
         returns: Iterator over all map keys.
 
       values:
         signature: |
-          (): IterableIterator<%V>
+          (): %IterableIterator<%V>
         returns: Iterator over all map values.
 
       entries:
         signature: |
-          (): IterableIterator<readonly [%K, %V]>
+          (): %IterableIterator<readonly [%K, %V]>
         returns: Iterator over all map entries.
 
       forEach:
@@ -83,7 +83,7 @@ symbols:
 
       detectSplice:
         signature: |
-          (newContents: ReadonlyMap<%K, %V>): %IBindableMap.%SpliceParams<%K, %V>
+          (newContents: %ReadonlyMap<%K, %V>): %IBindableMap.%SpliceParams<%K, %V>
         params:
           newContents: New map contents.
         returns: '%splice method arguments. If no method call required, returns undefined.'
@@ -93,7 +93,7 @@ symbols:
 
       detectReindex:
         signature: |
-          (newContents: ReadonlyMap<%K, %V>): ReadonlyMap<%K, %K>
+          (newContents: %ReadonlyMap<%K, %V>): ReadonlyMap<%K, %K>
         params:
           newContents: New map contents.
         returns: '<b>keyMapping</b> argument of %reindex method. If no method call required, returns undefined.'

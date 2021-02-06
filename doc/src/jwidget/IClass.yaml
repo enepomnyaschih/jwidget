@@ -49,7 +49,7 @@ symbols:
           on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
           Returns <code>this</code> object, which makes it easy to use in object instantiation:</p>
           <pre>
-          const items = new %List();
+          const items = new %BindableArray().ownValues();
           return new Panel(items).%owning(items);
           </pre>
 

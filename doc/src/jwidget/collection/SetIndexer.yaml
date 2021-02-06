@@ -69,6 +69,16 @@ symbols:
         type: '%ReadonlyBindableMap<%K, %V>'
         description: Target map.
 
+    references:
+      add:
+        file: jwidget/IBindableSet
+        member: add
+
+      targetOfConfig:
+        symbol: SetIndexer.Config
+        member: target
+        label: target
+
   SetIndexer.Config:
     kind: interface
     simple: true

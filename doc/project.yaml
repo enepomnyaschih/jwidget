@@ -43,19 +43,55 @@ references:
     href: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
   unique:
     href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Same-value-zero_equality
+  Iterable:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#iterables
+  IterableIterator:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#iterators
+  Map:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+  ReadonlyMap:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+  Set:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+  ReadonlySet:
+    href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 
   # Pages
   DocumentationRoot:
     file: doc
     label: Documentation root
 
-  # Terms
-  falsy:
+  # Core
+  CoreUtils:
     file: jwidget
-    symbol: isFalsy
-  truthy:
+  Binding:
     file: jwidget
-    symbol: isTruthy
+    symbol: Binding
+  UPDATE:
+    file: jwidget
+    symbol: Binding
+  WATCH:
+    file: jwidget
+    symbol: Binding
+  TWOWAY:
+    file: jwidget
+    symbol: Binding
+  cmp:
+    file: jwidget
+    symbol: cmp
+  destroyFunction:
+    file: jwidget
+    symbol: destroy
+    label: destroy
+
+  # Destroyable
+  destroy:
+    file: jwidget/Destroyable
+    member: destroy
+  baseDestroy:
+    file: jwidget/Destroyable
+    member: destroy
+    label: destroy
   destroyed:
     file: jwidget/Destroyable
     member: destroy
@@ -68,49 +104,6 @@ references:
   destroys:
     file: jwidget/Destroyable
     member: destroy
-  dispatched:
-    file: jwidget/IDispatcher
-    member: dispatch
-  dispatches:
-    file: jwidget/IDispatcher
-    member: dispatch
-
-  # Core
-  CoreUtils:
-    file: jwidget
-  Binding:
-    file: jwidget
-    symbol: Binding
-  CollectionFlags:
-    file: jwidget
-    symbol: CollectionFlags
-  TWOWAY:
-    file: jwidget
-    symbol: Binding
-  cmp:
-    file: jwidget
-    symbol: cmp
-  destroyFunction:
-    file: jwidget
-    symbol: destroy
-    label: destroy
-  newIid:
-    file: jwidget
-    symbol: newIid
-
-  # ArrayUtils
-  backEvery:
-    file: jwidget/ArrayUtils
-    symbol: backEvery
-
-  # Destroyable
-  destroy:
-    file: jwidget/Destroyable
-    member: destroy
-  baseDestroy:
-    file: jwidget/Destroyable
-    member: destroy
-    label: destroy
 
   # IClass
   own:
@@ -130,6 +123,12 @@ references:
 
   # Dispatcher
   dispatch:
+    file: jwidget/IDispatcher
+    member: dispatch
+  dispatched:
+    file: jwidget/IDispatcher
+    member: dispatch
+  dispatches:
     file: jwidget/IDispatcher
     member: dispatch
 
@@ -184,311 +183,70 @@ references:
     file: jwidget/Component
     member: renderTo
 
-  # Collection
-  collections:
-    file: jwidget/ReadonlyCollection
-    label: Collections
-
-  # List
-  findOfList:
-    file: jwidget/ReadonlyList
-    member: find
-    label: find
-
-  # Mappers
-  mappers:
-    file: jwidget/mapper/AbstractMapper
-    label: Mappers
-
-  ListMapper:
-    file: jwidget/mapper/list
-
-  MapMapper:
-    file: jwidget/mapper/map
-
-  SetMapper:
-    file: jwidget/mapper/set
-
-  createMapper:
-    file: jwidget/mapper/collection
-    symbol: createMapper
-
-  mapCollection:
-    file: jwidget/mapper/collection
-    symbol: mapCollection
-
-  mapList:
-    file: jwidget/mapper/list
-    symbol: mapList
-
-  mapMap:
-    file: jwidget/mapper/map
-    symbol: mapMap
-
-  mapSet:
-    file: jwidget/mapper/set
-    symbol: mapSet
-
-  # Filterers
-  filterers:
-    file: jwidget/filterer/AbstractFilterer
-    label: Filterers
-
-  ListFilterer:
-    file: jwidget/filterer/list
-
-  MapFilterer:
-    file: jwidget/filterer/map
-
-  SetFilterer:
-    file: jwidget/filterer/set
-
-  createFilterer:
-    file: jwidget/filterer/collection
-    symbol: createFilterer
-
-  filterCollection:
-    file: jwidget/filterer/collection
-    symbol: filterCollection
-
-  filterList:
-    file: jwidget/filterer/list
-    symbol: filterList
-
-  filterMap:
-    file: jwidget/filterer/map
-    symbol: filterMap
-
-  filterSet:
-    file: jwidget/filterer/set
-    symbol: filterSet
-
-  # Counters
-  counters:
-    file: jwidget/counter/AbstractCounter
-    label: Counters
-
-  ListCounter:
-    file: jwidget/counter/list
-
-  MapCounter:
-    file: jwidget/counter/map
-
-  SetCounter:
-    file: jwidget/counter/set
-
-  createCounter:
-    file: jwidget/counter/collection
-    symbol: createCounter
-
-  countCollection:
-    file: jwidget/counter/collection
-    symbol: countCollection
-
-  countList:
-    file: jwidget/counter/list
-    symbol: countList
-
-  countMap:
-    file: jwidget/counter/map
-    symbol: countMap
-
-  countSet:
-    file: jwidget/counter/set
-    symbol: countSet
-
-  # Indexers
-  indexers:
-    file: jwidget/indexer/AbstractIndexer
-    label: Indexers
-
-  ListIndexer:
-    file: jwidget/indexer/list
-
-  MapIndexer:
-    file: jwidget/indexer/map
-
-  SetIndexer:
-    file: jwidget/indexer/set
-
-  createIndexer:
-    file: jwidget/indexer/collection
-    symbol: createIndexer
-
-  indexCollection:
-    file: jwidget/indexer/collection
-    symbol: indexCollection
-
-  indexList:
-    file: jwidget/indexer/list
-    symbol: indexList
-
-  indexMap:
-    file: jwidget/indexer/map
-    symbol: indexMap
-
-  indexSet:
-    file: jwidget/indexer/set
-    symbol: indexSet
-
-  # ConvertersToSet
-  convertersToSet:
-    file: jwidget/convertertoset/AbstractConverterToSet
-    label: Converters to set
-
-  ListConverterToSet:
-    file: jwidget/convertertoset/list
-
-  MapConverterToSet:
-    file: jwidget/convertertoset/map
-
-  SetConverterToSet:
-    file: jwidget/convertertoset/set
-
-  createConverterToSet:
-    file: jwidget/convertertoset/collection
-    symbol: createConverterToSet
-
-  collectionToSet:
-    file: jwidget/convertertoset/collection
-    symbol: collectionToSet
-
-  listToSet:
-    file: jwidget/convertertoset/list
-    symbol: listToSet
-
-  mapToSet:
-    file: jwidget/convertertoset/map
-    symbol: mapToSet
-
-  setToSet:
-    file: jwidget/convertertoset/set
-    symbol: setToSet
-
-  # ConvertersToList
-  convertersToList:
-    file: jwidget/convertertolist/AbstractConverterToList
-    label: Converters to list
-
-  ListConverterToList:
-    file: jwidget/convertertolist/list
-
-  MapConverterToList:
-    file: jwidget/convertertolist/map
-
-  SetConverterToList:
-    file: jwidget/convertertolist/set
-
-  createConverterToList:
-    file: jwidget/convertertolist/collection
-    symbol: createConverterToList
-
-  collectionToList:
-    file: jwidget/convertertolist/collection
-    symbol: collectionToList
-
-  listToList:
-    file: jwidget/convertertolist/list
-    symbol: listToList
-
-  mapToList:
-    file: jwidget/convertertolist/map
-    symbol: mapToList
-
-  setToList:
-    file: jwidget/convertertolist/set
-    symbol: setToList
-
-  # SortersComparing
-  sortersComparing:
-    file: jwidget/sortercomparing/AbstractSorterComparing
-    label: Sorters (comparing)
-
-  ListSorterComparing:
-    file: jwidget/sortercomparing/list
-
-  MapSorterComparing:
-    file: jwidget/sortercomparing/map
-
-  SetSorterComparing:
-    file: jwidget/sortercomparing/set
-
-  createSorterComparing:
-    file: jwidget/sortercomparing/collection
-    symbol: createSorterComparing
-
-  sortCollectionComparing:
-    file: jwidget/sortercomparing/collection
-    symbol: sortCollectionComparing
-
-  sortListComparing:
-    file: jwidget/sortercomparing/list
-    symbol: sortListComparing
-
-  sortMapComparing:
-    file: jwidget/sortercomparing/map
-    symbol: sortMapComparing
-
-  sortSetComparing:
-    file: jwidget/sortercomparing/set
-    symbol: sortSetComparing
-
-  # Observers
-  observers:
-    file: jwidget/observer/AbstractObserver
-    label: Observers
-
-  ListObserver:
-    file: jwidget/observer/list
-
-  MapObserver:
-    file: jwidget/observer/map
-
-  SetObserver:
-    file: jwidget/observer/set
-
-  createObserver:
-    file: jwidget/observer/collection
-    symbol: createObserver
-
-  # Inserters
-  inserters:
-    file: jwidget/inserter/list
-    label: Inserters
-
-  ListInserter:
-    file: jwidget/inserter/list
-
-  MapInserter:
-    file: jwidget/inserter/map
-
-  # Mergers
-  mergers:
-    file: jwidget/merger/list
-    label: Mergers
-
-  ListMerger:
-    file: jwidget/merger/list
-
-  mergeLists:
-    file: jwidget/merger/list
-    symbol: mergeLists
-
-  mergeNoSync:
-    file: jwidget/merger/list
-    symbol: mergeNoSync
-
-  # Reversers
-  reversers:
-    file: jwidget/reverser/list
-    label: Reversers
-
-  ListReverser:
-    file: jwidget/reverser/list
-
-  reverseList:
-    file: jwidget/reverser/list
-    symbol: reverseList
+  # Collection synchronizers
+  startMappingArray:
+    file: jwidget/collection/ArrayMapper
+    symbol: startMappingArray
+
+  startMappingMap:
+    file: jwidget/collection/MapMapper
+    symbol: startMappingMap
+
+  startMappingSet:
+    file: jwidget/collection/SetMapper
+    symbol: startMappingSet
+
+  startFilteringArray:
+    file: jwidget/collection/ArrayFilterer
+    symbol: startFilteringArray
+
+  startFilteringMap:
+    file: jwidget/collection/MapFilterer
+    symbol: startFilteringMap
+
+  startFilteringSet:
+    file: jwidget/collection/SetFilterer
+    symbol: startFilteringSet
+
+  startCollectingArrayValues:
+    file: jwidget/collection/ArrayValueCollector
+    symbol: startCollectingArrayValues
+
+  startCollectingMapValues:
+    file: jwidget/collection/MapValueCollector
+    symbol: startCollectingMapValues
+
+  startCollectingMapKeys:
+    file: jwidget/collection/MapKeyCollector
+    symbol: startCollectingMapKeys
+
+  startCollectingSetValues:
+    file: jwidget/collection/SetValueCollector
+    symbol: startCollectingSetValues
+
+  startMergingArrays:
+    file: jwidget/collection/ArrayMerger
+    symbol: startMergingArrays
+
+  startReversingArray:
+    file: jwidget/collection/ArrayReverser
+    symbol: startReversingArray
+
+  startConvertingSetToArray:
+    file: jwidget/collection/SetConverterToArray
+    symbol: startConvertingSetToArray
+
+  startIndexingSet:
+    file: jwidget/collection/SetIndexer
+    symbol: startIndexingSet
+
+  startCountingMatchingSetValues:
+    file: jwidget/collection/SetMatchingValueCounter
+    symbol: startCountingMatchingSetValues
+
+  startSortingSet:
+    file: jwidget/collection/SetSorter
+    symbol: startSortingSet
 
   # Tutorials
   TutorialIndex:
@@ -678,7 +436,6 @@ includes:
             <li>%AbstractTemplate</li>
             <li>%dummyDestroyable</li>
             <li>%dummyDispatcher</li>
-            <li>%ArraySpliceResult</li>
             <li>%TemplateOutput</li>
           </ul>
         </div>

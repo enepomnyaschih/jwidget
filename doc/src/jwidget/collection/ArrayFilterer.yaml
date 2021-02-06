@@ -96,6 +96,25 @@ symbols:
           <p>Refilters the target array. Call this method when properties of arbitrary array items change in such a way
           that they must be refiltered.</p>
 
+    references:
+      addAll:
+        file: jwidget/IBindableArray
+        member: addAll
+
+      move:
+        file: jwidget/IBindableArray
+        member: move
+
+      Config:
+        symbol: ArrayFilterer.Config
+
+      targetOfConfig:
+        symbol: ArrayFilterer.Config
+        member: target
+
+      Reconfig:
+        symbol: ArrayFilterer.Reconfig
+
   ArrayFilterer.Config:
     kind: interface
     simple: true

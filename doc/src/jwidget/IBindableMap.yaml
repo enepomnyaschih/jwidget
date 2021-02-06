@@ -59,7 +59,7 @@ symbols:
 
       removeAll:
         signature: |
-          (keys: Iterable<%K>)
+          (keys: %Iterable<%K>)
         params:
           keys: Entry keys.
         description: |
@@ -67,7 +67,7 @@ symbols:
 
       clear:
         signature: |
-          (): Map<%K, %V>
+          (): %Map<%K, %V>
         returns: Old map contents or an empty map.
         description: |
           <p>Removes all map entries and dispatches %onClear message. Returns an empty map if this map is already
@@ -75,7 +75,7 @@ symbols:
 
       splice:
         signature: |
-          (keysToRemove: Iterable<%K>, entriesToUpdate: ReadonlyMap<%K, %V>): %IBindableMap.%SpliceResult<%K, %V>
+          (keysToRemove: %Iterable<%K>, entriesToUpdate: %ReadonlyMap<%K, %V>): %IBindableMap.%SpliceResult<%K, %V>
         params:
           keysToRemove: Keys of entries to remove.
           entriesToUpdate: Entries to add or update.
@@ -85,7 +85,7 @@ symbols:
 
       reindex:
         signature: |
-          (keyMapping: ReadonlyMap<%K, %K>): Map<%K, %K>
+          (keyMapping: %ReadonlyMap<%K, %K>): Map<%K, %K>
         params:
           keyMapping: |
             Key mapping. Entry with key x will gain key <code>keyMapping[x]</code>.
@@ -106,7 +106,7 @@ symbols:
 
       trySetAll:
         signature: |
-          (entries: ReadonlyMap<%K, %V>): %IBindableMap.%SpliceResult<%K, %V>
+          (entries: %ReadonlyMap<%K, %V>): %IBindableMap.%SpliceResult<%K, %V>
         params:
           entries: Entries to add or update.
         returns: Splice result. If the map hasn't changed, returns undefined.
@@ -125,7 +125,7 @@ symbols:
 
       tryRemoveAll:
         signature: |
-          (keys: Iterable<%K>): Map<%K, %V>
+          (keys: %Iterable<%K>): %Map<%K, %V>
         params:
           keys: Entry keys.
         returns: The removed entries. If no entries have been removed, returns undefined.
@@ -134,7 +134,7 @@ symbols:
 
       tryClear:
         signature: |
-          (): Map<%K, %V>
+          (): %Map<%K, %V>
         returns: Old map contents or undefined.
         description: |
           <p>Removes all map entries and dispatches %onClear message. Returns undefined if this map is already
@@ -142,7 +142,7 @@ symbols:
 
       trySplice:
         signature: |
-          (keysToRemove: Iterable<%K>, entriesToUpdate: ReadonlyMap<%K, %V>): %IBindableMap.%SpliceResult<%K, %V>
+          (keysToRemove: %Iterable<%K>, entriesToUpdate: %ReadonlyMap<%K, %V>): %IBindableMap.%SpliceResult<%K, %V>
         params:
           keysToRemove: Keys of entries to remove.
           entriesToUpdate: Entries to add or update.
@@ -152,7 +152,7 @@ symbols:
 
       tryReindex:
         signature: |
-          (keyMapping: ReadonlyMap<%K, %K>): Map<%K, %K>
+          (keyMapping: %ReadonlyMap<%K, %K>): %Map<%K, %K>
         params:
           keyMapping: |
             Key mapping. Entry with key x will gain key <code>keyMapping[x]</code>.
@@ -163,7 +163,7 @@ symbols:
 
       performSplice:
         signature: |
-          (newContents: ReadonlyMap<%K, %V>)
+          (newContents: %ReadonlyMap<%K, %V>)
         params:
           newContents: New map contents.
         description: |
@@ -171,7 +171,7 @@ symbols:
 
       performReindex:
         signature: |
-          (newContents: ReadonlyMap<%K, %V>)
+          (newContents: %ReadonlyMap<%K, %V>)
         params:
           newContents: New map contents.
         description: |
@@ -189,12 +189,12 @@ symbols:
     properties:
       keysToRemove:
         modifiers: readonly
-        type: 'Iterable<%K>'
+        type: '%Iterable<%K>'
         description: Keys to remove.
 
       entriesToUpdate:
         modifiers: readonly
-        type: 'ReadonlyMap<%K, %V>'
+        type: '%ReadonlyMap<%K, %V>'
         description: Entries to add or update.
 
   IBindableMap.SpliceResult:
@@ -208,11 +208,11 @@ symbols:
     properties:
       removedEntries:
         modifiers: readonly
-        type: 'ReadonlyMap<%K, %V>'
+        type: '%ReadonlyMap<%K, %V>'
         description: Removed entries.
       addedEntries:
         modifiers: readonly
-        type: 'ReadonlyMap<%K, %V>'
+        type: '%ReadonlyMap<%K, %V>'
         description: Added entries.
 
 references:

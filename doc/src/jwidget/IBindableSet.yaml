@@ -29,7 +29,7 @@ symbols:
 
       addAll:
         signature: |
-          (values: Iterable<%T>): ReadonlySet<%T>
+          (values: %Iterable<%T>): %ReadonlySet<%T>
         params:
           values: Values to add.
         returns: The truly added values. Never returns null or undefined.
@@ -47,7 +47,7 @@ symbols:
 
       deleteAll:
         signature: |
-          (values: Iterable<%T>): ReadonlySet<%T>
+          (values: %Iterable<%T>): %ReadonlySet<%T>
         params:
           values: Values to delete.
         returns: The truly deleted values. Never returns null or undefined.
@@ -56,14 +56,14 @@ symbols:
 
       clear:
         signature: |
-          (): ReadonlySet<%T>
+          (): %ReadonlySet<%T>
         returns: Old collection contents. If the set is already empty, returns an empty set.
         description: |
           <p>Clears the set and dispatches %onClear message.</p>
 
       splice:
         signature: |
-          (valuesToRemove: Iterable<%T>, valuesToAdd: Iterable<%T>): %IBindableSet.%SpliceResult<%T>
+          (valuesToRemove: %Iterable<%T>, valuesToAdd: Iterable<%T>): %IBindableSet.%SpliceResult<%T>
         params:
           valuesToRemove: Values to remove.
           valuesToAdd: Values to add.
@@ -74,7 +74,7 @@ symbols:
 
       tryAddAll:
         signature: |
-          (values: Iterable<%T>): ReadonlySet<%T>
+          (values: %Iterable<%T>): %ReadonlySet<%T>
         params:
           values: Values to add.
         returns: The truly added values. If the set hasn't changed, returns undefined.
@@ -83,7 +83,7 @@ symbols:
 
       tryDeleteAll:
         signature: |
-          (values: Iterable<T>): ReadonlySet<T>
+          (values: %Iterable<T>): %ReadonlySet<T>
         params:
           values: Values to delete.
         returns: The truly deleted values. If the set hasn't changed, returns undefined.
@@ -92,14 +92,14 @@ symbols:
 
       tryClear:
         signature: |
-          (): ReadonlySet<%T>
+          (): %ReadonlySet<%T>
         returns: Old collection contents. If the set is already empty, returns undefined.
         description: |
           <p>Clears the set and dispatches %onClear message.</p>
 
       trySplice:
         signature: |
-          (valuesToRemove: Iterable<%T>, valuesToAdd: Iterable<%T>): %IBindableSet.%SpliceResult<%T>
+          (valuesToRemove: %Iterable<%T>, valuesToAdd: Iterable<%T>): %IBindableSet.%SpliceResult<%T>
         params:
           valuesToRemove: Values to remove.
           valuesToAdd: Values to add.
@@ -110,7 +110,7 @@ symbols:
 
       performSplice:
         signature: |
-          (newContents: Iterable<%T>)
+          (newContents: %Iterable<%T>)
         params:
           newContents: New set contents.
         description: |
@@ -126,12 +126,12 @@ symbols:
     properties:
       valuesToRemove:
         modifiers: readonly
-        type: 'Iterable<%T>'
+        type: '%Iterable<%T>'
         description: Values to remove.
 
       valuesToAdd:
         modifiers: readonly
-        type: 'Iterable<%T>'
+        type: '%Iterable<%T>'
         description: Values to add.
 
   IBindableSet.SpliceResult:
@@ -144,12 +144,12 @@ symbols:
     properties:
       removedValues:
         modifiers: readonly
-        type: 'ReadonlySet<%T>'
+        type: '%ReadonlySet<%T>'
         description: Removed values.
 
       addedValues:
         modifiers: readonly
-        type: 'ReadonlySet<%T>'
+        type: '%ReadonlySet<%T>'
         description: Added values.
 
 references:

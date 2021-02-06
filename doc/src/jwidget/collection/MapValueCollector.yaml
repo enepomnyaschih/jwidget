@@ -1,14 +1,14 @@
 symbols:
   default:
     typevars:
-      V: Value type.
+      T: Value type.
     extends:
       - file: jwidget/collection/AbstractValueCollector
     description: |
       <p>Value collector for %ReadonlyBindableMap. See %AbstractValueCollector for details.</p>
     constructor:
       signature: |
-        (source: %ReadonlyBindableMap<unknown, %V>, config?: %AbstractValueCollector.%Config<%V>)
+        (source: %ReadonlyBindableMap<unknown, %T>, config?: %AbstractValueCollector.%Config<%T>)
       params:
         source: Source map.
         config: Collector configuration.
@@ -16,12 +16,12 @@ symbols:
     properties:
       source:
         modifiers: readonly
-        type: '%ReadonlyBindableMap<unknown, %V>'
+        type: '%ReadonlyBindableMap<unknown, %T>'
         description: Source map.
 
   startCollectingMapValues:
     signature: |
-      <V>(source: %ReadonlyBindableMap<unknown, V>): %DestroyableReadonlyBindableSet<V>
+      <T>(source: %ReadonlyBindableMap<unknown, T>): %DestroyableReadonlyBindableSet<T>
     params:
       source: Source map.
     returns: Target set.

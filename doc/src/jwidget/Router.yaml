@@ -113,7 +113,7 @@ symbols:
                       if (!id) {
                           return new EmailList(this.emails);
                       }
-                      const email = this.emails.%findOfList(email => email.id === id);
+                      const email = this.emails.find(email => email.id === id);
                       return email != null ? new Email(email, this.router) : new EmailNotFound(id);
                   }
               }));
@@ -234,14 +234,14 @@ symbols:
         type: string
         description: |
           <p>Router name. Must be equal to the route name in the %parent router. Required for proper %getFullPath and
-          %redirect method processing. Root router does not have a name.</p>
+          %redirectRoute function processing. Root router does not have a name.</p>
 
       parent:
         modifiers: readonly
         type: '%Router<any>'
         description: |
-          <p>Parent router. Required for proper %getFullPath and %redirect method processing. Root router does not have
-          a parent.</p>
+          <p>Parent router. Required for proper %getFullPath and %redirectRoute function processing. Root router does
+          not have a parent.</p>
 
       path:
         modifiers: readonly
@@ -566,7 +566,7 @@ symbols:
         optional: true
         type: '%Router.%Joiner | string'
         description: |
-          <p>Path joiner. Opposite to %separator. Used in %getFullPath and %redirect methods to properly build the
+          <p>Path joiner. Opposite to %separator. Used in %getFullPath and %redirectRoute methods to properly build the
           path. Joins incoming route and argument to a full path.</p>
           <p>Joiner can be specified as a function or a string. The function has the next signature:</p>
           <p><code>(route: string, arg: string): string</code></p>

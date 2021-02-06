@@ -56,7 +56,7 @@ class ClassNameUpdater extends Class {
  * @param property Boolean property to bind CSS class to.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindClass(el: ClassUpdaterElement, cls: string, property: Bindable<string>): Destroyable;
+export default function bindClass(el: ClassUpdaterElement, cls: string, property: Bindable<boolean>): Destroyable;
 
 /**
  * Watches string property modification and updates CSS class name in the DOM element.

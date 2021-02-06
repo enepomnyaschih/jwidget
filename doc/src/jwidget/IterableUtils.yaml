@@ -36,7 +36,7 @@ symbols:
 
   index:
     signature: |
-      <V, K>(iterable: Iterable<V>, callback: (item: V) => K): Map<K, V>
+      <V, K>(iterable: %Iterable<V>, callback: (item: V) => K): %Map<K, V>
     params:
       iterable: Iterable.
       callback: Callback.

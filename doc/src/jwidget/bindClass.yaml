@@ -1,7 +1,7 @@
 symbols:
   default:
     signature: |
-      (el: %ClassUpdaterElement, cls: string, property: %Bindable<string>): %Destroyable
+      (el: %ClassUpdaterElement, cls: string, property: %Bindable<boolean>): %Destroyable
       (el: %ClassNameUpdaterElement, cls: %Bindable<string>): %Destroyable
     params:
       el: DOM element.
@@ -10,7 +10,7 @@ symbols:
     returns: Binding object. You must %destroy it to stop the synchronization.
     description: |
       <p>Watches boolean or string property modification and updates class attribute in the DOM element.</p>
-      <p>One signature allows you to turn on/off the specified class. Any %truthy value is treated as true.</p>
+      <p>One signature allows you to turn on/off the specified class. Any truthy value is treated as true.</p>
       <pre>
       // Bind "checked" CSS class to checked property value
       %bindClass(el, "checked", checked);

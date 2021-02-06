@@ -189,13 +189,13 @@ symbols:
 
               readonly id: number;
               readonly name: %IProperty<string>;
-              readonly skills: %IList<Skill>;
+              readonly skills: %IBindableArray<Skill>;
 
               constructor(config: Project.Config) {
                   super();
                   this.id = config.id;
                   this.name = new %Property(config.name);
-                  this.skills = new %List(config.skills);
+                  this.skills = new %BindableArray(config.skills);
               }
 
               get title() {

@@ -15,7 +15,7 @@ symbols:
 
   addAll:
     signature: |
-      <T>(arr: T[], items: Iterable<T>, index?: number)
+      <T>(arr: T[], items: %Iterable<T>, index?: number)
     params:
       arr: 'Array to modify.'
       items: 'Items to add.'
@@ -71,8 +71,8 @@ symbols:
   trySplice:
     signature: |
       <T>(arr: T[],
-          segmentsToRemove: Iterable<%IBindableArray.%IndexCount>,
-          segmentsToAdd: Iterable<%IBindableArray.%IndexItems<T>>): %IBindableArray.%SpliceResult<T>
+          segmentsToRemove: %Iterable<%IBindableArray.%IndexCount>,
+          segmentsToAdd: %Iterable<%IBindableArray.%IndexItems<T>>): %IBindableArray.%SpliceResult<T>
     params:
       arr: 'Array to modify.'
       segmentsToRemove: 'Array of segments to remove sorted by index asc. Segments are removed in backward order.'

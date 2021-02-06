@@ -29,7 +29,7 @@ symbols:
       <pre>
       const source = new %BindableArray([1, 2]);
       const target = new %BindableArray<number>();
-      const mapper = new %ArrayMapper(source, x => 2 * x, {%targetOfConfig});
+      const mapper = new %ArrayMapper(source, x => 2 * x, {%target});
       </pre>
       <p>If you want to map the values into a new collection, use shorthand functions %startMappingArray, %startMappingMap
       and %startMappingSet instead:</p>
@@ -69,6 +69,19 @@ symbols:
         <dd>You can build the target set from multiple sources as long as all values are different.</dd>
       </dl>
 
+    references:
+      native:
+        file: ReadonlyBindableArray
+        symbol: default
+        member: native
+
+      add:
+        file: jwidget/IBindableArray
+        member: add
+
+      target:
+        label: target
+
   AbstractMapper.DestroyCallback:
     kind: interface
     simple: true
@@ -78,6 +91,9 @@ symbols:
     description: |
       <p><code>(targetValue: %U, sourceValue: %T): void</code></p>
       <p>Signature of %AbstractMapper.%Config.%destroyOfConfig callback.</p>
+    references:
+      Config:
+        symbol: AbstractMapper.Config
 
   AbstractMapper.Config:
     kind: interface
@@ -100,19 +116,12 @@ symbols:
           const viewArray = %startMappingArray(dataArray, data => new View(data), {%destroy});
           </pre>
 
+        references:
+          DestroyCallback:
+            symbol: AbstractMapper.DestroyCallback
+
 references:
-  target:
-    symbol: default
-    member: target
-
-  add:
-    file: jwidget/IBindableArray
-    member: add
-
   destroyOfConfig:
     symbol: AbstractMapper.Config
     member: destroy
     label: destroy
-
-  targetOfConfig:
-    label: target

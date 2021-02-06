@@ -12,7 +12,7 @@ symbols:
     constructor:
       signature: |
         (silent?: boolean)
-        new BindableMap<K, V>(contents: Iterable<readonly [%K, %V]>, silent?: boolean)
+        new BindableMap<K, V>(contents: %Iterable<readonly [%K, %V]>, silent?: boolean)
       params:
         contents: Initial map contents.
         silent: Create a silent map which means that it never dispatches modification messages.

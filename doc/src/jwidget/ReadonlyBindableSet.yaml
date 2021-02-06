@@ -17,7 +17,7 @@ symbols:
         description: Property containing number of values in the set.
       native:
         modifiers: readonly
-        type: 'ReadonlySet<%T>'
+        type: '%ReadonlySet<%T>'
         description: Native set - internal collection representation.
       onSplice:
         modifiers: readonly
@@ -25,7 +25,7 @@ symbols:
         description: Value are removed from the set and/or values are added to the set.
       onClear:
         modifiers: readonly
-        type: '%Listenable<ReadonlySet<%T>>'
+        type: '%Listenable<%ReadonlySet<%T>>'
         description: The set is cleared.
       onChange:
         modifiers: readonly
@@ -35,7 +35,7 @@ symbols:
     methods:
       '[Symbol.iterator]':
         signature: |
-          (): IterableIterator<%T>
+          (): %IterableIterator<%T>
         returns: Set iterator.
 
       has:
@@ -52,7 +52,7 @@ symbols:
 
       detectSplice:
         signature: |
-          (newContents: Iterable<%T>): %IBindableSet.%SpliceParams<%T>
+          (newContents: %Iterable<%T>): %IBindableSet.%SpliceParams<%T>
         params:
           newContents: New set contents.
         returns: '%splice method arguments. If no method call required, returns undefined.'

@@ -12,7 +12,7 @@ symbols:
     constructor:
       signature: |
         (silent?: boolean)
-        new BindableArray<T>(contents: Iterable<%T>, silent?: boolean)
+        new BindableArray<T>(contents: %Iterable<%T>, silent?: boolean)
       params:
         contents: Initial array contents.
         silent: Create a silent array which means that it never dispatches modification messages.

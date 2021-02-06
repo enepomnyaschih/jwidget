@@ -58,6 +58,19 @@ symbols:
         description: |
           <p>Source map.</p>
 
+    references:
+      addOfConfig:
+        symbol: MapInserter.Config
+        member: add
+
+      removeOfConfig:
+        symbol: MapInserter.Config
+        member: remove
+
+      clearOfConfig:
+        symbol: MapInserter.Config
+        member: clear
+
   MapInserter.Config:
     kind: interface
     simple: true

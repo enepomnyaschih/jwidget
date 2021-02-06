@@ -30,7 +30,7 @@ symbols:
     returns: Map keys.
     description: |
       <p>Returns an %Iterable of all %map keys. As opposed to native %Map.%keys, returns an %Iterable instead of
-      %Iterator, so it is stateless and can be reused multiple times to iterate over the map keys.</p>
+      %IterableIterator, so it is stateless and can be reused multiple times to iterate over the map keys.</p>
     references:
       keys:
         href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/keys
@@ -43,7 +43,7 @@ symbols:
     returns: Map values.
     description: |
       <p>Returns an %Iterable of all %map values. As opposed to native %Map.%values, returns an %Iterable instead of
-      %Iterator, so it is stateless and can be reused multiple times to iterate over the map values.</p>
+      %IterableIterator, so it is stateless and can be reused multiple times to iterate over the map values.</p>
     references:
       values:
         href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/values

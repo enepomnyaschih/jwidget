@@ -28,14 +28,18 @@ symbols:
 
 references:
   handlerOfConfig:
-    file: Router
+    file: jwidget/Router
     symbol: Router.Config
     member: handler
     label: handler
 
   staticGetFullPath:
-    file: Router
+    file: jwidget/Router
     symbol: default
     member: getFullPath
     static: true
     label: getFullPath
+
+  redirection:
+    file: jwidget/Router
+    member: redirection

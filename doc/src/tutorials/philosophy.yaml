@@ -30,7 +30,9 @@ description: |
   <li>It is optimal to destroy objects using aggregation mechanism implemented with %own method, or
   using internal features of classes:<ul>
     <li>Method %IProperty.%ownValue</li>
-    <li>Method %ICollection.%ownItems</li>
+    <li>Method %IBindableArray.%ownValuesOfArray</li>
+    <li>Method %IBindableMap.%ownValuesOfMap</li>
+    <li>Method %IBindableSet.%ownValuesOfSet</li>
     <li>Config options %Mapper.%destroyOfMapperConfig, %AbstractMapper.%destroyOfCollectionMapperConfig etc.</li>
   </ul></li>
   <li>Sometimes it is acceptable to destroy objects explicitly using %destroyOfDestroyable method.</li>
@@ -47,8 +49,8 @@ description: |
   <h3>Data binding in collections</h3>
 
   <ol>
-  <li>Data and components are structured based on three collection types: %List, %Map and %Set. Read the common theory
-  of algorithms and data structures to learn pros and cons of each collection type.</li>
+  <li>Data and components are structured based on three collection types: %BindableArray, %BindableMap and %BindableSet.
+  Read the common theory of algorithms and data structures to learn pros and cons of each collection type.</li>
   <li>Each collection dispatches messages about its modification.</li>
   <li>You don't have to listen all collection messages manually. Instead, you should use standard collection bindings.
   The bindings provide a simple way to connect collections to each other.</li>
@@ -62,9 +64,20 @@ description: |
   </div>
 
 references:
-  ownItems:
-    file: jwidget/ICollection
-    member: ownItems
+  ownValuesOfArray:
+    file: jwidget/IBindableArray
+    member: ownValues
+    label: ownValues
+
+  ownValuesOfMap:
+    file: jwidget/IBindableMap
+    member: ownValues
+    label: ownValues
+
+  ownValuesOfSet:
+    file: jwidget/IBindableSet
+    member: ownValues
+    label: ownValues
 
   destroyOfMapperConfig:
     file: jwidget/Mapper

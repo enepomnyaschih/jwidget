@@ -7,13 +7,13 @@ symbols:
       <T>(subtractor: Iterable<T>, subtrahend: SetLike<T>): T[]
     params:
       subtractor: Iterable to subtract from.
-      subtrahend: %Set or %Map to subtract.
+      subtrahend: '%Set or %Map to subtract.'
     returns: Collection difference.
     description: |
       <p>Builds a new array containing all %subtractor items that are not present in %subtrahend.</p>
 
   SetLike:
-    type: interface
+    kind: interface
     simple: true
     typevars:
       T: Value type.

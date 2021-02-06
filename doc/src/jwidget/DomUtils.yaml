@@ -33,7 +33,7 @@ symbols:
       </pre>
 
   InputElement:
-    type: interface
+    kind: interface
     simple: true
     description: |
       <p>Subset of %JQuery methods necessary for implementation of %isTextInput function.</p>

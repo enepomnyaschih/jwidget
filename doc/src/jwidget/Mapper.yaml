@@ -240,7 +240,7 @@ symbols:
 
   mapPropertiesByReducer:
     signature: |
-      mapPropertiesByReducer<T, U>(sources: %Bindable<%T>[], callback: (accumulator: %U, item: %T) => %U, initial: %U): %DestroyableBindable<%U>
+      mapPropertiesByReducer<T, U>(sources: %Bindable<T>[], callback: (accumulator: U, item: T) => U, initial: U): %DestroyableBindable<U>
     params:
       sources: Source bindables.
       callback: A function to execute on each element in the array.

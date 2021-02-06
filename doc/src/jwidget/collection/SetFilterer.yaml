@@ -65,6 +65,16 @@ symbols:
         type: '%ReadonlyBindableSet<%T>'
         description: Target set.
 
+    references:
+      addAll:
+        file: jwidget/IBindableSet
+        member: addAll
+
+      targetOfConfig:
+        symbol: SetFilterer.Config
+        member: target
+        label: target
+
   SetFilterer.Config:
     kind: interface
     simple: true

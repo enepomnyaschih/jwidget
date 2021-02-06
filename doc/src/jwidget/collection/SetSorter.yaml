@@ -115,7 +115,7 @@ symbols:
       source: Source set.
       config: Sorter configuration.
     returns: Sorted array.
-    description: 'Sorts a set and starts synchronization. See %SetSorters for details.'
+    description: 'Sorts a set and starts synchronization. See %SetSorter for details.'
 
 references:
   Config:

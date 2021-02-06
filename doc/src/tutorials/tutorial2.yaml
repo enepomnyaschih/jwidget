@@ -8,8 +8,8 @@ description: |
 
   <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-2">https://github.com/enepomnyaschih/mt/tree/mt-2.2-2</a> (Git branch).</p>
 
-  <p>In this part we meet %List class. We will learn how to use it to display child UI component lists. Our goal is to
-  render a list of tweets developed in the previous part.</p>
+  <p>In this part we meet %BindableArray class. We will learn how to use it to display child UI component arrays. Our goal is to
+  render an array of tweets developed in the previous part.</p>
 
   <p>Let's dive directly to the view. Define class TweetFeed.</p>
 
@@ -26,8 +26,8 @@ description: |
   <h5>src/view/TweetFeed.ts</h5>
 
   <pre>
+  import %BindableArray from "jwidget/BindableArray";
   import %Component from "jwidget/Component";
-  import %List from "jwidget/List";
   import %template from "jwidget/template";
   import Tweet from "../model/Tweet";
   import TweetView from "./TweetView";
@@ -41,29 +41,29 @@ description: |
 
       protected renderTweets() {
           const tweetViews = this.tweets.map(tweet => new TweetView(tweet));
-          return this.%own(new %List(tweetViews)).%ownItems();
+          return this.%own(new %BindableArray(tweetViews)).%ownValues();
       }
   }
   </pre>
 
   <p>Let's review renderTweets method in details. Similarly to TweetView component, we've defined method
   <b>render&lt;ChildId&gt;</b> for element with jwid="tweets". But now this method not just fills the element with
-  data, but renders a list of child components into it. This list is created from an array of tweet models with the
+  data, but renders an array of child components into it. This array is created from an array of tweet models with the
   following steps:</p>
 
   <ol>
   <li>Models get mapped to views via ES5 <b>map</b> method of array.</li>
-  <li>View array gets converted to jWidget %List.</li>
-  <li>The %List gets aggregated in TweetFeed via %own method, and its items get aggregated in it with %ownItems method.</li>
+  <li>View array gets converted to jWidget %BindableArray.</li>
+  <li>The %BindableArray gets aggregated in TweetFeed via %own method, and its items get aggregated in it with %ownValues method.</li>
   </ol>
 
-  <p>jWidget components recognize jWidget lists of components, not arrays. If you return such a list as a result of
-  <b>render&lt;ChildId&gt;</b> method, then this list gets rendered into the corresponding element as a list of child
+  <p>jWidget components recognize jWidget bindable arrays of components. If you return a bindable array as a result of
+  <b>render&lt;ChildId&gt;</b> method, then this array gets rendered into the corresponding element as an array of child
   components.</p>
 
-  <p>Aggregation methods %own and %ownItems control the life time of child components. If object A owns object B, then
+  <p>Aggregation methods %own and %ownValues control the life time of child components. If object A owns object B, then
   destruction of object A automatically triggers destruction of object B. In our case, destruction of TweetFeed
-  automatically triggers destruction of tweet view list. Thanks to %ownItems call, destruction of the list triggers
+  automatically triggers destruction of tweet view array. Thanks to %ownValues call, destruction of the array triggers
   destruction of all its elements, i.e. tweet views. It is a good practice to destroy child UI components when you
   don't need them anymore, because any UI component may initialize its own bindings you can be unaware of. See
   %commonPractices for more instructions about how this can be achieved.</p>
@@ -147,8 +147,8 @@ description: |
   Let's remove renderTweets method and override %afterRender method instead:</p>
 
   <pre>
+  import %BindableArray from "jwidget/BindableArray";
   import %Component from "jwidget/Component";
-  import %List from "jwidget/List";
   import %template from "jwidget/template";
   import Tweet from "../model/Tweet";
   import TweetView from "./TweetView";
@@ -163,13 +163,13 @@ description: |
       protected %afterRender() {
           super.%afterRender();
           const tweetViews = this.tweets.map(tweet => new TweetView(tweet));
-          const tweetViewList = this.%own(new %List(tweetViews)).%ownItems();
-          this.%addList(tweetViewList, "tweets");
+          const bindableTweetViews = this.%own(new %BindableArray(tweetViews)).%ownValues();
+          this.%addArray(bindableTweetViews, "tweets");
       }
   }
   </pre>
 
-  <p>This code is equivalent to the original one, but child component list is added dynamically with %addList method.
+  <p>This code is equivalent to the original one, but child component array is added dynamically with %addArray method.
   This method takes element "jwid" as second argument, which should be used as a container for child components passed
   in the first argument. If we won't pass second argument, the array will be rendered into root element. Use the way
   you like more. I'll stick to the first way, utilizing <b>render&lt;ChildId&gt;</b> method.</p>
@@ -179,22 +179,18 @@ description: |
 
 references:
   add:
-    file: jwidget/IList
+    file: jwidget/IBindableArray
     member: add
-
-  map:
-    file: jwidget/IList
-    member: map
 
   commonPractices:
     file: jwidget/Component
     symbol: commonPractices
     label: Common practices in child component management
 
-  addList:
+  addArray:
     file: jwidget/Component
-    member: addList
+    member: addArray
 
-  ownItems:
-    file: jwidget/ICollection
-    member: ownItems
+  ownValues:
+    file: jwidget/IBindableArray
+    member: ownValues
