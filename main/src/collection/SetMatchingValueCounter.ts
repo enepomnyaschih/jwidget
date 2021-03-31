@@ -93,7 +93,7 @@ export default class SetMatchingValueCounter<T> extends Class {
 	}
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
-		const diff = count(spliceResult.removedValues, this.test) - count(spliceResult.addedValues, this.test);
+		const diff = count(spliceResult.deletedValues, this.test) - count(spliceResult.addedValues, this.test);
 		this._matchingFromThisSource -= diff;
 		this._target.set(this._target.get() - diff);
 	}

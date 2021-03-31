@@ -162,7 +162,7 @@ describe("MapValueCollector", () => {
 		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 6, 9]);
 		source1.set("f", 7);
 		expect(normalizeValues(target)).eql([1, 2, 3, 4, 5, 6, 7, 9]);
-		source2.remove("d");
+		source2.delete("d");
 		expect(normalizeValues(target)).eql([1, 2, 3, 4, 6, 7, 9]);
 		collector1.destroy();
 		expect(normalizeValues(target)).eql([4, 6, 9]);
@@ -196,7 +196,7 @@ function listen(set: ReadonlyBindableSet<any>) {
 
 function parseSpliceResult<T>(spliceResult: IBindableSet.SpliceResult<T>) {
 	return [
-		normalizeValues(spliceResult.removedValues),
+		normalizeValues(spliceResult.deletedValues),
 		normalizeValues(spliceResult.addedValues)
 	];
 }

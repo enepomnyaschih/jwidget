@@ -238,7 +238,7 @@ function listen(map: ReadonlyBindableMap<any, any>) {
 
 function parseSpliceResult<K, V>(spliceResult: IBindableMap.SpliceResult<K, V>) {
 	return [
-		normalizeEntries(spliceResult.removedEntries.entries()),
+		normalizeEntries(spliceResult.deletedEntries.entries()),
 		normalizeEntries(spliceResult.addedEntries.entries())
 	];
 }

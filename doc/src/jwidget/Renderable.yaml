@@ -12,3 +12,4 @@ symbols:
 references:
   moreAboutRender:
     href: Component.html#moreAboutRender
+    label: More about renderChild methods

@@ -69,7 +69,7 @@ description: |
     <p>The difference between jWidget and other Model-View frameworks is the approach of working with properties and
     collections. In other frameworks, data binding is performed implicitly via HTML templates. In jWidget, data binding
     is performed explicitly using %Property and its bindings. Instead of special tags-repeaters in HTML templates, you work with
-    collections explicitly using collections and their synchronizers.</p>
+    collections explicitly using their synchronizers.</p>
     <p>This approach is more effective: data binding is not constrained by connection between model and view. All the same
     practices are used to bind model objects to each other and to bind view components to each other.</p>
     <p>Current versions of the framework, its source code, tests, documentation, examples and tutorials are distributed

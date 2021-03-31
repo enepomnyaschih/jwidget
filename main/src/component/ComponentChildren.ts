@@ -63,12 +63,12 @@ export default class ComponentChildren extends BindableMap<string, Component> {
 		return value;
 	}
 
-	remove(key: string): Component {
-		const value = super.remove(key);
+	delete(key: string): Component {
+		const value = super.delete(key);
 		if (value === undefined) {
 			return undefined;
 		}
-		this.target.remove(key);
+		this.target.delete(key);
 		return value;
 	}
 
@@ -78,9 +78,9 @@ export default class ComponentChildren extends BindableMap<string, Component> {
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		const {removedEntries, addedEntries} = spliceResult;
+		const {deletedEntries, addedEntries} = spliceResult;
 		const children = map(addedEntries, value => new ComponentChild(this.component, value));
-		this.target.trySplice(getDifference(getIterableKeys(removedEntries), addedEntries), children);
+		this.target.trySplice(getDifference(getIterableKeys(deletedEntries), addedEntries), children);
 		return spliceResult;
 	}
 

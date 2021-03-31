@@ -37,7 +37,7 @@ export default class ComponentBindable extends Class {
 				this.parent.children.set(this.id, child);
 			},
 			done: () => {
-				this.parent.children.remove(this.id);
+				this.parent.children.delete(this.id);
 			}
 		}));
 	}

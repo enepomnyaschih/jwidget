@@ -7,7 +7,7 @@ symbols:
         typevars: [T]
       - file: jwidget/Class
     description: |
-      <p>Unordered collection optimized for items adding, removal and search.</p>
+      <p>Implementation of a bindable wrapper over a native set.</p>
     constructor:
       signature: |
         (silent?: boolean)

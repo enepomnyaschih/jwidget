@@ -13,9 +13,9 @@ symbols:
       %bindText(el, text);
       </pre>
       %example:bindText
-      <p>The function returns a binding object. If you need to stop the synchronization, %destroy it. This is not neccessary
-      if you work with a private property and DOM element as in the example above. However, if you work with an
-      external model or DOM element (e.g. they get passed to the constructor of the component), you must take care of
+      <p>The function returns a binding object. If you need to stop the synchronization, %destroy it. This is not necessary
+      if you work with a private property and a private DOM element as in the example above. However, if you work with an
+      external model or an external DOM element (e.g. they get passed to the constructor of the component), you must take care of
       the binding destruction, because life time of these objects can be longer than the life time of your
       component. The easiest way to do it is to %own the binding:</p>
       <pre>

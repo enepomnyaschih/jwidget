@@ -30,10 +30,10 @@ symbols:
     signature: |
       (str: string): string[]
     params:
-      str: String or array of such things.
+      str: String.
     returns: Array of separate CSS class names.
     description: |
-      <p>Parses CSS class string and returns array of CSS class names.</p>
+      <p>Parses CSS class string and returns an array of CSS class names.</p>
       <pre>
       %parseClass(['  a    b '); // ['a', 'b']
       </pre>

@@ -5,7 +5,7 @@ symbols:
       K: Key type.
       V: Value type.
     description: |
-      <p>Unordered key-value collection. Consists of key-value pairs (entries).</p>
+      <p>Bindable readonly wrapper over a native map.</p>
 
     properties:
       silent:
@@ -23,7 +23,7 @@ symbols:
       onSplice:
         modifiers: readonly
         type: '%Listenable<%IBindableMap.%SpliceResult<%K, %V>>'
-        description: Entries are removed from the map and/or entries are added/updated in the map.
+        description: Entries are deleted from the map and/or entries are added/updated in the map.
       onReindex:
         modifiers: readonly
         type: '%Listenable<%ReadonlyMap<%K, %K>>'
@@ -89,7 +89,7 @@ symbols:
         returns: '%splice method arguments. If no method call required, returns undefined.'
         description: |
           <p>Detects %splice method arguments to adjust the map contents to %newContents.
-          Determines keys to be removed and entries added/updated.</p>
+          Determines keys to be deleted and entries added/updated.</p>
 
       detectReindex:
         signature: |

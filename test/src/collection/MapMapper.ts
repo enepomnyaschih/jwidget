@@ -253,7 +253,7 @@ describe("MapMapper", () => {
 		expect(normalizeEntries(target)).eql([["a", 2], ["b", 4], ["c", 6], ["d", 15], ["e", 9], ["g", 0]]);
 		source1.set("f", 6);
 		expect(normalizeEntries(target)).eql([["a", 2], ["b", 4], ["c", 6], ["d", 15], ["e", 9], ["f", 12], ["g", 0]]);
-		source2.remove("d");
+		source2.delete("d");
 		expect(normalizeEntries(target)).eql([["a", 2], ["b", 4], ["c", 6], ["e", 9], ["f", 12], ["g", 0]]);
 		collector1.destroy();
 		expect(normalizeEntries(target)).eql([["e", 9], ["g", 0]]);
@@ -290,7 +290,7 @@ function listen(map: ReadonlyBindableMap<any, any>) {
 
 function parseSpliceResult<K, V>(spliceResult: IBindableMap.SpliceResult<K, V>) {
 	return [
-		normalizeEntries(spliceResult.removedEntries.entries()),
+		normalizeEntries(spliceResult.deletedEntries.entries()),
 		normalizeEntries(spliceResult.addedEntries.entries())
 	];
 }

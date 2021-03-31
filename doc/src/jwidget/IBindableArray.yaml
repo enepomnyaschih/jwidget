@@ -24,37 +24,37 @@ symbols:
           (value: %T, index?: number)
         params:
           value: Value to insert.
-          index: Index of an item to insert new one before. By default, appends the item to the end of collection.
+          index: Index of an item to insert new one before. By default, appends the item to the end of the array.
         description: |
-          <p>Inserts an item to the array.</p>
+          <p>Inserts an item to the array and dispatches %onSplice message.</p>
 
       addAll:
         signature: |
           (values: readonly %T[], index?: number)
         params:
           values: Values to insert.
-          index: Index of an item to insert new ones before. By default, appends the items to the end of collection.
+          index: Index of an item to insert new ones before. By default, appends the items to the end of the array.
         description: |
-          <p>Inserts item range to the array.</p>
+          <p>Inserts an item range to the array and dispatches %onSplice message.</p>
 
       set:
         signature: |
           (index: number, newValue: %T): %T
         params:
-          index: Index of an item.
+          index: Index of an item to replace.
           newValue: Value to set.
         returns: The old value of the item.
         description: |
-          <p>Replaces an item value at the specified position.</p>
+          <p>Replaces an item at specified position and dispatches %onReplace message.</p>
 
       remove:
         signature: |
           (index: number): %T
         params:
           index: Index of an item to remove.
-        returns: The removed item.
+        returns: Value of the removed item.
         description: |
-          <p>Removes an item at the specified index.</p>
+          <p>Removes an item at specified index and dispatches %onSplice message.</p>
 
       removeAll:
         signature: |
@@ -62,9 +62,9 @@ symbols:
         params:
           index: Index of the first item to remove.
           count: Count of items to remove.
-        returns: The removed items. Never returns null or undefined.
+        returns: Values of the removed items. Never returns null or undefined.
         description: |
-          <p>Removes an item range from the array.</p>
+          <p>Removes item range from the array and dispatches %onSplice message.</p>
 
       removeValues:
         signature: |
@@ -72,24 +72,24 @@ symbols:
         params:
           values: Values to remove.
         description: |
-          <p>Removes all occurrences of the specified values from the array.</p>
+          <p>Removes all occurrences of the values in the array and dispatches %onSplice message.</p>
 
       move:
         signature: |
           (fromIndex: number, toIndex: number): %T
         params:
-          fromIndex: Item index to move.
-          toIndex: Index to move to.
-        returns: Values of the moved item. Never returns null or undefined.
+          fromIndex: Index of an item to move.
+          toIndex: Index to move the item to.
+        returns: Value of the moved item.
         description: |
-          <p>Moves an item in the array.</p>
+          <p>Moves an item inside the array and dispatches %onMove message.</p>
 
       clear:
         signature: |
           (): %T[]
         returns: Old array contents.
         description: |
-          <p>Clears the array and dispatches %onClear message.</p>
+          <p>Removes all array items and dispatches %onClear message.</p>
 
       splice:
         signature: |
@@ -99,7 +99,7 @@ symbols:
           segmentsToAdd: Array of segments to insert sorted by index asc. Segments are inserted in direct order.
         returns: Splice result. Never returns null or undefined.
         description: |
-          <p>Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.</p>
+          <p>Removes and inserts item ranges granularly and dispatches %onSplice message.</p>
         references:
           IndexCount:
             file: jwidget/IBindableArray
@@ -117,17 +117,17 @@ symbols:
             Index mapping array. Item with index <b>i</b> will be moved to index <b>indexMapping[i]</b>.
             Must contain all indexes from 0 to (length - 1).
         description: |
-          <p>Reorders array items.</p>
+          <p>Reorders array items and dispatches %onReorder message.</p>
 
       trySet:
         signature: |
           (index: number, newValue: %T): %T
         params:
-          index: Index of an item.
+          index: Index of an item to replace.
           newValue: Value to set.
-        returns: Old item value. If collection is not modified, returns undefined.
+        returns: The old value of the item. If the call doesn't modify the array, returns undefined.
         description: |
-          <p>Changes item value at the specified position.</p>
+          <p>Replaces an item at the specified index and dispatches %onReplace message.</p>
 
       tryRemoveAll:
         signature: |
@@ -135,19 +135,19 @@ symbols:
         params:
           index: Index of the first item to remove.
           count: Count of items to remove.
-        returns: The removed items. If collection is not modified, returns undefined.
+        returns: The removed items. If the call doesn't modify the array, returns undefined.
         description: |
-          <p>Removes item range from the array.</p>
+          <p>Removes an item range from the array and dispatches %onSplice message.</p>
 
       tryMove:
         signature: |
           (fromIndex: number, toIndex: number): %T
         params:
-          fromIndex: Item index to move.
-          toIndex: Index to move to.
-        returns: Value of the moved item. If collection is not modified, returns undefined.
+          fromIndex: Index of an item to move.
+          toIndex: Index to move the item to.
+        returns: Value of the moved item. If the call doesn't modify the array, returns undefined.
         description: |
-          <p>Moves an item in the array.</p>
+          <p>Moves an item inside the array and dispatches %onMove message.</p>
 
       trySplice:
         signature: |
@@ -157,7 +157,7 @@ symbols:
           segmentsToAdd: Array of segments to insert sorted by index asc. Segments are inserted in direct order.
         returns: Splice result. If collection is not modified, returns undefined.
         description: |
-          <p>Removes and inserts item ranges. Universal optimized granular operation of removal/insertion.</p>
+          <p>Removes and inserts item ranges granularly and dispatches %onSplice message.</p>
         references:
           IndexCount:
             file: jwidget/IBindableArray
@@ -176,7 +176,7 @@ symbols:
             Must contain all indexes from 0 to (length - 1).
         returns: Old array contents. If collection is not modified, returns undefined.
         description: |
-          <p>Reorders array items.</p>
+          <p>Reorders array items and dispatches %onReorder message.</p>
 
       performSplice:
         signature: |
@@ -184,9 +184,9 @@ symbols:
         params:
           newContents: New array contents.
         description: |
-          <p>Adjusts array contents to %newContents using %detectSplice and %splice methods. All values in %newContents
-          must be %unique. If they are not, probably %performFilter method may help, because it doesn't require value
-          uniqueness.</p>
+          <p>Adjusts array contents to %newContents using %detectSplice and %splice methods.
+          All current values in the array must be unique.
+          Otherwise, consider using %performFilter method, because it doesn't require value uniqueness.</p>
 
       performFilter:
         signature: |
@@ -194,9 +194,9 @@ symbols:
         params:
           newContents: New array contents.
         description: |
-          <p>Adjusts array contents to %newContents using %detectFilter and %splice methods. Only removes items.
-          Doesn't consider item insertion - try %detectSplice if that's the case.
-          As opposed to %detectSplice, doesn't require item uniqueness.</p>
+          <p>Adjusts array contents to %newContents using %detectFilter and %splice methods.
+          Doesn't consider item insertion - try %performSplice if that's necessary.
+          In advantage to %performSplice, doesn't require item uniqueness.</p>
 
       performReorder:
         signature: |
@@ -204,7 +204,9 @@ symbols:
         params:
           newContents: New array contents.
         description: |
-          <p>Adjusts array contents to %newContents using %detectReorder and %reorder methods.</p>
+          <p>Adjusts array contents to %newContents using %detectReorder and %reorder methods.
+          Values of %newContents must match current values of the array.
+          All values in the array must be unique.</p>
 
       sort:
         signature: |
@@ -214,7 +216,8 @@ symbols:
             Indexer function. Must return a comparable value, compatible with %cmp. Returns value itself by default.
           order: Sorting order. Positive number for ascending sorting, negative for descending sorting.
         description: |
-          <p>Sorts the array by result of %callback function call for each item.</p>
+          <p>Sorts the array by result of %callback function call for each item. Modifies the array itself and dispatches
+          %onReorder message.</p>
 
       sortComparing:
         signature: |
@@ -225,13 +228,13 @@ symbols:
             negative value if t1 < t2; 0 if t1 == t2. Defaults to %cmp.
           order: Sorting order. Positive number for ascending sorting, negative for descending sorting.
         description: |
-          <p>Sorts the array by comparer.</p>
+          <p>Sorts the array by comparer. Modifies the array itself and dispatches %onReorder message.</p>
 
       reverse:
         signature: |
           ()
         description: |
-          <p>Reverses item order in the array. Modifies the array itself.</p>
+          <p>Reverses item order in the array. Modifies the array itself and dispatches %onReorder message.</p>
 
   IBindableArray.MoveMessage:
     kind: interface
@@ -239,7 +242,7 @@ symbols:
     typevars:
       T: Item type.
     description: |
-      <p>Message of %onMove.</p>
+      <p>%ReadonlyBindableArray.%onMove message.</p>
     properties:
       fromIndex:
         modifiers: readonly
@@ -262,7 +265,7 @@ symbols:
     typevars:
       T: Item type.
     description: |
-      <p>Message of %onReplace.</p>
+      <p>%ReadonlyBindableArray.%onReplace message.</p>
     properties:
       index:
         modifiers: readonly
@@ -285,12 +288,12 @@ symbols:
     typevars:
       T: Item type.
     description: |
-      <p>Message of %onReorder.</p>
+      <p>%ReadonlyBindableArray.%onReorder message.</p>
     properties:
       oldContents:
         modifiers: readonly
         type: 'readonly %T[]'
-        description: Old array contents.
+        description: Old contents of the array.
 
       indexMapping:
         modifiers: readonly
@@ -303,7 +306,7 @@ symbols:
     typevars:
       T: Item type.
     description: |
-      <p>%splice method arguments. Result of %detectSplice method.</p>
+      <p>%IBindableArray.%splice method arguments. Result of %detectSplice method.</p>
     properties:
       segmentsToRemove:
         modifiers: readonly
@@ -321,22 +324,22 @@ symbols:
     typevars:
       T: Item type.
     description: |
-      <p>%splice method result.</p>
+      <p>%IBindableArray.%splice method result.</p>
     properties:
       oldContents:
         modifiers: readonly
         type: 'readonly %T[]'
-        description: Old array contents.
+        description: Old contents of the array.
 
       removedSegments:
         modifiers: readonly
         type: 'readonly %IBindableArray.%IndexItems<%T>[]'
-        description: Removed item segments.
+        description: Removed segments.
 
       addedSegments:
         modifiers: readonly
         type: 'readonly %IBindableArray.%IndexItems<%T>[]'
-        description: Added item segments.
+        description: Added segments.
 
       removedItems:
         modifiers: readonly
@@ -351,12 +354,12 @@ symbols:
       removeParams:
         modifiers: readonly
         type: 'readonly %IBindableArray.%IndexCount[]'
-        description: Removed item segments converted to index and count pairs.
+        description: Removed segments converted to index and count pairs.
 
       empty:
         modifiers: readonly
         type: boolean
-        description: Determines if the splice call kept the array as it was.
+        description: Flag indicating if the splice call kept the array as it was.
 
   IBindableArray.IndexCount:
     kind: type
@@ -378,7 +381,7 @@ symbols:
       type IndexItems<T> = readonly [number, readonly T[]]
       </pre>
       <p>Type describing a pair of index and item array. Used in %IBindableArray.%splice method arguments to specify
-      segments to add, and in %SpliceResult class to specify removed and added segments.</p>
+      segments to add, and in %IBindableArray.%SpliceResult interface to specify removed and added segments.</p>
 
 references:
   splice:

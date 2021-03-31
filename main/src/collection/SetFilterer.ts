@@ -71,7 +71,7 @@ class SetFilterer<T> extends Class {
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
 		this._target.trySplice(
-			spliceResult.removedValues,
+			spliceResult.deletedValues,
 			filter(spliceResult.addedValues, this.test));
 	}
 

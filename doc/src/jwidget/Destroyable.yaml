@@ -3,7 +3,7 @@ symbols:
     kind: interface
     showInheritanceLevels: 1
     description: |
-      Object which has %destroy method. Can be aggregated in %IClass via %own method.
+      Object that has %destroy method. Can be aggregated in an %IClass instance by %own method.
 
     methods:
       destroy:
@@ -16,7 +16,7 @@ symbols:
 
           // ...
 
-          // Once object is not needed anymore, destroy it
+          // When the object is not needed anymore, destroy it.
           object.%destroy();
           </pre>
           <p>Alternatively (and optimally), you should use %own method to aggregate this object in another one.</p>

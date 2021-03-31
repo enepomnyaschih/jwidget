@@ -43,7 +43,7 @@ symbols:
 
       <ul>
         <li>Filtered entries of source map get added to %target immediately on the synchronizer initialization.</li>
-        <li>Filtered entries get removed from %target map on the synchronizer destruction.</li>
+        <li>Filtered entries get deleted from %target map on the synchronizer destruction.</li>
         <li>Target map gets synchronized with source map continuously until the synchronizer is destroyed.</li>
         <li>You can build the target map from multiple sources as long as there is no concurrency for keys of the target
         map.</li>

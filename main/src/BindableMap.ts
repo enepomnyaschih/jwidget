@@ -162,7 +162,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 			}
 			const addedEntries = new Map<K, V>();
 			addedEntries.set(key, value);
-			this._onSplice.dispatch({removedEntries, addedEntries});
+			this._onSplice.dispatch({deletedEntries: removedEntries, addedEntries});
 			this._onChange.dispatch();
 		}
 		if (oldValue !== undefined && this._ownsValues) {
@@ -207,7 +207,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		return value;
 	}
 
-	remove(key: K) {
+	delete(key: K) {
 		const value = this._native.get(key);
 		if (value === undefined) {
 			return undefined;
@@ -217,7 +217,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		if (!this.silent) {
 			const spliceResult: IBindableMap.SpliceResult<K, V> = {
 				addedEntries: new Map(),
-				removedEntries: new Map([[key, value]])
+				deletedEntries: new Map([[key, value]])
 			};
 			this._onSplice.dispatch(spliceResult);
 			this._onChange.dispatch();
@@ -228,19 +228,19 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		return value;
 	}
 
-	removeAll(keys: Iterable<K>) {
+	deleteAll(keys: Iterable<K>) {
 		if (!this.silent) {
-			this.tryRemoveAll(keys);
+			this.tryDeleteAll(keys);
 			return;
 		}
 		for (let key of keys) {
-			this.remove(key);
+			this.delete(key);
 		}
 	}
 
-	tryRemoveAll(keys: Iterable<K>) {
+	tryDeleteAll(keys: Iterable<K>) {
 		const spliceResult = this.trySplice(keys, new Map());
-		return (spliceResult !== undefined) ? <Map<K, V>>spliceResult.removedEntries : undefined;
+		return (spliceResult !== undefined) ? <Map<K, V>>spliceResult.deletedEntries : undefined;
 	}
 
 	clear(): Map<K, V> {
@@ -264,14 +264,14 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		return oldContents;
 	}
 
-	splice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V> {
-		const spliceResult = this.trySplice(keysToRemove, entriesToUpdate);
-		return (spliceResult !== undefined) ? spliceResult : {removedEntries: new Map(), addedEntries: new Map()};
+	splice(keysToDelete: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V> {
+		const spliceResult = this.trySplice(keysToDelete, entriesToUpdate);
+		return (spliceResult !== undefined) ? spliceResult : {deletedEntries: new Map(), addedEntries: new Map()};
 	}
 
-	trySplice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V> {
+	trySplice(keysToDelete: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V> {
 		const removedEntries = new Map<K, V>();
-		for (let key of keysToRemove) {
+		for (let key of keysToDelete) {
 			if (entriesToUpdate.has(key)) {
 				continue;
 			}
@@ -299,7 +299,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 		if (removedEntries.size === 0 && addedEntries.size === 0) {
 			return undefined;
 		}
-		const spliceResult: IBindableMap.SpliceResult<K, V> = {removedEntries, addedEntries};
+		const spliceResult: IBindableMap.SpliceResult<K, V> = {deletedEntries: removedEntries, addedEntries};
 		this._size.set(this._size.get() + addedEntries.size - removedEntries.size);
 		if (this._size.get() === 0) {
 			this._onClear.dispatch(removedEntries);
@@ -369,7 +369,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 				entriesToUpdate.set(key, value);
 			}
 		}
-		return (keysToRemove.length === 0 && entriesToUpdate.size === 0) ? undefined : {keysToRemove, entriesToUpdate};
+		return (keysToRemove.length === 0 && entriesToUpdate.size === 0) ? undefined : {keysToDelete: keysToRemove, entriesToUpdate};
 	}
 
 	detectReindex(newContents: ReadonlyMap<K, V>): ReadonlyMap<K, K> {
@@ -390,7 +390,7 @@ class BindableMap<K, V> extends Class implements IBindableMap<K, V> {
 	performSplice(newContents: ReadonlyMap<K, V>) {
 		const params = this.detectSplice(newContents);
 		if (params !== undefined) {
-			this.trySplice(params.keysToRemove, params.entriesToUpdate);
+			this.trySplice(params.keysToDelete, params.entriesToUpdate);
 		}
 	}
 

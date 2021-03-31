@@ -27,7 +27,7 @@ import IClass from "./IClass";
 import Some from './Some';
 
 /**
- * Extension of DestroyableReadonlyMap with modification methods.
+ * Extension of `DestroyableReadonlyBindableMap` with modification methods.
  */
 interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V> {
 
@@ -38,123 +38,126 @@ interface IBindableMap<K, V> extends IClass, DestroyableReadonlyBindableMap<K, V
 	ownValues(): this;
 
 	/**
-	 * Puts or replaces a value with the specified key and dispatches a splice message.
+	 * Adds or updates an entry with the specified key and dispatches a splice message.
 	 * @param key Entry key.
-	 * @param value Entry value.
-	 * @returns Old value of the entry.
+	 * @param value Value to set.
+	 * @returns Old value of the entry. If the function call creates a new entry, returns undefined.
 	 */
 	set(key: K, value: V): V;
 
 	/**
-	 * Puts or replaces multiple entries and dispatches a splice message.
+	 * Adds or replaces multiple entries and dispatches a splice message.
 	 * @param entries Entries to add or update.
 	 */
 	setAll(entries: ReadonlyMap<K, V>): void;
 
 	/**
-	 * Changes entry key in the map and dispatches a reindexing message.
-	 * If the map doesn't contain oldKey or contains newKey, and they are not equal, throws an error.
-	 * @param oldKey Old entry key.
-	 * @param newKey New entry key.
-	 * @returns The entry value.
+	 * Changes a key of an entry in the map and dispatches a reindexing message.
+	 * If the map doesn't contain `oldKey` or contains `newKey`, and they are not equal, throws an error.
+	 * @param oldKey Old key of an entry.
+	 * @param newKey New key of the entry.
+	 * @returns The value of the entry.
 	 */
 	setKey(oldKey: K, newKey: K): V;
 
 	/**
-	 * Removes an entry with the specified key and dispatches a splice message.
-	 * @param key Entry key.
-	 * @returns The removed value.
+	 * Deletes an entry with the specified key and dispatches a splice message.
+	 * @param key Key of an entry to delete.
+	 * @returns Value of the entry.
 	 */
-	remove(key: K): V;
+	delete(key: K): V;
 
 	/**
-	 * Removes multiple entries from the map and dispatches a splice message.
-	 * @param keys Entry keys.
+	 * Deletes multiple entries from the map and dispatches a splice message.
+	 * @param keys Keys of entries to delete.
 	 */
-	removeAll(keys: Iterable<K>): void;
+	deleteAll(keys: Iterable<K>): void;
 
 	/**
-	 * Removes all map entries and dispatches a cleanup message.
+	 * Deletes all map entries and dispatches a cleanup message.
+	 * @returns Old contents of the map. Never returns null of undefined.
 	 */
 	clear(): Map<K, V>;
 
 	/**
-	 * Removes and/or adds multiple entries in the map granularly and dispatches a splice message.
-	 * @param keysToRemove Keys of entries to remove.
-	 * @param entriesToUpdate Entries to put/replace.
+	 * Deletes and/or adds multiple entries in the map granularly and dispatches a splice message.
+	 * @param keysToDelete Keys of entries to delete.
+	 * @param entriesToUpdate Entries to add or replace.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
+	splice(keysToDelete: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
 
 	/**
-	 * Changes entry keys in the map and dispatches a reindexing message.
-	 * @param keyMapping Key mapping. Entry with key x will gain key keyMapping[x].
-	 * It is necessary to pass only changed keys, but unchanged keys or nonexistent keys are acceptable as well.
+	 * Changes entry keys in the map granularly and dispatches a reindexing message.
+	 * @param keyMapping Key mapping. Entry with key x will gain key keyMapping[x]. It is necessary to pass only truly
+	 * changed keys. The unchanged or non-existent keys are ignored.
 	 * @returns Mapping of truly changed keys. Never returns null or undefined.
 	 */
 	reindex(keyMapping: ReadonlyMap<K, K>): Map<K, K>;
 
 	/**
-	 * Puts or replaces an entry with the specified key and dispatches a splice message.
+	 * Adds or replaces an entry with the specified key and dispatches a splice message.
 	 * @param key Entry key.
-	 * @param value Entry value.
-	 * @returns The replaced value. If the map is not modified, returns undefined.
+	 * @param value Value to set.
+	 * @returns Wrapper over the old value of the entry. If the function call creates a new entry, returns
+	 * Some(undefined). If the call doesn't modify the map, returns undefined.
 	 */
 	trySet(key: K, value: V): Some<V>;
 
 	/**
-	 * Puts or replaces multiple entries and dispatches a splice message.
-	 * @param entries Entries to put.
-	 * @returns Result of an internal splice method call. If the map is not modified, returns undefined.
+	 * Adds or replaces multiple entries and dispatches a splice message.
+	 * @param entries Entries to add or update.
+	 * @returns Result of an internal splice method call. If the call doesn't modify the map, returns undefined.
 	 */
 	trySetAll(entries: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
 
 	/**
-	 * Changes entry key in map and dispatches a reindexing message.
+	 * Changes a key of an entry in the map and dispatches a reindexing message.
 	 * If the map doesn't contain oldKey or contains newKey, and they are not equal, throws an error.
-	 * @param oldKey Old entry key.
-	 * @param newKey New entry key.
-	 * @returns The entry value. If the map is not modified, returns undefined.
+	 * @param oldKey Old key of an entry.
+	 * @param newKey New key of the entry.
+	 * @returns The value of the entry. If the call doesn't modify the map, returns undefined.
 	 */
 	trySetKey(oldKey: K, newKey: K): V;
 
 	/**
-	 * Removes all map entries and dispatches a cleanup message.
+	 * Deletes multiple entries from the map and dispatches a splice message.
+	 * @param keys Keys of entries to delete.
+	 * @returns The deleted entries. If the call doesn't modify the map, returns undefined.
+	 */
+	tryDeleteAll(keys: Iterable<K>): Map<K, V>;
+
+	/**
+	 * Deletes all map entries and dispatches a cleanup message.
+	 * @returns Old contents of the map. If the call doesn't modify the map, returns undefined.
 	 */
 	tryClear(): Map<K, V>;
 
 	/**
-	 * Removes multiple entries from the map and dispatches a splice message.
-	 * @param keys Entry keys.
-	 * @returns The removed entries. If the map is not modified, returns undefined.
+	 * Deletes and/or adds multiple entries in the map granularly and dispatches a splice message.
+	 * @param keysToDelete Keys of entries to delete.
+	 * @param entriesToUpdate Entries to add or replace.
+	 * @returns Splice result. If the call doesn't modify the map, returns undefined.
 	 */
-	tryRemoveAll(keys: Iterable<K>): Map<K, V>;
+	trySplice(keysToDelete: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
 
 	/**
-	 * Removes and adds multiple entries in the map granularly and dispatches a splice message.
-	 * @param keysToRemove Keys of entries to remove.
-	 * @param entriesToUpdate Entries to put/replace.
-	 * @returns Splice result. If the map is not modified, returns undefined.
-	 */
-	trySplice(keysToRemove: Iterable<K>, entriesToUpdate: ReadonlyMap<K, V>): IBindableMap.SpliceResult<K, V>;
-
-	/**
-	 * Changes entry keys in the map and dispatches a reindexing message.
-	 * @param keyMapping Key mapping. Entry with key x will gain key keyMap[x].
-	 * It is necessary to pass only changed keys, but unchanged keys or nonexistent keys are acceptable as well.
-	 * @returns Mapping of truly changed keys. If the map is not modified, returns undefined.
+	 * Changes entry keys in the map granularly and dispatches a reindexing message.
+	 * @param keyMapping Key mapping. Entry with key x will gain key keyMapping[x]. It is necessary to pass only truly
+	 * changed keys. The unchanged or non-existent keys are ignored.
+	 * @returns Mapping of truly changed keys. If the call doesn't modify the map, returns undefined.
 	 */
 	tryReindex(keyMapping: ReadonlyMap<K, K>): Map<K, K>;
 
 	/**
-	 * Adjusts map contents to `newContents` using `detectSplice` and `splice` methods.
-	 * @param newContents New map contents.
+	 * Adjusts the map contents to `newContents` using `detectSplice` and `splice` methods.
+	 * @param newContents New contents of the map.
 	 */
 	performSplice(newContents: ReadonlyMap<K, V>): void;
 
 	/**
-	 * Adjusts map contents to `newContents` using `detectReindex` and `reindex` methods. All values must be unique.
-	 * @param newContents New map contents.
+	 * Adjusts the map contents to `newContents` using `detectReindex` and `reindex` methods. All values must be unique.
+	 * @param newContents New contents of the map.
 	 */
 	performReindex(newContents: ReadonlyMap<K, V>): void;
 }
@@ -163,28 +166,28 @@ export default IBindableMap;
 
 namespace IBindableMap {
 	/**
-	 * Map splice method arguments. Result of `detectSplice` method.
+	 * `IBindableMap.splice` method arguments. Result of `detectSplice` method.
 	 */
 	export interface SpliceParams<K, V> {
 		/**
-		 * Keys to remove.
+		 * Keys to delete.
 		 */
-		readonly keysToRemove: Iterable<K>;
+		readonly keysToDelete: Iterable<K>;
 
 		/**
-		 * Entries to put/replace.
+		 * Entries to add or replace.
 		 */
 		readonly entriesToUpdate: ReadonlyMap<K, V>;
 	}
 
 	/**
-	 * IBindableMap.splice method result.
+	 * `IBindableMap.splice` method result.
 	 */
 	export interface SpliceResult<K, V> {
 		/**
-		 * Removed entries.
+		 * Deleted entries.
 		 */
-		readonly removedEntries: ReadonlyMap<K, V>;
+		readonly deletedEntries: ReadonlyMap<K, V>;
 
 		/**
 		 * Added entries.

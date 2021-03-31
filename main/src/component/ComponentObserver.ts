@@ -33,7 +33,7 @@ export default class ComponentObserver extends Class {
 	constructor(source: ReadonlyBindableSet<Component>, private el: HTMLElement) {
 		super();
 		this.own(source.onSplice.listen(spliceResult => {
-			for (const value of spliceResult.removedValues) {
+			for (const value of spliceResult.deletedValues) {
 				this._removeValue(value);
 			}
 			for (const value of spliceResult.addedValues) {

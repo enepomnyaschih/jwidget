@@ -439,7 +439,7 @@ describe("BindableSet.tryClear", () => {
 });
 
 describe("BindableSet.splice", () => {
-	it("should remove and add values as documented", () => {
+	it("should delete and add values as documented", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		set.splice([2, 3, 6, 7], [4, 5, 8]);
 		expect(normalizeValues(set.native)).eql([1, 4, 5, 8]);
@@ -490,7 +490,7 @@ describe("BindableSet.splice", () => {
 		expect(parseSpliceResult(set.splice([], []))).eql([[], []]);
 	});
 
-	it("should ignore present values to add and absent values to remove", () => {
+	it("should ignore present values to add and absent values to delete", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		const messages = listen(set);
 		const result = set.splice([6, 7], [2, 3]);
@@ -511,7 +511,7 @@ describe("BindableSet.splice", () => {
 		expect(parseSpliceResult(result)).eql([[2], [4]]);
 	});
 
-	it("should ignore values removed and added back", () => {
+	it("should ignore values deleted and added back", () => {
 		const set = new BindableSet([1, 2, 3]);
 		const messages = listen(set);
 		const result = set.splice([2, 3], [4, 2]);
@@ -560,7 +560,7 @@ describe("BindableSet.trySplice", () => {
 		assert.isUndefined(set.trySplice([], []));
 	});
 
-	it("should return undefined if all values to remove are absent and all values to add are present", () => {
+	it("should return undefined if all values to delete are absent and all values to add are present", () => {
 		const set = new BindableSet([1, 2, 3, 4, 5]);
 		assert.isUndefined(set.trySplice([6, 7], [2, 3]));
 	});
@@ -678,14 +678,14 @@ function listen(set: BindableSet<any>) {
 
 function parseSpliceParams<T>(spliceParams: IBindableSet.SpliceParams<T>) {
 	return [
-		normalizeValues(spliceParams.valuesToRemove),
+		normalizeValues(spliceParams.valuesToDelete),
 		normalizeValues(spliceParams.valuesToAdd)
 	];
 }
 
 function parseSpliceResult<T>(spliceResult: IBindableSet.SpliceResult<T>) {
 	return [
-		normalizeValues(spliceResult.removedValues),
+		normalizeValues(spliceResult.deletedValues),
 		normalizeValues(spliceResult.addedValues)
 	];
 }

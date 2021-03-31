@@ -42,7 +42,7 @@ symbols:
 
       <ul>
         <li>All value of source set get added to %target immediately on synchronizer initialization.</li>
-        <li>Sorted values get removed from %target on synchronizer destruction.</li>
+        <li>Sorted values get deleted from %target on synchronizer destruction.</li>
         <li>You can build the target array from multiple sources as long as all values are different and you keep the
         target array sorted all the time.</li>
       </ul>

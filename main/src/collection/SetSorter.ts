@@ -81,7 +81,7 @@ export default class SetSorter<T> extends Class {
 	}
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
-		this._splice(spliceResult.removedValues, spliceResult.addedValues);
+		this._splice(spliceResult.deletedValues, spliceResult.addedValues);
 	}
 
 	private _onClear(oldContents: ReadonlySet<T>) {

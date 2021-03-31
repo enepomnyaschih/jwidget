@@ -4,8 +4,7 @@ symbols:
     typevars:
       T: Value type.
     description: |
-      <p>Ordered collection of items. Each item of the list has an index. Index of first item is 0,
-      index of each next one is higher by 1.</p>
+      <p>Bindable readonly wrapper over a native array.</p>
     properties:
       silent:
         modifiers: readonly
@@ -38,7 +37,7 @@ symbols:
       onReorder:
         modifiers: readonly
         type: '%Listenable<%IBindableArray.%ReorderMessage<%T>>'
-        description: Items are reordered in the array. Passes mapping of indices (old to new) as a message.
+        description: Items are reordered in the array.
       onChange:
         modifiers: readonly
         type: '%Listenable<void>'

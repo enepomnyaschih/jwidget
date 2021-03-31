@@ -50,7 +50,7 @@ export default class SetValueCollector<T> extends AbstractValueCollector<T> {
 	}
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
-		this._target.trySplice(spliceResult.removedValues, spliceResult.addedValues);
+		this._target.trySplice(spliceResult.deletedValues, spliceResult.addedValues);
 	}
 
 	private _onClear(oldContents: ReadonlySet<T>) {

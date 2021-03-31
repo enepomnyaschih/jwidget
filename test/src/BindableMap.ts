@@ -371,17 +371,17 @@ describe("BindableMap.trySetKey", () => {
 	});
 });
 
-describe("BindableMap.remove", () => {
+describe("BindableMap.delete", () => {
 	it("should change the map if the key exists", () => {
 		const map = new BindableMap(getTestInput());
-		map.remove("c");
+		map.delete("c");
 		expect(Array.from(map.native)).eql(getTestInput().filter(x => x[0] !== "c"));
 	});
 
 	it("should dispatch proper messages if the key exists", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
-		map.remove("c");
+		map.delete("c");
 		expect(messages).eql([
 			["size", 5, 4],
 			["splice", [["c", 8]], []],
@@ -391,25 +391,25 @@ describe("BindableMap.remove", () => {
 
 	it("should return the entry value if the key exists", () => {
 		const map = new BindableMap(getTestInput());
-		expect(map.remove("c")).equal(8);
+		expect(map.delete("c")).equal(8);
 	});
 
 	it("should not change the map if the key doesn't exist", () => {
 		const map = new BindableMap(getTestInput());
-		map.remove("f");
+		map.delete("f");
 		expect(Array.from(map.native)).eql(getTestInput());
 	});
 
 	it("should not dispatch any messages if the key doesn't exist", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
-		map.remove("f");
+		map.delete("f");
 		expect(messages).eql([]);
 	});
 
 	it("should return undefined if the key doesn't exist", () => {
 		const map = new BindableMap(getTestInput());
-		assert.isUndefined(map.remove("f"));
+		assert.isUndefined(map.delete("f"));
 	});
 
 	it("should not destroy the value by default", () => {
@@ -418,7 +418,7 @@ describe("BindableMap.remove", () => {
 			["b", newDestroyFailObject()],
 			["c", newDestroyFailObject()]
 		]);
-		map.remove("b");
+		map.delete("b");
 	});
 
 	it("should destroy the value if owned", () => {
@@ -429,22 +429,22 @@ describe("BindableMap.remove", () => {
 			["c", newDestroyFailObject()]
 		]).ownValues();
 		expect(step).equal(0);
-		map.remove("b");
+		map.delete("b");
 		expect(step).equal(1);
 	});
 });
 
-describe("BindableMap.removeAll", () => {
+describe("BindableMap.deleteAll", () => {
 	it("should change the map if some keys exist", () => {
 		const map = new BindableMap(getTestInput());
-		map.removeAll(["c", "d", "f"]);
+		map.deleteAll(["c", "d", "f"]);
 		expect(Array.from(map.native)).eql(getTestInput().filter(x => !["c", "d"].includes(x[0])));
 	});
 
 	it("should dispatch proper messages if some keys exist", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
-		map.removeAll(["c", "d", "f"]);
+		map.deleteAll(["c", "d", "f"]);
 		expect(messages).eql([
 			["size", 5, 3],
 			["splice", [["c", 8], ["d", 7]], []],
@@ -454,27 +454,27 @@ describe("BindableMap.removeAll", () => {
 
 	it("should not change the map if the list of keys is empty", () => {
 		const map = new BindableMap(getTestInput());
-		map.removeAll([]);
+		map.deleteAll([]);
 		expect(Array.from(map.native)).eql(getTestInput());
 	});
 
 	it("should not dispatch any messages if the list of keys is empty", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
-		map.removeAll([]);
+		map.deleteAll([]);
 		expect(messages).eql([]);
 	});
 
 	it("should not change the map if the keys don't exist", () => {
 		const map = new BindableMap(getTestInput());
-		map.removeAll(["f", "g"]);
+		map.deleteAll(["f", "g"]);
 		expect(Array.from(map.native)).eql(getTestInput());
 	});
 
 	it("should not dispatch any messages if the keys don't exist", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
-		map.removeAll(["f", "g"]);
+		map.deleteAll(["f", "g"]);
 		expect(messages).eql([]);
 	});
 
@@ -486,7 +486,7 @@ describe("BindableMap.removeAll", () => {
 			["d", newDestroyFailObject()],
 			["e", newDestroyFailObject()]
 		]);
-		map.removeAll(["c", "d", "f"]);
+		map.deleteAll(["c", "d", "f"]);
 	});
 
 	it("should destroy the values in direct order if owned", () => {
@@ -499,22 +499,22 @@ describe("BindableMap.removeAll", () => {
 			["e", newDestroyFailObject()]
 		]).ownValues();
 		expect(step).equal(0);
-		map.removeAll(["c", "d", "f"]);
+		map.deleteAll(["c", "d", "f"]);
 		expect(step).equal(2);
 	});
 });
 
-describe("BindableMap.tryRemoveAll", () => {
-	// While removeAll delegates its logic to tryRemoveAll, it doesn't make sense to copy all tests over here.
+describe("BindableMap.tryDeleteAll", () => {
+	// While deleteAll delegates its logic to tryDeleteAll, it doesn't make sense to copy all tests over here.
 
-	it("should return the removed entries if changed", () => {
+	it("should return the deleted entries if changed", () => {
 		const map = new BindableMap(getTestInput());
-		expect(Array.from(map.tryRemoveAll(["c", "d", "f"]))).eql([["c", 8], ["d", 7]]);
+		expect(Array.from(map.tryDeleteAll(["c", "d", "f"]))).eql([["c", 8], ["d", 7]]);
 	});
 
 	it("should return undefined if unchanged", () => {
 		const map = new BindableMap(getTestInput());
-		assert.isUndefined(map.tryRemoveAll(["f", "g"]));
+		assert.isUndefined(map.tryDeleteAll(["f", "g"]));
 	});
 });
 
@@ -603,7 +603,7 @@ describe("BindableMap.tryClear", () => {
 });
 
 describe("BindableMap.splice", () => {
-	it("should remove and add entries as documented", () => {
+	it("should delete and add entries as documented", () => {
 		const map = new BindableMap(getTestInput());
 		map.splice(["c"], new Map([["b", 3], ["f", 3], ["h", 9]]));
 		expect(Array.from(map.native)).eql([["a", 5], ["b", 3], ["d", 7], ["e", 8], ["f", 3], ["h", 9]]);
@@ -673,7 +673,7 @@ describe("BindableMap.splice", () => {
 		expect(parseSpliceResult(map.splice([], new Map([["b", 2], ["c", 8]])))).eql([[], []]);
 	});
 
-	it("should ignore non-existent keys to remove", () => {
+	it("should ignore non-existent keys to delete", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
 		expect(parseSpliceResult(map.splice(["f", "g"], new Map()))).eql([[], []]);
@@ -681,7 +681,7 @@ describe("BindableMap.splice", () => {
 		expect(messages).eql([]);
 	});
 
-	it("should ignore keys to remove that are being also updated", () => {
+	it("should ignore keys to delete that are being also updated", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
 		expect(parseSpliceResult(map.splice(["b"], new Map([["b", 3]])))).eql([[["b", 2]], [["b", 3]]]);
@@ -692,7 +692,7 @@ describe("BindableMap.splice", () => {
 		]);
 	});
 
-	it("should ignore keys to remove that are being also added", () => {
+	it("should ignore keys to delete that are being also added", () => {
 		const map = new BindableMap(getTestInput());
 		const messages = listen(map);
 		expect(parseSpliceResult(map.splice(["f"], new Map([["f", 3]])))).eql([[], [["f", 3]]]);
@@ -740,7 +740,7 @@ describe("BindableMap.trySplice", () => {
 		assert.isUndefined(map.trySplice([], new Map()));
 	});
 
-	it("should return undefined if the keys to remove don't exist", () => {
+	it("should return undefined if the keys to delete don't exist", () => {
 		const map = new BindableMap(getTestInput());
 		assert.isUndefined(map.trySplice(["f", "g"], new Map()));
 	});
@@ -968,7 +968,7 @@ describe("BindableMap.performSplice", () => {
 		]));
 	});
 
-	it("should destroy the removed values and then replaced values if owned", () => {
+	it("should destroy the deleted values and then replaced values if owned", () => {
 		let step = 0;
 		const map = new BindableMap<string, any>([
 			["a", newDestroyFailObject()],
@@ -1058,14 +1058,14 @@ function listen(map: BindableMap<any, any>) {
 
 function parseSpliceParams<K, V>(spliceParams: IBindableMap.SpliceParams<K, V>) {
 	return [
-		normalizeKeys(spliceParams.keysToRemove),
+		normalizeKeys(spliceParams.keysToDelete),
 		normalizeEntries(spliceParams.entriesToUpdate.entries())
 	];
 }
 
 function parseSpliceResult<K, V>(spliceResult: IBindableMap.SpliceResult<K, V>) {
 	return [
-		normalizeEntries(spliceResult.removedEntries.entries()),
+		normalizeEntries(spliceResult.deletedEntries.entries()),
 		normalizeEntries(spliceResult.addedEntries.entries())
 	];
 }

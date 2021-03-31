@@ -1,7 +1,6 @@
 description: |
   <p>jWidget utilities for HTML DOM in addition to %jquery. Usually you don't need them if you use %Component to
-  manipulate DOM. These are low-level alternatives to the existing %jquery methods which work much faster, because they
-  don't perform any safety checks.</p>
+  manipulate DOM.</p>
 
 symbols:
   functions: Functions
@@ -36,7 +35,7 @@ symbols:
     kind: interface
     simple: true
     description: |
-      <p>Subset of %JQuery methods necessary for implementation of %isTextInput function.</p>
+      <p>Interface comprising a subset of %JQuery methods necessary for implementation of %isTextInput function.</p>
     methods:
       prop:
         signature: |
@@ -103,7 +102,7 @@ symbols:
     returns: New HTML element.
     description: |
       <p>Parses HTML and builds a new DOM element. Doesn't perform any validation, but works much faster than %jquery
-      alternatives. Use it only if you are author of this HTML code.</p>
+      alternatives. Use it only if you trust this HTML code.</p>
 
   insert:
     signature: |

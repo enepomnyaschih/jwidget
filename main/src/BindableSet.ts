@@ -143,7 +143,7 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 
 	tryDeleteAll(values: Iterable<T>): ReadonlySet<T> {
 		const spliceResult = this.trySplice(values, []);
-		return (spliceResult !== undefined) ? spliceResult.removedValues : undefined;
+		return (spliceResult !== undefined) ? spliceResult.deletedValues : undefined;
 	}
 
 	clear(): ReadonlySet<T> {
@@ -165,12 +165,12 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 		return oldContents;
 	}
 
-	splice(valuesToRemove: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T> {
-		const spliceResult = this.trySplice(valuesToRemove, valuesToAdd);
-		return (spliceResult !== undefined) ? spliceResult : {addedValues: new Set(), removedValues: new Set()};
+	splice(valuesToDelete: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T> {
+		const spliceResult = this.trySplice(valuesToDelete, valuesToAdd);
+		return (spliceResult !== undefined) ? spliceResult : {addedValues: new Set(), deletedValues: new Set()};
 	}
 
-	trySplice(valuesToRemove: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T> {
+	trySplice(valuesToDelete: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T> {
 		const addedValues = new Set<T>();
 		for (const value of valuesToAdd) {
 			if (!this._native.has(value)) {
@@ -179,39 +179,39 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 			}
 		}
 		const valuesToAddSet = new Set(valuesToAdd);
-		const removedValues = new Set<T>();
-		for (const value of valuesToRemove) {
+		const deletedValues = new Set<T>();
+		for (const value of valuesToDelete) {
 			if (!valuesToAddSet.has(value) && this._native.has(value)) {
 				this._native.delete(value);
-				removedValues.add(value);
+				deletedValues.add(value);
 			}
 		}
-		if (removedValues.size === 0 && addedValues.size === 0) {
+		if (deletedValues.size === 0 && addedValues.size === 0) {
 			return undefined;
 		}
 
-		const spliceResult: IBindableSet.SpliceResult<T> = {removedValues, addedValues};
-		this._size.set(this._size.get() - removedValues.size + addedValues.size);
+		const spliceResult: IBindableSet.SpliceResult<T> = {deletedValues: deletedValues, addedValues};
+		this._size.set(this._size.get() - deletedValues.size + addedValues.size);
 		if (this._size.get() === 0) {
-			this._onClear.dispatch(removedValues);
+			this._onClear.dispatch(deletedValues);
 		} else {
 			this._onSplice.dispatch(spliceResult);
 		}
 		this._onChange.dispatch();
 		if (this._ownsValues) {
-			removedValues.forEach(destroy);
+			deletedValues.forEach(destroy);
 		}
 		return spliceResult;
 	}
 
 	detectSplice(newContents: Iterable<T>): IBindableSet.SpliceParams<T> {
-		const valuesToRemove = new Set<T>();
+		const valuesToDelete = new Set<T>();
 		const valuesToAdd = new Set<T>();
 		const oldValues = this._native;
 		const newValues = new Set(newContents);
 		for (let value of oldValues) {
 			if (!newValues.has(value)) {
-				valuesToRemove.add(value);
+				valuesToDelete.add(value);
 			}
 		}
 		for (let value of newValues) {
@@ -219,13 +219,13 @@ class BindableSet<T> extends Class implements IBindableSet<T> {
 				valuesToAdd.add(value);
 			}
 		}
-		return (valuesToRemove.size === 0 && valuesToAdd.size === 0) ? undefined : {valuesToRemove, valuesToAdd};
+		return (valuesToDelete.size === 0 && valuesToAdd.size === 0) ? undefined : {valuesToDelete: valuesToDelete, valuesToAdd};
 	}
 
 	performSplice(newContents: Iterable<T>) {
 		const spliceParams = this.detectSplice(newContents);
 		if (spliceParams !== undefined) {
-			this.trySplice(spliceParams.valuesToRemove, spliceParams.valuesToAdd);
+			this.trySplice(spliceParams.valuesToDelete, spliceParams.valuesToAdd);
 		}
 	}
 }

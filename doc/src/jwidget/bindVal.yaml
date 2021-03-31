@@ -13,28 +13,28 @@ symbols:
     returns: Binding object or bound property. You must %destroy it to stop the synchronization.
     description: |
       <p>Watches string property modification and updates the DOM element value and/or vice versa.</p>
-      <p>One signature returns a string property containing current DOM element value and starts watching for its
+      <p>The first signature returns a string property containing current DOM element value and starts watching for its
       modification.</p>
       <pre>
       // Watch input element value
       const value = %bindVal(el);
       </pre>
-      <p>Second signature watches string property modification and updates the DOM element value.</p>
+      <p>The second signature watches string property modification and updates the DOM element value.</p>
       <pre>
       // Bind element value to property
       %bindVal(el, value);
       </pre>
       %example:bindVal1
-      <p>Third signature allows you to setup a reverse or two-way binding.</p>
+      <p>The third and the fourth signatures allow you to setup a reverse or a two-way binding respectively.</p>
       <pre>
       %bindVal(el, value, %TWOWAY);
       </pre>
       %example:bindVal2
       <p>By default, the function watches DOM element value via "change" DOM event and also a timer with 100 ms
       interval to track the changes live. You can disable the timer by setting %simple parameter to true.</p>
-      <p>The function returns a binding object. If you need to stop the synchronization, %destroy it. This is not neccessary
-      if you work with a private property and DOM element as in the example above. However, if you work with an
-      external model or DOM element (e.g. they get passed to the constructor of the component), you must take care of
+      <p>The function returns a binding object. If you need to stop the synchronization, %destroy it. This is not necessary
+      if you work with a private property and a private DOM element as in the example above. However, if you work with an
+      external model or an external DOM element (e.g. they get passed to the constructor of the component), you must take care of
       the binding destruction, because life time of these objects can be longer than the life time of your
       component. The easiest way to do it is to %own the binding:</p>
       <pre>

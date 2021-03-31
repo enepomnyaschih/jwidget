@@ -14,11 +14,9 @@ symbols:
           <pre>
           // Bind element value to property
           %bindVal(el, property, %UPDATE);</pre>
-          <p>Always used as default binding. Hence, the next code is almost equivalent:</p>
+          <p>Always used as default binding. Hence, the next code is equivalent:</p>
           <pre>
           %bindVal(el, property);</pre>
-          <p>Please prefer the second approach, because the first one takes %IProperty as an argument whereas
-          %Bindable is enough for the second one.</p>
         </dd>
         <dt class="col-lg-2 col-sm-3">WATCH = 2</dt>
         <dd class="col-lg-10 col-sm-9">
@@ -85,7 +83,7 @@ symbols:
       <ul>
         <li>Comparing of booleans, numbers, strings, subarrays, null, undefined.</li>
         <li>Determined linear order, even for mixed arrays.</li>
-        <li>Optionally, case insensitive comparing for strings.</li>
+        <li>Optionally, case insensitive comparison of strings.</li>
         <li>Optionally, comparison of digit sequences in strings as numbers.</li>
       </ul>
       <p>Values of different types are compared as follows: undefined &lt; null &lt; array &lt; boolean &lt;
@@ -115,8 +113,8 @@ symbols:
           <p>Ignore case when comparing strings.</p>
           <h5>Example</h5>
           <pre>
-          expect(smartCmp("aB", "Ab")).toBe(1);
-          expect(smartCmp("aB", "Ab", {%caseInsensitive: true})).toBe(0);
+          expect(smartCmp("aB", "Ab")).equal(1);
+          expect(smartCmp("aB", "Ab", {%caseInsensitive: true})).equal(0);
           </pre>
 
       compareNumbersInStrings:
@@ -127,8 +125,8 @@ symbols:
           <p>Compare digit sequences as numbers when comparing strings.</p>
           <h5>Example</h5>
           <pre>
-          expect(%smartCmp("ab2", "ab10")).toBe(1);
-          expect(%smartCmp("ab2", "ab10", {%compareNumbersInStrings: true})).toBe(-1);
+          expect(%smartCmp("ab2", "ab10")).equal(1);
+          expect(%smartCmp("ab2", "ab10", {%compareNumbersInStrings: true})).equal(-1);
           </pre>
 
   destroy:

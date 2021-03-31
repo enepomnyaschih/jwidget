@@ -73,7 +73,7 @@ export default class SetIndexer<V, K> extends Class {
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<V>) {
 		this._target.trySplice(
-			map(spliceResult.removedValues, this.getKey),
+			map(spliceResult.deletedValues, this.getKey),
 			index(spliceResult.addedValues, this.getKey));
 	}
 
@@ -81,7 +81,7 @@ export default class SetIndexer<V, K> extends Class {
 		if (oldContents.size === this._target.size.get()) {
 			this._target.tryClear();
 		} else {
-			this._target.tryRemoveAll(map(oldContents, this.getKey));
+			this._target.tryDeleteAll(map(oldContents, this.getKey));
 		}
 	}
 }

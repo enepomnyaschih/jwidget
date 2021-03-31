@@ -10,7 +10,7 @@ symbols:
       <p>Extension of %DestroyableBindable interface with %set method to modify the property value.</p>
       %%PropertyExample
       <p>Can be used as a target property in %Copier and %Mapper model bindings. Also, can be used as a target property
-      in %bindProp, %bindRadio and %bindVal view bindings.All bindings are independent - you can implement your own
+      in %bindProp, %bindRadio and %bindVal view bindings. All bindings are independent - you can implement your own
       binding if you want.</p>
 
     methods:

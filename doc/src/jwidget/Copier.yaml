@@ -11,9 +11,9 @@ symbols:
       const source = new %Property(1);
       const target = new %Property<number>();
       const copier = new %Copier(source, target);
-      expect(target.%getOfBindable()).toBe(1);
+      expect(target.%getOfBindable()).equal(1);
       source.%setOfProperty(2);
-      expect(target.%getOfBindable()).toBe(2);
+      expect(target.%getOfBindable()).equal(2);
       copier.%destroy(); // stop synchronization
       </pre>
     constructor:

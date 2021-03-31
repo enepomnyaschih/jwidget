@@ -88,7 +88,7 @@ class MapInserter<K, V> extends Class {
 	}
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, V>) {
-		this._removeEntries(spliceResult.removedEntries);
+		this._removeEntries(spliceResult.deletedEntries);
 		this._addEntries(spliceResult.addedEntries);
 	}
 

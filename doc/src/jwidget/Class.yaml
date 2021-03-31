@@ -7,6 +7,18 @@ symbols:
       <p>Introduces object aggregation support. If you call <code>a.%own(b)</code>, then <code>b</code> is destroyed
       automatically on <code>a</code> destruction. You can aggregate any object implementing %Destroyable. Aggregated objects
       are destroyed in reverse order.</p>
+      <p>The convention is to call the respective superclass method of destruction at the end of the overriding
+      method. That's why %Class provides two destruction methods for you to override if you want to add an extra
+      destruction logic:</p>
+      <dl class="row">
+        <dt class="col-lg-2 col-sm-3">%destroy</dt>
+        <dd class="col-lg-10 col-sm-9">Here, the aggregated objects are still available. When you call
+          <code>super.%destroy()</code>, the aggregated objects get destroyed and %destroyObject method gets
+          called.</dd>
+        <dt class="col-lg-2 col-sm-3">%destroyObject</dt>
+        <dd class="col-lg-10 col-sm-9">Here, the aggregated objects are already destroyed. In the majority of cases,
+          it is recommended to override this method instead of %destroy.</dd>
+      </dl>
       <pre>
       class Book extends %Class {
           cover = this.%own(new Cover());
@@ -57,24 +69,17 @@ symbols:
 
           // ...
 
-          // Once object is not needed anymore, destroy it
+          // When the object is not needed anymore, destroy it.
           object.%destroy();
           </pre>
           <p>Alternatively (and optimally), you should use %own method to aggregate this object inside another one.</p>
-          <p>Unlike the other %Destroyable subclasses, %Class subclasses are not recommended to override %destroy
-          method directly. Instead, please use %destroyObject if you want the aggregated objects to be already
-          destroyed.</p>
-          <p>You can override %destroy method in a subclass to do some preliminary work before aggregated object
-          destruction. For example, %Component overrides this method to remove child components before their
-          destruction, because child components are usually aggregated inside the component. However, in the majority
-          of cases, you should override %destroyObject method instead to customize destruction logic.</p>
 
       destroyObject:
         modifiers: [protected]
         signature: '(): void'
         description: |
-          <p>Class destructor implementation. Called in %destroy method <i>after aggregated object destruction</i>.
-          The logic of class instance destruction should be implemented here. If you override this method,
+          <p>Class destructor implementation. Called in %destroy method after destruction of all aggregated objects.
+          The logic of class instance destruction should usually be implemented here. If you override this method,
           remember to call <code>super.%destroyObject()</code> at the end of the method:</p>
           <pre>
           %destroyObject() {

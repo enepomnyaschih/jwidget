@@ -4,7 +4,7 @@ symbols:
     typevars:
       T: Value type.
     description: |
-      <p>Unordered collection optimized for value addition, removal and presence check.</p>
+      <p>Bindable readonly wrapper over a native set.</p>
 
     properties:
       silent:
@@ -22,7 +22,7 @@ symbols:
       onSplice:
         modifiers: readonly
         type: '%Listenable<%IBindableSet.%SpliceResult<%T>>'
-        description: Value are removed from the set and/or values are added to the set.
+        description: Value are deleted from the set and/or values are added to the set.
       onClear:
         modifiers: readonly
         type: '%Listenable<%ReadonlySet<%T>>'
@@ -58,7 +58,7 @@ symbols:
         returns: '%splice method arguments. If no method call required, returns undefined.'
         description: |
           <p>Detects %splice method arguments to adjust the set contents to %newContents.
-          Determines values to be removed and added.</p>
+          Determines values to be deleted and added.</p>
 
     references:
       splice:

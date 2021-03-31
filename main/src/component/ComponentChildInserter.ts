@@ -56,8 +56,8 @@ export default class ComponentChildInserter extends BindableMap<string, Componen
 		return item;
 	}
 
-	remove(key: string): ComponentChild {
-		const item = super.remove(key);
+	delete(key: string): ComponentChild {
+		const item = super.delete(key);
 		if (item === undefined) {
 			return undefined;
 		}
@@ -71,7 +71,7 @@ export default class ComponentChildInserter extends BindableMap<string, Componen
 		if (spliceResult === undefined) {
 			return undefined;
 		}
-		spliceResult.removedEntries.forEach(this._detach, this);
+		spliceResult.deletedEntries.forEach(this._detach, this);
 		spliceResult.addedEntries.forEach(this._attach, this);
 		return spliceResult;
 	}

@@ -26,7 +26,7 @@ import DestroyableReadonlyBindableSet from './DestroyableReadonlyBindableSet';
 import IClass from "./IClass";
 
 /**
- * Extension of DestroyableReadonlySet with modification methods.
+ * Extension of `DestroyableReadonlyBindableSet` with modification methods.
  */
 interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 
@@ -39,74 +39,76 @@ interface IBindableSet<T> extends IClass, DestroyableReadonlyBindableSet<T> {
 	/**
 	 * Adds a value to the set if one is absent and dispatches a splice message.
 	 * @param value Value to add.
-	 * @returns Value is added successfully. False if value is already present.
+	 * @returns The value is added successfully. Returns false if the value is already present.
 	 */
 	add(value: T): boolean;
 
 	/**
 	 * Adds multiple values to the set, ones that are absent, and dispatches a splice message.
 	 * @param values Values to add.
-	 * @returns The added values. Never returns null or undefined.
+	 * @returns The truly added values. Never returns null or undefined.
 	 */
 	addAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * Removes a value from the set if one is present and dispatches a splice message.
-	 * @param value Value to remove.
-	 * @returns Value is removed successfully. Returns false if value is already absent.
+	 * Deletes a value from the set if one is present and dispatches a splice message.
+	 * @param value Value to delete.
+	 * @returns The value is deleted successfully. Returns false if the value is already absent.
 	 */
 	delete(value: T): boolean;
 
 	/**
-	 * Removes multiple values from the set, ones that are present, and dispatches a splice message.
-	 * @param values Values to remove.
-	 * @returns The removed values. Never returns null or undefined.
+	 * Deletes multiple values from the set, ones that are present, and dispatches a splice message.
+	 * @param values Values to delete.
+	 * @returns The truly deleted values. Never returns null or undefined.
 	 */
 	deleteAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * Removes all set values and dispatches a cleanup message.
+	 * Deletes all values from the set and dispatches a cleanup message.
+	 * @returns Old contents of the set. Never returns null or undefined.
 	 */
 	clear(): ReadonlySet<T>;
 
 	/**
-	 * Removes and/or adds multiple values in the set granularly and dispatches a splice message.
-	 * @param valuesToRemove Values to remove.
+	 * Deletes and/or adds multiple values in the set granularly and dispatches a splice message.
+	 * @param valuesToDelete Values to delete.
 	 * @param valuesToAdd Values to add.
 	 * @returns Splice result. Never returns null or undefined.
 	 */
-	splice(valuesToRemove: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T>;
+	splice(valuesToDelete: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T>;
 
 	/**
 	 * Adds multiple values to the set, ones that are absent, and dispatches a splice message.
 	 * @param values Values to add.
-	 * @returns The added values. If the set is not modified, returns undefined.
+	 * @returns The truly added values. If the call doesn't modify the set, returns undefined.
 	 */
 	tryAddAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * Removes multiple values from the set, ones that are present, and dispatches a splice message.
-	 * @param values Values to remove.
-	 * @returns The removed values. If the set is not modified, returns undefined.
+	 * Deletes multiple values from the set, ones that are present, and dispatches a splice message.
+	 * @param values Values to delete.
+	 * @returns The truly deleted values. If the call doesn't modify the set, returns undefined.
 	 */
 	tryDeleteAll(values: Iterable<T>): ReadonlySet<T>;
 
 	/**
-	 * Removes all set values and dispatches a cleanup message.
+	 * Deletes all set values and dispatches a cleanup message.
+	 * @returns Old contents of the set. If the call doesn't modify the set, returns undefined.
 	 */
 	tryClear(): ReadonlySet<T>;
 
 	/**
-	 * Removes and/or adds multiple values in the set granularly and dispatches a splice message.
-	 * @param valuesToRemove Values to remove.
+	 * Deletes and/or adds multiple values in the set granularly and dispatches a splice message.
+	 * @param valuesToDelete Values to delete.
 	 * @param valuesToAdd Values to add.
-	 * @returns Splice result. If the set is not modified, returns undefined.
+	 * @returns Splice result. If the call doesn't modify the set, returns undefined.
 	 */
-	trySplice(valuesToRemove: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T>;
+	trySplice(valuesToDelete: Iterable<T>, valuesToAdd: Iterable<T>): IBindableSet.SpliceResult<T>;
 
 	/**
-	 * Adjusts set contents to `newValues` using `detectSplice` and `splice` methods.
-	 * @param newContents New set contents.
+	 * Adjusts the set contents to `newContents` using `detectSplice` and `splice` methods.
+	 * @param newContents New contents of the set.
 	 */
 	performSplice(newContents: Iterable<T>): void;
 }
@@ -115,13 +117,13 @@ export default IBindableSet;
 
 namespace IBindableSet {
 	/**
-	 * Set splice method arguments. Result of `detectSplice` method.
+	 * `IBindableSet.splice` method arguments. Result of `detectSplice` method.
 	 */
 	export interface SpliceParams<T> {
 		/**
-		 * Values to remove.
+		 * Values to delete.
 		 */
-		readonly valuesToRemove: Iterable<T>;
+		readonly valuesToDelete: Iterable<T>;
 
 		/**
 		 * Values to add.
@@ -130,13 +132,13 @@ namespace IBindableSet {
 	}
 
 	/**
-	 * Set splice method result.
+	 * `IBindableSet.splice` method result.
 	 */
 	export interface SpliceResult<T> {
 		/**
-		 * Removed values.
+		 * Deleted values.
 		 */
-		readonly removedValues: ReadonlySet<T>;
+		readonly deletedValues: ReadonlySet<T>;
 
 		/**
 		 * Added values.

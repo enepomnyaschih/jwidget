@@ -25,12 +25,12 @@ symbols:
               constructor(el: JQuery) {
                   super();
                   const value = this.%own(%bindVal(el));
-                  value.%map((value) => console.log(value));
+                  value.%map(value => console.log(value));
               }
           }
           </pre>
           <p>In some cases, binding destruction is not obligatory. In the next example, the component binds a property to
-          its own element, so garbage collector will take everything away on component destruction anyway. So, it doesn't
+          its own element, so the garbage collector will take everything away on component destruction anyway. So, it doesn't
           make much sense to aggregate the binding explicitly.</p>
 
       example2:
@@ -41,7 +41,7 @@ symbols:
           class App extends %Component {
               renderInput(el: JQuery) {
                   const value = %bindVal(el);
-                  value.%map((value) => console.log(value));
+                  value.%map(value => console.log(value));
               }
           }
           </pre>

@@ -241,7 +241,7 @@ function listen(set: ReadonlyBindableSet<any>) {
 
 function parseSpliceResult<T>(spliceResult: IBindableSet.SpliceResult<T>) {
 	return [
-		normalizeValues(spliceResult.removedValues),
+		normalizeValues(spliceResult.deletedValues),
 		normalizeValues(spliceResult.addedValues)
 	];
 }

@@ -2,17 +2,6 @@ description: |
   <p>jWidget utilities for native JavaScript arrays.</p>
 
 symbols:
-  binarySearch:
-    signature: |
-      <T>(arr: readonly T[], isHigher: (value: T) => boolean): number
-    params:
-      arr: 'Sorted array.'
-      isHigher: 'Should return true if the argument is "higher" than the searched value.'
-    returns: 'Array index.'
-    description: |
-      <p>Determines index of the first item the %isHigher callback returns true for. The input array must be ordered
-      in such a way that all values such that <tt>!%isHigher(value)</tt> go before <tt>%isHigher(value)</tt>.</p>
-
   addAll:
     signature: |
       <T>(arr: T[], items: %Iterable<T>, index?: number)
@@ -22,6 +11,52 @@ symbols:
       index: 'Index of an item to insert the new ones before. By default, appends the items to the end of array.'
     description: |
       <p>Adds a range of new items to an array.</p>
+
+  backForEach:
+    signature: |
+      <T>(arr: readonly T[], callback: (item: T, index: number) => void)
+    params:
+      arr: Array.
+      callback: Callback.
+    description: |
+      <p>Iterates through array items in backward order.</p>
+
+  binarySearch:
+    signature: |
+      <T>(arr: readonly T[], isHigher: (value: T) => boolean): number
+    params:
+      arr: 'Sorted array.'
+      isHigher: 'Should return true if the argument is "higher" than the searched value.'
+    returns: 'Array index.'
+    description: |
+      <p>Determines index of the first item the %isHigher callback returns true for. If such an item does not exist,
+      returns the array length. The input array must be ordered in such a way that all values such that
+      <tt>!%isHigher(value)</tt> go before <tt>%isHigher(value)</tt>.</p>
+
+  invert:
+    signature: |
+      (arr: readonly number[]): number[]
+    params:
+      arr: 'Array to invert.'
+    returns: 'New inverted array.'
+    description: |
+      Builds a new array by the rule: <code>result[%arr[i]] === i</code> and returns it.
+
+  isIdentity:
+    signature: |
+      (arr: readonly number[]): boolean
+    params:
+      arr: 'Array to inspect.'
+    returns: 'Every item in %arr is equal to its index: <code>%arr[i] === i</code>.'
+
+  merge:
+    signature: |
+      <T>(arrays: readonly (readonly T[])[]): T[]
+    params:
+      arrays: Array of subarrays.
+    returns: Merged array.
+    description: |
+      <p>Builds a new array consisting of subarray items in the same order.</p>
 
   move:
     signature: |
@@ -34,39 +69,17 @@ symbols:
     description: |
       Moves an item in the array.
 
-  backForEach:
+  tryReorder:
     signature: |
-      <T>(arr: readonly T[], callback: (item: T, index: number) => void)
+      <T>(arr: T[], indexArray: readonly number[]): T[]
     params:
-      arr: Array.
-      callback: Callback.
+      arr: 'Array.'
+      indexArray: |
+        Index array. Item with index <code>i</code> will be moved to index <code>indexArray[i]</code>.
+        Must contain all indexes from 0 to (length - 1).
+    returns: 'Old array contents. If the array is not modified, returns undefined.'
     description: |
-      <p>Iterates through array items in backward order.</p>
-
-  isIdentity:
-    signature: |
-      (arr: readonly number[]): boolean
-    params:
-      arr: 'Array to inspect.'
-    returns: 'Every item in %arr is equal to its index: <code>%arr[i] === i</code>.'
-
-  invert:
-    signature: |
-      (arr: readonly number[]): number[]
-    params:
-      arr: 'Array to invert.'
-    returns: 'New inverted array.'
-    description: |
-      Builds a new array by the rule: <code>result[%arr[i]] === i</code> and returns it.
-
-  merge:
-    signature: |
-      <T>(arrays: readonly (readonly T[])[]): T[]
-    params:
-      arrays: Array of subarrays.
-    returns: Merged array.
-    description: |
-      <p>Builds a new array consisting of subarray items in the same order.</p>
+      <p>Reorders array items.</p>
 
   trySplice:
     signature: |
@@ -80,18 +93,6 @@ symbols:
     returns: 'Splice result. If the array is not modified, returns undefined.'
     description: |
       <p>Removes and inserts item ranges.</p>
-
-  tryReorder:
-    signature: |
-      <T>(arr: T[], indexArray: readonly number[]): T[]
-    params:
-      arr: 'Array.'
-      indexArray: |
-        Index array. Item with index <tt>i</tt> will be moved to index <tt>indexArray[i]</tt>.
-        Must contain all indexes from 0 to (length - 1).
-    returns: 'Old array contents. If the array is not modified, returns undefined.'
-    description: |
-      <p>Reorders array items.</p>
 
 references:
   IndexCount:

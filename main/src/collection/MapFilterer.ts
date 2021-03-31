@@ -64,7 +64,7 @@ class MapFilterer<K, V> extends Class {
 	}
 
 	protected destroyObject() {
-		this._target.tryRemoveAll(this._prepareToRemove(this.source.native));
+		this._target.tryDeleteAll(this._prepareToRemove(this.source.native));
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
@@ -75,7 +75,7 @@ class MapFilterer<K, V> extends Class {
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, V>) {
 		this._target.trySplice(
-			this._prepareToRemove(spliceResult.removedEntries),
+			this._prepareToRemove(spliceResult.deletedEntries),
 			this._prepareToSet(spliceResult.addedEntries));
 	}
 
@@ -84,7 +84,7 @@ class MapFilterer<K, V> extends Class {
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, V>) {
-		this._target.tryRemoveAll(this._prepareToRemove(oldContents));
+		this._target.tryDeleteAll(this._prepareToRemove(oldContents));
 	}
 
 	private _prepareToSet(entries: ReadonlyMap<K, V>) {

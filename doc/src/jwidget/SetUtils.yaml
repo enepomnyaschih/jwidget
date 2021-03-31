@@ -18,7 +18,7 @@ symbols:
     typevars:
       T: Value type.
     description: |
-      <p>Subset of %Set or %Map methods needed for %getDifference implementation.</p>
+      <p>Interface comprising a subset of %Set or %Map methods needed for %getDifference implementation.</p>
     methods:
       has:
         signature: |
@@ -27,7 +27,7 @@ symbols:
           value: Value.
         returns: If the collection has a value/key.
         description: |
-          <p>See %setHas or %mapHas.</p>
+          <p>See %Set.%setHas or %Map.%mapHas.</p>
         references:
           setHas:
             href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/has

@@ -45,7 +45,7 @@ symbols:
       <ul>
         <li>All values of the source set get indexed and added to %target immediately on the synchronizer
         initialization.</li>
-        <li>Indexed entries get removed from %target on synchronizer destruction.</li>
+        <li>Indexed entries get deleted from %target on synchronizer destruction.</li>
         <li>Target map gets synchronized with source set continuously until the synchronizer is destroyed.</li>
         <li>All values must have different keys.</li>
       </ul>

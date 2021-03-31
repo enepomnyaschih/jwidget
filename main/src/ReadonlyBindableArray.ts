@@ -66,7 +66,7 @@ interface ReadonlyBindableArray<T> extends Iterable<T> {
 	readonly onMove: Listenable<IBindableArray.MoveMessage<T>>;
 
 	/**
-	 * Items are reordered in the array. Passes mapping of indices (old to new) as a message.
+	 * Items are reordered in the array.
 	 */
 	readonly onReorder: Listenable<IBindableArray.ReorderMessage<T>>;
 

@@ -53,7 +53,7 @@ export default class MapKeyCollector<K> extends AbstractValueCollector<K> {
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<K, unknown>) {
 		this._target.trySplice(
-			getIterableKeys(spliceResult.removedEntries),
+			getIterableKeys(spliceResult.deletedEntries),
 			getIterableKeys(spliceResult.addedEntries));
 	}
 

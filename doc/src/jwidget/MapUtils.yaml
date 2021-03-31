@@ -31,6 +31,19 @@ symbols:
     description: |
       <p>Returns an %Iterable of all %map keys. As opposed to native %Map.%keys, returns an %Iterable instead of
       %IterableIterator, so it is stateless and can be reused multiple times to iterate over the map keys.</p>
+      <pre>
+      function pushAndLog<T>(array: T[], values: %Iterable<T>) {
+          array.push(...values);
+          for (const value of values) {
+              console.log(value);
+          }
+      }
+
+      const array: T[] = [];
+      const map = new %Map([["a", 1], ["b", 2]]);
+      pushAndLog(array, map.%keys()); // wrong: the values will be pushed, but not logged
+      pushAndLog(array, %getIterableKeys(map)); // correct
+      </pre>
     references:
       keys:
         href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/keys
@@ -44,6 +57,19 @@ symbols:
     description: |
       <p>Returns an %Iterable of all %map values. As opposed to native %Map.%values, returns an %Iterable instead of
       %IterableIterator, so it is stateless and can be reused multiple times to iterate over the map values.</p>
+      <pre>
+      function pushAndLog<T>(array: T[], values: %Iterable<T>) {
+          array.push(...values);
+          for (const value of values) {
+              console.log(value);
+          }
+      }
+
+      const array: T[] = [];
+      const map = new %Map([["a", 1], ["b", 2]]);
+      pushAndLog(array, map.%values()); // wrong: the values will be pushed, but not logged
+      pushAndLog(array, %getIterableValues(map)); // correct
+      </pre>
     references:
       values:
         href: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/values

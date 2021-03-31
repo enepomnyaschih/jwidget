@@ -12,12 +12,12 @@ symbols:
       const collector = new %ArrayValueCollector(source);
       const target = collector.%target;
 
-      expect(target.%has(1)).toBe(true);
-      expect(target.%has(4)).toBe(false);
+      expect(target.%has(1)).equal(true);
+      expect(target.%has(4)).equal(false);
 
       // Target collection is automatically synchronized with the original collection.
       source.%add(4);
-      expect(target.%has(4)).toBe(true);
+      expect(target.%has(4)).equal(true);
 
       // Destroy the collector to stop synchronization.
       collector.%destroy();
@@ -45,7 +45,7 @@ symbols:
 
       <ul>
         <li>All values get added to %target immediately on the collector initialization.</li>
-        <li>The values get removed from %target on the collector destruction.</li>
+        <li>The values get deleted from %target on the collector destruction.</li>
         <li>Target set gets synchronized with source collection continuously until the synchronizer is destroyed.</li>
         <li>All values must be different.</li>
         <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications.</li>

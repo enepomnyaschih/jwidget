@@ -14,8 +14,8 @@ symbols:
       const converter = new %SetConverterToArray(source);
       const target = converter.%target;
 
-      expect(target.%includes(1)).toBe(true);
-      expect(target.%includes(4)).toBe(false);
+      expect(target.%includes(1)).equal(true);
+      expect(target.%includes(4)).equal(false);
 
       // The target array is automatically synchronized with the source set.
       source.%add(4);
@@ -47,7 +47,7 @@ symbols:
 
       <ul>
         <li>All values of the source set get added to %target immediately on synchronizer initialization.</li>
-        <li>The values get removed from %target on synchronizer destruction.</li>
+        <li>The values get deleted from %target on synchronizer destruction.</li>
         <li>Target array gets synchronized with source set continuously until the synchronizer is destroyed.</li>
         <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications. All values must
         be different.</li>

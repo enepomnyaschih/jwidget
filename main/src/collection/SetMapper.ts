@@ -99,9 +99,9 @@ class SetMapper<T, U> extends AbstractMapper<T, U> {
 	}
 
 	private _onSplice(spliceResult: IBindableSet.SpliceResult<T>) {
-		const {removedValues, addedValues} = spliceResult;
-		this._target.trySplice(this._getItems(removedValues), this._createItems(addedValues));
-		this._destroyItems(removedValues);
+		const {deletedValues, addedValues} = spliceResult;
+		this._target.trySplice(this._getItems(deletedValues), this._createItems(addedValues));
+		this._destroyItems(deletedValues);
 	}
 
 	private _onClear(oldContents: ReadonlySet<T>) {

@@ -7,8 +7,7 @@ symbols:
         typevars: [T]
       - file: jwidget/Class
     description: |
-      <p>Ordered collection of items. Each item of the array has an index. Index of first item is 0,
-      index of each next one is higher by 1.</p>
+      <p>Implementation of a bindable wrapper over a native array.</p>
     constructor:
       signature: |
         (silent?: boolean)

@@ -38,9 +38,8 @@ symbols:
           }
           </pre>
           %example:component
-          <p>Let's find out how HTML template works. Each component has a <b>main </b>template, which is passed into %templateAnnotation
-          annotation and defaults to <tt>&lt;div&gt;&lt;/div&gt;</tt>. You can add more templates. Subclass inherits
-          superclass templates.</p>
+          <p>Let's find out how the HTML template works. Each component has a template, that is passed into %templateAnnotation
+          annotation and defaults to <tt>&lt;div&gt;&lt;/div&gt;</tt>. Subclass inherits the superclass template.</p>
           <p>Pay attention to special attributes %jwclass and %jwid in the template. %jwclass is a root
           CSS class of the component, and %jwid is a suffix to %jwclass in this element. So, the next HTML snippet is
           created in DOM as a result of this component rendering:</p>
@@ -114,8 +113,8 @@ symbols:
           </li>
           <li>
           <p>Add a set of child components into some element using %addSet method. As opposed to %addArray
-          method, %addSet doesn't retain the order of child components. A newly added component is always appended
-          to the end. Framework will provide the synchronization with this collection during application running.</p>
+          method, %addSet doesn't let you control the order of child components. A newly added component is always appended
+          to the end. Framework will provide the synchronization with this set during application running.</p>
           <pre>
           %afterRender() {
               super.%afterRender();
@@ -152,7 +151,7 @@ symbols:
           <p>It is convenient to use %startMappingArray and %startMappingSet functions to convert data collections
           to UI component collections. Thanks to them, view is updated on data update automatically.</p>
           <p>That's the reason why we recommend to use jWidget collections in data model instead of native JavaScript Array
-          and Object: jWidget collections can be synchronized to each other.</p>
+          and %Set: jWidget collections can be synchronized to each other.</p>
           <p>Reference: %tutorial6</p>
 
       moreAboutRender:
@@ -171,7 +170,7 @@ symbols:
           <ul>
           <li>If the method returns an instance of %Component, then it gets added into %children map and becomes a child
           component. This option doesn't work for the root element.</li>
-          <li>If the method returns an instance of %Bindable&lt;Component&gt;, then it gets added as a bindable child
+          <li>If the method returns an instance of %Bindable&lt;%Component&gt;, then it gets added as a bindable child
           component via %addBindable method. This option doesn't work for the root element.</li>
           <li>If the method returns an instance of %ReadonlyBindableArray&lt;%Component&gt;, then it gets added as a child array via
           method %addArray.</li>
@@ -187,7 +186,7 @@ symbols:
       componentRemoval:
         header: Component removal and destruction
         text: |
-          <p>You can destroy the component via %destroy method. However you can not destroy a component which is added into
+          <p>You can destroy a component via %destroy method. However you can not destroy a component which is added into
           another component as a child (framework throws an exception in this case). You must remove the child component
           from its parent first. To remove the component from its parent, you must perform the operation opposite to the
           adding operation.</p>
@@ -196,7 +195,7 @@ symbols:
           <li>Methods %addBindable, %addArray and %addSet return bindings. Their destruction removes the
           children.</li>
           </ul>
-          <p>As soon as child component is removed, you can destroy it:</p>
+          <p>As soon as a child component is removed, you can destroy it:</p>
           <pre>
           this.children.%mapDelete("comments").%destroy();
           </pre>
@@ -220,7 +219,7 @@ symbols:
           }
           </pre>
           <p>You don't need to remove the child components explicitly all the time. On parent component destruction,
-          framework automatically removes all the children before %unrender method call. However, it doesn't destroy them.
+          the framework automatically removes all the children before %unrender method call. However, it doesn't destroy them.
           You can use aggregation method %own to destroy child components. So, usually your code will look as simple as
           this:</p>
           <pre>
@@ -245,7 +244,7 @@ symbols:
               '</div>'
           )
           class MyComponent extends %Component {
-              renderTitleBox: function() {
+              protected renderTitleBox() {
                   return this.%own(new TitleBox());
               }
           }
@@ -340,12 +339,12 @@ symbols:
           Component layouting should be performed here (i.e. element size computation). Call <tt>super.afterAppend()</tt>
           at the first line of the method.</li>
           <li>Component destruction flow:<ol>
-            <li>Method %releaseDom is called. Everything that was performed in %afterAppend
+            <li>If the component was in DOM, %releaseDom method is called. Everything that was performed in %afterAppend
             method, i.e. on step 3, should be reverted here. Call <tt>super.releaseDom()</tt> at the last line of the
             method.</li>
             <li>The element is removed from DOM. All child components are removed. All child arrays, sets and
             properties are unbound.</li>
-            <li>Method %unrender is called. Everything that was performed during component
+            <li>If the component was rendered, %unrender method is called. Everything that was performed during component
             rendering, i.e. on step 2, should be reverted here. You must destroy the child components explicitly here unless
             you use %own method to aggregate them. Call <tt>super.unrender()</tt> at the last line of the method.</li>
             <li>The element is destroyed, i.e. all event handlers and data assigned to the element is released.</li>
@@ -354,7 +353,8 @@ symbols:
             method.</li>
             <li>All aggregated objects (including child components) are destroyed.</li>
             <li>Method %destroyObject is called. Call <tt>super.destroyObject()</tt> at the last line of the method.</li>
-          </ol></li>
+          </ol>
+          It implies that you should never override %destroy method for a %Component.</li>
           </ol>
 
       webPackIntegration:
@@ -402,6 +402,7 @@ symbols:
           file somewhere in sources folder with the next lines of code:</p>
           <pre>
           // hack to make this a module
+          // @ts-ignore
           export default null;
 
           // hack to use CommonJS syntax in TypeScript files (e.g. to load CSS)
@@ -418,26 +419,7 @@ symbols:
     constructor:
       signature: '()'
       description: |
-        <p>Plain objects of this class can be constructed. They can be used as dummy components or simple containers.
-        For example, here's a common pattern for %Bindable&lt;%ReadonlyBindableArray&lt;%Component&gt;&gt; rendering:</p>
-        <pre>
-        @%templateAnnotation('<div><div jwid="labels"></div></div>')
-        class Container extends %Component {
-            constructor(private labels: %Bindable<%ReadonlyBindableArray<%Component>>) {
-                super();
-            }
-
-            protected renderLabels: function() {
-                return this.%own(this.labels.%mapProperty(labels => {
-                    const component = new Component().%render();
-                    component.%addArray(labels);
-                    return component;
-                }, {destroy}));
-            }
-        }
-        </pre>
-        <p>You should not rely on this possibility too much. The best approach is to inherit a new class from
-        %Component and render the children in its implementation.</p>
+        <p>Constructs a new instance of %Component.</p>
     properties:
       parent:
         modifiers: readonly
@@ -528,8 +510,8 @@ symbols:
           }
           </pre>
           <p>%addBindable method returns a binding. If you %baseDestroy it, the child gets removed from parent component
-          and the synchronization gets stopped. Also, the property is removed from parent component on parent
-          component destruction right before %unrender method call. But notice that child component inside this
+          and the synchronization gets stopped. The same happens when the component gets destroyed -
+          right before %unrender method call. But notice that child component inside this
           property does not get destroyed automatically. Usually it can be done by corresponding %Mapper or %Property
           destruction in %unrender method or via %own.
       addArray:
@@ -551,8 +533,8 @@ symbols:
           }
           </pre>
           <p>%addArray method returns a binding. If you %baseDestroy it, the children get removed from parent component
-          and the synchronization gets stopped. Also, the array is removed from parent component on parent component
-          destruction right before %unrender method call. But notice that child components inside this array are not
+          and the synchronization gets stopped. The same happens when the component gets destroyed -
+          right before %unrender method call. But notice that child components inside this array are not
           destroyed automatically. Usually it can be done by corresponding %ArrayMapper or array destruction in
           %unrender method or via %own.</p>
       addSet:
@@ -574,8 +556,8 @@ symbols:
           }
           </pre>
           <p>%addSet method returns a binding. If you %baseDestroy it, the children get removed from parent
-          component and the synchronization gets stopped. Also, the set is removed from parent component on
-          parent component destruction right before %unrender method call. But notice that child components inside
+          component and the synchronization gets stopped. The same happens when the component gets destroyed -
+          right before %unrender method call. But notice that child components inside
           this set are not destroyed automatically. Usually it can be done by corresponding mapper or
           set destruction in %unrender method or via %own.</p>
       using:
@@ -618,7 +600,7 @@ symbols:
           <p>Component life stage method. Called after first-time component appearing in HTML DOM and UI components
           tree. Component layouting should be performed here (element size computing). Component rendering is
           finished here. Call <tt>super.afterAppend()</tt> at the first line of the method.</p>
-          <p><b>Caution:</b> the component is called in the next cases only:</p>
+          <p><b>Caution:</b> the method is called in the next cases only:</p>
           <ul>
             <li>%renderTo or %renderAs method is called, and the parent element is present in the document body.</li>
             <li>The component is added as a child component to a component that has %afterAppend method called

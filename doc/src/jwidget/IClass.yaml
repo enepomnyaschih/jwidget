@@ -19,7 +19,7 @@ symbols:
 
           // ...
 
-          // Once object is not needed anymore, destroy it
+          // When the object is not needed anymore, destroy it.
           object.%destroy();
           </pre>
           <p>Alternatively (and optimally), you should use %own method to aggregate this object inside another one.</p>
@@ -45,9 +45,7 @@ symbols:
           obj: 'Object to aggregate.'
         returns: 'this'
         description: |
-          <p>Aggregates the object. It means that the specified object is automatically destroyed
-          on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
-          Returns <code>this</code> object, which makes it easy to use in object instantiation:</p>
+          <p>The same as %own, but returns <code>this</code>, which makes it easy to use in object instantiation:</p>
           <pre>
           const items = new %BindableArray().ownValues();
           return new Panel(items).%owning(items);

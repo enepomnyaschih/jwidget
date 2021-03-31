@@ -26,7 +26,7 @@ symbols:
         description: |
           <p>Synchronously dispatches a message, i.e. calls all bound handlers with the specified argument.</p>
           <pre>
-          dispatcher.%dispatch("My message");
+          dispatcher.%dispatch("Hello");
           </pre>
           <p>This way, we synchronously call all handlers of <code>dispatcher</code> with "Hello" argument.
 

@@ -8,7 +8,7 @@ symbols:
         typevars: [K, V]
       - file: jwidget/Class
     description: |
-      <p>Unordered key-value collection. Consists of key-value pairs (entries).</p>
+      <p>Implementation of a bindable wrapper over a native map.</p>
     constructor:
       signature: |
         (silent?: boolean)

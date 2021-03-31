@@ -6,7 +6,7 @@ symbols:
     showInheritanceLevels: 2
     description: |
       <p>Container for callback functions. Provides basic message listening functionality. Has a sub-interface
-      %IDispatcher, which exposes %dispatch method to dispatch messages.</p>
+      %IDispatcher that can %dispatch messages.</p>
       %%DispatcherExample
 
     properties:
@@ -31,4 +31,15 @@ symbols:
           <p>Starts listening messages.</p>
           <p>Whenever a message is %dispatched, %handler function is called. Handlers are called in the same order
           as they were bound.</p>
-          <p>You can stop listening messages by %destroying the returned listener reference.</p>
+          <p>You can stop listening messages by %destroying the returned listener reference. Consider using %own method
+          for this purpose.</p>
+          <pre>
+          class MyListener extends %Class {
+              constructor(onChange: %Listenable<number>) {
+                  super();
+                  this.%own(onChange.%listen(message => {
+                      console.log("Value has changed to " + message);
+                  }));
+              }
+          }
+          </pre>

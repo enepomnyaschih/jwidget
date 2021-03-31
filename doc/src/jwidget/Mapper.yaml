@@ -6,44 +6,44 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>Listens source %Bindable instances modification and recreates target value via mapping function.</p>
+      <p>Listens modification of source %Bindable instances and recreates the target value via mapping function.</p>
       <pre>
       const count  = new %Property(1);
       const unit   = new %Property("apples");
       const target = new %Property<string>();
 
       const mapper = new %Mapper([count, units], (count: number, units: string) => count + " " + units, {target});
-      expect(target.%getOfBindable()).toBe("1 apples");
+      expect(target.%getOfBindable()).equal("1 apples");
 
       count.%setOfProperty(2);
-      expect(target.%getOfBindable()).toBe("2 apples");
+      expect(target.%getOfBindable()).equal("2 apples");
 
       mapper.%destroy(); // stops synchronization and resets target value to null
-      expect(target.%getOfBindable()).toBe(null);
+      expect(target.%getOfBindable()).equal(null);
       </pre>
-      <p>If <b>target</b> is omitted in constructor, it is created automatically.</p>
+      <p>If the <b>target</b> is omitted in the constructor, it gets created automatically.</p>
       <pre>
       const source = new %Property(1);
       const mapper = new %Mapper([source], (value: number) => value + " apples");
       const target = mapper.%target;
-      expect(target.%getOfBindable()).toBe("1 apples");
+      expect(target.%getOfBindable()).equal("1 apples");
       mapper.%destroy(); // stops synchronization
       </pre>
-      <p>In this case, it is optimal to use %mapProperties function instead. It returns target property right away:</p>
+      <p>In this case, it is optimal to use %mapProperties function instead. It returns the target property right away:</p>
       <pre>
       const source = new %Property(1);
       const target = %mapProperties([source], (value: number) => value + " apples");
-      expect(target.%getOfBindable()).toBe("1 apples");
+      expect(target.%getOfBindable()).equal("1 apples");
       target.%baseDestroy(); // stops synchronization
       </pre>
       <p>And even better, if you have just one source property, simply call its %mapOfBindable method:
       <pre>
       const source = new %Property(1);
       const target = source.%mapOfBindable(value => value + " apples");
-      expect(target.%getOfBindable()).toBe("1 apples");
+      expect(target.%getOfBindable()).equal("1 apples");
       target.%baseDestroy(); // stops synchronization
       </pre>
-      <p>If target value is %Destroyable instance, %Mapper can destroy it for you. Just pass %destroyOfConfig config
+      <p>If the target value is %Destroyable instance, %Mapper can destroy it for you. Just pass %destroyOfConfig config
       option:</p>
       <pre>
       const source = new %Property(1);
@@ -56,13 +56,13 @@ symbols:
       flow:
         header: Flow
         text: |
-          <p>On source property change, next flow takes place:</p>
+          <p>On the source property change, the next flow takes place:</p>
           <ol>
           <li>Create a new value.</li>
           <li>Reassign target property.</li>
           <li>Destroy the old value.</li>
           </ol>
-          <p>You can override this behaviour by passing %viaNull config option. Setting it to true changes the flow the
+          <p>You can change this behaviour by passing %viaNull config option. Setting it to true changes the flow in the
           next way:</p>
           <ol>
           <li>Set target value to null.</li>
@@ -197,10 +197,10 @@ symbols:
       const target = new %Property<number>();
 
       const mapper = new %Mapper.%ByReducer(sources, (x, y) => x + y, 0, target);
-      expect(target.%getOfBindable()).toBe(7);
+      expect(target.%getOfBindable()).equal(7);
 
       sources[0].%setOfProperty(5);
-      expect(target.%getOfBindable()).toBe(9);
+      expect(target.%getOfBindable()).equal(9);
       </pre>
 
     constructor:

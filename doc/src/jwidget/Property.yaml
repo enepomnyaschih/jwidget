@@ -24,7 +24,7 @@ symbols:
           prop.%set('10');           // output: 10
           prop.%set(10);             // output: 10 (different type)
 
-          const doubl = prop.%map((value) => value * 2);
+          const doubl = prop.%map(value => value * 2);
           console.log(doubl.%get()); // output: 20
           prop.%set(6);              // output: 6
           console.log(doubl.%get()); // output: 12

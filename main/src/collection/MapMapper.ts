@@ -64,7 +64,7 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	}
 
 	protected destroyObject() {
-		this._destroyItems(this._target.tryRemoveAll(getIterableKeys(this.source)) ?? new Map(), this.source.native);
+		this._destroyItems(this._target.tryDeleteAll(getIterableKeys(this.source)) ?? new Map(), this.source.native);
 		if (this._targetCreated) {
 			this._target.destroy();
 		}
@@ -81,12 +81,12 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	}
 
 	private _onSplice(sourceResult: IBindableMap.SpliceResult<K, T>) {
-		const {removedEntries, addedEntries} = sourceResult;
+		const {deletedEntries, addedEntries} = sourceResult;
 		const targetResult = this._target.trySplice(
-			getDifference(getIterableKeys(removedEntries), addedEntries),
+			getDifference(getIterableKeys(deletedEntries), addedEntries),
 			map(addedEntries, this._create));
 		if (targetResult !== undefined) {
-			this._destroyItems(targetResult.removedEntries, removedEntries);
+			this._destroyItems(targetResult.deletedEntries, deletedEntries);
 		}
 	}
 
@@ -95,7 +95,7 @@ class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 	}
 
 	private _onClear(oldContents: ReadonlyMap<K, T>) {
-		this._destroyItems(this._target.tryRemoveAll(getIterableKeys(oldContents)), oldContents);
+		this._destroyItems(this._target.tryDeleteAll(getIterableKeys(oldContents)), oldContents);
 	}
 }
 

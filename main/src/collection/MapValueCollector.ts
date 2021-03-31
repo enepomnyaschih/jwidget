@@ -52,7 +52,7 @@ export default class MapValueCollector<V> extends AbstractValueCollector<V> {
 
 	private _onSplice(spliceResult: IBindableMap.SpliceResult<unknown, V>) {
 		this._target.trySplice(
-			getIterableValues(spliceResult.removedEntries),
+			getIterableValues(spliceResult.deletedEntries),
 			getIterableValues(spliceResult.addedEntries));
 	}
 

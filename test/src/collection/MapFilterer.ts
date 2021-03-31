@@ -237,7 +237,7 @@ describe("MapFilterer", () => {
 		expect(normalizeEntries(target)).eql([["b", 2], ["c", 4], ["e", 9], ["g", 0]]);
 		source1.setAll(new Map([["f", 6], ["g", 7]]));
 		expect(normalizeEntries(target)).eql([["b", 2], ["c", 4], ["e", 9], ["f", 6], ["g", 0]]);
-		source2.removeAll(["c", "d"]);
+		source2.deleteAll(["c", "d"]);
 		expect(normalizeEntries(target)).eql([["b", 2], ["e", 9], ["f", 6], ["g", 0]]);
 		collector1.destroy();
 		// This assertion is particularly interesting, because "g" key is also present in source1, but it is odd.
@@ -275,7 +275,7 @@ function listen(map: ReadonlyBindableMap<any, any>) {
 
 function parseSpliceResult<K, V>(spliceResult: IBindableMap.SpliceResult<K, V>) {
 	return [
-		normalizeEntries(spliceResult.removedEntries.entries()),
+		normalizeEntries(spliceResult.deletedEntries.entries()),
 		normalizeEntries(spliceResult.addedEntries.entries())
 	];
 }
