@@ -5,7 +5,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%ArrayReverser builds an arrays containing all items of source array in reversed order.</p>
+      <p>%ArrayReverser builds an array containing all items of source array in reversed order.</p>
       <pre>
       const source = new %BindableArray([1, 2, 3]);
       const reverser = new %ArrayReverser(source);

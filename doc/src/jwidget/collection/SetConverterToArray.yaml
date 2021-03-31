@@ -50,7 +50,7 @@ symbols:
         <li>The values get deleted from %target on synchronizer destruction.</li>
         <li>Target array gets synchronized with source set continuously until the synchronizer is destroyed.</li>
         <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications. All values must
-        be different.</li>
+        be %unique.</li>
       </ul>
 
     constructor:

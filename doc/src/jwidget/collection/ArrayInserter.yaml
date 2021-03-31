@@ -6,13 +6,13 @@ symbols:
       - file: jwidget/Class
     description: |
       <p>%ArrayInserter handles all %ReadonlyBindableArray messages by a combination of three callbacks:</p>
-      <dl>
-        <dt>%addOfConfig</dt>
-        <dd>An item has been added.</dd>
-        <dt>%removeOfConfig</dt>
-        <dd>An item has been removed.</dd>
-        <dt>%clearOfConfig</dt>
-        <dd>The array has been cleared.</dd>
+      <dl class="row">
+        <dt class="col-lg-2 col-sm-3">%addOfConfig</dt>
+        <dd class="col-lg-10 col-sm-9">An item has been added.</dd>
+        <dt class="col-lg-2 col-sm-3">%removeOfConfig</dt>
+        <dd class="col-lg-10 col-sm-9">An item has been removed.</dd>
+        <dt class="col-lg-2 col-sm-3">%clearOfConfig</dt>
+        <dd class="col-lg-10 col-sm-9">The array has been cleared.</dd>
       </dl>
       <p>For example, this synchronizer can be used to smoothly integrate an application with a third party API:</p>
       <pre>

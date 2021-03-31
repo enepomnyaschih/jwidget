@@ -6,7 +6,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p><b>Value collector</b> is one of collection synchronizers.</p>
+      <p><b>Value collector</b> builds a new set containing all values (or keys) of the source collection.</p>
       <pre>
       const source = new %BindableArray([1, 2, 3]);
       const collector = new %ArrayValueCollector(source);
@@ -47,7 +47,7 @@ symbols:
         <li>All values get added to %target immediately on the collector initialization.</li>
         <li>The values get deleted from %target on the collector destruction.</li>
         <li>Target set gets synchronized with source collection continuously until the synchronizer is destroyed.</li>
-        <li>All values must be different.</li>
+        <li>All values must be %unique.</li>
         <li>You can add values in %targetOfConfig from other sources as long as you avoid duplications.</li>
       </ul>
 

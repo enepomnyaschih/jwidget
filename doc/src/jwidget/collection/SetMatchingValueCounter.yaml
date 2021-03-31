@@ -158,7 +158,7 @@ references:
 
   size:
     file: jwidget/ReadonlyBindableSet
-    member: length
+    member: size
 
   reconfigure:
     symbol: default

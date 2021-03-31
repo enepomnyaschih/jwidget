@@ -47,7 +47,7 @@ symbols:
         initialization.</li>
         <li>Indexed entries get deleted from %target on synchronizer destruction.</li>
         <li>Target map gets synchronized with source set continuously until the synchronizer is destroyed.</li>
-        <li>All values must have different keys.</li>
+        <li>All values must have %unique keys.</li>
       </ul>
 
     constructor:

@@ -7,17 +7,17 @@ symbols:
       - file: jwidget/Class
     description: |
       <p>%MapInserter handles all %ReadonlyBindableMap messages by a combination of three callbacks:</p>
-      <dl>
-        <dt>%addOfConfig</dt>
-        <dd>An entry has been added.</dd>
-        <dt>%removeOfConfig</dt>
-        <dd>An entry has been removed.</dd>
-        <dt>%clearOfConfig</dt>
-        <dd>The map has been cleared.</dd>
+      <dl class="row">
+        <dt class="col-lg-2 col-sm-3">%addOfConfig</dt>
+        <dd class="col-lg-10 col-sm-9">An entry has been added.</dd>
+        <dt class="col-lg-2 col-sm-3">%removeOfConfig</dt>
+        <dd class="col-lg-10 col-sm-9">An entry has been removed.</dd>
+        <dt class="col-lg-2 col-sm-3">%clearOfConfig</dt>
+        <dd class="col-lg-10 col-sm-9">The map has been cleared.</dd>
       </dl>
-      <p>For example, this synchronizer can be used to smoothly integrate an application with a third party API:</p>
+      <p>For example, this synchronizer can be used to smoothly integrate an application with a third party API or
+      a browser native API:</p>
       <pre>
-      // Our wrapper around it
       class ComponentWithStyles extends %Component {
           constructor(private styles: %ReadonlyBindableMap<string, string>) {
               super();
@@ -62,14 +62,17 @@ symbols:
       addOfConfig:
         symbol: MapInserter.Config
         member: add
+        label: add
 
       removeOfConfig:
         symbol: MapInserter.Config
         member: remove
+        label: remove
 
       clearOfConfig:
         symbol: MapInserter.Config
         member: clear
+        label: clear
 
   MapInserter.Config:
     kind: interface

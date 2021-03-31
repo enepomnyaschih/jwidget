@@ -18,13 +18,13 @@ symbols:
 
   redirectRoute:
     signature: |
-      (path: string, router: %Router<any>, replaceState?: boolean)
+      (path: string, router?: %Router<any>, replaceState?: boolean)
     params:
       path: Path relative to %router.
-      router: Redirect relative to this router.
+      router: Redirect relative to this router. By default, performs a global redirection.
       replaceState: Replace the current browser historical state rather than pushing a new state to the stack.
     description: |
-      <p>Immediately performs the redirection, i.e. sets %hash to %staticGetFullPath(%path, %router).</p>
+      <p>Immediately performs the redirection, i.e. sets %hash to %Router.%staticGetFullPath(%path, %router).</p>
 
 references:
   handlerOfConfig:
@@ -42,4 +42,4 @@ references:
 
   redirection:
     file: jwidget/Router
-    member: redirection
+    symbol: redirection

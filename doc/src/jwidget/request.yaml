@@ -61,7 +61,7 @@ symbols:
                   return %Promise.reject(null);
               }
               const {data, settings, cancelToken} = config;
-              return %request($.ajax({
+              return %request($.%ajax({
                   ...settings,
                   type,
                   url,
@@ -94,6 +94,14 @@ symbols:
           typical REST API. Since you are an author of this code, you can easily transform the communication
           protocol as you wish: for example, copy session ID from local storage to request headers. It's up to you.
           All these functions return %Promise&lt;any&gt; where any is response JSON.</p>
+          <div class="alert alert-danger">The %request function doesn't do any extra input/output validation besides
+          that of %JQuery.%ajax. There is a known vulnerability in %JQuery.%ajax that it automatically detects the
+          <b>dataType</b> if it has been omitted in the call, which may result in an unintended code execution if you
+          access an untrusted API endpoint. To avoid this problem, always specify <b>dataType</b> option value.</div>
+
+        references:
+          ajax:
+            href: https://api.jquery.com/jquery.ajax/
 
       endpoints:
         header: How to define API endpoints in jWidget

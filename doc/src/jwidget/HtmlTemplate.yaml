@@ -6,6 +6,8 @@ symbols:
       <p>HTML template. Creates new DOM elements based on HTML code. This class compiles the HTML code only once
       and uses element cloning further on to optimize rendering performance. %Component uses %HtmlTemplate to render
       itself by default.</p>
+      <div class="alert alert-danger">This class doesn't do any extra HTML validation. Please only bind an element's
+      HTML to trusted content. Instantiating it with an untrusted content may result in malicious code execution.</div>
     constructor:
       signature: |
         (html: string)

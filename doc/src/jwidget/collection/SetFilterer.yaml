@@ -43,7 +43,7 @@ symbols:
         <li>Filtered values of the source collection get added to %target immediately on the synchronizer initialization.</li>
         <li>Filtered values get deleted from %target set on the synchronizer destruction.</li>
         <li>Target set gets synchronized with source set continuously until the synchronizer is destroyed.</li>
-        <li>You can build the target set from multiple sources as long as all values are different.</li>
+        <li>You can build the target set from multiple sources as long as all values are %unique.</li>
       </ul>
 
     constructor:

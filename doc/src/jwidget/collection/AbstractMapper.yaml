@@ -58,15 +58,15 @@ symbols:
 
       <h3>Additional rules for different collection types</h3>
 
-      <dl>
-        <dt>%ReadonlyBindableArray</dt>
-        <dd>Target array must be empty before initialization. The synchronizer requires exclusive access to the target
+      <dl class="row">
+        <dt class="col-lg-2 col-sm-3">%ReadonlyBindableArray</dt>
+        <dd class="col-lg-10 col-sm-9">Target array must be empty before initialization. The synchronizer requires exclusive access to the target
         array, i.e. you can't change its contents manually or create other synchronizers with the same target array.</dd>
-        <dt>%ReadonlyBindableMap</dt>
-        <dd>You can build the target map from multiple sources as long as there is no concurrency for keys of the
+        <dt class="col-lg-2 col-sm-3">%ReadonlyBindableMap</dt>
+        <dd class="col-lg-10 col-sm-9">You can build the target map from multiple sources as long as there is no %concurrency for keys of the
         target map.</dd>
-        <dt>%ReadonlyBindableSet</dt>
-        <dd>You can build the target set from multiple sources as long as all values are different.</dd>
+        <dt class="col-lg-2 col-sm-3">%ReadonlyBindableSet</dt>
+        <dd class="col-lg-10 col-sm-9">You can build the target set from multiple sources as long as all values are %unique.</dd>
       </dl>
 
     references:
@@ -107,7 +107,7 @@ symbols:
         optional: true
         type: '%AbstractMapper.%DestroyCallback<%T, %U>'
         description: |
-          <p>Mapped value destructor. Destroys a values when it leaves the target collection.</p>
+          <p>Mapped value destructor. Destroys a value when it leaves the target collection.</p>
           <p>It is usually convenient to pass %destroyFunction core function as this callback into a collection:</p>
           <pre>
           import {%destroyFunction} from "jwidget";

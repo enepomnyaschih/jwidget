@@ -15,7 +15,7 @@ symbols:
       <p>Interface of %hash object. Extension of %IProperty&lt;string&gt; interface with %updating status indicator and
       <b>replaceState</b> optional parameter of %set method.</p>
       <p>The built-in implementation of this interface also listens to "hashchange" DOM event to properly update own
-      state. It makes this properly transparently mirror current browser <b>location.hash</b> value.</p>
+      state. It makes this property transparently mirror current browser <b>location.hash</b> value.</p>
     properties:
       updating:
         modifiers: readonly

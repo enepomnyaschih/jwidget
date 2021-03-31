@@ -50,7 +50,7 @@ export default class RouteRedirector extends Component {
 /**
  * Immediately performs the redirection, i.e. sets `hash` to `getFullPath(path, router)`.
  * @param path Path relative to `router`.
- * @param router Redirect relative to this router.
+ * @param router Redirect relative to this router. By default, performs a global redirection.
  * @param replaceState Replace the current browser historical state rather than pushing a new state to the stack.
  */
 export function redirectRoute(path: string, router?: Router<any>, replaceState?: boolean) {

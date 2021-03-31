@@ -17,7 +17,7 @@ symbols:
         }
 
         private async loadProfile() {
-          const profile = await %request($.get("/profile"), null, this.cancelToken);
+          const profile = await %request($.get("/profile"), this.cancelToken);
           this.el.text(profile.name);
         }
       }
