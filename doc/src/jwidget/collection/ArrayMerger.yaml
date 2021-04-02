@@ -5,7 +5,8 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%ArrayMerger builds an array consisting of all items of source arrays in the same order.</p>
+      <p>%ArrayMerger binds one array to another array of subarrays, filling it with items of the subarrays in the same
+      order.</p>
       <pre>
       const source = new %BindableArray([
           new %BindableArray([1, 2, 3]),
@@ -87,6 +88,8 @@ symbols:
     simple: true
     typevars:
       T: Value type.
+    description: |
+      <p>Configuration of %ArrayMerger.</p>
 
     properties:
       target:
@@ -103,7 +106,7 @@ symbols:
       source: Source arrays.
     returns: Merged array.
     description: |
-      <p>Merges arrays and starts synchronization. See %ArrayMerger for details.</p>
+      <p>Creates a new array bound to another array with %ArrayMerger.</p>
 
 references:
   Config:

@@ -33,7 +33,7 @@ import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractMapper from './AbstractMapper';
 
 /**
- * AbstractMapper implementation for sets.
+ * `AbstractMapper` implementation for sets.
  */
 class SetMapper<T, U> extends AbstractMapper<T, U> {
 
@@ -114,7 +114,7 @@ export default SetMapper;
 
 namespace SetMapper {
 	/**
-	 * SetMapper configuration.
+	 * Configuration of `SetMapper`.
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
@@ -125,7 +125,7 @@ namespace SetMapper {
 }
 
 /**
- * Maps a set and starts synchronization.
+ * Creates a new set bound to another set with `SetMapper`.
  * @param source Source set.
  * @param create Mapping callback.
  * @param config Mapper configuration.

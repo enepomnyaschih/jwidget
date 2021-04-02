@@ -32,8 +32,7 @@ import ReadonlyBindableMap from "../ReadonlyBindableMap";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 /**
- * Set indexer. Builds a new map by rule: key is the result of the function call, value is the
- * corresponding set value. Can be used for value search optimization.
+ * Binds a map to a set, giving each value a key equal to the result of a function call for it.
  */
 export default class SetIndexer<V, K> extends Class {
 
@@ -88,7 +87,7 @@ export default class SetIndexer<V, K> extends Class {
 
 namespace SetIndexer {
 	/**
-	 * SetIndexer configuration.
+	 * Configuration of `SetIndexer`.
 	 */
 	export interface Config<V, K> {
 		/**
@@ -99,7 +98,7 @@ namespace SetIndexer {
 }
 
 /**
- * Indexes set and starts synchronization.
+ * Creates a new map bound to a set with `SetIndexer`.
  * @param source Source set.
  * @param getKey Indexer function.
  * @returns Set index map.

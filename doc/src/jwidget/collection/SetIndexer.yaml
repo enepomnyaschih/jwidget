@@ -6,8 +6,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%SetIndexer builds a new map by rule: key is the result of a callback function call, value is the
-      corresponding set value.</p>
+      <p>%SetIndexer binds a map to a set, giving each value a key equal to the result of a function call for it.</p>
       <pre>
       const source = new %BindableSet([1, 2]);
       const indexer = new %SetIndexer(source, x => String.fromCharCode(x + 97));
@@ -85,6 +84,9 @@ symbols:
     typevars:
       V: Value type.
       K: Key type.
+    description: |
+      <p>Configuration of %SetIndexer.</p>
+
     properties:
       target:
         modifiers: readonly
@@ -100,7 +102,7 @@ symbols:
       source: Source set.
       getKey: Indexer function.
     returns: Index map.
-    description: 'Indexes a set and starts synchronization. See SetIndexer for details.'
+    description: 'Creates a new map bound to a set with %SetIndexer.'
 
 references:
   Config:

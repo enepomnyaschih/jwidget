@@ -29,7 +29,7 @@ import ReadonlyBindableSet from '../ReadonlyBindableSet';
 import AbstractValueCollector from './AbstractValueCollector';
 
 /**
- * Value collector implementation for sets. Can also be served as a set copier.
+ * `AbstractValueCollector` implementation for sets.
  */
 export default class SetValueCollector<T> extends AbstractValueCollector<T> {
 
@@ -59,7 +59,7 @@ export default class SetValueCollector<T> extends AbstractValueCollector<T> {
 }
 
 /**
- * Creates a copy of a set and starts synchronization.
+ * Creates a new set bound to another set with `SetValueCollector` (i.e. a full bound copy of it).
  * @param source Source set.
  * @returns Target set.
  */
@@ -70,5 +70,3 @@ export function startCollectingSetValues<T>(source: ReadonlyBindableSet<T>): Des
 	const target = new BindableSet<T>();
 	return target.owning(new SetValueCollector<T>(source, {target}));
 }
-
-export const startCopyingSet = startCollectingSetValues;

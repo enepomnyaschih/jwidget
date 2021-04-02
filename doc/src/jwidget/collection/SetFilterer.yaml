@@ -5,7 +5,8 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%SetFilterer builds a new set of values the callback function returns a truthy value for.</p>
+      <p>%SetFilterer binds one set to another, filling it with values of the source set a callback function returns a
+      truthy value for.</p>
       <pre>
       const source = new %BindableSet([1, 2, 3]);
       const filterer = new %SetFilterer(source, x => x % 2 === 1);
@@ -81,7 +82,7 @@ symbols:
     typevars:
       T: Value type.
     description: |
-      <p>%SetFilterer configuration.</p>
+      <p>Configuration of %SetFilterer.</p>
     properties:
       target:
         modifiers: readonly
@@ -96,7 +97,7 @@ symbols:
       source: Source set.
       test: Filtering criteria.
     returns: Target set.
-    description: 'Filters a set and starts synchronization. See %SetFilterer for details.'
+    description: 'Creates a new set bound to another set with %SetFilterer.'
 
 references:
   Config:

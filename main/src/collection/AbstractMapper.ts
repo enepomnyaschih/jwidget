@@ -25,8 +25,7 @@ SOFTWARE.
 import Class from '../Class';
 
 /**
- * Abstract collection item mapper. Builds a new collection of the same type, consisting of results of callback function
- * call for each collection item, and starts continuous synchronization.
+ * Binds one collection to another, filling it with results of a function call for each value of the source collection.
  */
 abstract class AbstractMapper<T, U> extends Class {
 
@@ -47,16 +46,19 @@ abstract class AbstractMapper<T, U> extends Class {
 export default AbstractMapper;
 
 namespace AbstractMapper {
+	/**
+	 * Signature of `AbstractMapper.Config.destroy` callback.
+	 */
 	export interface DestroyCallback<T, U> {
 		(targetValue: U, sourceValue: T): void;
 	}
 
 	/**
-	 * AbstractMapper configuration.
+	 * Configuration of `AbstractMapper`.
 	 */
 	export interface Config<T, U> {
 		/**
-		 * Item destructor. Destroys an item of the target collection.
+		 * Destructor of a mapped value. Destroys a value when it leaves the target collection.
 		 */
 		readonly destroy?: DestroyCallback<T, U>;
 	}

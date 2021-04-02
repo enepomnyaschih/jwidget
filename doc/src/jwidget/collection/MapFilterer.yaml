@@ -7,7 +7,8 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%MapFilterer builds a new map consisting of entries the callback function returns a truthy value for.</p>
+      <p>%MapFilterer binds one map to another, filling it with entries of the source map a function returns a truthy
+      value for.</p>
       <pre>
       const source = new %BindableMap([["a", 1], ["b", 2], ["c", 3]]);
       const filterer = new %MapFilterer(source, x => x % 2 === 1);
@@ -84,7 +85,7 @@ symbols:
       K: Key type.
       V: Value type.
     description: |
-      <p>%MapFilterer configuration.</p>
+      <p>Configuration of %MapFilterer.</p>
     properties:
       target:
         modifiers: readonly
@@ -99,7 +100,7 @@ symbols:
       source: Source map.
       test: Filtering criteria.
     returns: Target map.
-    description: 'Filters a map and starts synchronization. See %MapFilterer for details.'
+    description: 'Creates a new map bound to another map with %MapFilterer.'
 
 references:
   Config:

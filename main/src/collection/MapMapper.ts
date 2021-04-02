@@ -33,7 +33,7 @@ import {getDifference} from "../SetUtils";
 import AbstractMapper from './AbstractMapper';
 
 /**
- * AbstractMapper implementation for maps.
+ * `AbstractMapper` implementation for map values.
  */
 class MapMapper<K, T, U> extends AbstractMapper<T, U> {
 
@@ -103,7 +103,7 @@ export default MapMapper;
 
 namespace MapMapper {
 	/**
-	 * MapMapper configuration.
+	 * Configuration of `MapMapper`.
 	 */
 	export interface FullConfig<K, T, U> extends AbstractMapper.Config<T, U> {
 		/**
@@ -114,7 +114,7 @@ namespace MapMapper {
 }
 
 /**
- * Maps a map and starts synchronization.
+ * Creates a new map bound to another map with `MapMapper`.
  * @param source Source map.
  * @param create Mapping callback.
  * @param config Mapper configuration.

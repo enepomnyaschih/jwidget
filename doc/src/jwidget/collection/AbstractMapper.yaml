@@ -7,7 +7,8 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p><b>Mapper</b> builds a new collection, consisting of results of callback function call for each collection item.</p>
+      <p><b>Mapper</b> binds one collection to another, filling it with results of a function call for each value of
+      the source collection.</p>
       <pre>
       const source = new %BindableArray([1, 2]);
       const mapper = new %ArrayMapper(source, x => 2 * x);
@@ -101,13 +102,15 @@ symbols:
     typevars:
       T: Source value type.
       U: Target value type.
+    description: |
+      <p>Configuration of %AbstractMapper.</p>
     properties:
       destroy:
         modifiers: readonly
         optional: true
         type: '%AbstractMapper.%DestroyCallback<%T, %U>'
         description: |
-          <p>Mapped value destructor. Destroys a value when it leaves the target collection.</p>
+          <p>Destructor of a mapped value. Destroys a value when it leaves the target collection.</p>
           <p>It is usually convenient to pass %destroyFunction core function as this callback into a collection:</p>
           <pre>
           import {%destroyFunction} from "jwidget";

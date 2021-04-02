@@ -6,7 +6,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p><b>Value collector</b> builds a new set containing all values (or keys) of the source collection.</p>
+      <p><b>Value collector</b> binds a set to a collection, filling it with all values (or keys) of the collection.</p>
       <pre>
       const source = new %BindableArray([1, 2, 3]);
       const collector = new %ArrayValueCollector(source);
@@ -62,6 +62,8 @@ symbols:
     simple: true
     typevars:
       T: Value type.
+    description: |
+      <p>Configuration of %AbstractValueCollector.</p>
     properties:
       target:
         modifiers: readonly

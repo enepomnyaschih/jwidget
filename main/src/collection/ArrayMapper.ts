@@ -31,7 +31,7 @@ import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractMapper from './AbstractMapper';
 
 /**
- * AbstractMapper implementation for arrays.
+ * `AbstractMapper` implementation for arrays.
  */
 class ArrayMapper<T, U> extends AbstractMapper<T, U> {
 
@@ -121,7 +121,7 @@ export default ArrayMapper;
 
 namespace ArrayMapper {
 	/**
-	 * ArrayMapper configuration.
+	 * Configuration of `ArrayMapper`.
 	 */
 	export interface FullConfig<T, U> extends AbstractMapper.Config<T, U> {
 		/**
@@ -132,7 +132,7 @@ namespace ArrayMapper {
 }
 
 /**
- * Maps an array and starts synchronization.
+ * Creates a new array bound to another array with `ArrayMapper`.
  * @param source Source array.
  * @param create Mapping callback.
  * @param config Mapper configuration.

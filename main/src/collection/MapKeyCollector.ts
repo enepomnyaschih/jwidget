@@ -30,13 +30,13 @@ import ReadonlyBindableMap from '../ReadonlyBindableMap';
 import AbstractValueCollector from './AbstractValueCollector';
 
 /**
- * Value collector implementation for maps.
+ * `AbstractValueCollector` implementation for map keys.
  */
 export default class MapKeyCollector<K> extends AbstractValueCollector<K> {
 
 	/**
 	 * @param source Source map.
-	 * @param config Converter configuration.
+	 * @param config Collector configuration.
 	 */
 	constructor(readonly source: ReadonlyBindableMap<K, unknown>, config?: AbstractValueCollector.Config<K>) {
 		super(config, source.silent);
@@ -69,7 +69,7 @@ export default class MapKeyCollector<K> extends AbstractValueCollector<K> {
 }
 
 /**
- * Creates a set containing all map keys and starts synchronization.
+ * Creates a new set bound to a map with `MapKeyCollector`.
  * @param source Source map.
  * @returns Target set.
  */

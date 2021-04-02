@@ -30,8 +30,7 @@ import {filter} from "../IterableUtils";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 /**
- * Map filterer. Builds a new map consisting of values the callback function returns a truthy value for, and
- * starts continuous synchronization. Preserves value keys.
+ * Binds one set to another, filling it with values of the source set a callback function returns a truthy value for.
  */
 class SetFilterer<T> extends Class {
 
@@ -84,7 +83,7 @@ export default SetFilterer;
 
 namespace SetFilterer {
 	/**
-	 * SetFilterer configuration.
+	 * Configuration of `SetFilterer`.
 	 */
 	export interface Config<T> {
 		/**
@@ -95,7 +94,7 @@ namespace SetFilterer {
 }
 
 /**
- * Filters a set and starts synchronization.
+ * Creates a new set bound to another set with `SetFilterer`.
  * @param source Source set.
  * @param test Filtering criteria.
  * @returns Target set.

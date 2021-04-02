@@ -5,9 +5,9 @@ symbols:
     extends:
       - file: jwidget/collection/AbstractValueCollector
     description: |
-      <p>Value collector for %ReadonlyBindableSet. See %AbstractValueCollector for details.</p>
+      <p>%AbstractValueCollector implementation for sets.</p>
       <p>Can be used to maintain a copy of an existing %ReadonlyBindableSet and also to combine contents of several
-      collections in a single %BindableSet.</p>
+      collections in a single set.</p>
     constructor:
       signature: |
         (source: %ReadonlyBindableSet<%T>, config?: %AbstractValueCollector.%Config<%T>)
@@ -28,8 +28,7 @@ symbols:
       source: Source set.
     returns: Target set.
     description: |
-      <p>Creates a new set containing all set values (i.e. creates a copy) and starts synchronization.
-      See %AbstractValueCollector for details.</p>
+      <p>Creates a new set bound to another set with %SetValueCollector (i.e. a full bound copy of it).</p>
 
 references:
   Config:

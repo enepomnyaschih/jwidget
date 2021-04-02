@@ -7,7 +7,7 @@ symbols:
     extends:
       - file: jwidget/collection/AbstractMapper
     description: |
-      <p>%AbstractMapper implementation for %ReadonlyBindableMap.</p>
+      <p>%AbstractMapper implementation for map values.</p>
     constructor:
       signature: |
         (source: %ReadonlyBindableMap<%K, %T>, create: (data: %T) => %U, config?: %MapMapper.%FullConfig<%K, %T, %U>)
@@ -39,7 +39,7 @@ symbols:
         symbol: AbstractMapper.Config
         typevars: [T, U]
     description: |
-      <p>%MapMapper configuration.</p>
+      <p>Configuration of %MapMapper.</p>
     properties:
       target:
         modifiers: readonly
@@ -56,7 +56,7 @@ symbols:
       create: Mapping callback.
       config: Mapper configuration.
     returns: Target map.
-    description: 'Maps a map and starts synchronization. See %AbstractMapper for details.'
+    description: 'Creates a new map bound to another map with %MapMapper.'
 
 references:
   Config:

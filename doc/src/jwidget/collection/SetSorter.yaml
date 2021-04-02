@@ -5,7 +5,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%SetSorter builds a new %ReadonlyBindableArray containing value of source set sorted by comparer.</p>
+      <p>%SetSorter binds an array to a set, filling it with sorted values of the set.</p>
       <pre>
       const source = new %BindableSet(["qw", "er", "ty"]);
       const sorter = new %SetSorter(source, {%compareOfConfig: (x, y) => %cmp(x[1], y[1])});
@@ -77,6 +77,9 @@ symbols:
     simple: true
     typevars:
       T: Value type.
+    description: |
+      <p>Configuration of %startSortingSet and partial configuration of %SetSorter.</p>
+
     properties:
       compare:
         modifiers: readonly
@@ -100,6 +103,9 @@ symbols:
     extends:
       - file: jwidget/collection/SetSorter
         symbol: SetSorter.Config
+    description: |
+      <p>Full configuration of %SetSorter.</p>
+
     properties:
       target:
         modifiers: readonly
@@ -115,7 +121,7 @@ symbols:
       source: Source set.
       config: Sorter configuration.
     returns: Sorted array.
-    description: 'Sorts a set and starts synchronization. See %SetSorter for details.'
+    description: 'Creates a new array bound to a set with %SetSorter.'
 
 references:
   Config:

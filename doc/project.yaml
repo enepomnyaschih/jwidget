@@ -379,6 +379,8 @@ includes:
         <div class="col-4">
           <h5>Collection bindings</h5>
           <ul class="list-unstyled" style="column-count: 2">
+            <li>%AbstractMapper</li>
+            <li>%AbstractValueCollector</li>
             <li>%ArrayFilterer</li>
             <li>%ArrayInserter</li>
             <li>%ArrayMapper</li>

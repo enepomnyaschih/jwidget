@@ -31,9 +31,8 @@ import ReadonlyBindableArray from "../ReadonlyBindableArray";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 /**
- * Set converter to array builds a new BindableArray containing the values of the source set. Initially, values get
- * added to the array in natural order. This order may differ in different browsers. After initialization, all newly
- * added values get appended to the end of the array.
+ * Binds an array to a set, filling it with values of the set in natural order. This order may differ in different
+ * browsers. After initialization, all newly added values get appended to the end of the array.
  */
 export default class SetConverterToArray<T> extends Class {
 
@@ -88,7 +87,7 @@ export default class SetConverterToArray<T> extends Class {
 
 namespace SetConverterToArray {
 	/**
-	 * Configuration of SetConverterToArray.
+	 * Configuration of `SetConverterToArray`.
 	 */
 	export interface Config<T> {
 		/**
@@ -99,7 +98,7 @@ namespace SetConverterToArray {
 }
 
 /**
- * Converts a set to an array and starts synchronization.
+ * Creates a new array bound to a set with `SetConverterToArray`.
  * @param source Source set.
  * @returns Target array.
  */

@@ -33,7 +33,7 @@ import ReadonlyBindableArray from "../ReadonlyBindableArray";
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 /**
- * Sorter (comparing). Builds an array containing the values of a set sorted by a comparer.
+ * Binds an array to a set, filling it with sorted values of the set.
  */
 export default class SetSorter<T> extends Class {
 
@@ -155,11 +155,11 @@ export default class SetSorter<T> extends Class {
 namespace SetSorter {
 
 	/**
-	 * AbstractSorterComparing configuration.
+	 * Configuration of `startSortingSet` and partial configuration of `SetSorter`.
 	 */
 	export interface Config<T> {
 		/**
-		 * Item comparing callback.
+		 * Value comparing callback. Defaults to `cmp`.
 		 */
 		readonly compare?: (x: T, y: T) => number;
 
@@ -170,7 +170,7 @@ namespace SetSorter {
 	}
 
 	/**
-	 * AbstractSorterComparing full configuration.
+	 * Full configuration of `SetSorter`.
 	 */
 	export interface FullConfig<T> extends Config<T> {
 		/**
@@ -181,7 +181,7 @@ namespace SetSorter {
 }
 
 /**
- * Sorts a set and starts synchronization.
+ * Creates a new array bound to a set with `SetSorter`.
  * @param source Source set.
  * @param config Sorter configuration.
  * @returns Sorted list.

@@ -31,8 +31,8 @@ import {filter} from "../IterableUtils";
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
 /**
- * Array filterer. Builds a new array consisting of values the callback function returns a truthy value for, and
- * starts continuous synchronization. Preserves item order.
+ * Binds one array to another, filling it with items of the source array a function returns a truthy value for in the
+ * same order.
  */
 class ArrayFilterer<T> extends Class {
 
@@ -66,7 +66,7 @@ class ArrayFilterer<T> extends Class {
 	}
 
 	/**
-	 * Changes filterer configuration and refilters the target collection.
+	 * Changes filterer configuration and refilters the target array.
 	 * @param config Options to modify.
 	 */
 	reconfigure(config: ArrayFilterer.Reconfig<T>) {
@@ -75,8 +75,8 @@ class ArrayFilterer<T> extends Class {
 	}
 
 	/**
-	 * Refilters the target collection item at the specified position in the source collection.
-	 * Call this method when collection item properties change the way that it must be refiltered.
+	 * Refilters an item at specified position in the source array.
+	 * Call this method when the item properties change in such a way that it must be refiltered.
 	 */
 	refilterAt(sourceIndex: number) {
 		const item = this.source.get(sourceIndex);
@@ -96,8 +96,8 @@ class ArrayFilterer<T> extends Class {
 	}
 
 	/**
-	 * Refilters the target collection. Call this method when collection item properties change the way that
-	 * they must be refiltered.
+	 * Refilters the target array. Call this method when properties of arbitrary array items change in such a way
+	 * that they must be refiltered.
 	 */
 	refilter() {
 		const newFiltered = this.source.native.map(item => this.test(item) ? 1 : 0);
@@ -287,7 +287,7 @@ export default ArrayFilterer;
 
 namespace ArrayFilterer {
 	/**
-	 * ArrayFilterer configuration.
+	 * Configuration of `ArrayFilterer`.
 	 */
 	export interface Config<T> {
 		/**
@@ -297,7 +297,7 @@ namespace ArrayFilterer {
 	}
 
 	/**
-	 * ArrayFilterer.reconfigure method configuration.
+	 * Configuration of `ArrayFilterer.reconfigure` method.
 	 * All options are optional. If skipped, an option stays the same.
 	 */
 	export interface Reconfig<T> {
@@ -309,7 +309,7 @@ namespace ArrayFilterer {
 }
 
 /**
- * Filters an array and starts synchronization.
+ * Creates a new array bound to another array with `ArrayFilterer`.
  * @param source Source array.
  * @param test Filtering criteria.
  * @returns Target array.

@@ -5,7 +5,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%ArrayReverser builds an array containing all items of source array in reversed order.</p>
+      <p>%ArrayReverser binds one array to another, filling it with items of the source array in reverse order.</p>
       <pre>
       const source = new %BindableArray([1, 2, 3]);
       const reverser = new %ArrayReverser(source);
@@ -75,6 +75,8 @@ symbols:
     simple: true
     typevars:
       T: Value type.
+    description: |
+      <p>Configuration of %ArrayReverser.</p>
 
     properties:
       target:
@@ -91,7 +93,7 @@ symbols:
       source: Source array.
     returns: Reversed array.
     description: |
-      <p>Reverses an array and starts synchronization. See %ArrayReverser for details.</p>
+      <p>Creates a new array bound to another array with %ArrayReverser.</p>
 
 references:
   Config:

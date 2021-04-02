@@ -29,7 +29,7 @@ import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import AbstractValueCollector from './AbstractValueCollector';
 
 /**
- * Value collector implementation for arrays.
+ * `AbstractValueCollector` implementation for arrays.
  */
 export default class ArrayValueCollector<T> extends AbstractValueCollector<T> {
 
@@ -64,7 +64,7 @@ export default class ArrayValueCollector<T> extends AbstractValueCollector<T> {
 }
 
 /**
- * Creates a set containing all array values and starts synchronization.
+ * Creates a new set bound to an array with `ArrayValueCollector`.
  * @param source Source array.
  * @returns Target set.
  */

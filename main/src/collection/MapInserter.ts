@@ -27,7 +27,7 @@ import IBindableMap from '../IBindableMap';
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 
 /**
- * Inserter implementation for maps.
+ * Handles all messages of %ReadonlyBindableMap with a combination of three callbacks.
  */
 class MapInserter<K, V> extends Class {
 
@@ -114,21 +114,21 @@ export default MapInserter;
 
 namespace MapInserter {
 	/**
-	 * MapInserter configuration.
+	 * Configuration of `MapInserter`.
 	 */
 	export interface Config<K, V> {
 		/**
-		 * Callback to call when an item is added to the map or moved within the map.
+		 * Callback to call when an entry is added or updated in the map.
 		 */
 		readonly add?: (value: V, key: K) => void;
 
 		/**
-		 * Callback to call when an item is removed from the map or moved within the map.
+		 * Callback to call when an entry is removed or updated in the map.
 		 */
 		readonly remove?: (value: V, key: K) => void;
 
 		/**
-		 * Callback to call when the map is cleared. By default, calls `remove` for all map items.
+		 * Callback to call when the map is cleared. By default, calls `remove` for all map entries.
 		 */
 		readonly clear?: (entries: ReadonlyMap<K, V>) => void;
 	}

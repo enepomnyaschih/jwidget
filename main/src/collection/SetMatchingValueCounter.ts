@@ -32,8 +32,7 @@ import Property from '../Property';
 import ReadonlyBindableSet from '../ReadonlyBindableSet';
 
 /**
- * Set matching value counter. Builds a new Property containing number of set values the callback
- * returns a truthy value for, and starts continuous synchronization.
+ * Binds a `Property` to a set, assigning it to the number of values a function returns a truthy value for.
  */
 export default class SetMatchingValueCounter<T> extends Class {
 
@@ -107,7 +106,7 @@ export default class SetMatchingValueCounter<T> extends Class {
 
 namespace SetMatchingValueCounter {
 	/**
-	 * SetMatchingValueCounter configuration.
+	 * Configuration of `SetMatchingValueCounter`.
 	 */
 	export interface Config {
 		/**
@@ -117,7 +116,7 @@ namespace SetMatchingValueCounter {
 	}
 
 	/**
-	 * SetMatchingValueCounter.reconfigure method configuration.
+	 * Configuration of `SetMatchingValueCounter.reconfigure` method.
 	 */
 	export interface Reconfig<T> {
 		/**
@@ -128,7 +127,7 @@ namespace SetMatchingValueCounter {
 }
 
 /**
- * Counts matching values in a set and starts synchronization.
+ * Creates a new property bound to a set with `SetMatchingValueCounter`.
  * @param source Source set.
  * @param test Criteria.
  * @returns Target property.

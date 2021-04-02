@@ -6,7 +6,7 @@ symbols:
     extends:
       - file: jwidget/collection/AbstractMapper
     description: |
-      <p>%AbstractMapper implementation for %ReadonlyBindableSet.</p>
+      <p>%AbstractMapper implementation for sets.</p>
     constructor:
       signature: |
         (source: %ReadonlyBindableSet<%T>, create: (data: %T) => %U, config?: %SetMapper.%FullConfig<%T, %U>)
@@ -37,7 +37,8 @@ symbols:
         symbol: AbstractMapper.Config
         typevars: [T, U]
     description: |
-      <p>%SetMapper configuration.</p>
+      <p>Configuration of %SetMapper.</p>
+
     properties:
       target:
         modifiers: readonly
@@ -54,7 +55,7 @@ symbols:
       create: Mapping callback.
       config: Mapper configuration.
     returns: Target set.
-    description: 'Maps an array and starts synchronization. See %AbstractMapper for details.'
+    description: 'Creates a new set bound to another set with %SetMapper.'
 
 references:
   Config:

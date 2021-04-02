@@ -5,7 +5,7 @@ symbols:
     extends:
       - file: jwidget/collection/AbstractValueCollector
     description: |
-      <p>Value collector for %ReadonlyBindableMap. See %AbstractValueCollector for details.</p>
+      <p>%AbstractValueCollector implementation for map values.</p>
     constructor:
       signature: |
         (source: %ReadonlyBindableMap<unknown, %T>, config?: %AbstractValueCollector.%Config<%T>)
@@ -26,7 +26,7 @@ symbols:
       source: Source map.
     returns: Target set.
     description: |
-      <p>Creates a set containing all map values and starts synchronization. See %AbstractValueCollector for details.</p>
+      <p>Creates a new set bound to a map with %MapValueCollector.</p>
 
 references:
   Config:

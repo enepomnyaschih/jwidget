@@ -6,7 +6,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%MapInserter handles all %ReadonlyBindableMap messages by a combination of three callbacks:</p>
+      <p>%MapInserter handles all messages of %ReadonlyBindableMap with a combination of three callbacks:</p>
       <dl class="row">
         <dt class="col-lg-2 col-sm-3">%addOfConfig</dt>
         <dd class="col-lg-10 col-sm-9">An entry has been added.</dd>
@@ -80,6 +80,8 @@ symbols:
     typevars:
       K: Key type.
       V: Value type.
+    description: |
+      <p>Configuration of %MapInserter.</p>
 
     properties:
       add:

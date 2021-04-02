@@ -6,9 +6,9 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p><b>Set converter to array</b> is one of collection synchronizers. <b>Set converter to array</b> builds a new %BindableArray
-      containing the values of the source set. Initially, values get added to the array in natural order. This order may differ
-      in different browsers. After initialization, all newly added values get appended to the end of the array.</p>
+      <p><b>Set converter to array</b> binds an array to a set, filling it with values of the set in natural
+      order. This order may differ in different browsers. After initialization, all newly added values get appended to
+      the end of the array.</p>
       <pre>
       const source = new %BindableSet([1, 2, 3]);
       const converter = new %SetConverterToArray(source);
@@ -94,6 +94,9 @@ symbols:
     simple: true
     typevars:
       T: Collection value type.
+    description: |
+      <p>Configuration of %SetConverterToArray.</p>
+
     properties:
       target:
         modifiers: readonly
@@ -108,7 +111,7 @@ symbols:
     params:
       source: Source set.
     returns: Target array.
-    description: Converts a set to an array and starts synchronization.
+    description: 'Creates a new array bound to a set with %SetConverterToArray.'
 
 references:
   Config:

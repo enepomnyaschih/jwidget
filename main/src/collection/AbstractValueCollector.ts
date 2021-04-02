@@ -28,7 +28,7 @@ import IBindableSet from '../IBindableSet';
 import ReadonlyBindableSet from "../ReadonlyBindableSet";
 
 /**
- * Abstract value collector.
+ * Binds a set to a collection, filling it with all values (or keys) of the collection.
  */
 abstract class AbstractValueCollector<T> extends Class {
 
@@ -60,7 +60,7 @@ export default AbstractValueCollector;
 
 namespace AbstractValueCollector {
 	/**
-	 * AbstractValueCollector configuration.
+	 * Configuration of `AbstractValueCollector`.
 	 */
 	export interface Config<T> {
 		/**

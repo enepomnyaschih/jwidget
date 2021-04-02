@@ -5,8 +5,8 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%ArrayFilterer builds a new array consisting of items the callback function returns a truthy value for in the
-      same order.</p>
+      <p>%ArrayFilterer binds one array to another, filling it with items of the source array a function returns a
+      truthy value for in the same order.</p>
       <pre>
       const source = new %BindableArray([1, 2, 3]);
       const filterer = new %ArrayFilterer(source, x => x % 2 === 1);
@@ -126,7 +126,7 @@ symbols:
     typevars:
       T: Value type.
     description: |
-      <p>%ArrayFilterer configuration.</p>
+      <p>Configuration of %ArrayFilterer.</p>
     properties:
       target:
         modifiers: readonly
@@ -140,7 +140,7 @@ symbols:
     typevars:
       T: Value type.
     description: |
-      <p>%ArrayFilterer.%reconfigure method configuration. All options are optional. If skipped, an option stays the
+      <p>Configuration of %ArrayFilterer.%reconfigure method. All options are optional. If skipped, an option stays the
       same.</p>
     properties:
       test:
@@ -156,7 +156,7 @@ symbols:
       source: Source array.
       test: Filtering criteria.
     returns: Target array.
-    description: 'Filters an array and starts synchronization. See %ArrayFilterer for details.'
+    description: 'Creates a new array bound to another array with %ArrayFilterer.'
 
 references:
   reconfigure:

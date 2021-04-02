@@ -27,7 +27,7 @@ import IBindableArray from '../IBindableArray';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
 /**
- * Inserter implementation for arrays.
+ * Handles all messages of `ReadonlyBindableArray` with a combination of three callbacks.
  */
 class ArrayInserter<T> extends Class {
 
@@ -143,16 +143,16 @@ export default ArrayInserter;
 
 namespace ArrayInserter {
 	/**
-	 * ArrayInserter configuration.
+	 * Configuration of `ArrayInserter`.
 	 */
 	export interface Config<T> {
 		/**
-		 * Callback to call when an item is added to the array or moved within the array.
+		 * Callback to call when an item is added to the array or moved in the array.
 		 */
 		readonly add?: (item: T, index: number) => void;
 
 		/**
-		 * Callback to call when an item is removed from the array or moved within the array.
+		 * Callback to call when an item is removed from the array or moved in the array.
 		 */
 		readonly remove?: (item: T, index: number) => void;
 

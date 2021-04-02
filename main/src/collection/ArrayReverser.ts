@@ -29,7 +29,7 @@ import IBindableArray from '../IBindableArray';
 import ReadonlyBindableArray from '../ReadonlyBindableArray';
 
 /**
- * Array reverser.
+ * Binds one array to another, filling it with items of the source array in reverse order.
  */
 class ArrayReverser<T> extends Class {
 	private _targetCreated: boolean;
@@ -130,7 +130,7 @@ export default ArrayReverser;
 
 namespace ArrayReverser {
 	/**
-	 * ArrayReverser configuration.
+	 * Configuration of `ArrayReverser`.
 	 */
 	export interface Config<T> {
 		/**
@@ -141,7 +141,7 @@ namespace ArrayReverser {
 }
 
 /**
- * Reverses arrays and starts synchronization.
+ * Creates a new array bound to another array with `ArrayReverser`.
  * @param source Source array.
  * @returns Reversed array.
  */

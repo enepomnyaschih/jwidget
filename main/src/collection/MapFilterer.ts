@@ -31,8 +31,7 @@ import {filter as filterEntries, getIterableKeys} from "../MapUtils";
 import ReadonlyBindableMap from '../ReadonlyBindableMap';
 
 /**
- * Map filterer. Builds a new map consisting of values the callback function returns a truthy value for, and
- * starts continuous synchronization. Preserves value keys.
+ * Binds one map to another, filling it with entries of the source map a function returns a truthy value for.
  */
 class MapFilterer<K, V> extends Class {
 
@@ -108,7 +107,7 @@ export default MapFilterer;
 
 namespace MapFilterer {
 	/**
-	 * MapFilterer configuration.
+	 * Configuration of `MapFilterer`.
 	 */
 	export interface Config<K, V> {
 		/**
@@ -119,7 +118,7 @@ namespace MapFilterer {
 }
 
 /**
- * Filters a map and starts synchronization.
+ * Creates a new map bound to another map with `MapFilterer`.
  * @param source Source map.
  * @param test Filtering criteria.
  * @returns Target map.

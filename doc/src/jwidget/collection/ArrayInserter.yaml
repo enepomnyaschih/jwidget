@@ -5,7 +5,7 @@ symbols:
     extends:
       - file: jwidget/Class
     description: |
-      <p>%ArrayInserter handles all %ReadonlyBindableArray messages by a combination of three callbacks:</p>
+      <p>%ArrayInserter handles all messages of %ReadonlyBindableArray with a combination of three callbacks:</p>
       <dl class="row">
         <dt class="col-lg-2 col-sm-3">%addOfConfig</dt>
         <dd class="col-lg-10 col-sm-9">An item has been added.</dd>
@@ -82,6 +82,8 @@ symbols:
     simple: true
     typevars:
       T: Value type.
+    description: |
+      <p>Configuration of %ArrayInserter.</p>
 
     properties:
       add:

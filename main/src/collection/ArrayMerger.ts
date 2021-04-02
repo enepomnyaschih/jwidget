@@ -32,7 +32,7 @@ import ReadonlyBindableArray from '../ReadonlyBindableArray';
 import {startMappingArray} from "./ArrayMapper";
 
 /**
- * Array merger.
+ * Binds one array to another array of subarrays, filling it with items of the subarrays in the same order.
  */
 class ArrayMerger<T> extends Class {
 
@@ -41,7 +41,7 @@ class ArrayMerger<T> extends Class {
 	private _target: IBindableArray<T>;
 
 	/**
-	 * @param source Source array.
+	 * @param source Source arrays.
 	 * @param config Merger configuration.
 	 */
 	constructor(readonly source: ReadonlyBindableArray<ReadonlyBindableArray<T>>, config: ArrayMerger.Config<T> = {}) {
@@ -215,7 +215,7 @@ export default ArrayMerger;
 
 namespace ArrayMerger {
 	/**
-	 * ArrayMerger configuration.
+	 * Configuration of `ArrayMerger`.
 	 */
 	export interface Config<T> {
 		/**
@@ -226,7 +226,7 @@ namespace ArrayMerger {
 }
 
 /**
- * Merges arrays and starts synchronization.
+ * Creates a new array bound to another array with `ArrayMerger`.
  * @param source Source array.
  * @returns Merged array.
  */
