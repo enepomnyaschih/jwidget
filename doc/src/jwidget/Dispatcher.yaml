@@ -7,7 +7,7 @@ symbols:
     description: |
       <p>Real implementation of %IDispatcher interface that calls handler functions on %dispatch method call (as opposed to
       %dummyDispatcher which doesn't). Used to dispatch messages (e.g. field value changes) to listeners. The messages
-      get dispatched immediately and synchronously - there's no message bus in the framework.
+      get dispatched immediately and synchronously - there's no message bus in jWidget.
       Remember to destroy listener references to unbind the listeners. It is a smart approach to expose dispatchers
       in getters as %Listenable to deny direct control over the dispatcher by the listeners.</p>
       <p>Full example of a class that dispatches messages:</p>

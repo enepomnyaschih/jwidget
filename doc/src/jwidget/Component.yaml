@@ -81,7 +81,7 @@ symbols:
           </li>
           <li>
           <p>Add a bindable child component using %addBindable method. Pass an instance of %Bindable&lt;%Component&gt;
-          as an argument and the framework will provide the synchronization with this property during application
+          as an argument and the component will provide the synchronization with this property during application
           running.</p>
           <pre>
           %afterRender() {
@@ -97,7 +97,7 @@ symbols:
           </li>
           <li>
           <p>Add an array of child components into some element using %addArray method. Pass an instance of
-          %ReadonlyBindableArray&lt;%Component&gt; as an argument and the framework will provide the synchronization
+          %ReadonlyBindableArray&lt;%Component&gt; as an argument and the component will provide the synchronization
           with this array during application running.</p>
           <pre>
           %afterRender() {
@@ -178,7 +178,7 @@ symbols:
           it gets added as a child collection via method %addSet.</li>
           <li>If the method returns <b>false</b>, then the element gets removed from the HTML document. This option doesn't
           work for the root element.</li>
-          <li>In any other case, the framework doesn't perform any additional actions with the element. You can use
+          <li>In any other case, the component doesn't perform any additional actions with the element. You can use
           <b>el</b> argument to do arbitrary manipulations over it.</li>
           </ul>
           <p>The method should be protected, not private, to avoid "unused method" warning of TypeScript compiler.</p>
@@ -187,7 +187,7 @@ symbols:
         header: Component removal and destruction
         text: |
           <p>You can destroy a component via %destroy method. However you can not destroy a component which is added into
-          another component as a child (framework throws an exception in this case). You must remove the child component
+          another component as a child (component throws an exception in this case). You must remove the child component
           from its parent first. To remove the component from its parent, you must perform the operation opposite to the
           adding operation.</p>
           <ul>
@@ -219,7 +219,7 @@ symbols:
           }
           </pre>
           <p>You don't need to remove the child components explicitly all the time. On parent component destruction,
-          the framework automatically removes all the children before %unrender method call. However, it doesn't destroy them.
+          it automatically removes all the children before %unrender method call. However, it doesn't destroy them.
           You can use aggregation method %own to destroy child components. So, usually your code will look as simple as
           this:</p>
           <pre>
@@ -623,7 +623,7 @@ symbols:
         description: |
           <p>Component life stage method. Called during component destruction before %afterDestroy method call.
           Everything that was performed during component rendering should be reverted here. All child components are
-          already removed by framework before this method call, but the components themselves are not destroyed. You
+          already removed by the component before this method call, but the components themselves are not destroyed. You
           must destroy them explicitly as specified in %componentRemoval topic. Call <tt>super.unrender()</tt> at the
           last line of the method.</p>
       afterDestroy:

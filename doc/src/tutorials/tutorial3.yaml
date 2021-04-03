@@ -81,7 +81,7 @@ description: |
 
   <p><b>First</b>, it is important to understand that after instantiation of TweetFeed class object the component
   is not rendered yet. It means that it doesn't have HTML elements and capability to add child components.
-  Component will be rendered automatically somewhere inside the framework, later. But if you really need to perform
+  Component will be rendered automatically by jWidget, later. But if you really need to perform
   some additional actions with the rendered component (for example, add a CSS-class),
   you can render it explicitly using %render method.</p>
 

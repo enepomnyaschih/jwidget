@@ -173,7 +173,7 @@ description: |
   });
   </pre>
 
-  <p>The first two imports are mandatory for jWidget, because the framework depends on some edge EcmaScript features,
+  <p>The first two imports are mandatory for jWidget, because the library depends on some edge EcmaScript features,
   and these polyfills make sure that these features are available in all popular browsers. The third import attaches
   all stylesheets in a preferred order as listed in index.styl file. The stylesheets are written in
   <a href="http://stylus-lang.com/" target="_blank">Stylus</a> syntax.</p>
@@ -184,7 +184,7 @@ description: |
   <img src="result-1.png">
 
   <p>As you can see, our component has a structure but doesn't have any data.
-  Let's bind the component elements to the data. jWidget framework doesn't provide any magic HTML syntax for this.
+  Let's bind the component elements to the data. jWidget doesn't provide any magic HTML syntax for this.
   So, we won't change the template, but we'll add some TypeScript code. The real tool that jWidget provides for us
   is direct and fast access to <a href="http://api.jquery.com" target="_blank">jQuery-wrappers</a> over all HTML
   elements having "jwid" attribute defined. You can access these elements inside method %afterRender

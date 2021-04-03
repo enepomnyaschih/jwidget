@@ -16,7 +16,7 @@ description: |
   method of the model in order to modify it.</li>
   <li>Model doesn't have direct references to any views, but it dispatches messages about its modification.</li>
   <li>View listens model modification messages to do necessary updates.</li>
-  <li>View should initialize and aggregate data bindings provided by the framework.</li>
+  <li>View should initialize and aggregate data bindings provided by the library.</li>
   </ol>
 
   <h3>Object life time control</h3>

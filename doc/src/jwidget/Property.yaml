@@ -8,6 +8,24 @@ symbols:
       - file: jwidget/IProperty
     description: |
       <p>Container for a value. Provides basic data binding functionality.</p>
+      <p>jWidget provides the following model bindings for %Property out of the box:</p>
+      <ul>
+        <li>%Copier</li>
+        <li>%Mapper</li>
+        <li>%Switcher</li>
+      </ul>
+      <p>jWidget also provides the following Model & View bindings for %Property:</p>
+      <ul>
+        <li>%bindAttr</li>
+        <li>%bindClass</li>
+        <li>%bindCss</li>
+        <li>%bindDisplay</li>
+        <li>%bindHtml</li>
+        <li>%bindProp (one-way or two-way)</li>
+        <li>%bindRadio (one-way or two-way)</li>
+        <li>%bindText</li>
+        <li>%bindVal (one-way or two-way)</li>
+      </ul>
 
     topics:
       example1:
@@ -53,12 +71,12 @@ symbols:
                   super();
               }
 
-              protected renderName(el: JQuery) {
+              protected renderName(el: %JQuery) {
                   // simple two-way binding
                   this.%own(%bindVal(el, this.user.name, %TWOWAY));
               }
 
-              protected renderAge(el: JQuery) {
+              protected renderAge(el: %JQuery) {
                   // to display a number in text input, we must map it back and forth
 
                   // map age to string property
@@ -98,7 +116,7 @@ symbols:
                   super();
               }
 
-              protected renderRoot(el: JQuery) {
+              protected renderRoot(el: %JQuery) {
                   this.%own(%bindText(el, this.counter.seconds));
               }
           }

@@ -8,7 +8,7 @@ description: |
 
   <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-4">https://github.com/enepomnyaschih/mt/tree/mt-2.2-4</a> (Git branch).</p>
 
-  <p>In this part we learn how to handle user events in scope of jWidget framework. First, we must activate buttons
+  <p>In this part we learn how to handle user events in scope of a jWidget application. First, we must activate buttons
   Like/Unlike and Retweet/Unretweet.</p>
 
   <img src="buttons.png">
@@ -30,7 +30,7 @@ description: |
 
   <p>In some other model-view frameworks (actually, MVC frameworks) controller is responsible for event listening and
   handling. jWidget doesn't provide any features for controller implementation. Controller part is identified by
-  the author of the framework as unnecessary and complicating things with no benefit. jWidget goes without controller.</p>
+  the author of the library as unnecessary and complicating things with no benefit. jWidget goes without controller.</p>
 
   <p>Message management API is optimized for performance in jWidget and implemented according to OOD principles. That's the reason
   why jWidget message API is very different from jQuery event API. jWidget messages get dispatched from %Dispatcher class and

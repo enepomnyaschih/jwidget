@@ -4,12 +4,12 @@ description: |
   <div class="container">
     <div class="jumbotron">
       <h1 class="display-4">jWidget 2</h1>
-      <p class="lead">Object-oriented TypeScript Model-View framework.</p>
+      <p class="lead">Object-oriented binding library for TypeScript Model-View architectures.</p>
       <hr class="my-4">
-      <p>Being straight competitor to the other frontend frameworks, jWidget is good for developers who respect
-      the principles of object-oriented programming and appreciate good application performance.</p>
+      <p>jWidget is good for developers who respect the principles of object-oriented programming and
+      appreciate good application performance and code transparency.</p>
     </div>
-    <p>jWidget 2 is available as <a href="https://www.npmjs.com/package/jwidget">npm package</a>.</p>
+    <p>jWidget 2 is available as an <a href="https://www.npmjs.com/package/jwidget">npm package</a>.</p>
     <pre>
     npm i jwidget jquery
     </pre>
@@ -72,7 +72,7 @@ description: |
     collections explicitly using their synchronizers.</p>
     <p>This approach is more effective: data binding is not constrained by connection between model and view. All the same
     practices are used to bind model objects to each other and to bind view components to each other.</p>
-    <p>Current versions of the framework, its source code, tests, documentation, examples and tutorials are distributed
+    <p>Current versions of the library, its source code, tests, documentation, examples and tutorials are distributed
     under terms of <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>. Versions 2.0, 2.1 and
     all versions prior to 1.4.8 are distributed under terms of
     <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" target="_blank">LGPLv3 license</a>.</p>
