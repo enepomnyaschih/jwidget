@@ -6,7 +6,7 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial3/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-3">https://github.com/enepomnyaschih/mt/tree/mt-2.2-3</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.3-3">https://github.com/enepomnyaschih/mt/tree/mt-2.3-3</a> (Git branch).</p>
 
   <p>In this part we learn how to render child components that don't belong to lists. Examples of such components are
   the user profile panel and the tweet feed - they are child components of the application.</p>
@@ -53,7 +53,7 @@ description: |
   import ApplicationData from "../model/ApplicationData";
   import TweetFeed from "./TweetFeed";
 
-  @%template(require<string>("./Application.jw.html"))
+  @%template(require("./Application.jw.html"))
   export default class Application extends %Component {
 
       constructor(private data: ApplicationData) {
@@ -279,7 +279,7 @@ description: |
   import %template from "jwidget/template";
   import Profile from "../model/Profile";
 
-  @%template(require<string>("./ProfileBox.jw.html"))
+  @%template(require("./ProfileBox.jw.html"))
   export default class ProfileBox extends %Component {
 
       constructor(private profile: Profile) {

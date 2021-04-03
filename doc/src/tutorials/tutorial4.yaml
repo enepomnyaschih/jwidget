@@ -6,7 +6,7 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial4/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-4">https://github.com/enepomnyaschih/mt/tree/mt-2.2-4</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.3-4">https://github.com/enepomnyaschih/mt/tree/mt-2.3-4</a> (Git branch).</p>
 
   <p>In this part we learn how to handle user events in scope of a jWidget application. First, we must activate buttons
   Like/Unlike and Retweet/Unretweet.</p>

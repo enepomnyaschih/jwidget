@@ -6,7 +6,7 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="300" src="../samples/tutorial1/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-1">https://github.com/enepomnyaschih/mt/tree/mt-2.2-1</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.3-1">https://github.com/enepomnyaschih/mt/tree/mt-2.3-1</a> (Git branch).</p>
 
   <p>This tutorial shows you a way to develop your own Twitter in several steps using jWidget 2 and TypeScript.</p>
 
@@ -17,9 +17,10 @@ description: |
   <p>In the first sample we take a look at model and view. We will develop a simple UI component which takes data
   from a model to render itself.</p>
 
-  <p>First, download <a href="https://github.com/enepomnyaschih/jwidget-template/tree/2.2.1">jWidget 2 project template</a>. The
+  <p>First, install <a href="https://nodejs.org/">NodeJS + NPM</a>. Then download a
+  <a href="https://github.com/enepomnyaschih/jwidget-template/tree/2.3">jWidget 2 project template</a>. The
   template gives you a good starting point. Now you don't need to bother about the environment configuration
-  process. Just extract the template to some folder at your disk and run:</p>
+  process. Just extract the template to some folder at your local drive and run:</p>
 
   <pre>
   npm install
@@ -35,13 +36,10 @@ description: |
   serve public
   </pre>
 
-  <p>This command will display the URL of the served files. Open it in your browser. It should display "Hello, World!"
+  <p>This command displays the URL of the served files. Open it in your browser. It should display "Hello, World!"
   message.</p>
 
-  <p>Now we are ready to depelop the application. Download profile avatar files
-  <a href="https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-32.png" target="_blank">avatar-32.png</a> and
-  <a href="https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-48.png" target="_blank">avatar-48.png</a> to
-  "static/backend" folder.</p>
+  <p>Now we are ready to develop an application.</p>
 
   <p>Our goal is to implement a component for tweet representation:</p>
 
@@ -75,7 +73,14 @@ description: |
   }
   </pre>
 
-  <p>Model development is finished, so let's implement a view. Define TweetView component as follows:</p>
+  <p>Model development is finished, so let's implement a view.</p>
+
+  <p>Download profile avatar files
+  <a href="https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-32.png" target="_blank">avatar-32.png</a> and
+  <a href="https://raw.github.com/enepomnyaschih/mt/master/public/backend/avatar-48.png" target="_blank">avatar-48.png</a> to
+  "static/backend" folder - we'll use them as assets.</p>
+
+  <p>Define TweetView component as follows:</p>
 
   <h5>src/view/TweetView.ts</h5>
 
@@ -84,7 +89,7 @@ description: |
   import %template from "jwidget/template";
   import Tweet from "../model/Tweet";
 
-  @%template(require<string>("./TweetView.jw.html"))
+  @%template(require("./TweetView.jw.html"))
   export default class TweetView extends %Component {
 
       constructor(_tweet: Tweet) {
@@ -197,7 +202,7 @@ description: |
   import %template from "jwidget/template";
   import Tweet from "../model/Tweet";
 
-  @%template(require<string>("./TweetView.jw.html"))
+  @%template(require("./TweetView.jw.html"))
   export default class TweetView extends %Component {
 
       constructor(private tweet: Tweet) {
@@ -352,7 +357,7 @@ description: |
   import %template from "jwidget/template";
   import Tweet from "../model/Tweet";
 
-  @%template(require<string>("./TweetView.jw.html"))
+  @%template(require("./TweetView.jw.html"))
   export default class TweetView extends %Component {
 
       constructor(private tweet: Tweet) {
@@ -419,7 +424,7 @@ description: |
 
   <h3>Cleanup</h3>
 
-  <p>Since we used a <a href="https://github.com/enepomnyaschih/jwidget-template/tree/2.2.1">template</a> to initialize
+  <p>Since we used a <a href="https://github.com/enepomnyaschih/jwidget-template/tree/2.3">template</a> to initialize
   the project, it makes sense to do some cleanup now. Delete the following unused files:</p>
 
   <ul>
@@ -428,7 +433,7 @@ description: |
   <li>src/Application.ts</li>
   </ul>
 
-  <p>Also, following the <a href="https://github.com/enepomnyaschih/jwidget-template/blob/2.2.1/README.md">README</a>
+  <p>Also, following the <a href="https://github.com/enepomnyaschih/jwidget-template/blob/2.3/README.md">README</a>
   instructions:</p>
 
   <ul>

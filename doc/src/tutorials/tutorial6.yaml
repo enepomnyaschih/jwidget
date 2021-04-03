@@ -6,7 +6,7 @@ description: |
 
   <iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial6/"></iframe>
 
-  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.2-6">https://github.com/enepomnyaschih/mt/tree/mt-2.2-6</a> (Git branch).</p>
+  <p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.3-6">https://github.com/enepomnyaschih/mt/tree/mt-2.3-6</a> (Git branch).</p>
 
   <p>Now we switch to the most wonderful and important part of jWidget which makes it special - it is collection
   bindings. In this tutorial, we add a feature of a new tweet posting and an existing tweet removal.</p>
@@ -20,12 +20,13 @@ description: |
 
   <pre>
   import %BindableArray from "jwidget/%BindableArray";
+  import %IBindableArray from "jwidget/IBindableArray";
   import Profile from "./Profile";
   import Tweet from "./Tweet";
 
   export default class ApplicationData {
 
-      readonly tweets: %BindableArray<Tweet>;
+      readonly tweets: %IBindableArray<Tweet>;
 
       constructor(readonly profile: Profile, tweets: Tweet[] = []) {
           this.tweets = new %BindableArray(tweets);
@@ -53,7 +54,7 @@ description: |
   import Tweet from "../model/Tweet";
   import TweetView from "./TweetView";
 
-  @%template(require<string>("./TweetFeed.jw.html"))
+  @%template(require("./TweetFeed.jw.html"))
   export default class TweetFeed extends %Component {
 
       constructor(private tweets: %ReadonlyBindableArray<Tweet>) {
