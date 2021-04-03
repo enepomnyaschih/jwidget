@@ -11,7 +11,7 @@ import Inbox from "./Inbox";
 import NotFound from "./NotFound";
 import Settings from "./Settings";
 
-@template(require<string>("./Application.jw.html"))
+@template(require("./Application.jw.html"))
 export default class Application extends Component {
 
 	private router: UIRouter;

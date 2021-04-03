@@ -4,7 +4,7 @@ import Property from "jwidget/Property";
 import template from "jwidget/template";
 import AjaxGreeter from "./AjaxGreeter";
 
-@template(require<string>("./Application.jw.html"))
+@template(require("./Application.jw.html"))
 export default class Application extends Component {
 
 	private count = new Property(0);

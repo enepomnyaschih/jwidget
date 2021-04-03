@@ -2,7 +2,7 @@ import Component from "jwidget/Component";
 import {redirectRoute} from "jwidget/RouteRedirector";
 import template from "jwidget/template";
 
-@template(require<string>("./EmailNotFound.jw.html"))
+@template(require("./EmailNotFound.jw.html"))
 export default class EmailNotFound extends Component {
 
 	constructor(private id: string) {

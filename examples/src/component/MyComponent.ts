@@ -1,7 +1,7 @@
 import Component from "jwidget/Component";
 import template from "jwidget/template";
 
-@template(require<string>("./MyComponent.jw.html"))
+@template(require("./MyComponent.jw.html"))
 export default class MyComponent extends Component {
 
 	constructor(private message: string, private link: string) {

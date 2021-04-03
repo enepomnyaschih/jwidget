@@ -3,7 +3,7 @@ import bindVal from "jwidget/bindVal";
 import Component from "jwidget/Component";
 import template from "jwidget/template";
 
-@template(require<string>("./Application.jw.html"))
+@template(require("./Application.jw.html"))
 export default class Application extends Component {
 
 	protected renderRect(el: JQuery) {

@@ -6,7 +6,7 @@ export default null;
 // https://github.com/TypeStrong/ts-loader#loading-other-resources-and-code-splitting
 declare global {
 	const require: {
-		<T>(path: string): T;
+		(path: string): any;
 		(paths: string[], callback: (...modules: any[]) => void): void;
 		ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void) => void;
 	};

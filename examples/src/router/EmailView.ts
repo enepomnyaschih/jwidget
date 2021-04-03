@@ -4,7 +4,7 @@ import {redirectRoute} from "jwidget/RouteRedirector";
 import template from "jwidget/template";
 import Email from "./Email";
 
-@template(require<string>("./EmailView.jw.html"))
+@template(require("./EmailView.jw.html"))
 export default class EmailView extends Component {
 
 	constructor(private email: Email, private parentRouter: Router<any>) {

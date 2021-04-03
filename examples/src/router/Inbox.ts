@@ -9,7 +9,7 @@ import EmailList from "./EmailList";
 import EmailNotFound from "./EmailNotFound";
 import EmailView from "./EmailView";
 
-@template(require<string>("./Inbox.jw.html"))
+@template(require("./Inbox.jw.html"))
 export default class Inbox extends Component {
 
 	private router: UIRouter;
