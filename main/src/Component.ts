@@ -191,7 +191,7 @@ export default class Component extends Class {
 	/**
 	 * Component life stage method. Called during component destruction before `afterDestroy` method call.
 	 * Everything that was performed during component
-	 * rendering should be reverted here. All child components are already removed by framework
+	 * rendering should be reverted here. All child components are already removed by the component
 	 * before this method call, but the components themselves are not destroyed. You must destroy them explicitly.
 	 * Call `super.unrender()` at the last line of the method.
 	 */

@@ -1,7 +1,7 @@
 {
   "name": "jwidget",
   "version": "2.3.0",
-  "description": "Object-oriented TypeScript Model-View framework.",
+  "description": "Object-oriented library for TypeScript Model-View architectures.",
   "homepage": "http://enepomnyaschih.github.io/jwidget",
   "bugs": {
     "url": "https://github.com/enepomnyaschih/jwidget/issues"

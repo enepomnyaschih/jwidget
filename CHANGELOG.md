@@ -1,7 +1,7 @@
 # 2.3
 
 Main release goal is to catch up with rapidly developing TypeScript features and default type definitions, avoid naming
-conflicts between them and framework API. Secondary goal is to simplify the framework, e.g. delete some parts of the API
+conflicts between them and the library. Secondary goal is to simplify the library, e.g. delete some parts of the API
 that don't complement its nature of being a value binding library, that don't generate significant benefit to
 justify their maintenance, that are confusing to the end user.
 
@@ -235,7 +235,7 @@ Specifically:
 * Added IterableUtils: map, filter, count, index.
 * Added MapUtils: map, filter, getIterableKeys, getIterableValues.
 * Added SetUtils: SetLike, getDifference.
-* All framework features have been covered by tests.
+* All library features have been covered by tests.
 
 # 2.2.1
 

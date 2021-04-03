@@ -1,5 +1,5 @@
 # jWidget framework
 
-Object-oriented TypeScript Model-View framework.
+Object-oriented library for TypeScript Model-View architectures.
 
 See http://enepomnyaschih.github.io/jwidget for details.
