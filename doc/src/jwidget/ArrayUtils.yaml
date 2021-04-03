@@ -8,7 +8,7 @@ symbols:
     params:
       arr: 'Array to modify.'
       items: 'Items to add.'
-      index: 'Index of an item to insert the new ones before. By default, appends the items to the end of array.'
+      index: 'Index of an item to add the new ones before. By default, appends the items to the end of array.'
     description: |
       <p>Adds a range of new items to an array.</p>
 
@@ -40,7 +40,7 @@ symbols:
       arr: 'Array to invert.'
     returns: 'New inverted array.'
     description: |
-      Builds a new array by the rule: <code>result[%arr[i]] === i</code> and returns it.
+      <p>Builds a new array by the rule: <code>result[%arr[i]] === i</code> and returns it.</p>
 
   isIdentity:
     signature: |
@@ -63,17 +63,17 @@ symbols:
       <T>(arr: T[], fromIndex: number, toIndex: number): T
     params:
       arr: 'Array to modify.'
-      fromIndex: 'Index to an item to move.'
+      fromIndex: 'Index of an item to move.'
       toIndex: 'Index to move the item to.'
-    returns: 'The moved item.'
+    returns: 'Value of the moved item.'
     description: |
-      Moves an item in the array.
+      <p>Moves an item in an array.</p>
 
   tryReorder:
     signature: |
       <T>(arr: T[], indexArray: readonly number[]): T[]
     params:
-      arr: 'Array.'
+      arr: 'Array to modify.'
       indexArray: |
         Index array. Item with index <code>i</code> will be moved to index <code>indexArray[i]</code>.
         Must contain all indexes from 0 to (length - 1).

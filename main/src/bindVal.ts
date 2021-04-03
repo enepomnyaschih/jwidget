@@ -112,7 +112,7 @@ class ValueBinding<T extends string | number | string[]> extends Class {
 }
 
 /**
- * Returns a string property containing current DOM element value and starts watching for its modification.
+ * Returns a new `Property` bound to value of a DOM element.
  * @param el DOM element.
  * @param simple Disable live watch by timer.
  * @returns Bound property. You must destroy it to stop the synchronization.
@@ -121,26 +121,36 @@ export default function bindVal<T extends string | number | string[]>(
 	el: ValueWatcherElement, simple?: boolean): DestroyableBindable<T>;
 
 /**
- * Watches string property modification and updates the DOM element value.
+ * Binds value of a DOM element to a `Property`.
  * @param el DOM element.
- * @param property Element value to assign.
+ * @param property Property.
+ * @param binding Binding direction.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindVal<T extends string | number | string[]>(
 	el: ValueUpdaterElement<T>, property: Bindable<T>, binding?: 1): Destroyable;
 
 /**
- * Watches string property modification and updates the DOM element value and/or vice versa.
+ * Binds a `Property` to value of a DOM element.
  * @param el DOM element.
- * @param property Element value to read and/or write.
+ * @param property Property.
  * @param binding Binding direction.
  * @param simple Disable live watch by timer.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindVal<T extends string | number | string[]>(
-	el: ValueWatcherElement, property: IProperty<T>, binding?: 2, simple?: boolean): Destroyable;
+	el: ValueWatcherElement, property: IProperty<T>, binding: 2, simple?: boolean): Destroyable;
+
+/**
+ * Sets up a two-way binding between value of a DOM element and a `Property`.
+ * Initially, the property value prevails.
+ * @param el DOM element.
+ * @param property Property.
+ * @param binding Binding direction.
+ * @param simple Disable live watch by timer.
+ */
 export default function bindVal<T extends string | number | string[]>(
-	el: ValueUpdaterElement<T> & ValueWatcherElement, property: IProperty<T>, binding?: 3, simple?: boolean): Destroyable;
+	el: ValueUpdaterElement<T> & ValueWatcherElement, property: IProperty<T>, binding: 3, simple?: boolean): Destroyable;
 export default function bindVal<T extends string | number | string[]>(el: any, property: any, binding?: number, simple?: boolean): Destroyable {
 	if (property == null || typeof property === "boolean") {
 		// In this semantic, "property" apparently plays role of "simple".

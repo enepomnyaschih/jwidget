@@ -3,6 +3,19 @@ symbols:
     kind: abstract class
     description: |
       <p>Abstract HTML template. See implementations for details.</p>
+
+    properties:
+      requiresAfterAppend:
+        modifiers: readonly
+        type: boolean
+        description: |
+          <p>Flag indicating if rendering of a %Component by this template must be followed with a DOM presence check with a
+          possible %afterAppend method call.</p>
+        references:
+          afterAppend:
+            file: jwidget/Component
+            member: afterAppend
+
     methods:
       createElement:
         signature: |

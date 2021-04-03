@@ -97,37 +97,42 @@ class CheckedBinding extends Class {
 }
 
 /**
- * Returns a boolean property containing current checkbox state and starts watching for its modification.
- * Only "checked" prop is supported.
+ * Returns a new boolean `Property` bound to checkbox state of a DOM element.
+ * Only "checked" JQuery property is supported in this case.
  * @param el DOM element.
- * @param prop Element's property name.
- * @returns Bound property. You must destroy it to stop the synchronization.
+ * @param prop JQuery property name.
+ * @returns Bound `Property`. You must destroy it to stop the synchronization.
  */
 export default function bindProp(el: CheckedWatcherElement, prop: "checked"): DestroyableBindable<boolean>;
 
 /**
- * Watches boolean property modification and updates the specified property of the DOM element.
+ * Binds a JQuery property of a DOM element to a boolean `Property`.
  * @param el DOM element.
- * @param prop Element's property name.
- * @param property Property value to assign.
+ * @param prop JQuery property name.
+ * @param property Property.
+ * @param binding Binding direction.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindProp(el: PropUpdaterElement, prop: string, property: Bindable<boolean>, binding?: 1): Destroyable;
 
 /**
- * Returns a boolean property containing current checkbox state and starts watching for its modification.
- * Only "checked" prop is supported.
+ * Binds a boolean `Property` to a JQuery property of a DOM element.
+ * Only "checked" JQuery property is supported in this case.
  * @param el DOM element.
- * @param prop Element's property name.
+ * @param prop JQuery property name.
+ * @param property Property.
+ * @param binding Binding direction.
  * @returns Bound property. You must destroy it to stop the synchronization.
  */
 export default function bindProp(el: CheckedWatcherElement, prop: "checked", property: IProperty<boolean>, binding: 2): Destroyable;
 
 /**
- * Watches boolean property modification and updates the specified property of the DOM element and/or vice versa.
+ * Sets up a two-way binding between a JQuery property of a DOM element and a boolean `Property`.
+ * Initially, the boolean property value prevails.
+ * Only "checked" JQuery property is supported in this case.
  * @param el DOM element.
- * @param prop Element's property name.
- * @param property Property value to read and/or write.
+ * @param prop JQuery property name.
+ * @param property Property.
  * @param binding Binding direction.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */

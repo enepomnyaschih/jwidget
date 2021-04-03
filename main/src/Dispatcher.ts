@@ -28,7 +28,8 @@ import IDispatcher from "./IDispatcher";
 import Listener from "./Listener";
 
 /**
- * Real implementation of `Listenable` interface.
+ * Real implementation of `IDispatcher` interface that calls handler functions on `dispatch` method call (as opposed to
+ * `dummyDispatcher` which doesn't).
  * Used to dispatch messages (for example, field value change) to other objects (listeners).
  */
 export default class Dispatcher<M> implements IDispatcher<M> {

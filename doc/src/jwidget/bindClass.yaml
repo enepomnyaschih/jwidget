@@ -5,11 +5,11 @@ symbols:
       (el: %ClassNameUpdaterElement, cls: %Bindable<string>): %Destroyable
     params:
       el: DOM element.
-      cls: Class name.
-      property: Property indicating if the class should be activated.
+      cls: CSS class name.
+      property: Property to bind presence of the CSS class to.
     returns: Binding object. You must %destroy it to stop the synchronization.
     description: |
-      <p>Watches boolean or string property modification and updates class attribute in the DOM element.</p>
+      <p>Binds presence or name of a CSS class of a DOM element to a boolean or a string %Property.</p>
       <p>One signature allows you to turn the specified class on/off. Any truthy value is treated as true.</p>
       <pre>
       // Bind "checked" CSS class to checked property value

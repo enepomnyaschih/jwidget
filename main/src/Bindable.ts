@@ -32,7 +32,7 @@ import Mapper from "./Mapper";
  */
 interface Bindable<V> {
 	/**
-	 * Checks if this property never dispatches messages. This knowledge may help you do certain code optimizations.
+	 * Property value has just been changed. Dispatched in result of `set` method call if the value has been changed.
 	 */
 	readonly silent: boolean;
 
@@ -42,14 +42,14 @@ interface Bindable<V> {
 	readonly onChange: Listenable<Bindable.ChangeMessage<V>>;
 
 	/**
-	 * Returns property value.
+	 * Think twice before calling this method - probably it makes sense to use some kind of binding instead?
+	 * @returns Current property value.
 	 */
 	get(): V;
 
 	/**
-	 * Builds a new property containing the result of the callback function called
-	 * on this property value. To stop synchronization, destroy the resulting property.
-	 * To map multiple properties, use `Mapper`.
+	 * Creates a new property bound to this property, keeping it equal to the result of a function call for value
+	 * of this property.
 	 *
 	 * @param create Mapping function.
 	 * @param config Configuration options.
@@ -61,21 +61,21 @@ export default Bindable;
 
 namespace Bindable {
 	/**
-	 * Bindable change message.
+	 * `Bindable` change message.
 	 */
 	export interface ChangeMessage<V> {
 		/**
-		 * Sender property.
+		 * Property that has its value changed.
 		 */
 		readonly sender: Bindable<V>;
 
 		/**
-		 * New value.
+		 * New property value.
 		 */
 		readonly value: V;
 
 		/**
-		 * Old value.
+		 * Old property value.
 		 */
 		readonly oldValue: V;
 	}

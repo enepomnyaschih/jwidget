@@ -39,7 +39,7 @@ class DisplayUpdater extends Class {
 }
 
 /**
- * Watches boolean property modification and updates visibility of the DOM element.
+ * Binds visibility of a DOM element to a boolean `Property`.
  * @param el DOM element.
  * @param property Element visibility.
  * @returns Binding object. You must destroy it to stop the synchronization.

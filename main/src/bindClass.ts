@@ -50,18 +50,18 @@ class ClassNameUpdater extends Class {
 }
 
 /**
- * Watches boolean property modification and updates the specified CSS class presence in the DOM element.
+ * Binds presence of a CSS class of a DOM element to a boolean `Property`.
  * @param el DOM element.
  * @param cls CSS class name.
- * @param property Boolean property to bind CSS class to.
+ * @param property Property to bind presence of the CSS class to.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindClass(el: ClassUpdaterElement, cls: string, property: Bindable<boolean>): Destroyable;
 
 /**
- * Watches string property modification and updates CSS class name in the DOM element.
+ * Binds name of a CSS class of a DOM element to a string `Property`.
  * @param el DOM element.
- * @param cls CSS class name.
+ * @param cls Property containing a CSS class name.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindClass(el: ClassNameUpdaterElement, cls: Bindable<string>): Destroyable;

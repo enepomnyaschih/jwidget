@@ -27,10 +27,6 @@ import Class from './Class';
 import Destroyable from './Destroyable';
 
 class HtmlUpdater extends Class {
-	/**
-	 * @param el DOM element.
-	 * @param property Source property.
-	 */
 	constructor(private el: HtmlUpdaterElement, private property: Bindable<string>) {
 		super();
 		this._update();
@@ -43,7 +39,7 @@ class HtmlUpdater extends Class {
 }
 
 /**
- * Watches string property modification and updates inner HTML of the DOM element.
+ * Binds inner HTML of a DOM element to a string `Property`.
  * @param el DOM element.
  * @param property HTML value.
  * @returns Binding object. You must destroy it to stop the synchronization.

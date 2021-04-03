@@ -7,7 +7,7 @@ symbols:
       property: Text value.
     returns: Binding object. You must %destroy it to stop the synchronization.
     description: |
-      <p>Watches string property modification and updates inner text of the DOM element.</p>
+      <p>Binds inner text of a DOM element to a string %Property.</p>
       <pre>
       // Bind inner text to property value
       %bindText(el, text);

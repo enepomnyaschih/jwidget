@@ -7,8 +7,8 @@ symbols:
       property: Element visibility.
     returns: Binding object. You must %destroy it to stop the synchronization.
     description: |
-      <p>Watches boolean property modification and updates visibility of the DOM element. When %property has falsy
-      value, sets "display" inline style to "none". When %property is truthy, removes "display" inline style. Make
+      <p>Binds visibility of a DOM element to a boolean %Property. When %property value is false, sets "display"
+      inline style to "none". When %property value is true, removes "display" inline style. You must make
       sure that the element is visible by default according to your CSS rules.</p>
       <pre>
       // Bind element visibility to property value

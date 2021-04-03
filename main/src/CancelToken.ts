@@ -27,9 +27,9 @@ import dummyDestroyable from "./dummyDestroyable";
 import Dispatcher from "./Dispatcher";
 
 /**
- * Cancelation token is an object that provides a signal on destruction for the bound asyncronous operations to
- * stop working. Examples of asyncronous operations that support cancelation are `defer` and `request`. In comparison
- * to "destroyable promise" approach, cancelation tokens are compatible to async/await syntax.
+ * Cancellation token is an object that provides a signal on destruction for the bound asynchronous operations to
+ * stop working. Examples of asynchronous operations that support cancellation are `defer` and `request`. In comparison
+ * to "destroyable promise" approach, cancellation tokens are compatible to async/await syntax.
  */
 export default class CancelToken implements Destroyable {
 
@@ -43,8 +43,8 @@ export default class CancelToken implements Destroyable {
 	}
 
 	/**
-	 * Adds a handler function to call on taken cancelation. If the token is already canceled, calls the
-	 * function immediately and returns %dummyDestroyable. Else registers the callback for a one-time call on
+	 * Adds a handler function to call on taken cancellation. If the token is already canceled, calls the
+	 * function immediately and returns `dummyDestroyable`. Else registers the callback for a one-time call on
 	 * token destruction and returns the attachment. Destroying the returned attachment results in handler
 	 * function removal.
 	 * @param handler Token cancelation callback.
@@ -72,7 +72,7 @@ export default class CancelToken implements Destroyable {
 }
 
 /**
- * Helper function that wraps an abstract asyncronous operation with a promise supporting cancelation tokens.
+ * Helper function that wraps an abstract asynchronous operation with a promise supporting cancellation tokens.
  * @param run Asyncronous operation initiation callback.
  * @param cancel Asyncronous operation cancelation callback.
  * @param cancelToken Optional cancelation token.

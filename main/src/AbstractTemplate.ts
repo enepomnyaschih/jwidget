@@ -38,12 +38,16 @@ abstract class AbstractTemplate {
 
 	protected ids: string[] = null; // IDs in dependency order.
 
+	/**
+	 * Flag indicating if rendering of a `Component` by this template must be followed with a DOM presence check with a
+	 * possible `afterAppend` method call.
+	 */
 	get requiresAfterAppend(): boolean {
 		return false;
 	}
 
 	/**
-	 * Renders the template. See TemplateOutput for details.
+	 * Renders the template. See `TemplateOutput` for details.
 	 */
 	abstract createElement(): TemplateOutput;
 

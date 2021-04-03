@@ -39,7 +39,7 @@ class CssUpdater extends Class {
 }
 
 /**
- * Watches string property modification and updates the specified CSS style of the DOM element.
+ * Binds a CSS style value of a DOM element to a string `Property`.
  * @param el DOM element.
  * @param style CSS style name.
  * @param property Style value.

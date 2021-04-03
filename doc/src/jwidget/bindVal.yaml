@@ -3,29 +3,32 @@ symbols:
     signature: |
       <T extends string | number | string[]>(el: %ValueWatcherElement, simple?: boolean): %DestroyableBindable<T>
       <T extends string | number | string[]>(el: %ValueUpdaterElement<T>, property: %Bindable<T>, binding?: %UPDATE): %Destroyable
-      <T extends string | number | string[]>(el: %ValueWatcherElement, property: %IProperty<T>, binding?: %WATCH, simple?: boolean): %Destroyable
-      <T extends string | number | string[]>(el: %ValueUpdaterElement<T> & %ValueWatcherElement, property: %IProperty<T>, binding?: %TWOWAY, simple?: boolean): %Destroyable
+      <T extends string | number | string[]>(el: %ValueWatcherElement, property: %IProperty<T>, binding: %WATCH, simple?: boolean): %Destroyable
+      <T extends string | number | string[]>(el: %ValueUpdaterElement<T> & %ValueWatcherElement, property: %IProperty<T>, binding: %TWOWAY, simple?: boolean): %Destroyable
     params:
       el: DOM element.
-      value: Element value to read and/or write.
+      property: Property.
       binding: Binding direction.
       simple: Disable live watch.
     returns: Binding object or bound property. You must %destroy it to stop the synchronization.
     description: |
-      <p>Watches string property modification and updates the DOM element value and/or vice versa.</p>
-      <p>The first signature returns a string property containing current DOM element value and starts watching for its
-      modification.</p>
+      <p>Binds value of a DOM element to a %Property and/or back.</p>
+      <p>The first signature returns a new %Property bound to value of a DOM element.</p>
       <pre>
       // Watch input element value
-      const value = %bindVal(el);
+      const value = %bindVal<string>(el);
       </pre>
-      <p>The second signature watches string property modification and updates the DOM element value.</p>
+      <p>The second signature binds value of a DOM element to a %Property.</p>
       <pre>
       // Bind element value to property
       %bindVal(el, value);
       </pre>
       %example:bindVal1
-      <p>The third and the fourth signatures allow you to setup a reverse or a two-way binding respectively.</p>
+      <p>The third signature binds a %Property to value of a DOM element.</p>
+      <pre>
+      %bindVal(el, value, %WATCH);
+      </pre>
+      <p>The fourth signature sets up a two-way binding.</p>
       <pre>
       %bindVal(el, value, %TWOWAY);
       </pre>

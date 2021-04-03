@@ -39,7 +39,7 @@ class TextUpdater extends Class {
 }
 
 /**
- * Watches string property modification and updates inner text of the DOM element.
+ * Binds inner text of a DOM element to a string %Property.
  * @param el DOM element.
  * @param property Text value.
  * @returns Binding object. You must destroy it to stop the synchronization.

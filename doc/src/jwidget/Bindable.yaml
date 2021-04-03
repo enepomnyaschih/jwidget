@@ -64,8 +64,8 @@ symbols:
           config: Configuration options.
         returns: Mapped property.
         description: |
-          <p>Builds a new property containing the result of the %create function called on this property value and
-          starts synchronization. To stop the synchronization, %destroy the resulting property. To map multiple
+          <p>Creates a new property bound to this property, keeping it equal to the result of a function call for value
+          of this property. To stop the binding, you must %destroy the resulting property. To map multiple
           properties at once, use %Mapper.</p>
           <h5>Example 1. Double number</h5>
           <pre>
@@ -140,7 +140,7 @@ symbols:
       sender:
         type: '%Bindable<%V>'
         modifiers: readonly
-        description: <p>Property that has value changed.</p>
+        description: <p>Property that has its value changed.</p>
       oldValue:
         type: '%V'
         modifiers: readonly

@@ -119,7 +119,7 @@ function updateField(el: RadioUpdaterField, selector: string, value: string) {
 }
 
 /**
- * Returns a string property containing current radio group selection and starts watching for its modification.
+ * Returns a new string `Property` bound to radio button selection in a DOM element.
  * @param el DOM element.
  * @param name Value of "name" attribute in radio button elements.
  * @returns Bound property. You must destroy it to stop the synchronization.
@@ -127,24 +127,34 @@ function updateField(el: RadioUpdaterField, selector: string, value: string) {
 export default function bindRadio(el: RadioWatcherField, name: string): DestroyableBindable<string>;
 
 /**
- * Watches string property modification and updates the radio group selection.
+ * Binds radio button selection in a DOM element to a string `Property`.
  * @param el DOM element.
  * @param name Value of "name" attribute in radio button elements.
- * @param property Radio button value to select.
+ * @param property Property.
+ * @param binding Binding direction.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
 export default function bindRadio(el: RadioUpdaterField, name: string, property: Bindable<string>, binding?: 1): Destroyable;
 
 /**
- * Watches string property modification and updates the radio group selection.
+ * Binds a string `Property` to radio button selection in a DOM element.
  * @param el DOM element.
  * @param name Value of "name" attribute in radio button elements.
- * @param property Radio button value to read and/or write.
+ * @param property Property.
  * @param binding Binding direction.
  * @returns Binding object. You must destroy it to stop the synchronization.
  */
-export default function bindRadio(el: RadioWatcherField, name: string, property: IProperty<string>, binding?: 2): Destroyable;
-export default function bindRadio(el: RadioField, name: string, property: IProperty<string>, binding?: 3): Destroyable;
+export default function bindRadio(el: RadioWatcherField, name: string, property: IProperty<string>, binding: 2): Destroyable;
+
+/**
+ * Sets up a two-way binding between radio button selection in a DOM element and a string `Property`.
+ * Initially, the property value prevails.
+ * @param el DOM element.
+ * @param name Value of "name" attribute in radio button elements.
+ * @param property Property.
+ * @param binding Binding direction.
+ */
+export default function bindRadio(el: RadioField, name: string, property: IProperty<string>, binding: 3): Destroyable;
 export default function bindRadio(el: any, name: string, property?: any, binding?: number): Destroyable {
 	if (property == null) {
 		const target = new Property<string>();

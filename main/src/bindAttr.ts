@@ -39,8 +39,7 @@ class AttrUpdater extends Class {
 }
 
 /**
- * Watches string property modification and updates the specified attribute of the DOM element.
- * Destroy the returned object to stop synchronization.
+ * Binds an attribute of a DOM element to a string `Property`.
  * @param el DOM element.
  * @param attr Attribute name.
  * @param property Attribute value to assign.

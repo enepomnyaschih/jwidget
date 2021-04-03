@@ -26,8 +26,9 @@ import ArraySpliceResult from './ArraySpliceResult';
 import IBindableArray from './IBindableArray';
 
 /**
- * Determines index of the first item the `isHigher` callback returns true for. The input array must be ordered in such
- * a way that all values such that `!isHigher(value)` go before `isHigher(value)`.
+ * Determines index of the first item the `isHigher` callback returns true for. If such an item does not exist,
+ * returns the array length. The input array must be ordered in such a way that all values such that
+ * `!isHigher(value)` go before `isHigher(value)`.
  * @param arr Sorted array.
  * @param isHigher Should return true if the argument is "higher" than the searched value.
  * @returns Array index.
@@ -61,10 +62,8 @@ export function backForEach<T>(arr: readonly T[], callback: (item: T, index: num
 }
 
 /**
- * Checks if every item in array is equal to its index: `array[i] === i`.
- *
  * @param arr Array.
- * @returns Every item is equal to its index.
+ * @returns Every item in `arr` is equal to its index: `arr[i] === i`.
  */
 export function isIdentity(arr: readonly number[]): boolean {
 	for (let i = 0, l = arr.length; i < l; ++i) {
@@ -76,10 +75,10 @@ export function isIdentity(arr: readonly number[]): boolean {
 }
 
 /**
- * Builds a new array by the rule: `result[array[i]] === i`.
+ * Builds a new array by the rule: `result[arr[i]] === i` and returns it.
  *
- * @param arr Array.
- * @returns The inverted array.
+ * @param arr Array to invert.
+ * @returns New inverted array.
  */
 export function invert(arr: readonly number[]): number[] {
 	const l = arr.length;
@@ -105,10 +104,10 @@ export function merge<T>(arrays: readonly (readonly T[])[]): T[] {
 }
 
 /**
- * Adds a range of items to an array.
- * @param arr Array.
+ * Adds a range of new items to an array.
+ * @param arr Array to modify.
  * @param items Items to add.
- * @param index Index of an item to add the new ones before. By default, appends the items to the end of the array.
+ * @param index Index of an item to add the new ones before. By default, appends the items to the end of array.
  */
 export function addAll<T>(arr: T[], items: Iterable<T>, index?: number): void {
 	if (index === undefined) {
@@ -123,11 +122,11 @@ export function addAll<T>(arr: T[], items: Iterable<T>, index?: number): void {
 }
 
 /**
- * Moves an item inside array.
- * @param arr Array.
- * @param fromIndex Item index to move.
- * @param toIndex Index to move to.
- * @returns The moved item.
+ * Moves an item in an array.
+ * @param arr Array to modify.
+ * @param fromIndex Index of an item to move.
+ * @param toIndex Index to move the item to.
+ * @returns Value of the moved item.
  */
 export function move<T>(arr: T[], fromIndex: number, toIndex: number): T {
 	const item = arr[fromIndex];
@@ -141,7 +140,7 @@ export function move<T>(arr: T[], fromIndex: number, toIndex: number): T {
 
 /**
  * Removes and inserts item ranges.
- * @param arr Array.
+ * @param arr Array to modify.
  * @param segmentsToRemove Array of segments to remove sorted by index asc. Segments are removed in backward order.
  * @param segmentsToAdd Array of segments to insert sorted by index asc. Segments are inserted in forward order.
  * @returns Splice result. If the array is not modified, returns undefined.
@@ -199,7 +198,7 @@ export function trySplice<T>(arr: T[],
 
 /**
  * Reorders array items.
- * @param arr Array.
+ * @param arr Array to modify.
  * @param indexArray Index array. Item with index `i` will be moved to index `indexArray[i]`.
  * Must contain all indexes from 0 to (length - 1).
  * @returns Old array contents. If the array is not modified, returns undefined.
