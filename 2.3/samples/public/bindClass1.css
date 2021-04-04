@@ -1,0 +1,13 @@
+.application-rect {
+  border: 1px solid #f00;
+  display: inline-block;
+  margin-top: 10px;
+  width: 100px;
+  height: 100px;
+}
+.application-rect.checked {
+  background: #f00;
+}
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9iaW5kQ2xhc3MxL0FwcGxpY2F0aW9uLnN0eWwiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxzQkFBTztFQUNQLHFCQUFRO0VBQ1IsZ0JBQVc7RUFDWCxZQUFNO0VBQ04sYUFBTztBQUNYO0FBQ0k7RUFDSSxnQkFBVztBQUNuQiIsImZpbGUiOiJiaW5kQ2xhc3MxLmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5hcHBsaWNhdGlvbi1yZWN0XG4gICAgYm9yZGVyIDFweCBzb2xpZCByZWRcbiAgICBkaXNwbGF5IGlubGluZS1ibG9ja1xuICAgIG1hcmdpbi10b3AgMTBweFxuICAgIHdpZHRoIDEwMHB4XG4gICAgaGVpZ2h0IDEwMHB4XG5cbiAgICAmLmNoZWNrZWRcbiAgICAgICAgYmFja2dyb3VuZCByZWRcbiJdLCJzb3VyY2VSb290IjoiIn0=*/

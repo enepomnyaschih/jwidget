@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/Bindable - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+								data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+						</li>
+					
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/Bindable</a>
+						
+<a class="nav-link" href="#default">Default export</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#default---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#default---description">Description</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#bindings">Bindings</a></nav>
+
+
+<a class="nav-link" href="#default---properties">Properties</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--onChange">onChange</a>
+<a class="nav-link" href="#default--silent">silent</a></nav>
+
+<a class="nav-link" href="#default---methods">Methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--get">get</a>
+<a class="nav-link" href="#default--map">map</a></nav>
+
+
+</nav>
+
+<a class="nav-link" href="#Bindable-ChangeMessage">Bindable.ChangeMessage</a>
+
+<nav class="nav nav-pills flex-column">
+
+
+
+
+<a class="nav-link" href="#Bindable-ChangeMessage--sender">sender</a>
+<a class="nav-link" href="#Bindable-ChangeMessage--oldValue">oldValue</a>
+<a class="nav-link" href="#Bindable-ChangeMessage--value">value</a>
+
+
+
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1><span id="default"></span>jwidget/Bindable</h1>
+						
+						<h3>Consumption</h3>
+						<pre class="doc-consumption">import Bindable from "jwidget/Bindable";</pre>
+						
+<h3><span id="default"></span>Default export<a class="anchorjs-link" href="#default" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="default---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#default---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+<li><span style="margin-left: 0em"></span>interface <b>Bindable</b><span class="monospace">&lt;V&gt;</span></li>
+
+<li><span style="margin-left: 2em"></span>interface <a href="DestroyableBindable.html#default">DestroyableBindable</a><span class="monospace">&lt;V&gt;</span></li>
+
+<li><span style="margin-left: 4em"></span>interface <a href="IProperty.html#default">IProperty</a><span class="monospace">&lt;V&gt;</span></li>
+
+<li><span style="margin-left: 6em"></span>interface <a href="hash.html#IHash">IHash</a></li>
+
+<li><span style="margin-left: 6em"></span>class <a href="Property.html#default">Property</a><span class="monospace">&lt;V&gt;</span></li>
+
+</ul>
+<h4><span id="default---description"></span>Description<a class="anchorjs-link" href="#default---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">V</dt><dd class="col-lg-10 col-sm-9">Value type.</dd>
+</dl>
+<p>Read-only container for a value. Provides basic data binding functionality.</p>
+<p>Has a sub-interface <a href="IProperty.html" target="_parent">IProperty</a>, which exposes <a href="IProperty.html#default--set" target="_parent">set</a> method to modify the property.</p>
+<p>It is sometimes smart to store the property as <a href="IProperty.html" target="_parent">IProperty</a> internally, and expose it as <b>Bindable</b> or
+<a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a> externally to deny direct control over the property by the clients.</p>
+<pre>
+class Example {
+    private _size = new <a href="Property.html" target="_parent">Property</a>&lt;number&gt;(0);
+
+    get size(): <b>Bindable</b>&lt;number&gt; {
+        return this._size;
+    }
+
+    // ...
+
+        // We can't set public size, but we can set private _size
+        this._size.<a href="IProperty.html#default--set" target="_parent">set</a>(value);
+
+    // ...
+}</pre>
+
+
+
+		<h5><span id="bindings"></span>Bindings<a class="anchorjs-link" href="#bindings" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p><b>Bindable</b> can be used as source property in the next model bindings:</p>
+<ul>
+  <li><a href="Copier.html" target="_parent">Copier</a> - Keeps the value of one property equal to the value of another property.</li>
+  <li><a href="Mapper.html" target="_parent">Mapper</a> - Keeps the value of one property equal to the result of a function call with values of several
+  other properties.</li>
+  <li><a href="Switcher.html" target="_parent">Switcher</a> - Observes a property.</li>
+</ul>
+<p>Also, it can be used as a source property in the next view bindings:</p>
+<ul>
+  <li><a href="bindAttr.html" target="_parent">bindAttr</a> - Binds attribute to a property.</li>
+  <li><a href="bindClass.html" target="_parent">bindClass</a> - Binds CSS class to a property.</li>
+  <li><a href="bindCss.html" target="_parent">bindCss</a> - Binds CSS style to a property.</li>
+  <li><a href="bindDisplay.html" target="_parent">bindDisplay</a> - Binds visibility to a property.</li>
+  <li><a href="bindHtml.html" target="_parent">bindHtml</a> - Binds inner HTML to a property.</li>
+  <li><a href="bindProp.html" target="_parent">bindProp</a> - Binds jQuery property to a jWidget property and/or vice versa.</li>
+  <li><a href="bindRadio.html" target="_parent">bindRadio</a> - Binds radio selection to a property and/or vice versa.</li>
+  <li><a href="bindText.html" target="_parent">bindText</a> - Binds inner text to a property.</li>
+  <li><a href="bindVal.html" target="_parent">bindVal</a> - Binds input value to a property and/or vice versa.</li>
+</ul>
+<p>All bindings are independent - you can implement your own bindings if you want.</p>
+
+	
+
+
+<h4><span id="default---properties"></span>Fields<a class="anchorjs-link" href="#default---properties" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--onChange"></span>onChange<a class="anchorjs-link" href="#default--onChange" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly onChange: <a href="Listenable.html" target="_parent">Listenable</a>&lt;<b>Bindable</b>.<a href="#Bindable-ChangeMessage" target="_parent">ChangeMessage</a>&lt;<a href="#default" target="_parent">V</a>&gt;&gt;</code></p>
+<p>Property value has just been changed. <a href="IDispatcher.html#default--dispatch" target="_parent">Dispatched</a> in result of <a href="IProperty.html#default--set" target="_parent">set</a> method call if the value has been
+changed.</p>
+
+</div>
+
+<h5><span id="default--silent"></span>silent<a class="anchorjs-link" href="#default--silent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly silent: boolean</code></p>
+<p>Checks if this property never <a href="IDispatcher.html#default--dispatch" target="_parent">dispatches</a> messages. This knowledge may help you do certain code
+optimizations.</p>
+
+</div>
+
+<h4><span id="default---methods"></span>Methods<a class="anchorjs-link" href="#default---methods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--get"></span>get<a class="anchorjs-link" href="#default--get" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(): <a href="#default" target="_parent">V</a></code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Current property value.</dd>
+</dl>
+<p>Think twice before calling this method - probably it makes sense to use some kind of <a href="#bindings" target="_parent">binding</a> instead?</p>
+
+</div>
+
+<h5><span id="default--map"></span>map<a class="anchorjs-link" href="#default--map" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>&lt;U&gt;(create: (value: <a href="#default" target="_parent">V</a>) =&gt; U, config?: <a href="Mapper.html" target="_parent">Mapper</a>.<a href="Mapper.html#Mapper-Config" target="_parent">Config</a>&lt;U&gt;): <a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a>&lt;U&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">create</dt><dd class="col-lg-10 col-sm-9">Mapping function.</dd>
+<dt class="col-lg-2 col-sm-3">config</dt><dd class="col-lg-10 col-sm-9">Configuration options.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Mapped property.</dd>
+</dl>
+<p>Creates a new property bound to this property, keeping it equal to the result of a function call for value
+of this property. To stop the binding, you must <a href="Destroyable.html#default--destroy" target="_parent">destroy</a> the resulting property. To map multiple
+properties at once, use <a href="Mapper.html" target="_parent">Mapper</a>.</p>
+<h5>Example 1. Double number</h5>
+<pre>
+const num = new <a href="Property.html" target="_parent">Property</a>&lt;number&gt;(3);
+const double = num.<b>map</b>(value =&gt; 2 * value);
+expect(double.<a href="#default--get" target="_parent">get</a>()).equal(6);
+num.<a href="IProperty.html#default--set" target="_parent">set</a>(5);
+expect(double.<a href="#default--get" target="_parent">get</a>()).equal(10);</pre>
+<p>Pass <a href="Mapper.html#Mapper-Config--destroy" target="_parent">destroy</a> option to destroy the previously mapped values.</p>
+<h5>Example 2. Typical bindable model mapping to UI component</h5>
+<pre>
+@<a href="template.html" target="_parent">template</a>('&lt;div&gt;&lt;div jwid=&quot;report&quot;&gt;&lt;/div&gt;&lt;/div&gt;')
+class App extends <a href="Component.html" target="_parent">Component</a> {
+    constructor(private report: <b>Bindable</b>&lt;Report&gt;) {}
+
+    protected renderReport() {
+        return this.<a href="IClass.html#default--own" target="_parent">own</a>(report.<b>map</b>(report =&gt; new ReportView(report), {<a href="../jwidget.html#destroy" target="_parent">destroy</a>}));
+    }
+}</pre>
+<p>Pass <a href="Mapper.html#Mapper-Config--viaNull" target="_parent">viaNull</a> option to reverse mapper updating flow. Default flow is:</p>
+<ol>
+  <li>Create a new value.</li>
+  <li>Reassign target property.</li>
+  <li>Destroy the old value.</li>
+</ol>
+<p>Setting this option to true changes the flow the next way:</p>
+<ol>
+  <li>Set target value to null.</li>
+  <li>Destroy the old value.</li>
+  <li>Create a new value.</li>
+  <li>Assign target property.</li>
+</ol>
+
+</div>
+
+
+</div>
+<h3><span id="Bindable-ChangeMessage"></span>Bindable.ChangeMessage<a class="anchorjs-link" href="#Bindable-ChangeMessage" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">V</dt><dd class="col-lg-10 col-sm-9">Value type.</dd>
+</dl>
+<p>Message for <a href="#default--onChange" target="_parent">onChange</a>.</p>
+
+
+
+
+
+
+<h5><span id="Bindable-ChangeMessage--sender"></span>sender<a class="anchorjs-link" href="#Bindable-ChangeMessage--sender" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly sender: <b>Bindable</b>&lt;<a href="#Bindable-ChangeMessage" target="_parent">V</a>&gt;</code></p>
+<p>Property that has its value changed.</p>
+</div>
+
+<h5><span id="Bindable-ChangeMessage--oldValue"></span>oldValue<a class="anchorjs-link" href="#Bindable-ChangeMessage--oldValue" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly oldValue: <a href="#Bindable-ChangeMessage" target="_parent">V</a></code></p>
+<p>Old property value.</p>
+</div>
+
+<h5><span id="Bindable-ChangeMessage--value"></span>value<a class="anchorjs-link" href="#Bindable-ChangeMessage--value" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly value: <a href="#Bindable-ChangeMessage" target="_parent">V</a></code></p>
+<p>New property value.</p>
+</div>
+
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Messages</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="IterableUtils.html" target="_parent">IterableUtils</a></li>
+        <li><a href="MapUtils.html" target="_parent">MapUtils</a></li>
+        <li><a href="SetUtils.html" target="_parent">SetUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><b>Bindable</b></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Class.html" target="_parent">Class</a>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Dispatcher.html" target="_parent">Dispatcher</a>, <a href="IDispatcher.html" target="_parent">IDispatcher</a></li>
+        <li><a href="Property.html" target="_parent">Property</a>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="Component.html" target="_parent">Component</a></li>
+        <li><a href="Renderable.html" target="_parent">Renderable</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a></td>
+            <td><a href="ReadonlyBindableMap.html" target="_parent">ReadonlyBindableMap</a></td>
+            <td><a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="DestroyableReadonlyBindableArray.html" target="_parent">DestroyableReadonlyBindableArray</a></td>
+            <td><a href="DestroyableReadonlyBindableMap.html" target="_parent">DestroyableReadonlyBindableMap</a></td>
+            <td><a href="DestroyableReadonlyBindableSet.html" target="_parent">DestroyableReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="IBindableArray.html" target="_parent">IBindableArray</a></td>
+            <td><a href="IBindableMap.html" target="_parent">IBindableMap</a></td>
+            <td><a href="IBindableSet.html" target="_parent">IBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="BindableArray.html" target="_parent">BindableArray</a></td>
+            <td><a href="BindableMap.html" target="_parent">BindableMap</a></td>
+            <td><a href="BindableSet.html" target="_parent">BindableSet</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="collection/AbstractMapper.html" target="_parent">AbstractMapper</a></li>
+        <li><a href="collection/AbstractValueCollector.html" target="_parent">AbstractValueCollector</a></li>
+        <li><a href="collection/ArrayFilterer.html" target="_parent">ArrayFilterer</a></li>
+        <li><a href="collection/ArrayInserter.html" target="_parent">ArrayInserter</a></li>
+        <li><a href="collection/ArrayMapper.html" target="_parent">ArrayMapper</a></li>
+        <li><a href="collection/ArrayMerger.html" target="_parent">ArrayMerger</a></li>
+        <li><a href="collection/ArrayReverser.html" target="_parent">ArrayReverser</a></li>
+        <li><a href="collection/ArrayValueCollector.html" target="_parent">ArrayValueCollector</a></li>
+        <li><a href="collection/MapFilterer.html" target="_parent">MapFilterer</a></li>
+        <li><a href="collection/MapInserter.html" target="_parent">MapInserter</a></li>
+        <li><a href="collection/MapKeyCollector.html" target="_parent">MapKeyCollector</a></li>
+        <li><a href="collection/MapMapper.html" target="_parent">MapMapper</a></li>
+        <li><a href="collection/MapValueCollector.html" target="_parent">MapValueCollector</a></li>
+        <li><a href="collection/SetConverterToArray.html" target="_parent">SetConverterToArray</a></li>
+        <li><a href="collection/SetFilterer.html" target="_parent">SetFilterer</a></li>
+        <li><a href="collection/SetIndexer.html" target="_parent">SetIndexer</a></li>
+        <li><a href="collection/SetMapper.html" target="_parent">SetMapper</a></li>
+        <li><a href="collection/SetMatchingValueCounter.html" target="_parent">SetMatchingValueCounter</a></li>
+        <li><a href="collection/SetSorter.html" target="_parent">SetSorter</a></li>
+        <li><a href="collection/SetValueCollector.html" target="_parent">SetValueCollector</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><a href="Router.html" target="_parent">Router</a></li>
+        <li><a href="RouteRedirector.html" target="_parent">RouteRedirector</a></li>
+        <li><a href="RoutingNode.html" target="_parent">RoutingNode</a></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><a href="request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyDispatcher.html" target="_parent">dummyDispatcher</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

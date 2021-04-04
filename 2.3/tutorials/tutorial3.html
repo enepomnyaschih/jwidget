@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Part 3. Named child components - jWidget 2 tutorials</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" href="tutorial1.html"
+								data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+						</li>
+					
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			<div class="container">
+<h2>Tutorial. Part 3. Named child components</h2>
+
+<iframe style="border: 1px solid green; padding: 10px;" width="100%" height="330" src="../samples/tutorial3/"></iframe>
+
+<p>Source: <a href="https://github.com/enepomnyaschih/mt/tree/mt-2.3-3">https://github.com/enepomnyaschih/mt/tree/mt-2.3-3</a> (Git branch).</p>
+
+<p>In this part we learn how to render child components that don't belong to lists. Examples of such components are
+the user profile panel and the tweet feed - they are child components of the application.</p>
+
+<img src="application.png">
+
+<p>First, let's define ApplicationData class - new root model of the application.</p>
+
+<h5>src/model/ApplicationData.ts</h5>
+
+<pre>
+import Tweet, {createTweetByJson} from &quot;./Tweet&quot;;
+
+export default class ApplicationData {
+
+    constructor(readonly tweets: Tweet[] = []) {
+    }
+
+    static createByJson(json: any) {
+        return new ApplicationData((&lt;any[]&gt;json || []).map(createTweetByJson));
+    }
+}</pre>
+
+<p>Now let's implement Application class - new root view of the application.</p>
+
+<h5>src/view/Application.jw.html</h5>
+
+<pre>
+&lt;div jwclass=&quot;mt-application&quot;&gt;
+    &lt;div jwid=&quot;wrap&quot;&gt;
+        &lt;div jwid=&quot;profile-box&quot;&gt;&lt;/div&gt;
+        &lt;div jwid=&quot;tweets&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<h5>src/view/Application.ts</h5>
+
+<pre>
+import $ from &quot;jquery&quot;;
+import <a href="../jwidget/Component.html" target="_parent">Component</a> from &quot;jwidget/Component&quot;;
+import <a href="../jwidget/template.html" target="_parent">template</a> from &quot;jwidget/template&quot;;
+import ApplicationData from &quot;../model/ApplicationData&quot;;
+import TweetFeed from &quot;./TweetFeed&quot;;
+
+@<a href="../jwidget/template.html" target="_parent">template</a>(require(&quot;./Application.jw.html&quot;))
+export default class Application extends <a href="../jwidget/Component.html" target="_parent">Component</a> {
+
+    constructor(private data: ApplicationData) {
+        super();
+    }
+
+    protected renderTweets() {
+        return this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(new TweetFeed(this.data.tweets));
+    }
+
+    protected <a href="../jwidget/Component.html#default--afterRender" target="_parent">afterRender</a>() {
+        super.<a href="../jwidget/Component.html#default--afterRender" target="_parent">afterRender</a>();
+        $(&quot;html&quot;).addClass(&quot;mt-html&quot;);
+        $(&quot;body&quot;).addClass(&quot;mt-body&quot;);
+    }
+}</pre>
+
+<p>Once again, we see method <b>render&lt;ChildId&gt;</b> (renderTweets), and once again it does something new. This
+time, it creates and returns an instance of TweetFeed class. It means that the instance of TweetFeed will be
+rendered at the place of element with jwid="tweets". This element will be completely replaced with the component,
+and all its CSS classes (here: "mt-application-tweets") will be copied into root element of the component.</p>
+
+<p>Let's review some details of this feature.</p>
+
+<p><b>First</b>, it is important to understand that after instantiation of TweetFeed class object the component
+is not rendered yet. It means that it doesn't have HTML elements and capability to add child components.
+Component will be rendered automatically by jWidget, later. But if you really need to perform
+some additional actions with the rendered component (for example, add a CSS-class),
+you can render it explicitly using <a href="../jwidget/Component.html#default--render" target="_parent">render</a> method.</p>
+
+<pre>
+    protected renderTweets() {
+        const view = this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(new TweetFeed(this.data.tweets));
+        view.<a href="../jwidget/Component.html#default--render" target="_parent">render</a>();
+        view.el.addClass(&quot;my-extra-class&quot;);
+        return view;
+    }</pre>
+
+<p><b>Second</b>, like in the previous parts, we should have a way to add a child component without
+<b>render&lt;ChildId&gt;</b> method definition. You can do it using <a href="../jwidget/Component.html#default--children" target="_parent">children</a> map.</p>
+
+<pre>
+    protected <a href="../jwidget/Component.html#default--afterRender" target="_parent">afterRender</a>() {
+        super.<a href="../jwidget/Component.html#default--afterRender" target="_parent">afterRender</a>();
+        this.<a href="../jwidget/Component.html#default--children" target="_parent">children</a>.<a href="../jwidget/IMap.html#default--put" target="_parent">put</a>(&quot;tweets&quot;, this.<a href="../jwidget/IClass.html#default--own" target="_parent">own</a>(new TweetFeed(this.data.tweets)));
+    }</pre>
+
+<p>Select the way you like more, but, again, I will stick to <b>render&lt;ChildId&gt;</b> method.</p>
+
+<p>Add styles.</p>
+
+<h5>src/view/Application.styl</h5>
+
+<pre>
+.blocklink
+    color inherit
+    display block
+    font inherit
+    font-size 100%
+    text-decoration inherit
+
+.mt-html
+.mt-body
+    background #c0deed
+
+.mt-application
+    font-family Arial, sans-serif
+
+    &amp;-wrap
+        background rgba(255,255,255,0.5)
+        box-sizing border-box
+        margin 0 auto
+        overflow hidden
+        padding 15px
+        width 868px
+
+    &amp;-profile-box
+        float left
+        width 302px
+
+    &amp;-tweets
+        float left
+        margin-left 13px</pre>
+
+<p>Update index.styl and index.ts to apply the changes.</p>
+
+<h5>src/index.styl</h5>
+
+<pre>
+// All Stylus files should be imported here in the preferred order
+
+@import &quot;view/Application&quot;
+@import &quot;view/TweetFeed&quot;
+@import &quot;view/TweetView&quot;</pre>
+
+<h5>src/index.ts</h5>
+
+<pre>
+import &quot;core-js/stable&quot;;
+import &quot;regenerator-runtime/runtime&quot;;
+import &quot;./index.styl&quot;;
+
+import $ from &quot;jquery&quot;;
+import ApplicationData from &quot;./model/ApplicationData&quot;;
+import Application from &quot;./view/Application&quot;;
+
+$(function () {
+    const data = ApplicationData.createByJson([
+        {
+            &quot;fullName&quot;: &quot;Road Runner&quot;,
+            &quot;shortName&quot;: &quot;roadrunner&quot;,
+            &quot;avatarUrl48&quot;: &quot;backend/avatar-48.png&quot;,
+            &quot;contentHtml&quot;: &quot;jWidget documentation is here &lt;a href=\&quot;https://enepomnyaschih.github.com/jwidget\&quot; target=\&quot;_blank\&quot;&gt;enepomnyaschih.github.com/jwidget&lt;/a&gt;&quot;,
+            &quot;timeAgo&quot;: 215000,
+            &quot;like&quot;: false,
+            &quot;retweet&quot;: true
+        },
+        {
+            &quot;fullName&quot;: &quot;Road Runner&quot;,
+            &quot;shortName&quot;: &quot;roadrunner&quot;,
+            &quot;avatarUrl48&quot;: &quot;backend/avatar-48.png&quot;,
+            &quot;contentHtml&quot;: &quot;Tweet feed is growing&quot;,
+            &quot;timeAgo&quot;: 515000,
+            &quot;like&quot;: false,
+            &quot;retweet&quot;: false
+        }
+    ]);
+    new Application(data).<a href="../jwidget/Component.html#default--renderTo" target="_parent">renderTo</a>(&quot;body&quot;);
+});</pre>
+
+<p>We'll see the next result.</p>
+
+<img src="result-3.png">
+
+<p>Profile panel is remaining to implement.</p>
+
+<p>Let's start with model once again. We need to collect data about current user profile. Let's create Profile
+model.</p>
+
+<h5>src/model/Profile.ts</h5>
+
+<pre>
+export default interface Profile {
+
+    readonly fullName: string;
+    readonly shortName: string;
+    readonly avatarUrl32: string;
+    readonly avatarUrl48: string;
+    readonly tweets: number;
+    readonly following: number;
+    readonly followers: number;
+}</pre>
+
+<p>Now, let's add Profile to ApplicationData.</p>
+
+<h5>src/model/ApplicationData.ts</h5>
+
+<pre>
+import Profile from &quot;./Profile&quot;;
+import Tweet, {createTweetByJson} from &quot;./Tweet&quot;;
+
+export default class ApplicationData {
+
+    constructor(readonly profile: Profile, readonly tweets: Tweet[] = []) {
+    }
+
+    static createByJson(json: any) {
+        return new ApplicationData(json.profile,
+            (&lt;any[]&gt;json.tweets || []).map(createTweetByJson));
+    }
+}</pre>
+
+<p>Let's switch to view. Implement ProfileBox.</p>
+
+<h5>src/view/ProfileBox.jw.html</h5>
+
+<pre>
+&lt;div jwclass=&quot;mt-profile-box&quot;&gt;
+    &lt;a jwid=&quot;top&quot; class=&quot;blocklink&quot; href=&quot;#&quot;&gt;
+        &lt;div jwid=&quot;avatar&quot;&gt;&lt;/div&gt;
+        &lt;div jwid=&quot;full-name&quot;&gt;&lt;/div&gt;
+        &lt;div jwid=&quot;show-profile&quot;&gt;Show my profile&lt;/div&gt;
+    &lt;/a&gt;
+    &lt;div jwid=&quot;middle&quot;&gt;
+        &lt;a jwid=&quot;count tweets&quot; class=&quot;blocklink&quot; href=&quot;#&quot;&gt;
+            &lt;div jwid=&quot;count-value tweets-value&quot;&gt;&lt;/div&gt;
+            &lt;div jwid=&quot;count-label&quot;&gt;TWEETS&lt;/div&gt;
+        &lt;/a&gt;
+        &lt;a jwid=&quot;count count-border following&quot; class=&quot;blocklink&quot; href=&quot;#&quot;&gt;
+            &lt;div jwid=&quot;count-value following-value&quot;&gt;&lt;/div&gt;
+            &lt;div jwid=&quot;count-label&quot;&gt;FOLLOWING&lt;/div&gt;
+        &lt;/a&gt;
+        &lt;a jwid=&quot;count count-border followers&quot; class=&quot;blocklink&quot; href=&quot;#&quot;&gt;
+            &lt;div jwid=&quot;count-value followers-value&quot;&gt;&lt;/div&gt;
+            &lt;div jwid=&quot;count-label&quot;&gt;FOLLOWERS&lt;/div&gt;
+        &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div jwid=&quot;bottom&quot;&gt;
+        &lt;form jwid=&quot;compose-form&quot;&gt;
+            &lt;div jwid=&quot;compose-fields&quot;&gt;
+                &lt;textarea jwid=&quot;compose-input&quot; placeholder=&quot;Compose tweet...&quot;&gt;&lt;/textarea&gt;
+            &lt;/div&gt;
+            &lt;div jwid=&quot;compose-buttons&quot;&gt;
+                &lt;input jwid=&quot;compose-submit&quot; type=&quot;submit&quot; value=&quot;Tweet&quot;&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<h5>src/view/ProfileBox.ts</h5>
+
+<pre>
+import <a href="../jwidget/Component.html" target="_parent">Component</a> from &quot;jwidget/Component&quot;;
+import <a href="../jwidget/template.html" target="_parent">template</a> from &quot;jwidget/template&quot;;
+import Profile from &quot;../model/Profile&quot;;
+
+@<a href="../jwidget/template.html" target="_parent">template</a>(require(&quot;./ProfileBox.jw.html&quot;))
+export default class ProfileBox extends <a href="../jwidget/Component.html" target="_parent">Component</a> {
+
+    constructor(private profile: Profile) {
+        super();
+    }
+
+    protected renderTop(el: JQuery) {
+        el.attr(&quot;href&quot;, &quot;https://twitter.com/&quot; + this.profile.shortName);
+    }
+
+    protected renderAvatar(el: JQuery) {
+        el.css(&quot;background-image&quot;, &quot;url(&quot; + this.profile.avatarUrl32 + &quot;)&quot;);
+    }
+
+    protected renderFullName(el: JQuery) {
+        el.text(this.profile.fullName);
+    }
+
+    protected renderTweets(el: JQuery) {
+        el.attr(&quot;href&quot;, &quot;https://twitter.com/&quot; + this.profile.shortName);
+    }
+
+    protected renderTweetsValue(el: JQuery) {
+        el.text(this.profile.tweets);
+    }
+
+    protected renderFollowingValue(el: JQuery) {
+        el.text(this.profile.following);
+    }
+
+    protected renderFollowersValue(el: JQuery) {
+        el.text(this.profile.followers);
+    }
+}</pre>
+
+<h5>src/view/ProfileBox.styl</h5>
+
+<pre>
+.mt-profile-box
+    background #f9f9f9
+    border 1px solid rgba(0,0,0,0.45)
+    border-radius 6px
+    box-sizing border-box
+
+    &amp;-full-name
+    &amp;-count-value
+    &amp;-compose-submit
+        color #333
+        font-family Arial, sans-serif
+        font-size 14px
+        font-weight bold
+        text-shadow 0 1px 0 #fff
+
+    &amp;-show-profile,
+    &amp;-count-label
+        color #999
+        font-family Arial, sans-serif
+        font-size 11px
+        text-shadow 0 1px 0 #fff
+
+    &amp;-top
+        border-bottom 1px solid #e8e8e8
+        overflow hidden
+        padding 12px
+        padding-bottom 2px
+
+    &amp;-avatar
+        background transparent none no-repeat 0 0
+        border-radius 3px
+        float left
+        margin 0 10px 10px 0
+        width 32px
+        height 32px
+
+    &amp;-full-name
+        padding-top 2px
+
+    &amp;-top:hover &amp;-full-name
+        color #0084b4
+        text-decoration underline
+
+    &amp;-middle
+        overflow hidden
+
+    &amp;-count
+        float left
+        padding 7px 12px
+
+        &amp;:hover &amp;-value
+            color #0084b4
+
+        &amp;:hover &amp;-label
+            color #0084b4
+
+        &amp;-border
+            border-left 1px solid #e8e8e8
+
+    &amp;-bottom
+        background #f5f5f5
+        border-radius 0 0 6px 6px
+        border-top 1px solid #e8e8e8
+        padding 10px 12px
+
+    &amp;-compose
+        &amp;-input
+            border 1px solid #ccc
+            border-radius 3px
+            box-sizing border-box
+            padding 8px
+            width 274px
+
+        &amp;-buttons
+            text-align right
+
+        &amp;-submit
+            background #19aadf
+            border 1px solid #057ed0
+            border-radius 4px
+            color #fff
+            cursor pointer
+            padding 6px 10px
+            text-shadow 0 -1px 0 rgba(0,0,0,0.45)
+
+            &amp;:hover
+                background #09a0d7</pre>
+
+<p>Add profile box rendering method to Application.</p>
+
+<pre>
+    protected renderProfileBox() {
+        return this.own(new ProfileBox(this.data.profile));
+    }</pre>
+
+<p>Register ProfileBox styles.</p>
+
+<h5>src/index.styl</h5>
+
+<pre>
+// All Stylus files should be imported here in the preferred order
+
+@import &quot;view/Application&quot;
+@import &quot;view/ProfileBox&quot;
+@import &quot;view/TweetFeed&quot;
+@import &quot;view/TweetView&quot;</pre>
+
+<p>And enhance the data JSON with profile data.</p>
+
+<h5>src/index.ts</h5>
+
+<pre>
+import &quot;core-js/stable&quot;;
+import &quot;regenerator-runtime/runtime&quot;;
+import &quot;./index.styl&quot;;
+
+import $ from &quot;jquery&quot;;
+import ApplicationData from &quot;./model/ApplicationData&quot;;
+import Application from &quot;./view/Application&quot;;
+
+$(function () {
+    const data = ApplicationData.createByJson({
+        &quot;profile&quot;: {
+            &quot;fullName&quot;: &quot;Road Runner&quot;,
+            &quot;shortName&quot;: &quot;roadrunner&quot;,
+            &quot;avatarUrl32&quot;: &quot;backend/avatar-32.png&quot;,
+            &quot;avatarUrl48&quot;: &quot;backend/avatar-48.png&quot;,
+            &quot;tweets&quot;: 380,
+            &quot;following&quot;: 21,
+            &quot;followers&quot;: 27
+        },
+        &quot;tweets&quot;: [
+            {
+                &quot;fullName&quot;: &quot;Road Runner&quot;,
+                &quot;shortName&quot;: &quot;roadrunner&quot;,
+                &quot;avatarUrl48&quot;: &quot;backend/avatar-48.png&quot;,
+                &quot;contentHtml&quot;: &quot;jWidget documentation is here &lt;a href=\&quot;https://enepomnyaschih.github.com/jwidget\&quot; target=\&quot;_blank\&quot;&gt;enepomnyaschih.github.com/jwidget&lt;/a&gt;&quot;,
+                &quot;timeAgo&quot;: 215000,
+                &quot;like&quot;: false,
+                &quot;retweet&quot;: true
+            }, {
+                &quot;fullName&quot;: &quot;Road Runner&quot;,
+                &quot;shortName&quot;: &quot;roadrunner&quot;,
+                &quot;avatarUrl48&quot;: &quot;backend/avatar-48.png&quot;,
+                &quot;contentHtml&quot;: &quot;Tweet feed is growing&quot;,
+                &quot;timeAgo&quot;: 515000,
+                &quot;like&quot;: false,
+                &quot;retweet&quot;: false
+            }
+        ]
+    });
+    new Application(data).<a href="../jwidget/Component.html#default--renderTo" target="_parent">renderTo</a>(&quot;body&quot;);
+});</pre>
+
+<p>Here is the result, which represents original requirements.</p>
+
+<img src="application.png">
+
+<p>We've learned how to render components and add them into each other. Now it's the time to add a bit of dynamics into
+our application. We'll describe this in the next part.</p>
+
+<a href="tutorial4.html" target="_parent">Tutorial. Part 4. Messages</a>
+</div>
+<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><b>Tutorial. Part 3. Named child components</b></li>
+    <li><a href="tutorial4.html" target="_parent">Tutorial. Part 4. Messages</a></li>
+    <li><a href="tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="../jwidget/ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="../jwidget/DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="../jwidget/IterableUtils.html" target="_parent">IterableUtils</a></li>
+        <li><a href="../jwidget/MapUtils.html" target="_parent">MapUtils</a></li>
+        <li><a href="../jwidget/SetUtils.html" target="_parent">SetUtils</a></li>
+        <li><a href="../jwidget/StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="../jwidget/Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="../jwidget/Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="../jwidget/DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Class.html" target="_parent">Class</a>, <a href="../jwidget/IClass.html" target="_parent">IClass</a></li>
+        <li><a href="../jwidget/Dispatcher.html" target="_parent">Dispatcher</a>, <a href="../jwidget/IDispatcher.html" target="_parent">IDispatcher</a></li>
+        <li><a href="../jwidget/Property.html" target="_parent">Property</a>, <a href="../jwidget/IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Component.html" target="_parent">Component</a></li>
+        <li><a href="../jwidget/Renderable.html" target="_parent">Renderable</a></li>
+        <li><a href="../jwidget/template.html" target="_parent">template</a></li>
+        <li><a href="../jwidget/listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Copier.html" target="_parent">Copier</a></li>
+        <li><a href="../jwidget/Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="../jwidget/Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="../jwidget/Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="../jwidget/bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="../jwidget/bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="../jwidget/bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="../jwidget/bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="../jwidget/bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="../jwidget/bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="../jwidget/bindText.html" target="_parent">bindText</a></li>
+        <li><a href="../jwidget/bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="../jwidget/ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a></td>
+            <td><a href="../jwidget/ReadonlyBindableMap.html" target="_parent">ReadonlyBindableMap</a></td>
+            <td><a href="../jwidget/ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/DestroyableReadonlyBindableArray.html" target="_parent">DestroyableReadonlyBindableArray</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyBindableMap.html" target="_parent">DestroyableReadonlyBindableMap</a></td>
+            <td><a href="../jwidget/DestroyableReadonlyBindableSet.html" target="_parent">DestroyableReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/IBindableArray.html" target="_parent">IBindableArray</a></td>
+            <td><a href="../jwidget/IBindableMap.html" target="_parent">IBindableMap</a></td>
+            <td><a href="../jwidget/IBindableSet.html" target="_parent">IBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="../jwidget/BindableArray.html" target="_parent">BindableArray</a></td>
+            <td><a href="../jwidget/BindableMap.html" target="_parent">BindableMap</a></td>
+            <td><a href="../jwidget/BindableSet.html" target="_parent">BindableSet</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="../jwidget/collection/AbstractMapper.html" target="_parent">AbstractMapper</a></li>
+        <li><a href="../jwidget/collection/AbstractValueCollector.html" target="_parent">AbstractValueCollector</a></li>
+        <li><a href="../jwidget/collection/ArrayFilterer.html" target="_parent">ArrayFilterer</a></li>
+        <li><a href="../jwidget/collection/ArrayInserter.html" target="_parent">ArrayInserter</a></li>
+        <li><a href="../jwidget/collection/ArrayMapper.html" target="_parent">ArrayMapper</a></li>
+        <li><a href="../jwidget/collection/ArrayMerger.html" target="_parent">ArrayMerger</a></li>
+        <li><a href="../jwidget/collection/ArrayReverser.html" target="_parent">ArrayReverser</a></li>
+        <li><a href="../jwidget/collection/ArrayValueCollector.html" target="_parent">ArrayValueCollector</a></li>
+        <li><a href="../jwidget/collection/MapFilterer.html" target="_parent">MapFilterer</a></li>
+        <li><a href="../jwidget/collection/MapInserter.html" target="_parent">MapInserter</a></li>
+        <li><a href="../jwidget/collection/MapKeyCollector.html" target="_parent">MapKeyCollector</a></li>
+        <li><a href="../jwidget/collection/MapMapper.html" target="_parent">MapMapper</a></li>
+        <li><a href="../jwidget/collection/MapValueCollector.html" target="_parent">MapValueCollector</a></li>
+        <li><a href="../jwidget/collection/SetConverterToArray.html" target="_parent">SetConverterToArray</a></li>
+        <li><a href="../jwidget/collection/SetFilterer.html" target="_parent">SetFilterer</a></li>
+        <li><a href="../jwidget/collection/SetIndexer.html" target="_parent">SetIndexer</a></li>
+        <li><a href="../jwidget/collection/SetMapper.html" target="_parent">SetMapper</a></li>
+        <li><a href="../jwidget/collection/SetMatchingValueCounter.html" target="_parent">SetMatchingValueCounter</a></li>
+        <li><a href="../jwidget/collection/SetSorter.html" target="_parent">SetSorter</a></li>
+        <li><a href="../jwidget/collection/SetValueCollector.html" target="_parent">SetValueCollector</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/hash.html" target="_parent">hash</a></li>
+        <li><a href="../jwidget/Router.html" target="_parent">Router</a></li>
+        <li><a href="../jwidget/RouteRedirector.html" target="_parent">RouteRedirector</a></li>
+        <li><a href="../jwidget/RoutingNode.html" target="_parent">RoutingNode</a></li>
+        <li><a href="../jwidget/UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="../jwidget/Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="../jwidget/Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="../jwidget/defer.html" target="_parent">defer</a></li>
+        <li><a href="../jwidget/request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="../jwidget/DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="../jwidget/HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget/AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="../jwidget/dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="../jwidget/dummyDispatcher.html" target="_parent">dummyDispatcher</a></li>
+        <li><a href="../jwidget/TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

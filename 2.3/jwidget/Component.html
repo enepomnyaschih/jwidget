@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/Component - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+								data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+						</li>
+					
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/Component</a>
+						
+<a class="nav-link" href="#default">Default export</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#default---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#default---description">Description</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#example">jWidget UI component example</a>
+<a class="nav-link" href="#creation">Component creation in code</a>
+<a class="nav-link" href="#childComponents">Child components</a>
+<a class="nav-link" href="#childComponentCollections">More about child component collections</a>
+<a class="nav-link" href="#moreAboutRender">More about renderChildId methods</a>
+<a class="nav-link" href="#componentRemoval">Component removal and destruction</a>
+<a class="nav-link" href="#commonPractices">Common practices in child component management</a>
+<a class="nav-link" href="#componentLifeStages">Component life stages</a>
+<a class="nav-link" href="#webPackIntegration">Integration with WebPack</a></nav>
+<a class="nav-link" href="#default---constructor">Constructor</a>
+
+<a class="nav-link" href="#default---properties">Properties</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--parent">parent</a>
+<a class="nav-link" href="#default--el">el</a>
+<a class="nav-link" href="#default--children">children</a>
+<a class="nav-link" href="#default--template">template</a></nav>
+
+<a class="nav-link" href="#default---methods">Methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--render">render</a>
+<a class="nav-link" href="#default--renderTo">renderTo</a>
+<a class="nav-link" href="#default--renderAs">renderAs</a>
+<a class="nav-link" href="#default--remove">remove</a>
+<a class="nav-link" href="#default--getElement">getElement</a>
+<a class="nav-link" href="#default--removeElement">removeElement</a>
+<a class="nav-link" href="#default--addBindable">addBindable</a>
+<a class="nav-link" href="#default--addArray">addArray</a>
+<a class="nav-link" href="#default--addSet">addSet</a>
+<a class="nav-link" href="#default--using">using</a>
+<a class="nav-link" href="#default--beforeRender">beforeRender</a>
+<a class="nav-link" href="#default--afterRender">afterRender</a>
+<a class="nav-link" href="#default--afterAppend">afterAppend</a>
+<a class="nav-link" href="#default--releaseDom">releaseDom</a>
+<a class="nav-link" href="#default--unrender">unrender</a>
+<a class="nav-link" href="#default--afterDestroy">afterDestroy</a>
+<a class="nav-link" href="#default--createElement">createElement</a>
+<a class="nav-link font-italic" href="#default--destroy">destroy</a>
+<a class="nav-link font-italic" href="#default--destroyObject">destroyObject</a>
+<a class="nav-link font-italic" href="#default--own">own</a>
+<a class="nav-link font-italic" href="#default--owning">owning</a></nav>
+
+
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1><span id="default"></span>jwidget/Component</h1>
+						
+						<h3>Consumption</h3>
+						<pre class="doc-consumption">import Component from "jwidget/Component";</pre>
+						
+<h3><span id="default"></span>Default export<a class="anchorjs-link" href="#default" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="default---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#default---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Destroyable.html#default">Destroyable</a></li>
+<li><span style="margin-left: 2em"></span>interface <a href="IClass.html#default">IClass</a></li>
+<li><span style="margin-left: 4em"></span>class <a href="Class.html#default">Class</a></li>
+<li><span style="margin-left: 6em"></span>class <b>Component</b></li>
+
+<li><span style="margin-left: 8em"></span>class <a href="RouteRedirector.html#default">RouteRedirector</a></li>
+
+</ul>
+<h4><span id="default---description"></span>Description<a class="anchorjs-link" href="#default---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<p>Base class of UI component. Supports the next features:</p>
+<ul>
+<li>Rendering by HTML template.</li>
+<li>Direct access to component elements.</li>
+<li><a href="https://api.jquery.com" target="_blank">jQuery</a> interface for element manipulations.</li>
+<li>Convenient API for data binding and child component management.</li>
+</ul>
+<p>jWidget component has very simple API, but pretty unusual philosophy to build up Model-View architecture
+without a lot of effort. Let's start with examples.</p>
+
+
+		<h5><span id="example"></span>jWidget UI component example<a class="anchorjs-link" href="#example" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<pre>
+@<a href="template.html" target="_parent">template</a>(
+    '&lt;div jwclass=&quot;my-component&quot;&gt;' +
+        '&lt;div jwid=&quot;hello-message&quot;&gt;&lt;/div&gt;' +
+        '&lt;a href=&quot;#&quot; jwid=&quot;link&quot;&gt;Click me!&lt;/a&gt;' +
+    '&lt;/div&gt;'
+)
+class MyComponent extends <b>Component</b> {
+    constructor(private message: string, private link: string) {
+        super();
+    }
+
+    protected <a href="#default--afterRender" target="_parent">afterRender</a>() {
+        super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+        this.<a href="#default--getElement" target="_parent">getElement</a>(&quot;hello-message&quot;).text(this.message);
+        this.<a href="#default--getElement" target="_parent">getElement</a>(&quot;link&quot;).attr(&quot;href&quot;, this.link);
+    }
+}</pre>
+<iframe style="border: 1px solid green; padding: 10px;" width="800" height="300" src="../samples/public/component.html"></iframe>
+<p>Let's find out how the HTML template works. Each component has a template, that is passed into <a href="template.html" target="_parent">template</a>
+annotation and defaults to <tt>&lt;div&gt;&lt;/div&gt;</tt>. Subclass inherits the superclass template.</p>
+<p>Pay attention to special attributes <b>jwclass</b> and <b>jwid</b> in the template. <b>jwclass</b> is a root
+CSS class of the component, and <b>jwid</b> is a suffix to <b>jwclass</b> in this element. So, the next HTML snippet is
+created in DOM as a result of this component rendering:</p>
+<pre>
+&lt;div class=&quot;my-component&quot;&gt;
+    &lt;div class=&quot;my-component-hello-message&quot;&gt;&lt;/div&gt;
+    &lt;a href=&quot;#&quot; class=&quot;my-component-link&quot;&gt;Click me!&lt;/a&gt;
+&lt;/div&gt;</pre>
+<p>You can obtain an element by its <b>jwid</b> via method <a href="#default--getElement" target="_parent">getElement</a>. The result of this method is a <a href="https://api.jquery.com" target="_blank">jQuery</a> wrapper
+over this element. The root element always has jwid = "root". In addition, the root element of the component is
+stored in <a href="#default--el" target="_parent">el</a> property of the component.</p>
+
+	
+
+		<h5><span id="creation"></span>Component creation in code<a class="anchorjs-link" href="#creation" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>Component can be created by simple construction of component object. After that, you can use one of the
+methods <a href="#default--render" target="_parent">render</a>, <a href="#default--renderTo" target="_parent">renderTo</a>, <a href="#default--renderAs" target="_parent">renderAs</a> to render this component and optionally insert it into DOM.
+<pre>
+$(() =&gt; {
+    new MyComponent(&quot;Hello, World!&quot;, &quot;javascript:alert('Hello!')&quot;).<a href="#default--renderTo" target="_parent">renderTo</a>(&quot;body&quot;);
+});</pre>
+
+	
+
+		<h5><span id="childComponents"></span>Child components<a class="anchorjs-link" href="#childComponents" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>There are 5 ways to add a child component (<b>note</b>: examples are not complete - see <a href="#componentRemoval" target="_parent">Component removal and destruction</a>.</p>
+<ul>
+<li>
+<p>Add a child component into <a href="#default--children" target="_parent">children</a> map with a key equal to jwid of the element to replace with the child
+component. Usually it is done in <a href="#default--afterRender" target="_parent">afterRender</a> method.</p>
+<pre>
+<a href="#default--afterRender" target="_parent">afterRender</a>() {
+    super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+    this.<a href="#default--children" target="_parent">children</a>.<a href="IBindableMap.html#default--set" target="_parent">set</a>(&quot;label&quot;, new LabelView(&quot;Hello&quot;));
+}</pre>
+</li>
+<li>
+<p>Add a bindable child component using <a href="#default--addBindable" target="_parent">addBindable</a> method. Pass an instance of <a href="Bindable.html" target="_parent">Bindable</a>&lt;<b>Component</b>&gt;
+as an argument and the component will provide the synchronization with this property during application
+running.</p>
+<pre>
+<a href="#default--afterRender" target="_parent">afterRender</a>() {
+    super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+    this.contentView = new <a href="Property.html" target="_parent">Property</a>(new LabelView(&quot;Hello&quot;));
+    this.<a href="#default--addBindable" target="_parent">addBindable</a>(this.contentView, &quot;label&quot;);
+}
+
+changeLabel(value: string) {
+    this.contentView.<a href="IProperty.html#default--set" target="_parent">set</a>(new LabelView(value));
+}</pre>
+</li>
+<li>
+<p>Add an array of child components into some element using <a href="#default--addArray" target="_parent">addArray</a> method. Pass an instance of
+<a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a>&lt;<b>Component</b>&gt; as an argument and the component will provide the synchronization
+with this array during application running.</p>
+<pre>
+<a href="#default--afterRender" target="_parent">afterRender</a>() {
+    super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+    this.labelViews = new <a href="BindableArray.html" target="_parent">BindableArray</a>([new LabelView(&quot;one&quot;), new LabelView(&quot;two&quot;)]);
+    this.<a href="#default--addArray" target="_parent">addArray</a>(this.labelViews, &quot;labels&quot;);
+}
+
+addLabel(value: string) {
+    this.labelViews.<a href="IBindableArray.html#default--add" target="_parent">add</a>(new LabelView(value));
+}</pre>
+</li>
+<li>
+<p>Add a set of child components into some element using <a href="#default--addSet" target="_parent">addSet</a> method. As opposed to <a href="#default--addArray" target="_parent">addArray</a>
+method, <a href="#default--addSet" target="_parent">addSet</a> doesn't let you control the order of child components. A newly added component is always appended
+to the end. Framework will provide the synchronization with this set during application running.</p>
+<pre>
+<a href="#default--afterRender" target="_parent">afterRender</a>() {
+    super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+    this.labelViews = new <a href="BindableSet.html" target="_parent">BindableSet</a>([new LabelView(&quot;one&quot;), new LabelView(&quot;two&quot;)]);
+    this.<a href="#default--addSet" target="_parent">addSet</a>(this.labelViews, &quot;labels&quot;);
+}
+
+addLabel(value: string) {
+    this.labelViews.<a href="ISet.html#default--add" target="_parent">add</a>(new LabelView(value));
+}</pre>
+</li>
+<li>
+<p>Define method <b>render&lt;ChildId&gt;</b>, where <b>&lt;ChildId&gt;</b> is jwid of an element in CamelCase with
+capitalized first letter. Example: <b>renderArticle</b> renders the element with jwid = "article". If the method
+returns an instance of <b>Component</b>, <a href="Bindable.html" target="_parent">Bindable</a>, <a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a> or <a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a>, then result will be
+treated as a child component or a child component array/collection. Define method <b>renderRoot</b> to render the
+root element, but you can return only <a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a> or <a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a> there, because it is
+impossible to replace the root element of the component.</p>
+<pre>
+protected renderLabel() {
+    return new LabelView(&quot;Hello&quot;);
+}</pre>
+<p>See <a href="#moreAboutRender" target="_parent">More about renderChild methods</a> paragraph for details.</p>
+</li>
+</ul>
+<p>Such API provides simplicity, at one hand, and flexibility in Model-View regard, at another hand.</p>
+<p>Reference: <a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></p>
+
+	
+
+		<h5><span id="childComponentCollections"></span>More about child component collections<a class="anchorjs-link" href="#childComponentCollections" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>It is convenient to use <a href="collection/ArrayMapper.html#startMappingArray" target="_parent">startMappingArray</a> and <a href="collection/SetMapper.html#startMappingSet" target="_parent">startMappingSet</a> functions to convert data collections
+to UI component collections. Thanks to them, view is updated on data update automatically.</p>
+<p>That's the reason why we recommend to use jWidget collections in data model instead of native JavaScript Array
+and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set" target="_blank">Set</a>: jWidget collections can be synchronized to each other.</p>
+<p>Reference: <a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></p>
+
+	
+
+		<h5><span id="moreAboutRender"></span>More about renderChildId methods<a class="anchorjs-link" href="#moreAboutRender" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>You can define method <b>render&lt;ChildId&gt;</b> for any element in HTML template that has attribute jwid.
+<b>&lt;ChildId&gt;</b> equals to this jwid, written in CamelCase with capitalized first letter.
+Method signature:</p>
+<pre>
+protected renderChildId(el: <a href="https://api.jquery.com" target="_blank">JQuery</a>): <a href="Renderable.html" target="_parent">Renderable</a></pre>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">el</dt><dd class="col-lg-10 col-sm-9">Element with corresponding jwid.</dd>
+</dl>
+<p>Depending on the returned value of this method, you have the next options:</p>
+<ul>
+<li>If the method returns an instance of <b>Component</b>, then it gets added into <a href="#default--children" target="_parent">children</a> map and becomes a child
+component. This option doesn't work for the root element.</li>
+<li>If the method returns an instance of <a href="Bindable.html" target="_parent">Bindable</a>&lt;<b>Component</b>&gt;, then it gets added as a bindable child
+component via <a href="#default--addBindable" target="_parent">addBindable</a> method. This option doesn't work for the root element.</li>
+<li>If the method returns an instance of <a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a>&lt;<b>Component</b>&gt;, then it gets added as a child array via
+method <a href="#default--addArray" target="_parent">addArray</a>.</li>
+<li>If the method returns an instance of <a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a>&lt;<b>Component</b>&gt;, then
+it gets added as a child collection via method <a href="#default--addSet" target="_parent">addSet</a>.</li>
+<li>If the method returns <b>false</b>, then the element gets removed from the HTML document. This option doesn't
+work for the root element.</li>
+<li>In any other case, the component doesn't perform any additional actions with the element. You can use
+<b>el</b> argument to do arbitrary manipulations over it.</li>
+</ul>
+<p>The method should be protected, not private, to avoid "unused method" warning of TypeScript compiler.</p>
+
+	
+
+		<h5><span id="componentRemoval"></span>Component removal and destruction<a class="anchorjs-link" href="#componentRemoval" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>You can destroy a component via <a href="#default--destroy" target="_parent">destroy</a> method. However you can not destroy a component which is added into
+another component as a child (component throws an exception in this case). You must remove the child component
+from its parent first. To remove the component from its parent, you must perform the operation opposite to the
+adding operation.</p>
+<ul>
+<li>If you have added a component to <a href="#default--children" target="_parent">children</a> object, you must remove it via <a href="IBindableMap.html#default--delete" target="_parent">delete</a> method.</li>
+<li>Methods <a href="#default--addBindable" target="_parent">addBindable</a>, <a href="#default--addArray" target="_parent">addArray</a> and <a href="#default--addSet" target="_parent">addSet</a> return bindings. Their destruction removes the
+children.</li>
+</ul>
+<p>As soon as a child component is removed, you can destroy it:</p>
+<pre>
+this.children.<a href="IBindableMap.html#default--delete" target="_parent">delete</a>(&quot;comments&quot;).<a href="#default--destroy" target="_parent">destroy</a>();</pre>
+<p>For collections, you should do something like this (<b>note</b>: this code is not optimal, see the example
+below):</p>
+<pre>
+// should be called after the rendering initiation
+initLabels() {
+    // Map label data array to view array
+    this._labelViews = <a href="collection/ArrayMapper.html#startMappingArray" target="_parent">startMappingArray</a>(this.labels, label =&gt; new LabelView(label), {<a href="#default--destroy" target="_parent">destroy</a>});
+
+    // Add labels into element with jwid=&quot;labels&quot;
+    this._labelArray = this.<a href="#default--addArray" target="_parent">addArray</a>(this._labelViews, &quot;labels&quot;);
+}
+
+clearLabels() {
+    this._labelArray.<a href="#default--destroy" target="_parent">destroy</a>();
+    this._labelArray = null;
+    this._labelViews.<a href="#default--destroy" target="_parent">destroy</a>();
+    this._labelViews = null;
+}</pre>
+<p>You don't need to remove the child components explicitly all the time. On parent component destruction,
+it automatically removes all the children before <a href="#default--unrender" target="_parent">unrender</a> method call. However, it doesn't destroy them.
+You can use aggregation method <a href="IClass.html#default--own" target="_parent">own</a> to destroy child components. So, usually your code will look as simple as
+this:</p>
+<pre>
+renderTitleBox() {
+    return this.<a href="IClass.html#default--own" target="_parent">own</a>(new TitleBox());
+}
+
+renderLabels() {
+    return this.<a href="IClass.html#default--own" target="_parent">own</a>(<a href="collection/ArrayMapper.html#startMappingArray" target="_parent">startMappingArray</a>(this.labels, label =&gt; new LabelView(label), {<a href="#default--destroy" target="_parent">destroy</a>}));
+}</pre>
+
+	
+
+		<h5><span id="commonPractices"></span>Common practices in child component management<a class="anchorjs-link" href="#commonPractices" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<h6>Create a child component</h6>
+<p>This example describes how to create and destroy a child component with <tt>jwid="title-box"</tt>.</p>
+<pre>
+@<a href="template.html" target="_parent">template</a>(
+    '&lt;div jwclass=&quot;my-component&quot;&gt;' +
+        '&lt;div jwid=&quot;title-box&quot;&gt;&lt;/div&gt;' +
+    '&lt;/div&gt;'
+)
+class MyComponent extends <b>Component</b> {
+    protected renderTitleBox() {
+        return this.<a href="IClass.html#default--own" target="_parent">own</a>(new TitleBox());
+    }
+}</pre>
+<h6>Create a bindable child component</h6>
+<p>This example describes how to create and destroy a bindable child component with <tt>jwid="document"</tt>.
+Assume that you have an observable property "document" and want to replace an old document view with a new one on
+document change.</p>
+<pre>
+@<a href="template.html" target="_parent">template</a>(
+    '&lt;div jwclass=&quot;my-component&quot;&gt;' +
+        '&lt;div jwid=&quot;document&quot;&gt;&lt;/div&gt;' +
+    '&lt;/div&gt;'
+)
+class MyComponent extends <b>Component</b> {
+    constructor(private document: <a href="Bindable.html" target="_parent">Bindable</a>&lt;Document&gt;) {
+        super();
+    }
+
+    protected renderDocument() {
+        return this.<a href="IClass.html#default--own" target="_parent">own</a>(this.document.<a href="Bindable.html#default--map" target="_parent">map</a>(document =&gt; new DocumentView(document), {<a href="#default--destroy" target="_parent">destroy</a>}));
+    }
+}</pre>
+<h6>Create a child component collection</h6>
+<p>This example describes how to create and destroy child components by data collection, and insert them into
+element with <tt>jwid="labels"</tt>. If data collection is not silent, child component collection gets constantly
+synchronized with the data.</p>
+<pre>
+@<a href="template.html" target="_parent">template</a>(
+    '&lt;div jwclass=&quot;my-component&quot;&gt;' +
+        '&lt;div jwid=&quot;labels&quot;&gt;&lt;/div&gt;' +
+    '&lt;/div&gt;'
+)
+class MyComponent extends <b>Component</b> {
+    constructor(private labels: <a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a>&lt;Label&gt;) {
+        super();
+    }
+
+    protected renderLabels() {
+        return this.own(<a href="collection/ArrayMapper.html#startMappingArray" target="_parent">startMappingArray</a>(this.labels, label =&gt; new LabelView(label), {<a href="#default--destroy" target="_parent">destroy</a>));
+    }
+}</pre>
+<h6>Add existing components as children</h6>
+<p>This example describes how to insert child components which have lifetime controlled by someone else, and
+therefore shouldn't be destroyed by parent component.</p>
+<pre>
+@<a href="template.html" target="_parent">template</a>(
+    '&lt;div jwclass=&quot;my-component&quot;&gt;' +
+        '&lt;div jwid=&quot;title-box&quot;&gt;&lt;/div&gt;' +
+    '&lt;/div&gt;'
+)
+class MyComponent extends <b>Component</b> {
+    constructor(private titleBox: <a href="Renderable.html" target="_parent">Renderable</a>) {
+        super();
+    }
+
+    protected renderTitleBox() {
+        return this.titleBox;
+    }
+}</pre>
+
+	
+
+		<h5><span id="componentLifeStages"></span>Component life stages<a class="anchorjs-link" href="#componentLifeStages" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>Each component has several stages of life.</p>
+<ol>
+<li>Like in all other classes, <b>constructor</b> is called first. Usually all fields are assigned to their
+initial values here, messages are created etc. Only component model should be touched here, view is completely
+ignored. Notice that component is not rendered after construction yet, so it doesn't have fields <a href="#default--el" target="_parent">el</a> and
+<a href="#default--children" target="_parent">children</a> assigned, and methods <a href="#default--addArray" target="_parent">addArray</a>, <a href="#default--addSet" target="_parent">addSet</a>, <a href="#default--addBindable" target="_parent">addBindable</a> won't work. The main reason behind that is
+our wish to give you a possibility to do something else between component construction and rendering, for example,
+change some field values and call some methods. Second reason: it is not recommended to call virtual methods in
+constructor in any object-oriented language. It may result in undesired side effects. You can render the
+component directly by calling <a href="#default--render" target="_parent">render</a>, <a href="#default--renderTo" target="_parent">renderTo</a>, <a href="#default--renderAs" target="_parent">renderAs</a>, or by adding this component into another component
+as a child. For example, component gets rendered immediately once it gets added to <a href="#default--children" target="_parent">children</a> map. You can invoke
+component rendering multiple times, but it gets rendered only once.</li>
+<li>Component rendering flow:<ol>
+  <li>Method <a href="#default--createElement" target="_parent">createElement</a> is called to create the HTML elements by the template.</li>
+  <li>The links to all elements are assigned.</li>
+  <li>Method <a href="#default--beforeRender" target="_parent">beforeRender</a> is called. It is convenient to perform some preliminary actions here. You are already
+  able to create child components. Call <tt>super.beforeRender()</tt> at the first line of the method.</li>
+  <li>All <a href="#moreAboutRender" target="_parent">render&lt;ChildId&gt;</a> methods are called for HTML template elements. The methods are called in the same order as
+  these jwid's are written in the template.</li>
+  <li>Method <a href="#default--afterRender" target="_parent">afterRender</a> is called at the end of rendering procedure. You should assign all elements' attributes
+  here, create child components, bind event handlers and fill the component with interactivity. Component rendering
+  is finished here. Call <tt>super.afterRender()</tt> at the first line of the method.</li>
+</ol></li>
+<li>Method <a href="#default--afterAppend" target="_parent">afterAppend</a> is called once the component first time appears in HTML DOM and UI component tree.
+Component layouting should be performed here (i.e. element size computation). Call <tt>super.afterAppend()</tt>
+at the first line of the method.</li>
+<li>Component destruction flow:<ol>
+  <li>If the component was in DOM, <a href="#default--releaseDom" target="_parent">releaseDom</a> method is called. Everything that was performed in <a href="#default--afterAppend" target="_parent">afterAppend</a>
+  method, i.e. on step 3, should be reverted here. Call <tt>super.releaseDom()</tt> at the last line of the
+  method.</li>
+  <li>The element is removed from DOM. All child components are removed. All child arrays, sets and
+  properties are unbound.</li>
+  <li>If the component was rendered, <a href="#default--unrender" target="_parent">unrender</a> method is called. Everything that was performed during component
+  rendering, i.e. on step 2, should be reverted here. You must destroy the child components explicitly here unless
+  you use <a href="IClass.html#default--own" target="_parent">own</a> method to aggregate them. Call <tt>super.unrender()</tt> at the last line of the method.</li>
+  <li>The element is destroyed, i.e. all event handlers and data assigned to the element is released.</li>
+  <li>Method <a href="#default--afterDestroy" target="_parent">afterDestroy</a> is called. Nearly everything that was performed in component
+  constructor, i.e. on step 1, should be reverted here. Call <tt>super.afterDestroy()</tt> at the last line of the
+  method.</li>
+  <li>All aggregated objects (including child components) are destroyed.</li>
+  <li>Method <a href="#default--destroyObject" target="_parent">destroyObject</a> is called. Call <tt>super.destroyObject()</tt> at the last line of the method.</li>
+</ol>
+It implies that you should never override <a href="#default--destroy" target="_parent">destroy</a> method for a <b>Component</b>.</li>
+</ol>
+
+	
+
+		<h5><span id="webPackIntegration"></span>Integration with WebPack<a class="anchorjs-link" href="#webPackIntegration" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+		<p>There's an easy way to attach HTML templates via WebPack. The first example from this topic can be splitted
+into two files:</p>
+<h6>MyComponent.ts</h6>
+<pre>
+@<a href="template.html" target="_parent">template</a>(require&lt;string&gt;(&quot;./MyComponent.jw.html&quot;))
+class MyComponent extends <b>Component</b> {
+    constructor(private message: string, private link: string) {
+        super();
+    }
+
+    protected <a href="#default--afterRender" target="_parent">afterRender</a>() {
+        super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+        this.<a href="#default--getElement" target="_parent">getElement</a>(&quot;hello-message&quot;).text(this.message);
+        this.<a href="#default--getElement" target="_parent">getElement</a>(&quot;link&quot;).attr(&quot;href&quot;, this.link);
+    }
+}</pre>
+<h6>MyComponent.jw.html</h6>
+<pre>
+&lt;div jwclass=&quot;my-component&quot;&gt;
+    &lt;div jwid=&quot;hello-message&quot;&gt;&lt;/div&gt;
+    &lt;a href=&quot;#&quot; jwid=&quot;link&quot;&gt;Click me!&lt;/a&gt;
+&lt;/div&gt;</pre>
+<p>To make this work, you need to install <a href="https://www.npmjs.com/package/html-loader"
+target="_blank">html-loader</a> NPM module:</li>
+<pre>
+npm install --save-dev html-loader</pre>
+<p>And use it in WebPack configuration:</p>
+<pre>
+module: {
+    rules: [
+        // ...
+        { test: /\.html$/, loader: &quot;html-loader&quot;, query: {minimize: true, attrs: false} }
+    ]
+}</pre>
+
+	
+
+<h4><span id="default---constructor"></span>Constructor<a class="anchorjs-link" href="#default---constructor" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<p><code>new Component()</code></p>
+
+<p>Constructs a new instance of <b>Component</b>.</p>
+
+
+<h4><span id="default---properties"></span>Fields<a class="anchorjs-link" href="#default---properties" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--parent"></span>parent<a class="anchorjs-link" href="#default--parent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly parent: <b>Component</b></code></p>
+<p>Parent component. The field is available from component rendering beginning.</p>
+
+</div>
+
+<h5><span id="default--el"></span>el<a class="anchorjs-link" href="#default--el" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly el: <a href="https://api.jquery.com" target="_blank">JQuery</a></code></p>
+<p>Root element. The field is available from component rendering beginning.</p>
+
+</div>
+
+<h5><span id="default--children"></span>children<a class="anchorjs-link" href="#default--children" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly children: <a href="IBindableMap.html" target="_parent">IBindableMap</a>&lt;<b>Component</b>&gt;</code></p>
+<p>Child component mutable map. Use this map to add child components in place of elements with
+corresponding jwid. The field is available from component rendering beginning.</p>
+
+</div>
+
+<h5><span id="default--template"></span>template<a class="anchorjs-link" href="#default--template" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>readonly template: <a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></code></p>
+<p>Component template. Template is defined by <a href="template.html" target="_parent">template</a> annotation.</p>
+
+</div>
+
+<h4><span id="default---methods"></span>Methods<a class="anchorjs-link" href="#default---methods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--render"></span>render<a class="anchorjs-link" href="#default--render" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(): this</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Renders the component. Call this method to initialize references to all elements of component and create
+child components. This method is called automatically in the next cases:</p>
+<ul>
+<li>One of methods <a href="#default--renderTo" target="_parent">renderTo</a>, <a href="#default--renderAs" target="_parent">renderAs</a> is called.</li>
+<li>The component is added into another component as a child.</li>
+</ul>
+<p>Feel free to call component rendering multiple times: it gets rendered only once.</p>
+
+</div>
+
+<h5><span id="default--renderTo"></span>renderTo<a class="anchorjs-link" href="#default--renderTo" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(el: string | HTMLElement | <a href="https://api.jquery.com" target="_blank">JQuery</a>): this</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">el</dt><dd class="col-lg-10 col-sm-9">Element to render component into.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Renders the component into an element. Use it to render root component only: children must be rendered
+using <a href="#default--children" target="_parent">children</a>, <a href="#default--addArray" target="_parent">addArray</a>, <a href="#default--addSet" target="_parent">addSet</a>, <a href="#default--addBindable" target="_parent">addBindable</a> members.</p>
+
+</div>
+
+<h5><span id="default--renderAs"></span>renderAs<a class="anchorjs-link" href="#default--renderAs" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(el: string | HTMLElement | <a href="https://api.jquery.com" target="_blank">JQuery</a>): this</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">el</dt><dd class="col-lg-10 col-sm-9">Element to render component in place of.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Renders the component in place of an element. Use it to render root component only: children must be
+rendered using <a href="#default--children" target="_parent">children</a>, <a href="#default--addArray" target="_parent">addArray</a>, <a href="#default--addSet" target="_parent">addSet</a>, <a href="#default--addBindable" target="_parent">addBindable</a> members.</p>
+
+</div>
+
+<h5><span id="default--remove"></span>remove<a class="anchorjs-link" href="#default--remove" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(): this</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Removes the component from DOM. Can be used for root component only (which was added via <a href="#default--renderTo" target="_parent">renderTo</a> or
+<a href="#default--renderAs" target="_parent">renderAs</a> method). All child components should be removed using <a href="#default--children" target="_parent">children</a> map or binding deletion.
+See <a href="#componentRemoval" target="_parent">Component removal and destruction</a> for details.</p>
+
+</div>
+
+<h5><span id="default--getElement"></span>getElement<a class="anchorjs-link" href="#default--getElement" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(id: string): <a href="https://api.jquery.com" target="_blank">JQuery</a></code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">id</dt><dd class="col-lg-10 col-sm-9">jwid of the element.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Element.</dd>
+</dl>
+<p>Returns element by its jwid.</p>
+
+</div>
+
+<h5><span id="default--removeElement"></span>removeElement<a class="anchorjs-link" href="#default--removeElement" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(id: string): this</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">id</dt><dd class="col-lg-10 col-sm-9">jwid of the element.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Removes element by jwid. Element gets removed from DOM and destroyed. It is then impossible to get it by
+<a href="#default--getElement" target="_parent">getElement</a> method.</p>
+
+</div>
+
+<h5><span id="default--addBindable"></span>addBindable<a class="anchorjs-link" href="#default--addBindable" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(component: <a href="Bindable.html" target="_parent">Bindable</a>&lt;<b>Component</b>&gt;, id: string): <a href="Destroyable.html" target="_parent">Destroyable</a></code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">component</dt><dd class="col-lg-10 col-sm-9">Child component property.</dd>
+<dt class="col-lg-2 col-sm-3">id</dt><dd class="col-lg-10 col-sm-9">jwid of element to replace.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Binding.</dd>
+</dl>
+<p>Adds child component and synchronizes the component with the property. On every property change, removes
+the child and adds another one. Equivalent to returning a <a href="Bindable.html" target="_parent">Bindable</a>&lt;<b>Component</b>&gt; instance in rendering
+method. It is convenient to create <b>component</b> property from data property using <a href="Bindable.html#default--map" target="_parent">map</a> method:</p>
+<pre>
+protected <a href="#default--afterRender" target="_parent">afterRender</a>() {
+    super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+    const avatarView = this.<a href="IClass.html#default--own" target="_parent">own</a>(this.user.avatar.<a href="Bindable.html#default--map" target="_parent">map</a>(avatar =&gt; new AvatarView(avatar), {<a href="#default--destroy" target="_parent">destroy</a>}));
+    this.<b>addBindable</b>(avatarView, &quot;avatar&quot;);
+}</pre>
+<p><b>addBindable</b> method returns a binding. If you <a href="Destroyable.html#default--destroy" target="_parent">destroy</a> it, the child gets removed from parent component
+and the synchronization gets stopped. The same happens when the component gets destroyed -
+right before <a href="#default--unrender" target="_parent">unrender</a> method call. But notice that child component inside this
+property does not get destroyed automatically. Usually it can be done by corresponding <a href="Mapper.html" target="_parent">Mapper</a> or <a href="Property.html" target="_parent">Property</a>
+destruction in <a href="#default--unrender" target="_parent">unrender</a> method or via <a href="IClass.html#default--own" target="_parent">own</a>.
+
+</div>
+
+<h5><span id="default--addArray"></span>addArray<a class="anchorjs-link" href="#default--addArray" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(source: <a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a>&lt;<b>Component</b>&gt;, el?: string | HTMLElement | <a href="https://api.jquery.com" target="_blank">JQuery</a>): <a href="Destroyable.html" target="_parent">Destroyable</a></code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">source</dt><dd class="col-lg-10 col-sm-9">Child component array.</dd>
+<dt class="col-lg-2 col-sm-3">el</dt><dd class="col-lg-10 col-sm-9">jwid of element to add child components into. Defaults to root element (<b>el</b>) of component.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Binding.</dd>
+</dl>
+<p>Adds an array of child components and synchronizes the component with it. On every array change, adds or
+removes corresponding children. Equivalent to returning a <a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a>&lt;<b>Component</b>&gt; instance in rendering
+method. As opposed to <a href="#default--addSet" target="_parent">addSet</a> method, retains component order. It is convenient to create "source" array from
+data array using <a href="collection/ArrayMapper.html#startMappingArray" target="_parent">startMappingArray</a> utility:</p>
+<pre>
+protected <a href="#default--afterRender" target="_parent">afterRender</a>() {
+    super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+    const array = this.<a href="IClass.html#default--own" target="_parent">own</a>(<a href="collection/ArrayMapper.html#startMappingArray" target="_parent">startMappingArray</a>(this.users, user =&gt; new UserView(user), {<a href="#default--destroy" target="_parent">destroy</a>}));
+    this.<b>addArray</b>(array, &quot;users&quot;);
+}</pre>
+<p><b>addArray</b> method returns a binding. If you <a href="Destroyable.html#default--destroy" target="_parent">destroy</a> it, the children get removed from parent component
+and the synchronization gets stopped. The same happens when the component gets destroyed -
+right before <a href="#default--unrender" target="_parent">unrender</a> method call. But notice that child components inside this array are not
+destroyed automatically. Usually it can be done by corresponding <a href="collection/ArrayMapper.html" target="_parent">ArrayMapper</a> or array destruction in
+<a href="#default--unrender" target="_parent">unrender</a> method or via <a href="IClass.html#default--own" target="_parent">own</a>.</p>
+
+</div>
+
+<h5><span id="default--addSet"></span>addSet<a class="anchorjs-link" href="#default--addSet" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(source: <a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a>&lt;<b>Component</b>&gt;, el?: string | HTMLElement | <a href="https://api.jquery.com" target="_blank">JQuery</a>): <a href="Destroyable.html" target="_parent">Destroyable</a></code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">source</dt><dd class="col-lg-10 col-sm-9">Child component collection.</dd>
+<dt class="col-lg-2 col-sm-3">el</dt><dd class="col-lg-10 col-sm-9">jwid of element to add child components into. Defaults to root element (<b>el</b>) of component.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Binding.</dd>
+</dl>
+<p>Adds a set of child components and synchronizes the component with it. On every set change,
+adds or removes corresponding children. Equivalent to returning a <a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a>&lt;<b>Component</b>&gt;
+instance in rendering method. As opposed to <a href="#default--addArray" target="_parent">addArray</a> method, ignores component order.
+It is convenient to create "source" collection from data collection using <a href="collection/SetMapper.html#startMappingSet" target="_parent">startMappingSet</a> utility:</p>
+<pre>
+protected <a href="#default--afterRender" target="_parent">afterRender</a>() {
+    super.<a href="#default--afterRender" target="_parent">afterRender</a>();
+    const set = this.<a href="IClass.html#default--own" target="_parent">own</a>(<a href="collection/SetMapper.html#startMappingSet" target="_parent">startMappingSet</a>(this.users, user =&gt; new UserView(user), {<a href="#default--destroy" target="_parent">destroy</a>}));
+    this.<b>addSet</b>(set, &quot;users&quot;);
+}</pre>
+<p><b>addSet</b> method returns a binding. If you <a href="Destroyable.html#default--destroy" target="_parent">destroy</a> it, the children get removed from parent
+component and the synchronization gets stopped. The same happens when the component gets destroyed -
+right before <a href="#default--unrender" target="_parent">unrender</a> method call. But notice that child components inside
+this set are not destroyed automatically. Usually it can be done by corresponding mapper or
+set destruction in <a href="#default--unrender" target="_parent">unrender</a> method or via <a href="IClass.html#default--own" target="_parent">own</a>.</p>
+
+</div>
+
+<h5><span id="default--using"></span>using<a class="anchorjs-link" href="#default--using" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(value: string | <a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a> | HTMLElement | <a href="https://api.jquery.com" target="_blank">JQuery</a>): this</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Template or element to use for component rendering.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>Selects component rendering strategy. This method is needed only in very rare cases. By default,
+component is rendered outside of DOM based on <a href="#default--template" target="_parent">template</a> property.
+You can change this by passing one of the next values into <b>using</b> method of the component:</p>
+<ul>
+<li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a> or string - use this template explicitly for rendering.</li>
+<li>HTMLElement or <a href="https://api.jquery.com" target="_blank">JQuery</a> - build component on top of existing DOM element. Special attributes jwclass and
+jwid get processed in the usual way.</li>
+</ul>
+<p><b>Note:</b> We strongly encourage you to use standard rendering strategy via <a href="#default--template" target="_parent">template</a>, or at least
+create <a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a> instances to store your HTML templates. They work 3 times faster compared to raw HTML
+rendering thanks to preliminary compilation and node cloning method.</p>
+
+</div>
+
+<h5><span id="default--beforeRender"></span>beforeRender<a class="anchorjs-link" href="#default--beforeRender" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected beforeRender()</code></p>
+
+<p>Component life stage method. Called during component rendering after HTML template parsing and
+initialization of references to all elements of the template. Called before <a href="#moreAboutRender" target="_parent">render&lt;ChildId&gt;</a> methods and
+<a href="#default--afterRender" target="_parent">afterRender</a> method. It is convenient to perform some preliminary action here before child component
+creation. But you are already able to create child components here. Call <tt>super.beforeRender()</tt> at
+the first line of the method.</p>
+
+</div>
+
+<h5><span id="default--afterRender"></span>afterRender<a class="anchorjs-link" href="#default--afterRender" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected afterRender()</code></p>
+
+<p>Component life stage method. Called after <a href="#default--beforeRender" target="_parent">beforeRender</a> method and <a href="#moreAboutRender" target="_parent">render&lt;ChildId&gt;</a> methods. You should
+assign all elements' attributes here, create child components, bind to events and fill component with
+interactivity. Call <tt>super.afterRender()</tt> at the first line of the method.</p>
+
+</div>
+
+<h5><span id="default--afterAppend"></span>afterAppend<a class="anchorjs-link" href="#default--afterAppend" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected afterAppend()</code></p>
+
+<p>Component life stage method. Called after first-time component appearing in HTML DOM and UI components
+tree. Component layouting should be performed here (element size computing). Component rendering is
+finished here. Call <tt>super.afterAppend()</tt> at the first line of the method.</p>
+<p><b>Caution:</b> the method is called in the next cases only:</p>
+<ul>
+  <li><a href="#default--renderTo" target="_parent">renderTo</a> or <a href="#default--renderAs" target="_parent">renderAs</a> method is called, and the parent element is present in the document body.</li>
+  <li>The component is added as a child component to a component that has <b>afterAppend</b> method called
+  in the past.</li>
+  <li>This is a child component of a component that has <b>afterAppend</b> called at the moment.</li>
+  <li><a href="#default--render" target="_parent">render</a> method is called, and <a href="#default--using" target="_parent">using</a> method was called with an HTMLElement or <a href="https://api.jquery.com" target="_blank">jQuery</a> element passed.</li>
+</ul>
+<p>In other words, <b>afterAppend</b> method works as expected as long as you render child components as specified
+in <a href="#childComponents" target="_parent">Child components</a> topic.</p>
+
+</div>
+
+<h5><span id="default--releaseDom"></span>releaseDom<a class="anchorjs-link" href="#default--releaseDom" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected releaseDom()</code></p>
+
+<p>Component life stage method. Called during component destruction before <a href="#default--unrender" target="_parent">unrender</a> method call.
+Everything that was performed in <a href="#default--afterAppend" target="_parent">afterAppend</a> method should be reverted here. Call
+<tt>super.releaseDom()</tt> at the last line of the method.</p>
+
+</div>
+
+<h5><span id="default--unrender"></span>unrender<a class="anchorjs-link" href="#default--unrender" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected unrender()</code></p>
+
+<p>Component life stage method. Called during component destruction before <a href="#default--afterDestroy" target="_parent">afterDestroy</a> method call.
+Everything that was performed during component rendering should be reverted here. All child components are
+already removed by the component before this method call, but the components themselves are not destroyed. You
+must destroy them explicitly as specified in <a href="#componentRemoval" target="_parent">Component removal and destruction</a> topic. Call <tt>super.unrender()</tt> at the
+last line of the method.</p>
+
+</div>
+
+<h5><span id="default--afterDestroy"></span>afterDestroy<a class="anchorjs-link" href="#default--afterDestroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected afterDestroy()</code></p>
+
+<p>Component life stage method. Called during component destruction after <a href="#default--unrender" target="_parent">unrender</a> method call. Everything
+that was performed during component construction should be reverted here. Call <tt>super.afterDestroy()</tt>
+at the last line of the method.</p>
+
+</div>
+
+<h5><span id="default--createElement"></span>createElement<a class="anchorjs-link" href="#default--createElement" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected createElement(): <a href="TemplateOutput.html" target="_parent">TemplateOutput</a></code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">HTML template rendering output.</dd>
+</dl>
+<p>Virtual method to render the component document fragment. By default, renders by <a href="#default--template" target="_parent">template</a>.</p>
+
+</div>
+
+<h5><span id="default--destroy"></span><i>destroy</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#default--destroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): void</code></p>
+
+<p>Class destructor invocation method. Destroys all aggregated objects and calls <a href="#default--destroyObject" target="_parent">destroyObject</a> method.
+You must call this method explicitly from outside, because JavaScript doesn't support automatic class
+destructor calling.</p>
+<pre>
+const object = new MyClass();
+
+// ...
+
+// When the object is not needed anymore, destroy it.
+object.<b>destroy</b>();</pre>
+<p>Alternatively (and optimally), you should use <a href="IClass.html#default--own" target="_parent">own</a> method to aggregate this object inside another one.</p>
+
+</div>
+
+<h5><span id="default--destroyObject"></span><i>destroyObject</i> <span class="doc-inherit-mark">(inherited from <a href="Class.html#default" target="_parent">Class</a>)</span><a class="anchorjs-link" href="#default--destroyObject" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>protected (): void</code></p>
+
+<p>Class destructor implementation. Called in <a href="#default--destroy" target="_parent">destroy</a> method after destruction of all aggregated objects.
+The logic of class instance destruction should usually be implemented here. If you override this method,
+remember to call <code>super.<b>destroyObject</b>()</code> at the end of the method:</p>
+<pre>
+<b>destroyObject</b>() {
+    // Release resources
+    ...
+
+    // Call superclass destructor
+    super.<b>destroyObject</b>();
+}</pre>
+
+</div>
+
+<h5><span id="default--own"></span><i>own</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--own" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;T extends <a href="Destroyable.html" target="_parent">Destroyable</a>&gt;(obj: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>obj</b></dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <b>obj</b> object, which makes it easy to use in field definition:</p>
+<pre>
+private selected = this.<b>own</b>(new <a href="Property.html" target="_parent">Property</a>(false));</pre>
+
+</div>
+
+<h5><span id="default--owning"></span><i>owning</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--owning" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(obj: <a href="Destroyable.html" target="_parent">Destroyable</a>): this
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>The same as <a href="IClass.html#default--own" target="_parent">own</a>, but returns <code>this</code>, which makes it easy to use in object instantiation:</p>
+<pre>
+const items = new <a href="BindableArray.html" target="_parent">BindableArray</a>().ownValues();
+return new Panel(items).<b>owning</b>(items);</pre>
+
+</div>
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Messages</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="IterableUtils.html" target="_parent">IterableUtils</a></li>
+        <li><a href="MapUtils.html" target="_parent">MapUtils</a></li>
+        <li><a href="SetUtils.html" target="_parent">SetUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Class.html" target="_parent">Class</a>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Dispatcher.html" target="_parent">Dispatcher</a>, <a href="IDispatcher.html" target="_parent">IDispatcher</a></li>
+        <li><a href="Property.html" target="_parent">Property</a>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><b>Component</b></li>
+        <li><a href="Renderable.html" target="_parent">Renderable</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a></td>
+            <td><a href="ReadonlyBindableMap.html" target="_parent">ReadonlyBindableMap</a></td>
+            <td><a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="DestroyableReadonlyBindableArray.html" target="_parent">DestroyableReadonlyBindableArray</a></td>
+            <td><a href="DestroyableReadonlyBindableMap.html" target="_parent">DestroyableReadonlyBindableMap</a></td>
+            <td><a href="DestroyableReadonlyBindableSet.html" target="_parent">DestroyableReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="IBindableArray.html" target="_parent">IBindableArray</a></td>
+            <td><a href="IBindableMap.html" target="_parent">IBindableMap</a></td>
+            <td><a href="IBindableSet.html" target="_parent">IBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="BindableArray.html" target="_parent">BindableArray</a></td>
+            <td><a href="BindableMap.html" target="_parent">BindableMap</a></td>
+            <td><a href="BindableSet.html" target="_parent">BindableSet</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="collection/AbstractMapper.html" target="_parent">AbstractMapper</a></li>
+        <li><a href="collection/AbstractValueCollector.html" target="_parent">AbstractValueCollector</a></li>
+        <li><a href="collection/ArrayFilterer.html" target="_parent">ArrayFilterer</a></li>
+        <li><a href="collection/ArrayInserter.html" target="_parent">ArrayInserter</a></li>
+        <li><a href="collection/ArrayMapper.html" target="_parent">ArrayMapper</a></li>
+        <li><a href="collection/ArrayMerger.html" target="_parent">ArrayMerger</a></li>
+        <li><a href="collection/ArrayReverser.html" target="_parent">ArrayReverser</a></li>
+        <li><a href="collection/ArrayValueCollector.html" target="_parent">ArrayValueCollector</a></li>
+        <li><a href="collection/MapFilterer.html" target="_parent">MapFilterer</a></li>
+        <li><a href="collection/MapInserter.html" target="_parent">MapInserter</a></li>
+        <li><a href="collection/MapKeyCollector.html" target="_parent">MapKeyCollector</a></li>
+        <li><a href="collection/MapMapper.html" target="_parent">MapMapper</a></li>
+        <li><a href="collection/MapValueCollector.html" target="_parent">MapValueCollector</a></li>
+        <li><a href="collection/SetConverterToArray.html" target="_parent">SetConverterToArray</a></li>
+        <li><a href="collection/SetFilterer.html" target="_parent">SetFilterer</a></li>
+        <li><a href="collection/SetIndexer.html" target="_parent">SetIndexer</a></li>
+        <li><a href="collection/SetMapper.html" target="_parent">SetMapper</a></li>
+        <li><a href="collection/SetMatchingValueCounter.html" target="_parent">SetMatchingValueCounter</a></li>
+        <li><a href="collection/SetSorter.html" target="_parent">SetSorter</a></li>
+        <li><a href="collection/SetValueCollector.html" target="_parent">SetValueCollector</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><a href="Router.html" target="_parent">Router</a></li>
+        <li><a href="RouteRedirector.html" target="_parent">RouteRedirector</a></li>
+        <li><a href="RoutingNode.html" target="_parent">RoutingNode</a></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><a href="request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyDispatcher.html" target="_parent">dummyDispatcher</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

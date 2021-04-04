@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/Class - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+								data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+						</li>
+					
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/Class</a>
+						
+<a class="nav-link" href="#default">Default export</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#default---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#default---description">Description</a>
+
+<a class="nav-link" href="#default---constructor">Constructor</a>
+
+
+<a class="nav-link" href="#default---methods">Methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link" href="#default--destroy">destroy</a>
+<a class="nav-link" href="#default--destroyObject">destroyObject</a>
+<a class="nav-link font-italic" href="#default--own">own</a>
+<a class="nav-link font-italic" href="#default--owning">owning</a></nav>
+
+
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1><span id="default"></span>jwidget/Class</h1>
+						
+						<h3>Consumption</h3>
+						<pre class="doc-consumption">import Class from "jwidget/Class";</pre>
+						
+<h3><span id="default"></span>Default export<a class="anchorjs-link" href="#default" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="default---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#default---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Destroyable.html#default">Destroyable</a></li>
+<li><span style="margin-left: 2em"></span>interface <a href="IClass.html#default">IClass</a></li>
+<li><span style="margin-left: 4em"></span>class <b>Class</b></li>
+
+</ul>
+<h4><span id="default---description"></span>Description<a class="anchorjs-link" href="#default---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<p>Introduces object aggregation support. If you call <code>a.<a href="IClass.html#default--own" target="_parent">own</a>(b)</code>, then <code>b</code> is destroyed
+automatically on <code>a</code> destruction. You can aggregate any object implementing <a href="Destroyable.html" target="_parent">Destroyable</a>. Aggregated objects
+are destroyed in reverse order.</p>
+<p>The convention is to call the respective superclass method of destruction at the end of the overriding
+method. That's why <b>Class</b> provides two destruction methods for you to override if you want to add an extra
+destruction logic:</p>
+<dl class="row">
+  <dt class="col-lg-2 col-sm-3"><a href="#default--destroy" target="_parent">destroy</a></dt>
+  <dd class="col-lg-10 col-sm-9">Here, the aggregated objects are still available. When you call
+    <code>super.<a href="#default--destroy" target="_parent">destroy</a>()</code>, the aggregated objects get destroyed and <a href="#default--destroyObject" target="_parent">destroyObject</a> method gets
+    called.</dd>
+  <dt class="col-lg-2 col-sm-3"><a href="#default--destroyObject" target="_parent">destroyObject</a></dt>
+  <dd class="col-lg-10 col-sm-9">Here, the aggregated objects are already destroyed. In the majority of cases,
+    it is recommended to override this method instead of <a href="#default--destroy" target="_parent">destroy</a>.</dd>
+</dl>
+<pre>
+class Book extends <b>Class</b> {
+    cover = this.<a href="IClass.html#default--own" target="_parent">own</a>(new Cover());
+
+    <a href="#default--destroyObject" target="_parent">destroyObject</a>() {
+        console.log(&quot;Destroying book&quot;);
+        super.<a href="#default--destroyObject" target="_parent">destroyObject</a>();
+    }
+}
+
+class Cover implements <a href="Destroyable.html" target="_parent">Destroyable</a> {
+    <a href="#default--destroy" target="_parent">destroy</a>() {
+        console.log(&quot;Destroying cover&quot;);
+    }
+}
+
+const book = new Book();
+book.<a href="#default--destroy" target="_parent">destroy</a>();</pre>
+<p>Output:</p>
+<samp>Destroying cover
+Destroying book</samp>
+
+
+
+<h4><span id="default---constructor"></span>Constructor<a class="anchorjs-link" href="#default---constructor" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<p><code>new Class()
+</code></p>
+
+<p>Constructs <b>Class</b> instance. Usually contructor is called in subclass, but you can also create pure <b>Class</b>
+instances as dummy objects or aggregators for other objects. For example, by destroying the object returned
+from the next method you cancel both animation and request.</p>
+<pre>
+startOperation() {
+    return new <b>Class</b>().
+        <a href="#default--owning" target="_parent">owning</a>(new Animation()).
+        <a href="#default--owning" target="_parent">owning</a>(new Request());
+}</pre>
+
+
+
+<h4><span id="default---methods"></span>Methods<a class="anchorjs-link" href="#default---methods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--destroy"></span>destroy<a class="anchorjs-link" href="#default--destroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>(): void</code></p>
+
+<p>Class destructor invocation method. Destroys all aggregated objects and calls <a href="#default--destroyObject" target="_parent">destroyObject</a> method.
+You must call this method explicitly from outside, because JavaScript doesn't support automatic class
+destructor calling.</p>
+<pre>
+const object = new MyClass();
+
+// ...
+
+// When the object is not needed anymore, destroy it.
+object.<b>destroy</b>();</pre>
+<p>Alternatively (and optimally), you should use <a href="IClass.html#default--own" target="_parent">own</a> method to aggregate this object inside another one.</p>
+
+</div>
+
+<h5><span id="default--destroyObject"></span>destroyObject<a class="anchorjs-link" href="#default--destroyObject" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member">
+<p><code>protected (): void</code></p>
+
+<p>Class destructor implementation. Called in <a href="#default--destroy" target="_parent">destroy</a> method after destruction of all aggregated objects.
+The logic of class instance destruction should usually be implemented here. If you override this method,
+remember to call <code>super.<b>destroyObject</b>()</code> at the end of the method:</p>
+<pre>
+<b>destroyObject</b>() {
+    // Release resources
+    ...
+
+    // Call superclass destructor
+    super.<b>destroyObject</b>();
+}</pre>
+
+</div>
+
+<h5><span id="default--own"></span><i>own</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--own" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;T extends <a href="Destroyable.html" target="_parent">Destroyable</a>&gt;(obj: T): T
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>obj</b></dd>
+</dl>
+<p>Aggregates the object. It means that the specified object is automatically destroyed
+on <code>this</code> object destruction. The aggregated objects are destroyed in reverse order.
+Returns <b>obj</b> object, which makes it easy to use in field definition:</p>
+<pre>
+private selected = this.<b>own</b>(new <a href="Property.html" target="_parent">Property</a>(false));</pre>
+
+</div>
+
+<h5><span id="default--owning"></span><i>owning</i> <span class="doc-inherit-mark">(inherited from <a href="IClass.html#default" target="_parent">IClass</a>)</span><a class="anchorjs-link" href="#default--owning" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(obj: <a href="Destroyable.html" target="_parent">Destroyable</a>): this
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">obj</dt><dd class="col-lg-10 col-sm-9">Object to aggregate.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">this</dd>
+</dl>
+<p>The same as <a href="IClass.html#default--own" target="_parent">own</a>, but returns <code>this</code>, which makes it easy to use in object instantiation:</p>
+<pre>
+const items = new <a href="BindableArray.html" target="_parent">BindableArray</a>().ownValues();
+return new Panel(items).<b>owning</b>(items);</pre>
+
+</div>
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Messages</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="IterableUtils.html" target="_parent">IterableUtils</a></li>
+        <li><a href="MapUtils.html" target="_parent">MapUtils</a></li>
+        <li><a href="SetUtils.html" target="_parent">SetUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><b>Class</b>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Dispatcher.html" target="_parent">Dispatcher</a>, <a href="IDispatcher.html" target="_parent">IDispatcher</a></li>
+        <li><a href="Property.html" target="_parent">Property</a>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="Component.html" target="_parent">Component</a></li>
+        <li><a href="Renderable.html" target="_parent">Renderable</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a></td>
+            <td><a href="ReadonlyBindableMap.html" target="_parent">ReadonlyBindableMap</a></td>
+            <td><a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="DestroyableReadonlyBindableArray.html" target="_parent">DestroyableReadonlyBindableArray</a></td>
+            <td><a href="DestroyableReadonlyBindableMap.html" target="_parent">DestroyableReadonlyBindableMap</a></td>
+            <td><a href="DestroyableReadonlyBindableSet.html" target="_parent">DestroyableReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="IBindableArray.html" target="_parent">IBindableArray</a></td>
+            <td><a href="IBindableMap.html" target="_parent">IBindableMap</a></td>
+            <td><a href="IBindableSet.html" target="_parent">IBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="BindableArray.html" target="_parent">BindableArray</a></td>
+            <td><a href="BindableMap.html" target="_parent">BindableMap</a></td>
+            <td><a href="BindableSet.html" target="_parent">BindableSet</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="collection/AbstractMapper.html" target="_parent">AbstractMapper</a></li>
+        <li><a href="collection/AbstractValueCollector.html" target="_parent">AbstractValueCollector</a></li>
+        <li><a href="collection/ArrayFilterer.html" target="_parent">ArrayFilterer</a></li>
+        <li><a href="collection/ArrayInserter.html" target="_parent">ArrayInserter</a></li>
+        <li><a href="collection/ArrayMapper.html" target="_parent">ArrayMapper</a></li>
+        <li><a href="collection/ArrayMerger.html" target="_parent">ArrayMerger</a></li>
+        <li><a href="collection/ArrayReverser.html" target="_parent">ArrayReverser</a></li>
+        <li><a href="collection/ArrayValueCollector.html" target="_parent">ArrayValueCollector</a></li>
+        <li><a href="collection/MapFilterer.html" target="_parent">MapFilterer</a></li>
+        <li><a href="collection/MapInserter.html" target="_parent">MapInserter</a></li>
+        <li><a href="collection/MapKeyCollector.html" target="_parent">MapKeyCollector</a></li>
+        <li><a href="collection/MapMapper.html" target="_parent">MapMapper</a></li>
+        <li><a href="collection/MapValueCollector.html" target="_parent">MapValueCollector</a></li>
+        <li><a href="collection/SetConverterToArray.html" target="_parent">SetConverterToArray</a></li>
+        <li><a href="collection/SetFilterer.html" target="_parent">SetFilterer</a></li>
+        <li><a href="collection/SetIndexer.html" target="_parent">SetIndexer</a></li>
+        <li><a href="collection/SetMapper.html" target="_parent">SetMapper</a></li>
+        <li><a href="collection/SetMatchingValueCounter.html" target="_parent">SetMatchingValueCounter</a></li>
+        <li><a href="collection/SetSorter.html" target="_parent">SetSorter</a></li>
+        <li><a href="collection/SetValueCollector.html" target="_parent">SetValueCollector</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><a href="Router.html" target="_parent">Router</a></li>
+        <li><a href="RouteRedirector.html" target="_parent">RouteRedirector</a></li>
+        <li><a href="RoutingNode.html" target="_parent">RoutingNode</a></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><a href="request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyDispatcher.html" target="_parent">dummyDispatcher</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>

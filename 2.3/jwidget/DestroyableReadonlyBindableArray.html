@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jwidget/DestroyableReadonlyBindableArray - jWidget 2</title>
+		<link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="../styles.css">
+	</head>
+	<body>
+		<nav class="doc-header navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="..">jWidget 2</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="..">Home</a>
+					</li>
+					
+						<li class="nav-item">
+							<a class="nav-link dropdown-toggle" href="../tutorials/tutorial1.html"
+								data-dropdown="#tutorial-dropdown">Tutorial <span class="sr-only">(current)</span></a>
+						</li>
+					
+					<li class="nav-item">
+						<a class="nav-link dropdown-toggle" href="../doc.html"
+							data-dropdown="#index-dropdown">Documentation <span class="sr-only">(current)</span></a>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="form-check text-light mr-2">
+		<input class="form-check-input" type="checkbox" id="navbarShowInherited">
+		<label class="form-check-label" for="navbarShowInherited">Expand inherited members</label>
+	</div>
+				</form>
+			</div>
+		</nav>
+		<div class="doc-contents">
+			
+				<nav class="doc-sidebar navbar navbar-light bg-light">
+					<nav class="doc-index nav nav-pills flex-column">
+						<a class="navbar-brand" href="#">jwidget/DestroyableReadonlyBindableArray</a>
+						
+<a class="nav-link" href="#default">Default export</a>
+
+<nav class="nav nav-pills flex-column">
+<a class="nav-link" href="#default---hierarchy">Hierarchy</a>
+<a class="nav-link" href="#default---description">Description</a>
+
+
+
+<a class="nav-link" href="#default---properties">Properties</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link font-italic" href="#default--silent">silent</a>
+<a class="nav-link font-italic" href="#default--length">length</a>
+<a class="nav-link font-italic" href="#default--native">native</a>
+<a class="nav-link font-italic" href="#default--onSplice">onSplice</a>
+<a class="nav-link font-italic" href="#default--onReplace">onReplace</a>
+<a class="nav-link font-italic" href="#default--onMove">onMove</a>
+<a class="nav-link font-italic" href="#default--onClear">onClear</a>
+<a class="nav-link font-italic" href="#default--onReorder">onReorder</a>
+<a class="nav-link font-italic" href="#default--onChange">onChange</a></nav>
+
+<a class="nav-link" href="#default---methods">Methods</a>
+<nav class="nav nav-pills flex-column"><a class="nav-link font-italic" href="#default--destroy">destroy</a>
+<a class="nav-link font-italic" href="#default--[Symbol.iterator]">[Symbol.iterator]</a>
+<a class="nav-link font-italic" href="#default--get">get</a>
+<a class="nav-link font-italic" href="#default--includes">includes</a>
+<a class="nav-link font-italic" href="#default--indexOf">indexOf</a>
+<a class="nav-link font-italic" href="#default--lastIndexOf">lastIndexOf</a>
+<a class="nav-link font-italic" href="#default--every">every</a>
+<a class="nav-link font-italic" href="#default--some">some</a>
+<a class="nav-link font-italic" href="#default--forEach">forEach</a>
+<a class="nav-link font-italic" href="#default--find">find</a>
+<a class="nav-link font-italic" href="#default--findIndex">findIndex</a>
+<a class="nav-link font-italic" href="#default--reduce">reduce</a>
+<a class="nav-link font-italic" href="#default--reduceRight">reduceRight</a>
+<a class="nav-link font-italic" href="#default--detectSplice">detectSplice</a>
+<a class="nav-link font-italic" href="#default--detectFilter">detectFilter</a>
+<a class="nav-link font-italic" href="#default--detectReorder">detectReorder</a>
+<a class="nav-link font-italic" href="#default--detectSort">detectSort</a>
+<a class="nav-link font-italic" href="#default--detectSortComparing">detectSortComparing</a></nav>
+
+
+</nav>
+						<div class="py-3"></div>
+					</nav>
+				</nav>
+				<div class="doc-main">
+					<div class="container-fluid">
+						<h1><span id="default"></span>jwidget/DestroyableReadonlyBindableArray</h1>
+						
+						<h3>Consumption</h3>
+						<pre class="doc-consumption">import DestroyableReadonlyBindableArray from "jwidget/DestroyableReadonlyBindableArray";</pre>
+						
+<h3><span id="default"></span>Default export<a class="anchorjs-link" href="#default" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h3>
+<div class="doc-section">
+
+<h4><span id="default---hierarchy"></span>Hierarchy<a class="anchorjs-link" href="#default---hierarchy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<ul class="doc-hierarchy">
+
+
+<li><span style="margin-left: 0em"></span>interface <a href="Destroyable.html#default">Destroyable</a></li>
+
+<li><span style="margin-left: 0em"></span>interface <a href="ReadonlyBindableArray.html#default">ReadonlyBindableArray</a><span class="monospace">&lt;T&gt;</span></li>
+<li><span style="margin-left: 2em"></span>interface <b>DestroyableReadonlyBindableArray</b><span class="monospace">&lt;T&gt;</span></li>
+
+<li><span style="margin-left: 4em"></span>interface <a href="IBindableArray.html#default">IBindableArray</a><span class="monospace">&lt;T&gt;</span></li>
+
+<li><span style="margin-left: 6em"></span>class <a href="BindableArray.html#default">BindableArray</a><span class="monospace">&lt;T&gt;</span></li>
+
+</ul>
+<h4><span id="default---description"></span>Description<a class="anchorjs-link" href="#default---description" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">T</dt><dd class="col-lg-10 col-sm-9">Value type.</dd>
+</dl>
+<p>Extension of <a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a> abstraction with <a href="#default--destroy" target="_parent">destroy</a> method. If a function returns a destroyable
+collection, it usually indicates that you are now responsible for its life time control.</p>
+
+
+
+
+<h4><span id="default---properties"></span>Fields<a class="anchorjs-link" href="#default---properties" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--silent"></span><i>silent</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--silent" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly silent: boolean</code></p>
+Checks if this collection never dispatches messages. This knowledge may help you do certain code optimizations.
+</div>
+
+<h5><span id="default--length"></span><i>length</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--length" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly length: <a href="Bindable.html" target="_parent">Bindable</a>&lt;number&gt;</code></p>
+Property containing number of items in the array.
+</div>
+
+<h5><span id="default--native"></span><i>native</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--native" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly native: readonly <a href="#default" target="_parent">T</a>[]</code></p>
+Native array of items - internal collection representation.
+</div>
+
+<h5><span id="default--onSplice"></span><i>onSplice</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--onSplice" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly onSplice: <a href="Listenable.html" target="_parent">Listenable</a>&lt;<a href="IBindableArray.html" target="_parent">IBindableArray</a>.<a href="IBindableArray.html#IBindableArray-SpliceResult" target="_parent">SpliceResult</a>&lt;<a href="#default" target="_parent">T</a>&gt;&gt;</code></p>
+Items are removed from the array and/or items are added to the array.
+</div>
+
+<h5><span id="default--onReplace"></span><i>onReplace</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--onReplace" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly onReplace: <a href="Listenable.html" target="_parent">Listenable</a>&lt;<a href="IBindableArray.html" target="_parent">IBindableArray</a>.<a href="IBindableArray.html#IBindableArray-ReplaceMessage" target="_parent">ReplaceMessage</a>&lt;<a href="#default" target="_parent">T</a>&gt;&gt;</code></p>
+An item is replaced in the array.
+</div>
+
+<h5><span id="default--onMove"></span><i>onMove</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--onMove" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly onMove: <a href="Listenable.html" target="_parent">Listenable</a>&lt;<a href="IBindableArray.html" target="_parent">IBindableArray</a>.<a href="IBindableArray.html#IBindableArray-MoveMessage" target="_parent">MoveMessage</a>&lt;<a href="#default" target="_parent">T</a>&gt;&gt;</code></p>
+An item is moved in the array.
+</div>
+
+<h5><span id="default--onClear"></span><i>onClear</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--onClear" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly onClear: <a href="Listenable.html" target="_parent">Listenable</a>&lt;readonly <a href="#default" target="_parent">T</a>[]&gt;</code></p>
+The array is cleared. Passes old contents as a message.
+</div>
+
+<h5><span id="default--onReorder"></span><i>onReorder</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--onReorder" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly onReorder: <a href="Listenable.html" target="_parent">Listenable</a>&lt;<a href="IBindableArray.html" target="_parent">IBindableArray</a>.<a href="IBindableArray.html#IBindableArray-ReorderMessage" target="_parent">ReorderMessage</a>&lt;<a href="#default" target="_parent">T</a>&gt;&gt;</code></p>
+Items are reordered in the array.
+</div>
+
+<h5><span id="default--onChange"></span><i>onChange</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--onChange" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>readonly onChange: <a href="Listenable.html" target="_parent">Listenable</a>&lt;void&gt;</code></p>
+The array is changed. Dispatched right after any another message.
+</div>
+
+<h4><span id="default---methods"></span>Methods<a class="anchorjs-link" href="#default---methods" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h4>
+
+<h5><span id="default--destroy"></span><i>destroy</i> <span class="doc-inherit-mark">(inherited from <a href="Destroyable.html#default" target="_parent">Destroyable</a>)</span><a class="anchorjs-link" href="#default--destroy" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): void</code></p>
+
+<p>Class destructor. You must override it in a subclass and call this method explicitly from outside, because
+JavaScript doesn't support automatic class destructor calling.</p>
+<pre>
+const object = new MyClass();
+
+// ...
+
+// When the object is not needed anymore, destroy it.
+object.<b>destroy</b>();</pre>
+<p>Alternatively (and optimally), you should use <a href="IClass.html#default--own" target="_parent">own</a> method to aggregate this object in another one.</p>
+
+</div>
+
+<h5><span id="default--[Symbol.iterator]"></span><i>[Symbol.iterator]</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--[Symbol.iterator]" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#iterators" target="_blank">IterableIterator</a>&lt;<a href="#default" target="_parent">T</a>&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Array iterator.</dd>
+</dl>
+
+</div>
+
+<h5><span id="default--get"></span><i>get</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--get" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(index: number): <a href="#default" target="_parent">T</a>
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">index</dt><dd class="col-lg-10 col-sm-9">Index in the list.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Item at the index. If an item with such index doesn't exist, returns undefined.</dd>
+</dl>
+
+</div>
+
+<h5><span id="default--includes"></span><i>includes</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--includes" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(value: <a href="#default" target="_parent">T</a>): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">If the value is <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes" target="_blank">included</a> in the array.</dd>
+</dl>
+
+</div>
+
+<h5><span id="default--indexOf"></span><i>indexOf</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--indexOf" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(value: <a href="#default" target="_parent">T</a>): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of the first item in the array with this value. If the item doesn't exist, returns -1.</dd>
+</dl>
+
+</div>
+
+<h5><span id="default--lastIndexOf"></span><i>lastIndexOf</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--lastIndexOf" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(value: <a href="#default" target="_parent">T</a>): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">value</dt><dd class="col-lg-10 col-sm-9">Value.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of the last item in the array with this value. If the item doesn't exist, returns -1.</dd>
+</dl>
+
+</div>
+
+<h5><span id="default--every"></span><i>every</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--every" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(callback: (value: <a href="#default" target="_parent">T</a>, index: number) =&gt; boolean): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Criteria callback.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">All items match the criteria.</dd>
+</dl>
+<p>Matches all items against criteria. Returns true if <b>callback</b> returns truthy value for all collection
+items. Algorithms iterates through the items consequently, and stops it after the first item violating
+the criteria.<p>
+
+</div>
+
+<h5><span id="default--some"></span><i>some</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--some" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(callback: (value: <a href="#default" target="_parent">T</a>, index: number) =&gt; boolean): boolean
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Criteria callback.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Some item matches the criteria.</dd>
+</dl>
+<p>Matches each item against criteria. Returns true if <b>callback</b> returns truthy value for at least one item
+in the collection. Algorithms iterates through the items sequentially, and stops it after the first item matching
+the criteria.<p>
+
+</div>
+
+<h5><span id="default--forEach"></span><i>forEach</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--forEach" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(callback: (value: <a href="#default" target="_parent">T</a>, index: number) =&gt; void)
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Callback function.</dd>
+</dl>
+<p>Iterates through the collection items. Calls the specified function for all items.<p>
+
+</div>
+
+<h5><span id="default--find"></span><i>find</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--find" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(callback: (value: <a href="#default" target="_parent">T</a>, index: number) =&gt; boolean): <a href="#default" target="_parent">T</a>
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Criteria callback.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">First item matching the criteria.</dd>
+</dl>
+<p>Finds an item matching the criteria. Returns the first item <b>callback</b> returns truthy value for.
+Algorithms iterates through the items sequentially, and stops it after the first item matching the criteria.</p>
+
+</div>
+
+<h5><span id="default--findIndex"></span><i>findIndex</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--findIndex" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(callback: (value: <a href="#default" target="_parent">T</a>, index: number) =&gt; boolean): number
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Criteria callback.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Index of the first item matching the criteria.</dd>
+</dl>
+<p>Finds an item matching the criteria. Returns the index of the first item <b>callback</b> returns truthy value for.
+Algorithms iterates through the items sequentially, and stops it after the first item matching the criteria.</p>
+
+</div>
+
+<h5><span id="default--reduce"></span><i>reduce</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--reduce" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;U&gt;(callback: (accumulator: U, item: <a href="#default" target="_parent">T</a>, index: number) =&gt; U, initial: U): U
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Function to execute on each item in the collection.</dd>
+<dt class="col-lg-2 col-sm-3">initial</dt><dd class="col-lg-10 col-sm-9">Value to use as the first argument to the first call of the callback.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Final accumulator value.</dd>
+</dl>
+<p>Applies a function against an accumulator and each item in the array (from start to end) to reduce it
+to a single value.</p>
+
+</div>
+
+<h5><span id="default--reduceRight"></span><i>reduceRight</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--reduceRight" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>&lt;U&gt;(callback: (accumulator: U, item: <a href="#default" target="_parent">T</a>, index: number) =&gt; U, initial: U): U
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Function to execute on each item in the collection.</dd>
+<dt class="col-lg-2 col-sm-3">initial</dt><dd class="col-lg-10 col-sm-9">Value to use as the first argument to the first call of the callback.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9">Final accumulator value.</dd>
+</dl>
+<p>Applies a function against an accumulator and each item in the array (from end to start) to reduce it
+to a single value.</p>
+
+</div>
+
+<h5><span id="default--detectSplice"></span><i>detectSplice</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--detectSplice" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(newContents: readonly <a href="#default" target="_parent">T</a>[]): <a href="IBindableArray.html" target="_parent">IBindableArray</a>.<a href="IBindableArray.html#IBindableArray-SpliceParams" target="_parent">SpliceParams</a>&lt;<a href="#default" target="_parent">T</a>&gt;
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">newContents</dt><dd class="col-lg-10 col-sm-9">New array contents.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><a href="IBindableArray.html#default--splice" target="_parent">splice</a> method arguments. If no method call required, returns undefined.</dd>
+</dl>
+<p>Detects <a href="IBindableArray.html#default--splice" target="_parent">splice</a> method arguments to adjust array contents to <b>newContents</b>. Determines item ranges to be
+removed and added. All values in the array must be <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Same-value-zero_equality" target="_blank">unique</a>. If the values are not unique, probably
+<a href="#default--detectFilter" target="_parent">detectFilter</a> method may help, because it doesn't require item uniqueness.</p>
+
+</div>
+
+<h5><span id="default--detectFilter"></span><i>detectFilter</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--detectFilter" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(newContents: readonly <a href="#default" target="_parent">T</a>[]): <a href="IBindableArray.html" target="_parent">IBindableArray</a>.<a href="IBindableArray.html#IBindableArray-IndexCount" target="_parent">IndexCount</a>[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">newContents</dt><dd class="col-lg-10 col-sm-9">New array contents.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>segmentsToRemove</b> argument of <a href="IBindableArray.html#default--splice" target="_parent">splice</a> method. If no method call required, returns undefined.</dd>
+</dl>
+<p>Detects <b>segmentsToRemove</b> argument of <a href="IBindableArray.html#default--splice" target="_parent">splice</a> method to adjust array contents to <b>newContents</b>.
+Determines item segments to be removed. Doesn't consider item insertion - try <a href="#default--detectSplice" target="_parent">detectSplice</a> if that's the
+case. As opposed to <a href="#default--detectSplice" target="_parent">detectSplice</a>, doesn't require item uniqueness.</p>
+
+</div>
+
+<h5><span id="default--detectReorder"></span><i>detectReorder</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--detectReorder" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(newContents: readonly <a href="#default" target="_parent">T</a>[]): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">newContents</dt><dd class="col-lg-10 col-sm-9">New array contents.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>indexMapping</b> argument of <a href="IBindableArray.html#default--reorder" target="_parent">reorder</a> method. If no method call required, returns undefined.</dd>
+</dl>
+<p>Detects <a href="IBindableArray.html#default--reorder" target="_parent">reorder</a> method arguments to adjust the array contents to <b>newContents</b>. Determines target indices
+for all items. All values in <b>newContents</b> must be <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#Same-value-zero_equality" target="_blank">unique</a>, and they must match values of this array.</p>
+
+</div>
+
+<h5><span id="default--detectSort"></span><i>detectSort</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--detectSort" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(callback?: (value: <a href="#default" target="_parent">T</a>, index: number) =&gt; any, order?: number): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">callback</dt><dd class="col-lg-10 col-sm-9">Indexer function. Must return a comparable value, compatible with <a href="../jwidget.html#cmp" target="_parent">cmp</a>. Returns the value itself by default.
+</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sorting order. Positive number for ascending sorting, negative for descending sorting.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>indexMapping</b> argument of <a href="IBindableArray.html#default--reorder" target="_parent">reorder</a> method. If no method call required, returns undefined.</dd>
+</dl>
+<p>Detects <a href="IBindableArray.html#default--reorder" target="_parent">reorder</a> method arguments to sort the array contents by result of <b>callback</b> call for each item.</p>
+
+</div>
+
+<h5><span id="default--detectSortComparing"></span><i>detectSortComparing</i> <span class="doc-inherit-mark">(inherited from <a href="ReadonlyBindableArray.html#default" target="_parent">ReadonlyBindableArray</a>)</span><a class="anchorjs-link" href="#default--detectSortComparing" aria-label="Anchor" style="padding-left: 0.375em;">#</a></h5>
+<div class="doc-member doc-inherited">
+<p><code>(compare?: (t1: T, t2: T, i1: number, i2: number) =&gt; number, order?: number): number[]
+</code></p>
+<dl class="row">
+<dt class="col-lg-2 col-sm-3">compare</dt><dd class="col-lg-10 col-sm-9">Comparer function. Should return positive value if t1 > t2;
+negative value if t1 < t2; 0 if t1 == t2. Defaults to <a href="../jwidget.html#cmp" target="_parent">cmp</a>.
+</dd>
+<dt class="col-lg-2 col-sm-3">order</dt><dd class="col-lg-10 col-sm-9">Sorting order. Positive number for ascending sorting, negative for descending sorting.</dd>
+<dt class="col-lg-2 col-sm-3"><span class="doc-returns">returns</span></dt><dd class="col-lg-10 col-sm-9"><b>indexMapping</b> argument of <a href="IBindableArray.html#default--reorder" target="_parent">reorder</a> method. If no method call required, returns undefined.</dd>
+</dl>
+<p>Detects <a href="IBindableArray.html#default--reorder" target="_parent">reorder</a> method arguments to sort list contents by comparer.</p>
+
+</div>
+
+
+</div>
+					</div>
+					<footer>&copy; <script>document.write(new Date().getFullYear())</script> Copyright: Egor Nepomnyaschih</footer>
+				</div>
+			
+		</div>
+		<div id="tutorial-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../tutorial.html" target="_parent">jWidget 2 tutorials</a></h5>
+  <ul>
+    <li><a href="../tutorials/tutorial1.html" target="_parent">Tutorial. Part 1. Model and view</a></li>
+    <li><a href="../tutorials/tutorial2.html" target="_parent">Tutorial. Part 2. Child component collections</a></li>
+    <li><a href="../tutorials/tutorial3.html" target="_parent">Tutorial. Part 3. Named child components</a></li>
+    <li><a href="../tutorials/tutorial4.html" target="_parent">Tutorial. Part 4. Messages</a></li>
+    <li><a href="../tutorials/tutorial5.html" target="_parent">Tutorial. Part 5. Properties</a></li>
+    <li><a href="../tutorials/tutorial6.html" target="_parent">Tutorial. Part 6. Collection bindings</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="../tutorials/philosophy.html" target="_parent">jWidget philosophy</a></li>
+  </ul>
+</div>
+</div>
+		<div id="index-dropdown" class="doc-dropdown" style="display: none"><div class="container-fluid">
+  <h5><a href="../doc.html" target="_parent">Documentation root</a></h5>
+  <div class="row">
+    <div class="col-4">
+      <h5>Utilities</h5>
+      <ul class="list-unstyled">
+        <li><a href="../jwidget.html" target="_parent">CoreUtils</a></li>
+        <li><a href="ArrayUtils.html" target="_parent">ArrayUtils</a></li>
+        <li><a href="DomUtils.html" target="_parent">DomUtils</a></li>
+        <li><a href="IterableUtils.html" target="_parent">IterableUtils</a></li>
+        <li><a href="MapUtils.html" target="_parent">MapUtils</a></li>
+        <li><a href="SetUtils.html" target="_parent">SetUtils</a></li>
+        <li><a href="StringUtils.html" target="_parent">StringUtils</a></li>
+      </ul>
+      <h5>Core interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destroyable.html" target="_parent">Destroyable</a></li>
+        <li><a href="Listenable.html" target="_parent">Listenable</a></li>
+        <li><a href="Bindable.html" target="_parent">Bindable</a></li>
+        <li><a href="DestroyableBindable.html" target="_parent">DestroyableBindable</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Auxiliary interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Some.html" target="_parent">Some</a></li>
+      </ul>
+      <h5>Core classes and their interfaces</h5>
+      <ul class="list-unstyled">
+        <li><a href="Class.html" target="_parent">Class</a>, <a href="IClass.html" target="_parent">IClass</a></li>
+        <li><a href="Dispatcher.html" target="_parent">Dispatcher</a>, <a href="IDispatcher.html" target="_parent">IDispatcher</a></li>
+        <li><a href="Property.html" target="_parent">Property</a>, <a href="IProperty.html" target="_parent">IProperty</a></li>
+      </ul>
+      <h5>UI core</h5>
+      <ul class="list-unstyled">
+        <li><a href="Component.html" target="_parent">Component</a></li>
+        <li><a href="Renderable.html" target="_parent">Renderable</a></li>
+        <li><a href="template.html" target="_parent">template</a></li>
+        <li><a href="listen.html" target="_parent">listen</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>Model bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled">
+        <li><a href="Copier.html" target="_parent">Copier</a></li>
+        <li><a href="Mapper.html" target="_parent">Mapper</a></li>
+        <li><a href="Switcher.html" target="_parent">Switcher</a></li>
+      </ul>
+      <h5>View bindings for <a href="Property.html" target="_parent">Property</a></h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="bindAttr.html" target="_parent">bindAttr</a></li>
+        <li><a href="bindClass.html" target="_parent">bindClass</a></li>
+        <li><a href="bindCss.html" target="_parent">bindCss</a></li>
+        <li><a href="bindDisplay.html" target="_parent">bindDisplay</a></li>
+        <li><a href="bindHtml.html" target="_parent">bindHtml</a></li>
+        <li><a href="bindProp.html" target="_parent">bindProp</a></li>
+        <li><a href="bindRadio.html" target="_parent">bindRadio</a></li>
+        <li><a href="bindText.html" target="_parent">bindText</a></li>
+        <li><a href="bindVal.html" target="_parent">bindVal</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <h5>Collections</h5>
+      <table class="table table-sm">
+        <tbody>
+          <tr>
+            <td><a href="ReadonlyBindableArray.html" target="_parent">ReadonlyBindableArray</a></td>
+            <td><a href="ReadonlyBindableMap.html" target="_parent">ReadonlyBindableMap</a></td>
+            <td><a href="ReadonlyBindableSet.html" target="_parent">ReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><b>DestroyableReadonlyBindableArray</b></td>
+            <td><a href="DestroyableReadonlyBindableMap.html" target="_parent">DestroyableReadonlyBindableMap</a></td>
+            <td><a href="DestroyableReadonlyBindableSet.html" target="_parent">DestroyableReadonlyBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="IBindableArray.html" target="_parent">IBindableArray</a></td>
+            <td><a href="IBindableMap.html" target="_parent">IBindableMap</a></td>
+            <td><a href="IBindableSet.html" target="_parent">IBindableSet</a></td>
+          </tr>
+          <tr>
+            <td><a href="BindableArray.html" target="_parent">BindableArray</a></td>
+            <td><a href="BindableMap.html" target="_parent">BindableMap</a></td>
+            <td><a href="BindableSet.html" target="_parent">BindableSet</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h5>Collection bindings</h5>
+      <ul class="list-unstyled" style="column-count: 2">
+        <li><a href="collection/AbstractMapper.html" target="_parent">AbstractMapper</a></li>
+        <li><a href="collection/AbstractValueCollector.html" target="_parent">AbstractValueCollector</a></li>
+        <li><a href="collection/ArrayFilterer.html" target="_parent">ArrayFilterer</a></li>
+        <li><a href="collection/ArrayInserter.html" target="_parent">ArrayInserter</a></li>
+        <li><a href="collection/ArrayMapper.html" target="_parent">ArrayMapper</a></li>
+        <li><a href="collection/ArrayMerger.html" target="_parent">ArrayMerger</a></li>
+        <li><a href="collection/ArrayReverser.html" target="_parent">ArrayReverser</a></li>
+        <li><a href="collection/ArrayValueCollector.html" target="_parent">ArrayValueCollector</a></li>
+        <li><a href="collection/MapFilterer.html" target="_parent">MapFilterer</a></li>
+        <li><a href="collection/MapInserter.html" target="_parent">MapInserter</a></li>
+        <li><a href="collection/MapKeyCollector.html" target="_parent">MapKeyCollector</a></li>
+        <li><a href="collection/MapMapper.html" target="_parent">MapMapper</a></li>
+        <li><a href="collection/MapValueCollector.html" target="_parent">MapValueCollector</a></li>
+        <li><a href="collection/SetConverterToArray.html" target="_parent">SetConverterToArray</a></li>
+        <li><a href="collection/SetFilterer.html" target="_parent">SetFilterer</a></li>
+        <li><a href="collection/SetIndexer.html" target="_parent">SetIndexer</a></li>
+        <li><a href="collection/SetMapper.html" target="_parent">SetMapper</a></li>
+        <li><a href="collection/SetMatchingValueCounter.html" target="_parent">SetMatchingValueCounter</a></li>
+        <li><a href="collection/SetSorter.html" target="_parent">SetSorter</a></li>
+        <li><a href="collection/SetValueCollector.html" target="_parent">SetValueCollector</a></li>
+      </ul>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-4">
+      <h5>Routing</h5>
+      <ul class="list-unstyled">
+        <li><a href="hash.html" target="_parent">hash</a></li>
+        <li><a href="Router.html" target="_parent">Router</a></li>
+        <li><a href="RouteRedirector.html" target="_parent">RouteRedirector</a></li>
+        <li><a href="RoutingNode.html" target="_parent">RoutingNode</a></li>
+        <li><a href="UIRouter.html" target="_parent">UIRouter</a></li>
+        <li><a href="Endpoint.html" target="_parent">Endpoint</a></li>
+      </ul>
+      <h5>Destroyable adapters</h5>
+      <ul class="list-unstyled">
+        <li><a href="Destructor.html" target="_parent">Destructor</a></li>
+        <li><a href="Interval.html" target="_parent">Interval</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>AJAX and asyncronous operations</h5>
+      <ul class="list-unstyled">
+        <li><a href="CancelToken.html" target="_parent">CancelToken</a></li>
+        <li><a href="defer.html" target="_parent">defer</a></li>
+        <li><a href="request.html" target="_parent">request</a></li>
+      </ul>
+      <h5>Other tools</h5>
+      <ul class="list-unstyled">
+        <li><a href="DomInserter.html" target="_parent">DomInserter</a></li>
+        <li><a href="DomTemplate.html" target="_parent">DomTemplate</a></li>
+        <li><a href="HtmlTemplate.html" target="_parent">HtmlTemplate</a></li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <h5>References (low level stuff)</h5>
+      <ul class="list-unstyled">
+        <li><a href="AbstractTemplate.html" target="_parent">AbstractTemplate</a></li>
+        <li><a href="dummyDestroyable.html" target="_parent">dummyDestroyable</a></li>
+        <li><a href="dummyDispatcher.html" target="_parent">dummyDispatcher</a></li>
+        <li><a href="TemplateOutput.html" target="_parent">TemplateOutput</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+		<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="../bootstrap.bundle.min.js"></script>
+		<script type="text/javascript" src="../scripts.js"></script>
+	</body>
+</html>
