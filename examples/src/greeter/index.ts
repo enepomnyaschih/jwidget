@@ -1,3 +1,6 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 import $ from "jquery";
 import {TWOWAY} from "jwidget";
 import bindText from "jwidget/bindText";

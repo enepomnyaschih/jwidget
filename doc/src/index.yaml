@@ -26,6 +26,9 @@ description: |
     update cycles. Each object simply listens messages and handles them synchronously in a very straightforward way.
     Look at the next example:</p>
     <pre>
+    import "core-js/stable";
+    import "regenerator-runtime/runtime";
+
     import $ from "jquery";
     import {%TWOWAY} from "jwidget";
     import %bindText from "jwidget/bindText";
